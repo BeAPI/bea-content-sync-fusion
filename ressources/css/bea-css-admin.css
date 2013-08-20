@@ -1,0 +1,15 @@
+.sync_messages .metabox-holder {
+	width: 250px;
+	float: left;
+	margin: 5px;
+}
+.sync_messages .logBlock {
+	height: 400px;
+	overflow: auto;
+	padding: 5px;
+}
+
+.locked-content a {
+	color: #333;
+	cursor: default;
+}
