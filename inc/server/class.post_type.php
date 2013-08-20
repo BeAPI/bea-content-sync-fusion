@@ -56,7 +56,7 @@ class BEA_CSF_Server_PostType {
 		return BEA_CSF_Server_Client::send_to_clients( 'BEA_CSF_Client_PostType', 'remove_post', $object_id, $blog_id );
 	}
 
-	public static function wp_insert_post( $post_ID, $post = null, $blog_id = 0 ) {
+	public static function wp_insert_post( $post_ID = 0, $post = null, $blog_id = 0 ) {
 		global $wpdb;
 		
 		// Get current options

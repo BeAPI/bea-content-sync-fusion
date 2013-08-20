@@ -42,8 +42,7 @@ class BEA_CSF_Client_Attachment {
 		$current_media_id = BEA_CSF_Client_Base::get_post_id_from_meta( 'master_id', $media['ID'] );
 		
 		// Parent media ?
-		$current_master_parent_id = BEA_CSF_Client_Base::get_post_id_from_meta( 'master_id', $media['post_parent'] );
-		$current_master_parent_id = (int) $current_master_parent_id;
+		$current_master_parent_id = (int) BEA_CSF_Client_Base::get_post_id_from_meta( 'master_id', $media['post_parent'] );
 		
 		// Merge or add ?
 		if ( $current_media_id > 0 ) { // Edit, update only main fields

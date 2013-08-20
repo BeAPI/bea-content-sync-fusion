@@ -11,7 +11,7 @@ class BEA_CSF_Server_Admin_Metabox {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ), 10, 2 );
 	}
 
-	public static function transition_post_status( $new_status = '', $old_status = '', $post ) {
+	public static function transition_post_status( $new_status, $old_status, $post ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return false;
 		}

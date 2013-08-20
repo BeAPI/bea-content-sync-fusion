@@ -24,7 +24,7 @@ class BEA_CSF_Server_Client {
 	/**
 	 * Build URL with action, make a POST request on each client
 	 */
-	public static function send_to_clients( $class = '', $method = '', $datas, $restrict_to_blog_id = null ) {
+	public static function send_to_clients( $class = '', $method = '', $datas = null, $restrict_to_blog_id = null ) {
 		// Get current options
 		$current_options = (array) get_site_option( BEA_CSF_OPTION );
 		
