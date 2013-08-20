@@ -93,7 +93,7 @@ class BEA_CSF_Server_Admin {
 											<strong><?php echo esc_html($blog['domain'].$blog['path']); ?></strong>
 											<br />
 											<div class="row-actions">
-												<?php if ( in_array($blog['blog_id'], $current_options['clients']) ) : ?>
+												<?php if ( isset($current_options['clients']) && in_array($blog['blog_id'], $current_options['clients']) ) : ?>
 												<span class="edit"><a class="cps-resync" href="<?php echo network_admin_url( 'settings.php?page='.self::admin_slug ); ?>&amp;action=resync&amp;blog_id=<?php echo esc_attr($blog['blog_id']); ?>">Resync</a> | </span>
 												<span class="edit"><a class="cps-flush" href="<?php echo wp_nonce_url(network_admin_url( 'settings.php?page='.self::admin_slug ).'&amp;action=flush&amp;blog_id='. esc_attr($blog['blog_id']), 'flush-client-'.$blog['blog_id']); ?>">Flush</a></span>
 												<input type="hidden" name="_wpnonce" value="<?php echo wp_create_nonce( 'resync-client-'.$blog['blog_id'] ); ?>" />
@@ -105,7 +105,7 @@ class BEA_CSF_Server_Admin {
 										<td style="text-align: center;"><input type="checkbox" name="client[]" value="<?php echo $blog['blog_id']; ?>" <?php checked(true, in_array($blog['blog_id'], $current_options['clients'])); ?> /></td>
 										<td style="text-align: center;">
 											<?php
-											if ( in_array($blog['blog_id'], $current_options['clients']) ) {
+											if ( isset($current_options['clients']) && in_array($blog['blog_id'], $current_options['clients']) ) {
 												echo self::check_client_sum( $blog['blog_id'], $current_sum );
 											}
 											?>	
@@ -193,14 +193,14 @@ class BEA_CSF_Server_Admin {
 		global $wpdb;
 		
 		// Post types objects
-		$objects = $wpdb->get_col( $wpdb->prepare( "
+		$objects = $wpdb->get_col( "
 			SELECT ID 
 			FROM $wpdb->posts 
 			WHERE post_type IN ('".implode("', '", BEA_CSF_Server_Client::get_post_types())."') 
 			AND post_status = 'publish' 
 			AND ID NOT IN ( SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'exclude_from_sync' AND meta_value = '1' )
 			ORDER BY post_parent ASC
-		" ) );
+		" );
 		
 		// Terms objects
 		$terms = get_terms( BEA_CSF_Server_Client::get_taxonomies(), array('hide_empty' => false, 'fields' => 'all') );

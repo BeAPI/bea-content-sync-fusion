@@ -11,7 +11,7 @@ class BEA_CSF_Client_Admin {
 		
 		// Get current options
 		$current_options = (array) get_site_option( BEA_CSF_OPTION );
-		if ( !in_array($wpdb->blogid, $current_options['clients']) ) {
+		if ( !isset($current_options['clients']) || !in_array($wpdb->blogid, $current_options['clients']) ) {
 			return false;
 		}
 		
