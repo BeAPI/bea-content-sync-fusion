@@ -1,6 +1,6 @@
 <?php
 class BEA_CSF_Server_Admin {
-	const admin_slug = 'bea-css-settings';
+	const admin_slug = 'bea-css';
 	
 	/**
 	 * Constructor
@@ -23,11 +23,21 @@ class BEA_CSF_Server_Admin {
 	}
 
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
-		if( isset( $hook_suffix ) && $hook_suffix == 'settings_page_'.self::admin_slug ) {
-			wp_enqueue_script( 'bea-css-jquery-ui',  BEA_CSF_URL.'/ressources/js/jquery-ui-1.8.16.custom.min.js', array('jquery'), '1.8.16' );
-			wp_enqueue_script( 'bea-css-admin',  BEA_CSF_URL.'/ressources/js/bea-css-admin.js', array( 'jquery', 'bea-css-jquery-ui' ), BEA_CSF_VERSION, true );
-			wp_enqueue_style( 'bea-css-jquery-ui',  BEA_CSF_URL.'/ressources/css/smoothness/jquery-ui-1.8.16.custom.css', array(), '1.8.16' );
-			wp_enqueue_style( 'bea-css-admin',  BEA_CSF_URL.'/ressources/css/bea-css-admin.css', array(), BEA_CSF_VERSION );
+		if( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_'.self::admin_slug . '-edit' ) { // Edit page
+			
+			wp_enqueue_script( 'bea-css-jquery-ui', BEA_CSF_URL.'ressources/js/jquery-ui-1.8.16.custom.min.js', array('jquery'), '1.8.16' );
+			wp_enqueue_script( 'bea-css-admin-edit', BEA_CSF_URL.'ressources/js/bea-css-admin-edit.js', array( 'jquery', 'bea-css-jquery-ui' ), BEA_CSF_VERSION, true );
+			wp_enqueue_style( 'bea-css-jquery-ui', BEA_CSF_URL.'ressources/css/smoothness/jquery-ui-1.8.16.custom.css', array(), '1.8.16' );
+			wp_enqueue_style( 'bea-css-admin-edit', BEA_CSF_URL.'ressources/css/bea-css-admin-edit.css', array(), BEA_CSF_VERSION );
+			
+		} elseif( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_'.self::admin_slug . '-add' ) {
+			
+			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL.'ressources/js/lou-multi-select/js/jquery.multi-select.js', array('jquery'), '0.9.8', true );
+			wp_enqueue_script( 'bea-css-admin-add', BEA_CSF_URL.'ressources/js/bea-css-admin-add.js', array( 'lou-multi-select' ), BEA_CSF_VERSION, true );
+			wp_localize_script('bea-css-admin-add', 'beaCssAdminAdd', array('selectableHeader' => __('Selectable items', BEA_CSF_LOCALE), 'selectionHeader' => __('Selection items', BEA_CSF_LOCALE)) );
+			wp_enqueue_style( 'lou-multi-select', BEA_CSF_URL.'ressources/js/lou-multi-select/css/multi-select.css', array(), '0.9.8', 'screen' );
+			wp_enqueue_style( 'bea-css-admin-add', BEA_CSF_URL.'ressources/css/bea-css-admin-add.css', array(), BEA_CSF_VERSION );
+			
 		}
 	}
 	/**
@@ -37,7 +47,9 @@ class BEA_CSF_Server_Admin {
 	 * @author Amaury Balmer
 	 */
 	public static function network_admin_menu() {
-		add_submenu_page( 'settings.php', __('Content Sync', BEA_CSF_LOCALE), __('Content Sync', BEA_CSF_LOCALE), 'manage_options', self::admin_slug, array( __CLASS__, 'page_manage' ) );
+		add_menu_page( __('Content Sync', BEA_CSF_LOCALE), __('Content Sync', BEA_CSF_LOCALE), 'manage_options', self::admin_slug . '-edit', '', BEA_CSF_URL . '/ressources/images/arrow-continue.png' );
+		add_submenu_page( self::admin_slug . '-edit', __('Edit', BEA_CSF_LOCALE), __('Edit', BEA_CSF_LOCALE), 'manage_options', self::admin_slug . '-edit', array( __CLASS__, 'render_page_edit' ) );
+		add_submenu_page( self::admin_slug . '-edit', __('Add', BEA_CSF_LOCALE), __('Add', BEA_CSF_LOCALE), 'manage_options', self::admin_slug.'-add', array( __CLASS__, 'render_page_add' ) );
 	}
 
 	/**
@@ -46,7 +58,7 @@ class BEA_CSF_Server_Admin {
 	 * @return void
 	 * @author Amaury Balmer
 	 */
-	public static function page_manage() {
+	public static function render_page_edit() {
 		global $wpdb;
 		
 		// Get current options
@@ -56,13 +68,26 @@ class BEA_CSF_Server_Admin {
 		$current_sum = self::get_local_sum();
 		
 		// Get blogs
-		$blogs = $wpdb->get_results( $wpdb->prepare("SELECT blog_id, domain, path FROM $wpdb->blogs WHERE site_id = %d AND public = '1' AND archived = '0' AND mature = '0' AND spam = '0' AND deleted = '0' ORDER BY blog_id ASC", $wpdb->siteid), ARRAY_A );
-
+		$blogs = self::get_blogs($wpdb->siteid);
+		
 		// Display message
 		settings_errors(BEA_CSF_LOCALE);
 		
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-page-settings.php' );
+		
+		return true;
+	}
+	
+	/**
+	 * Display options on admin
+	 *
+	 * @return void
+	 * @author Amaury Balmer
+	 */
+	public static function render_page_add() {
+		// Include template
+		include( BEA_CSF_DIR . 'views/admin/server-page-add.php' );
 		
 		return true;
 	}
@@ -280,5 +305,15 @@ class BEA_CSF_Server_Admin {
 		
 		echo json_encode( $output );
 		exit;
+	}
+	
+	public static function get_blogs( $site_id = 0 ) {
+		global $wpdb;
+		
+		if ( $site_id == 0 ) {
+			$site_id = $wpdb->siteid;
+		}
+		
+		return $wpdb->get_results( $wpdb->prepare("SELECT blog_id, domain, path FROM $wpdb->blogs WHERE site_id = %d AND public = '1' AND archived = '0' AND mature = '0' AND spam = '0' AND deleted = '0' ORDER BY blog_id ASC", $site_id), ARRAY_A );
 	}
 }

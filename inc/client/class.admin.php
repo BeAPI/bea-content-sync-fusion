@@ -25,13 +25,26 @@ class BEA_CSF_Client_Admin {
 		add_filter( 'tag_row_actions', array( __CLASS__, 'tag_row_actions' ), 10, 2 );
 	}
 	
+	/**
+	 * Register JS and CSS for client part
+	 * 
+	 * @param string $hook_suffix
+	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
 		if ( isset( $hook_suffix ) && ($hook_suffix == 'edit.php' || $hook_suffix == 'edit-tags.php' ) ) {
-			wp_enqueue_script( 'bea-csc-admin-client', BEA_CSF_URL . '/ressources/js/bea-csc-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
-			wp_enqueue_style( 'bea-csc-admin', BEA_CSF_URL . '/ressources/css/bea-css-admin.css', array( ), BEA_CSF_VERSION, 'all' );
+			wp_enqueue_script( 'bea-csc-admin-client', BEA_CSF_URL . 'ressources/js/bea-csc-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
+			wp_enqueue_style( 'bea-csc-admin', BEA_CSF_URL . 'ressources/css/bea-css-admin.css', array( ), BEA_CSF_VERSION, 'all' );
 		}
 	}
-
+	
+	/**
+	 * Add locked class on contents list
+	 * 
+	 * @param array $classes
+	 * @param string $class
+	 * @param integer $post_ID
+	 * @return array
+	 */
 	public static function post_class( $classes, $class, $post_ID ) {
 		$master_id = get_post_meta( $post_ID, 'master_id', true );
 		if ( $master_id != false && (int)$master_id > 0 ) {
@@ -42,13 +55,19 @@ class BEA_CSF_Client_Admin {
 	}
 
 	/**
-	 * Die if user try to edit content with master ID !
+	 * Check _POST data for post or term edition
 	 */
 	public static function admin_init( ) {
 		self::check_post_edition();
 		self::check_term_edition();
 	}
 	
+	/**
+	 * Block request for post edition
+	 * 
+	 * @global string $pagenow
+	 * @return boolean
+	 */
 	public static function check_post_edition() {
 		global $pagenow;
 
@@ -79,6 +98,13 @@ class BEA_CSF_Client_Admin {
 		return true;
 	}
 	
+	/**
+	 * Remove some actions on tag list
+	 * 
+	 * @param array $actions
+	 * @param object $term
+	 * @return array
+	 */
 	public static function tag_row_actions( $actions, $term ) {
 		$master_id = get_term_taxonomy_meta( (int) $term->term_taxonomy_id, 'master_id', true );
 		if ( $master_id != false && (int)$master_id > 0 ) {
@@ -89,6 +115,12 @@ class BEA_CSF_Client_Admin {
 		return $actions;
 	}
 	
+	/**
+	 * Block request for term edition
+	 * 
+	 * @global string $pagenow
+	 * @return boolean
+	 */
 	public static function check_term_edition() {
 		global $pagenow;
 

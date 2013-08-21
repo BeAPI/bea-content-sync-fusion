@@ -37,6 +37,7 @@ if ( is_admin() ) {
 	require( BEA_CSF_DIR . 'inc/server/class.admin.metabox.php' );
 	
 	require( BEA_CSF_DIR . 'inc/client/class.admin.php' );
+	require( BEA_CSF_DIR . 'inc/client/class.admin.notifications.php' );
 }
 
 add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );
@@ -55,5 +56,6 @@ function init_bea_content_sync_fusion() {
 		new BEA_CSF_Server_Admin_Metabox();
 		
 		new BEA_CSF_Client_Admin();
+		new BEA_CSF_Client_Admin_Notifications();
 	}
 }

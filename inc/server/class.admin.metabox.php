@@ -18,7 +18,7 @@ class BEA_CSF_Server_Admin_Metabox {
 		
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
-		if ( !isset($_POST[BEA_CSF_OPTION.'-nonce']) || !wp_verify_nonce( $_POST[BEA_CSF_OPTION.'-nonce'], plugin_basename( __FILE__ ) ) ) {
+		if ( !isset($_POST[BEA_CSF_OPTION.'-nonce-auto']) || !wp_verify_nonce( $_POST[BEA_CSF_OPTION.'-nonce-auto'], plugin_basename( __FILE__ ) ) ) {
 			return false;
 		}
 		
@@ -49,7 +49,8 @@ class BEA_CSF_Server_Admin_Metabox {
 	public static function add_meta_boxes( $post_type, $post ) {
 		// Add metabox in admin if redirect exist
 		foreach ( BEA_CSF_Server_Client::get_post_types() as $post_type ) {
-			add_meta_box( BEA_CSF_OPTION.'metabox', __( 'Synchronization', BEA_CSF_LOCALE), array( __CLASS__, 'metabox_content' ), $post_type, 'side', 'low' );
+			add_meta_box( BEA_CSF_OPTION.'metabox-auto', __( 'Synchronization (auto)', BEA_CSF_LOCALE), array( __CLASS__, 'metabox_content_auto' ), $post_type, 'side', 'low' );
+			add_meta_box( BEA_CSF_OPTION.'metabox-manual', __( 'Synchronization (manual)', BEA_CSF_LOCALE), array( __CLASS__, 'metabox_content_manual' ), $post_type, 'side', 'low' );
 		}
 
 		return true;
@@ -61,16 +62,34 @@ class BEA_CSF_Server_Admin_Metabox {
 	 * @return void
 	 * @author Amaury Balmer, Alexandre Sadowski
 	 */
-	public static function metabox_content( $post ) {
+	public static function metabox_content_auto( $post ) {
 		// Use nonce for verification
-		wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION.'-nonce' );
+		wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION.'-nonce-auto' );
 		
+		// Get values for current post
 		$previous_value = (int) get_post_meta( $post->ID, 'exclude_from_sync', true );
 		
-		// Checkbox
-		echo '<input type="checkbox" id="exclude_from_sync" name="exclude_from_sync" value="1" '.checked($previous_value, 1, false).' />';
-		echo '<label for="exclude_from_sync"> ';
-			_e( "Exclude this content from synchronization", BEA_CSF_LOCALE );
-		echo '</label>';
+		// Include template
+		include( BEA_CSF_DIR . 'views/admin/server-metabox-auto.php' );
+	}
+	
+	/**
+	 * Form for custom sync, choose recipients !
+	 *
+	 * @return void
+	 * @author Amaury Balmer, Alexandre Sadowski
+	 */
+	public static function metabox_content_manual( $post ) {
+		// Use nonce for verification
+		wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION.'-nonce-manual' );
+		
+		// Get blogs, TODO get only available receivers
+		$blogs = BEA_CSF_Server_Admin::get_blogs();
+		
+		// Get current receivers
+		$post_receivers = array(); // TODO
+		
+		// Include template
+		include( BEA_CSF_DIR . 'views/admin/server-metabox-manual.php' );
 	}
 }

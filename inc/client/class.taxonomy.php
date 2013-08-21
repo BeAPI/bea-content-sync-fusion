@@ -88,6 +88,9 @@ class BEA_CSF_Client_Taxonomy {
 
 	/**
 	 * Delete a term, take the master id, try to find the new ID and delete local term
+	 * 
+	 * @param array $datas
+	 * @return \WP_Error|boolean
 	 */
 	public static function remove_term( $datas = false ) {
 		// Test datas validity

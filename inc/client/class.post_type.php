@@ -35,7 +35,7 @@ class BEA_CSF_Client_PostType {
 			return new WP_Error('post_insertion', 'Error during the post insertion ' . $new_post_id->get_error_message() );
 		}
 		
-		// Remove old thimb
+		// Remove old thumb
 		delete_post_meta( $new_post_id, '_thumbnail_id' );
 		
 		// Save old ID
@@ -139,6 +139,9 @@ class BEA_CSF_Client_PostType {
 	
 	/**
 	 * Delete a post, take the master id, try to find the new ID and delete local post
+	 * 
+	 * @param integer $master_id
+	 * @return \WP_Error|boolean
 	 */
 	public static function remove_post( $master_id = 0 ) {
 		// Test datas validity

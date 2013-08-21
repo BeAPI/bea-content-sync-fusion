@@ -16,7 +16,7 @@ class BEA_CSF_Server_PostType {
 		
 		// Get current options
 		$current_options = (array) get_site_option( BEA_CSF_OPTION );
-		if ( $wpdb->blogid != $current_options['master'] ) {
+		if ( !isset($current_options['master']) || $wpdb->blogid != $current_options['master'] ) {
 			return false;
 		}
 		

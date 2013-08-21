@@ -1,8 +1,7 @@
 <div class="wrap">
-	<?php screen_icon(); ?>
+	<?php screen_icon('options-general'); ?>
 	<h2><?php _e("Content Sync: Settings", BEA_CSF_LOCALE); ?></h2>
-
-	<p></p>
+	
 	<div id="col-container">
 		<form action="" method="post">
 			<table class="widefat tag fixed" cellspacing="0">
