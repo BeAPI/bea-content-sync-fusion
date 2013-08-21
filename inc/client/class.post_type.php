@@ -1,15 +1,6 @@
 <?php
 class BEA_CSF_Client_PostType {
 	/**
-	 * Constructor
-	 *
-	 * @return void
-	 * @author Amaury Balmer
-	 */
-	public function __construct() {
-	}
-	
-	/**
 	 * Add post on DB
 	 */
 	public static function new_post( $datas ) {

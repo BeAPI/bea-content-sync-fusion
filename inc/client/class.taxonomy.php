@@ -1,15 +1,6 @@
 <?php
 class BEA_CSF_Client_Taxonomy {
 	/**
-	 * Constructor
-	 *
-	 * @return void
-	 * @author Amaury Balmer
-	 */
-	public function __construct() {
-	}
-	
-	/**
 	 * Add term on DB
 	 */
 	public static function new_term( $datas = false ) {

@@ -1,15 +1,6 @@
 <?php
 class BEA_CSF_Client_Attachment {
 	/**
-	 * Constructor
-	 *
-	 * @return void
-	 * @author Amaury Balmer
-	 */
-	public function __construct() {
-	}
-	
-	/**
 	 * Delete a attachment, take the master ID and try to find the new ID for delete it !
 	 */
 	public static function remove_attachement( $master_id = 0 ) {

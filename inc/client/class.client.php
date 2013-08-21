@@ -1,15 +1,6 @@
 <?php
 class BEA_CSF_Client_Base {
 	/**
-	 * Constructor
-	 *
-	 * @return void
-	 * @author Amaury Balmer
-	 */
-	public function __construct() {
-	}
-
-	/**
 	 * Integrity method return a MD5 based on terms name, post title
 	 */
 	public static function integrity() {

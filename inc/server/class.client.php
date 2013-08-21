@@ -1,15 +1,6 @@
 <?php
 class BEA_CSF_Server_Client {
 	/**
-	 * Constructor
-	 *
-	 * @return void
-	 * @author Amaury Balmer
-	 */
-	public function __construct() {
-	}
-	
-	/**
 	 * Post types to synchronized! 
 	 */
 	public static function get_post_types() {

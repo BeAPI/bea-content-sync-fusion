@@ -45,7 +45,6 @@ function init_bea_content_sync_fusion() {
 	load_plugin_textdomain( BEA_CSF_LOCALE, false, basename(BEA_CSF_DIR) . '/languages');
 	
 	// Client
-	new BEA_CSF_Server_Client();
 	new BEA_CSF_Server_Attachment();
 	new BEA_CSF_Server_PostType();
 	new BEA_CSF_Server_Taxonomy();
