@@ -1,5 +1,5 @@
 <?php
-class BEA_CSF_Client_Admin_Notifications {
+class BEA_CSF_Admin_Notifications {
 
 	/**
 	 * Constructor
@@ -23,11 +23,11 @@ class BEA_CSF_Client_Admin_Notifications {
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
 		if ( isset( $hook_suffix ) && $hook_suffix == 'settings_page_bea-csfc-notifications' ) {
-			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL.'ressources/js/lou-multi-select/js/jquery.multi-select.js', array('jquery'), '0.9.8', true );
-			wp_enqueue_script( 'bea-csc-admin-notifications', BEA_CSF_URL.'ressources/js/bea-csc-admin-notifications.js', array( 'lou-multi-select' ), BEA_CSF_VERSION, true );
-			wp_localize_script('bea-csc-admin-notifications', 'beaCscAdminAdd', array('selectableHeader' => __('Selectable users', BEA_CSF_LOCALE), 'selectionHeader' => __('Selection users', BEA_CSF_LOCALE)) );
-			wp_enqueue_style( 'lou-multi-select', BEA_CSF_URL.'ressources/js/lou-multi-select/css/multi-select.css', array(), '0.9.8', 'screen' );
-			wp_enqueue_style( 'bea-css-admin-notifications', BEA_CSF_URL.'ressources/css/bea-csc-admin-notifications.css', array(), BEA_CSF_VERSION );
+			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL.'assets/js/lou-multi-select/js/jquery.multi-select.js', array('jquery'), '0.9.8', true );
+			wp_enqueue_script( 'bea-csf-admin-notifications', BEA_CSF_URL.'assets/js/bea-csf-admin-notifications.js', array( 'lou-multi-select' ), BEA_CSF_VERSION, true );
+			wp_localize_script('bea-csf-admin-notifications', 'beaCsfAdminNotifications', array('selectableHeader' => __('Selectable users', BEA_CSF_LOCALE), 'selectionHeader' => __('Selection users', BEA_CSF_LOCALE)) );
+			wp_enqueue_style( 'lou-multi-select', BEA_CSF_URL.'assets/js/lou-multi-select/css/multi-select.css', array(), '0.9.8', 'screen' );
+			wp_enqueue_style( 'bea-csf-admin-notifications', BEA_CSF_URL.'assets/css/bea-csf-admin-notifications.css', array(), BEA_CSF_VERSION );
 		}
 	}
 

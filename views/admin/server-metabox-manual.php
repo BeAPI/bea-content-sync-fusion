@@ -8,7 +8,7 @@
 			<li>
 				<label class="selectit">
 					<input type="checkbox" name="receivers[]" value="<?php echo $blog['blog_id']; ?>" <?php checked(in_array($blog['blog_id'], $post_receivers), true); ?> />&nbsp;
-					<?php esc_html_e($blog['domain'].$blog['path']); ?>
+					<?php esc_html_e($blog['blogname']); ?>
 				</label>
 			</li>
 		<?php endforeach; ?>

@@ -1,15 +1,21 @@
 <?php
 /*
-Plugin Name: BEA - Content Synchronisation - Fusion
-Plugin URI: http://www.beapi.fr
-Description: Manage content synchronisation across a WordPress multisite
-Version: 1.1
-Author: BeAPI
-Author URI: http://www.beapi.fr
-Depends: meta-for-taxonomies
+  Plugin Name: BEA - Content Synchronization - Fusion
+  Plugin URI: http://www.beapi.fr
+  Description: Manage content synchronization across a WordPress multisite
+  Version: 1.1
+  Author: BeAPI
+  Author URI: http://www.beapi.fr
+  Depends: meta-for-taxonomies
+  Network: true
 
-Copyright 2013 - BeAPI Team (technique@beapi.fr)
-*/
+  Copyright 2013 - BeAPI Team (technique@beapi.fr)
+ */
+
+// Plugin table, use wide table for network
+global $wpdb;
+$wpdb->beac_synchronizations = $wpdb->base_prefix . 'bea_csf_synchronizations';
+$wpdb->bea_csf_synchronizations_blogs = $wpdb->base_prefix . 'bea_csf_synchronizations_blogs';
 
 // Plugin constants
 define( 'BEA_CSF_VERSION', '1.1' );
@@ -17,45 +23,61 @@ define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_LOCALE', 'bea-content-sync-fusion' );
 
 // Plugin URL and PATH
-define('BEA_CSF_URL', plugin_dir_url ( __FILE__ ));
-define('BEA_CSF_DIR', plugin_dir_path( __FILE__ ));
+define( 'BEA_CSF_URL', plugin_dir_url( __FILE__ ) );
+define( 'BEA_CSF_DIR', plugin_dir_path( __FILE__ ) );
 
-// Library
-require (BEA_CSF_DIR . 'inc/server/class.client.php');
-require (BEA_CSF_DIR . 'inc/server/class.attachment.php');
-require (BEA_CSF_DIR . 'inc/server/class.post_type.php');
-require (BEA_CSF_DIR . 'inc/server/class.taxonomy.php');
+// Plugin various
+require (BEA_CSF_DIR . 'classes/plugin.php');
 
-require (BEA_CSF_DIR . 'inc/client/class.client.php');
-require (BEA_CSF_DIR . 'inc/client/class.attachment.php');
-require (BEA_CSF_DIR . 'inc/client/class.post_type.php');
-require (BEA_CSF_DIR . 'inc/client/class.taxonomy.php');
+// Models
+require (BEA_CSF_DIR . 'classes/models/synchronization.php');
+require (BEA_CSF_DIR . 'classes/models/synchronizations.php');
+
+// Library server
+require (BEA_CSF_DIR . 'classes/server/client.php');
+require (BEA_CSF_DIR . 'classes/server/attachment.php');
+require (BEA_CSF_DIR . 'classes/server/post_type.php');
+require (BEA_CSF_DIR . 'classes/server/taxonomy.php');
+
+// Library client
+require (BEA_CSF_DIR . 'classes/client/client.php');
+require (BEA_CSF_DIR . 'classes/client/attachment.php');
+require (BEA_CSF_DIR . 'classes/client/post_type.php');
+require (BEA_CSF_DIR . 'classes/client/taxonomy.php');
 
 // Call admin classes
-if ( is_admin() ) { 
-	require( BEA_CSF_DIR . 'inc/server/class.admin.php' );
-	require( BEA_CSF_DIR . 'inc/server/class.admin.metabox.php' );
-	
-	require( BEA_CSF_DIR . 'inc/client/class.admin.php' );
-	require( BEA_CSF_DIR . 'inc/client/class.admin.notifications.php' );
+if ( is_admin() ) {
+	require( BEA_CSF_DIR . 'classes/admin/admin-synchronizations-network.php' );
+	require( BEA_CSF_DIR . 'classes/admin/admin-metaboxes.php' );
+	require( BEA_CSF_DIR . 'classes/admin/admin-restrictions.php' );
+	require( BEA_CSF_DIR . 'classes/admin/admin-notifications.php' );
 }
 
+// Plugin activate/desactive hooks
+register_activation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'activate' ) );
+register_deactivation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'deactivate' ) );
+
 add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );
+
 function init_bea_content_sync_fusion() {
 	// Load translations
-	load_plugin_textdomain( BEA_CSF_LOCALE, false, basename(BEA_CSF_DIR) . '/languages');
+	load_plugin_textdomain( BEA_CSF_LOCALE, false, basename( BEA_CSF_DIR ) . '/languages' );
 	
-	// Client
+	// Load builtin plugin "meta for taxo", if not already installed and actived
+	if ( !function_exists('get_term_taxonomy_meta') ) {
+		require_once(BEA_CSF_DIR.'libraries/meta-for-taxonomies/meta-for-taxonomies.php');
+	}
+	
+	// Server
 	new BEA_CSF_Server_Attachment();
 	new BEA_CSF_Server_PostType();
 	new BEA_CSF_Server_Taxonomy();
-	
+
 	// Admin
 	if ( is_admin() ) {
-		new BEA_CSF_Server_Admin();
-		new BEA_CSF_Server_Admin_Metabox();
-		
-		new BEA_CSF_Client_Admin();
-		new BEA_CSF_Client_Admin_Notifications();
+		new BEA_CSF_Admin_Synchronizations_Network();
+		new BEA_CSF_Admin_Metaboxes();
+		new BEA_CSF_Admin_Restrictions();
+		new BEA_CSF_Admin_Notifications();
 	}
 }

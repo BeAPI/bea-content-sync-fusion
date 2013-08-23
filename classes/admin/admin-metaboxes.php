@@ -1,5 +1,5 @@
 <?php
-class BEA_CSF_Server_Admin_Metabox {
+class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Constructor
 	 *

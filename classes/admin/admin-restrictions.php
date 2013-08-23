@@ -1,5 +1,5 @@
 <?php
-class BEA_CSF_Client_Admin {
+class BEA_CSF_Admin_Restrictions {
 	/**
 	 * Constructor
 	 *
@@ -32,8 +32,8 @@ class BEA_CSF_Client_Admin {
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
 		if ( isset( $hook_suffix ) && ($hook_suffix == 'edit.php' || $hook_suffix == 'edit-tags.php' ) ) {
-			wp_enqueue_script( 'bea-csc-admin-client', BEA_CSF_URL . 'ressources/js/bea-csc-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
-			wp_enqueue_style( 'bea-csc-admin', BEA_CSF_URL . 'ressources/css/bea-css-admin.css', array( ), BEA_CSF_VERSION, 'all' );
+			wp_enqueue_script( 'bea-csf-admin-client', BEA_CSF_URL . 'assets/js/bea-csf-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
+			wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array( ), BEA_CSF_VERSION, 'all' );
 		}
 	}
 	
