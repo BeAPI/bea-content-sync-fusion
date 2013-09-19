@@ -52,7 +52,7 @@
 		<p>
 			<label><?php _e('Enable notification settings on local admin ?', BEA_CSF_LOCALE); ?></label>
 			<select class="widefat" name="sync[notifications]">
-				<?php foreach( array('yes' => __('Yes', BEA_CSF_LOCALE), 'no' => __('No', BEA_CSF_LOCALE) ) as $value => $label ) : ?>
+				<?php foreach( array('1' => __('Yes', BEA_CSF_LOCALE), '0' => __('No', BEA_CSF_LOCALE) ) as $value => $label ) : ?>
 					<option value="<?php echo esc_attr($value); ?>" <?php selected($value, $current_sync['notifications']); ?>><?php echo esc_html($label); ?></option>
 				<?php endforeach; ?>
 			</select>
