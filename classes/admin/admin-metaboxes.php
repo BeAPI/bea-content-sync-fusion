@@ -84,7 +84,7 @@ class BEA_CSF_Admin_Metaboxes {
 		wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION.'-nonce-manual' );
 		
 		// Get blogs, TODO get only available receivers
-		$blogs = BEA_CSF_Server_Admin::get_blogs();
+		$blogs = BEA_CSF_Admin_Synchronizations_Network::get_blogs();
 		
 		// Get current receivers
 		$post_receivers = array(); // TODO
