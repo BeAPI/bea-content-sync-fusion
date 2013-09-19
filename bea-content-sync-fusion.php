@@ -12,11 +12,6 @@
   Copyright 2013 - BeAPI Team (technique@beapi.fr)
  */
 
-// Plugin table, use wide table for network
-global $wpdb;
-$wpdb->beac_synchronizations = $wpdb->base_prefix . 'bea_csf_synchronizations';
-$wpdb->bea_csf_synchronizations_blogs = $wpdb->base_prefix . 'bea_csf_synchronizations_blogs';
-
 // Plugin constants
 define( 'BEA_CSF_VERSION', '1.1' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
