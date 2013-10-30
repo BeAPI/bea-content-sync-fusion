@@ -1,7 +1,9 @@
 <?php
 class BEA_CSF_Synchronization {
 
-	private $_fields = array( 'active', 'label', 'post_type', 'mode', 'status', 'notifications', 'emitters', 'receivers' );
+	private $_fields = array( 'id', 'active', 'label', 'post_type', 'mode', 'status', 'notifications', 'emitters', 'receivers' );
+	private $_is_locked = true;
+	
 	// Public fields for this synchronization
 	public $id = 1;
 	public $active = 1;
@@ -12,7 +14,7 @@ class BEA_CSF_Synchronization {
 	public $notifications = 1;
 	public $emitters = array( );
 	public $receivers = array( );
-
+	
 	public function __construct( $fields = array( ) ) {
 		$this->set_fields( $fields );
 	}
@@ -40,6 +42,23 @@ class BEA_CSF_Synchronization {
 		} else {
 			return false;
 		}
+	}
+	
+	public function has_conflict() {
+		$result = array_intersect( (array) $this->emitters, (array) $this->receivers );
+		return !empty($result);
+	}
+	
+	public function lock() {
+		$this->_is_locked = true;
+	}
+	
+	public function unlock() {
+		$this->_is_locked = false;
+	}
+	
+	public function is_locked() {
+		return $this->_is_locked;
 	}
 
 }

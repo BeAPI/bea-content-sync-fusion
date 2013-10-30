@@ -1,10 +1,23 @@
 <?php
 class BEA_CSF_Synchronizations {
 
-	public static $bea_csf_synchronizations = array( );
+	private static $_bea_csf_synchronizations = array( );
 
-	public function __construct() {
+	public static function init_from_db() {
+		$current_options = get_site_option( BEA_CSF_OPTION );
+		if ( $current_options == false ) {
+			return false;
+		}
 		
+		foreach( $current_options as $key => $sync_obj ) {
+			$sync_obj->unlock();
+			$sync_obj->set_field( 'id', $key );
+			self::$_bea_csf_synchronizations[] = $sync_obj;
+		}
+	}
+	
+	public static function get_all() {
+		return self::$_bea_csf_synchronizations;
 	}
 
 	public static function register( $args ) {
@@ -31,7 +44,7 @@ class BEA_CSF_Synchronizations {
 		$new_obj->set_fields($args);
 		
 		// Append objet in register synchronizations
-		self::$bea_csf_synchronizations[] = $new_obj;
+		self::$_bea_csf_synchronizations[] = $new_obj;
 		
 		return true;
 	}
@@ -40,14 +53,16 @@ class BEA_CSF_Synchronizations {
 		$current_options = get_site_option( BEA_CSF_OPTION );
 		if ( $current_options == false ) {
 			$current_options = array( );
+			
+			$new_id = 1;
+		} else {
+			// Get current max 
+			$max = max( array_keys( $current_options ) );
+
+			// New key
+			$new_id = $max + 1;
 		}
-
-		// Get current max 
-		$max = max( array_keys( $current_options ) );
-
-		// New key
-		$new_id = $max + 1;
-
+		
 		// Add object into options array
 		$current_options[$new_id] = $sync_obj;
 
@@ -64,7 +79,7 @@ class BEA_CSF_Synchronizations {
 		}
 
 		// Get sync id
-		$current_sync_id = $sync_obj->get_id();
+		$current_sync_id = $sync_obj->get_field('id');
 
 		// Check if object exists
 		if ( !isset( $current_options[$current_sync_id] ) ) {
@@ -85,13 +100,10 @@ class BEA_CSF_Synchronizations {
 	}
 
 	public static function get( $sync_id ) {
-		$current_options = get_site_option( BEA_CSF_OPTION );
-		if ( $current_options == false ) {
-			$current_options = array( );
-		}
-
-		if ( isset( $current_options[$sync_id] ) ) {
-			return $current_options[$sync_id];
+		foreach( self::get_all() as $obj ) {
+			if ( $obj->get_field('id') == $sync_id ) {
+				return $obj;
+			}
 		}
 
 		return false;
@@ -104,7 +116,7 @@ class BEA_CSF_Synchronizations {
 		}
 
 		// Get sync id
-		$current_sync_id = $sync_obj->get_id();
+		$current_sync_id = $sync_obj->get_field('id');
 
 		// Check if object exists
 		if ( !isset( $current_options[$current_sync_id] ) ) {
