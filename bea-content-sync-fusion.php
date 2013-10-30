@@ -10,6 +10,8 @@
   Network: true
 
   Copyright 2013 - BeAPI Team (technique@beapi.fr)
+  
+  TODO : Mirror mode (deleting inclusion) | Unlink relation from receivers
  */
 
 // Plugin constants
