@@ -8,16 +8,47 @@ class BEA_CSF_Synchronizations {
 		if ( $current_options == false ) {
 			return false;
 		}
-		
-		foreach( $current_options as $key => $sync_obj ) {
+
+		foreach ( $current_options as $key => $sync_obj ) {
 			$sync_obj->unlock();
 			$sync_obj->set_field( 'id', $key );
 			self::$_bea_csf_synchronizations[] = $sync_obj;
 		}
 	}
-	
+
 	public static function get_all() {
 		return self::$_bea_csf_synchronizations;
+	}
+
+	public static function get( $args = array( ), $operator = 'AND' ) {
+		$list = self::get_all();
+		if ( empty( $list ) ) {
+			return array( );
+		}
+
+		if ( empty( $args ) ) {
+			return $list;
+		}
+
+		$operator = strtoupper( $operator );
+		$count = count( $args );
+
+		$filtered = array( );
+		foreach ( self::get_all() as $key => $obj ) {
+			$matched = 0;
+
+			foreach ( $args as $m_key => $m_value ) {
+				if ( $obj->get_field($m_key) == $m_value ) {
+					$matched++;
+				}
+			}
+
+			if ( ( 'AND' == $operator && $matched == $count ) || ( 'OR' == $operator && $matched > 0 ) || ( 'NOT' == $operator && 0 == $matched ) ) {
+				$filtered[$key] = $obj;
+			}
+		}
+		
+		return $filtered;
 	}
 
 	public static function register( $args ) {
@@ -38,14 +69,14 @@ class BEA_CSF_Synchronizations {
 		if ( empty( $args['label'] ) ) {
 			return false;
 		}
-		
+
 		// Instanciate object
 		$new_obj = new BEA_CSF_Synchronization();
-		$new_obj->set_fields($args);
-		
+		$new_obj->set_fields( $args );
+
 		// Append objet in register synchronizations
 		self::$_bea_csf_synchronizations[] = $new_obj;
-		
+
 		return true;
 	}
 
@@ -53,7 +84,7 @@ class BEA_CSF_Synchronizations {
 		$current_options = get_site_option( BEA_CSF_OPTION );
 		if ( $current_options == false ) {
 			$current_options = array( );
-			
+
 			$new_id = 1;
 		} else {
 			// Get current max 
@@ -62,7 +93,7 @@ class BEA_CSF_Synchronizations {
 			// New key
 			$new_id = $max + 1;
 		}
-		
+
 		// Add object into options array
 		$current_options[$new_id] = $sync_obj;
 
@@ -79,7 +110,7 @@ class BEA_CSF_Synchronizations {
 		}
 
 		// Get sync id
-		$current_sync_id = $sync_obj->get_field('id');
+		$current_sync_id = $sync_obj->get_field();
 
 		// Check if object exists
 		if ( !isset( $current_options[$current_sync_id] ) ) {
@@ -99,16 +130,6 @@ class BEA_CSF_Synchronizations {
 		return $current_sync_id;
 	}
 
-	public static function get( $sync_id ) {
-		foreach( self::get_all() as $obj ) {
-			if ( $obj->get_field('id') == $sync_id ) {
-				return $obj;
-			}
-		}
-
-		return false;
-	}
-
 	public static function delete( BEA_CSF_Synchronization $sync_obj ) {
 		$current_options = get_site_option( BEA_CSF_OPTION );
 		if ( $current_options == false ) {
@@ -116,7 +137,7 @@ class BEA_CSF_Synchronizations {
 		}
 
 		// Get sync id
-		$current_sync_id = $sync_obj->get_field('id');
+		$current_sync_id = $sync_obj->get_field( 'id' );
 
 		// Check if object exists
 		if ( !isset( $current_options[$current_sync_id] ) ) {

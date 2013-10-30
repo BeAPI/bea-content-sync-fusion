@@ -89,10 +89,12 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		// if edit, merge array
 		if ( $edit == true ) {
 
-			$current_sync = BEA_CSF_Synchronizations::get( $_GET['sync_id'] );
+			$current_sync = BEA_CSF_Synchronizations::get( array('id' => $_GET['sync_id']) );
 			if ( $current_sync == false ) {
 				wp_die( __( 'This synchronization ID not exists. Tcheater ?', BEA_CSF_LOCALE ) );
 			}
+			$current_sync = current($current_sync); // take first result
+			
 		} else {
 			$_POST['sync'] = (!isset( $_POST['sync'] ) ) ? array( ) : $_POST['sync'];
 
