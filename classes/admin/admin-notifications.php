@@ -45,6 +45,8 @@ class BEA_CSF_Admin_Notifications {
 	}
 
 	public static function render_page() {
+		global $wpdb;
+		
 		// Prepare users array
 		$users = array();
 		
@@ -58,7 +60,7 @@ class BEA_CSF_Admin_Notifications {
 		}
 		
 		// Get syncs with notifications enabled
-		$syncs = BEA_CSF_Synchronizations::get( array('notifications' => 1) );
+		$syncs = BEA_CSF_Synchronizations::get( array('notifications' => 1, 'receivers' => $wpdb->blogid), 'AND', false, true );
 		
 		// Get current values
 		$currents_values = get_option( BEA_CSF_OPTION . '-notifications' );

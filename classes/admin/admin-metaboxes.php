@@ -74,14 +74,16 @@ class BEA_CSF_Admin_Metaboxes {
 	 * @author Amaury Balmer
 	 */
 	public static function add_meta_boxes( $post_type, $post ) {
+		global $wpdb;
+		
 		// Get syncs for current post_type and mode set to "auto"
-		$syncs_with_auto_state = BEA_CSF_Synchronizations::get( array( 'post_type' => $post_type, 'mode' => 'auto' ) );
+		$syncs_with_auto_state = BEA_CSF_Synchronizations::get( array( 'post_type' => $post_type, 'mode' => 'auto', 'emitters' => $wpdb->blogid ), 'AND', false, true  );
 		if ( !empty( $syncs_with_auto_state ) ) {
 			add_meta_box( BEA_CSF_OPTION . 'metabox-auto', __( 'Synchronization (auto)', BEA_CSF_LOCALE ), array( __CLASS__, 'metabox_content_auto' ), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_auto_state ) );
 		}
 
 		// Get syncs for current post_type and mode set to "manual"
-		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array( 'post_type' => $post_type, 'mode' => 'manual' ) );
+		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array( 'post_type' => $post_type, 'mode' => 'manual', 'emitters' => $wpdb->blogid ), 'AND', false, true  );
 		if ( !empty( $syncs_with_manual_state ) ) {
 			add_meta_box( BEA_CSF_OPTION . 'metabox-manual', __( 'Synchronization (manual)', BEA_CSF_LOCALE ), array( __CLASS__, 'metabox_content_manual' ), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_manual_state ) );
 		}
