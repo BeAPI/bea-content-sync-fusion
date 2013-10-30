@@ -155,27 +155,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 		return true;
 	}
-
-	public static function get_sites_names( $blogs_id = array( ) ) {
-		if ( empty( $blogs_id ) ) {
-			return '';
-		}
-
-		// Get all blogs
-		$blogs = BEA_CSF_Admin_Synchronizations_Network::get_blogs();
-
-		$output = array( );
-		foreach ( $blogs_id as $blog_id ) {
-			if ( !isset( $blogs[$blog_id] ) ) {
-				continue;
-			}
-
-			$output[] = $blogs[$blog_id]['blogname'];
-		}
-
-		return implode( ', ', $output );
-	}
-
+	
 	/**
 	 * Calcul SUM MD5 for all content to sync, use IDs and hash !
 	 */
@@ -345,25 +325,52 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	  }
 	 */
 
-	public static function get_blogs( $site_id = 0 ) {
+	public static function get_sites_from_network( $network_id = 0 ) {
 		global $wpdb;
 
-		if ( $site_id == 0 ) {
-			$site_id = $wpdb->siteid;
+		if ( $network_id == 0 ) {
+			$network_id = $wpdb->siteid;
 		}
 
-		$results = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, domain, path FROM $wpdb->blogs WHERE site_id = %d AND public = '1' AND archived = '0' AND mature = '0' AND spam = '0' AND deleted = '0' ORDER BY blog_id ASC", $site_id ), ARRAY_A );
+		$results = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, domain, path FROM $wpdb->blogs WHERE site_id = %d AND public = '1' AND archived = '0' AND mature = '0' AND spam = '0' AND deleted = '0' ORDER BY blog_id ASC", $network_id ), ARRAY_A );
 		if ( empty( $results ) ) {
 			return false;
 		}
 
-		$blogs = array( );
+		$sites = array( );
 		foreach ( $results as $result ) {
-			$blogs[$result['blog_id']] = $result;
-			$blogs[$result['blog_id']]['blogname'] = get_blog_option( $result['blog_id'], 'blogname' );
+			$sites[$result['blog_id']] = $result;
+			$sites[$result['blog_id']]['blogname'] = get_blog_option( $result['blog_id'], 'blogname' );
 		}
 
-		return $blogs;
+		return $sites;
+	}
+
+	
+	public static function get_sites( $blogs_id = array( ), $field = false ) {
+		if ( empty( $blogs_id ) ) {
+			return '';
+		}
+
+		// Get all sites
+		$blogs = BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network();
+
+		$filtered = array( );
+		foreach ( $blogs_id as $blog_id ) {
+			if ( !isset( $blogs[$blog_id] ) ) {
+				continue;
+			}
+			
+			if ( $field == false ) {
+				$filtered[] = $blogs[$blog_id];
+			} elseif( isset($blogs[$blog_id][$field]) ) {
+				$filtered[] = $blogs[$blog_id][$field];
+			} else {
+				continue;
+			}
+		}
+
+		return $filtered;
 	}
 
 }

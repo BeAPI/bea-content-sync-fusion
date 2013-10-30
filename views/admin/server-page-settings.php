@@ -52,8 +52,8 @@
 							<td class="name column-name"><?php echo esc_html( $sync->get_field('mode') ); ?></td>
 							<td class="name column-name"><?php echo esc_html( $sync->get_field('status') ); ?></td>
 							<td class="name column-name"><?php echo esc_html( $i18n_true_false[$sync->get_field('notifications')] ); ?></td>
-							<td class="name column-name"><?php echo esc_html( self::get_sites_names($sync->get_field('emitters')) ); ?></td>
-							<td class="name column-name"><?php echo esc_html( self::get_sites_names($sync->get_field('receivers')) ); ?></td>
+							<td class="name column-name"><?php echo esc_html( implode( ', ', self::get_sites($sync->get_field('emitters'), 'blogname') ) ); ?></td>
+							<td class="name column-name"><?php echo esc_html( implode( ', ', self::get_sites($sync->get_field('receivers'), 'blogname') ) ); ?></td>
 							<td>
 								<?php if ( !$sync->is_locked() ) : ?>
 								<a class="button" href="<?php echo wp_nonce_url( add_query_arg( array('action' => 'edit', 'sync_id' => $sync->get_field('id') ), network_admin_url( 'admin.php?page=' . self::admin_slug.'-add' ) ), '' ); ?>"><?php _e( 'Edit', BEA_CSF_LOCALE ); ?></a>

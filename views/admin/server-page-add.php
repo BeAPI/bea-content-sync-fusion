@@ -67,8 +67,8 @@
 		<p>
 			<label><?php _e('Emitters', BEA_CSF_LOCALE); ?></label>
 			<select class="widefat multiple-helper" name="sync[emitters][]" multiple="true">
-				<?php foreach( self::get_blogs() as $blog ) : ?>
-					<option value="<?php echo esc_attr($blog['blog_id']); ?>" <?php selected(in_array($blog['blog_id'], $current_sync->get_field('emitters')), true); ?>><?php echo esc_html($blog['blogname'] . ' ('.$blog['domain'].$blog['path'].')'); ?></option>
+				<?php foreach( self::get_sites_from_network() as $site ) : ?>
+					<option value="<?php echo esc_attr($site['blog_id']); ?>" <?php selected(in_array($site['blog_id'], $current_sync->get_field('emitters')), true); ?>><?php echo esc_html($site['blogname'] . ' ('.$site['domain'].$site['path'].')'); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span class="description"><?php _e('Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', BEA_CSF_LOCALE); ?></span>
@@ -77,8 +77,8 @@
 		<p>
 			<label><?php _e('Receivers', BEA_CSF_LOCALE); ?></label>
 			<select class="widefat multiple-helper" name="sync[receivers][]" multiple="true">
-				<?php foreach( self::get_blogs() as $blog ) : ?>
-					<option value="<?php echo esc_attr($blog['blog_id']); ?>" <?php selected(in_array($blog['blog_id'], $current_sync->get_field('receivers')), true); ?>><?php echo esc_html($blog['blogname'] . ' ('.$blog['domain'].$blog['path'].')'); ?></option>
+				<?php foreach( self::get_sites_from_network() as $site ) : ?>
+					<option value="<?php echo esc_attr($site['blog_id']); ?>" <?php selected(in_array($site['blog_id'], $current_sync->get_field('receivers')), true); ?>><?php echo esc_html($site['blogname'] . ' ('.$site['domain'].$site['path'].')'); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span class="description"><?php _e('Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', BEA_CSF_LOCALE); ?></span>
