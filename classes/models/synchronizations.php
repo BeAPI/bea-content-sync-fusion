@@ -20,7 +20,7 @@ class BEA_CSF_Synchronizations {
 		return self::$_bea_csf_synchronizations;
 	}
 
-	public static function get( $args = array( ), $operator = 'AND' ) {
+	public static function get( $args = array( ), $operator = 'AND', $in_array = false ) {
 		$list = self::get_all();
 		if ( empty( $list ) ) {
 			return array( );
@@ -38,7 +38,8 @@ class BEA_CSF_Synchronizations {
 			$matched = 0;
 
 			foreach ( $args as $m_key => $m_value ) {
-				if ( $obj->get_field($m_key) == $m_value ) {
+				$obj_value = $obj->get_field($m_key);
+				if ( $obj_value == $m_value || ($in_array == true && is_array($obj_value) && in_array($m_value, $obj_value)) ) {
 					$matched++;
 				}
 			}
