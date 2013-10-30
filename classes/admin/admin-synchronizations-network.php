@@ -169,7 +169,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	  FROM $wpdb->posts
 	  WHERE post_type IN ('" . implode( "', '", BEA_CSF_Server_Client::get_post_types() ) . "')
 	  AND post_status = 'publish'
-	  AND ID NOT IN ( SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'exclude_from_sync' AND meta_value = '1' )
+	  AND ID NOT IN ( SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_exclude_from_sync' AND meta_value = '1' )
 	  ORDER BY post_parent ASC
 	  " );
 
@@ -288,7 +288,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	  FROM $wpdb->posts
 	  WHERE post_type IN ('" . implode( "', '", BEA_CSF_Server_Client::get_post_types() ) . "')
 	  AND post_status = 'publish'
-	  AND ID NOT IN ( SELECT post_id FROM $wpdb->postmeta WHERE meta_key = 'exclude_from_sync' AND meta_value = '1' )
+	  AND ID NOT IN ( SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_exclude_from_sync' AND meta_value = '1' )
 	  ORDER BY post_parent ASC
 	  " ) );
 	  foreach ( $objects as $object_id ) {

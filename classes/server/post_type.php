@@ -86,7 +86,7 @@ class BEA_CSF_Server_PostType {
 		}
 		
 		// Exclude meta ?
-		$current_value = (int) get_post_meta( $post_ID, 'exclude_from_sync', true );
+		$current_value = (int) get_post_meta( $post_ID, '_exclude_from_sync', true );
 		if ( $current_value == 1 ) {
 			return false;
 		}
