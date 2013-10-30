@@ -5,12 +5,16 @@
 	<div id="col-container">
 		<p><?php _e("This page allows you to choose what user must be notified when adding new content with sync feature. If no user is selected, no notification will be sent.", BEA_CSF_LOCALE); ?></p>
 		<form action="" method="post">
-			<?php foreach( get_post_types(array('public' => true), 'objects') as $post_type ) : /* TODO use sync ! */ ?>
-			
-				<h3><?php echo $post_type->labels->name; ?></h3>
-				<select class="widefat multiple-helper" name="" multiple="true">
+			<?php foreach( $syncs as $sync_obj ) : 
+				if ( !isset($currents_values[$sync_obj->get_field('id')]) ) {
+					$currents_values[$sync_obj->get_field('id')] = array();
+				}
+				?>
+				
+				<h3><?php echo $sync_obj->get_field('label'); ?></h3>
+				<select class="widefat multiple-helper" name="sync_notifications[<?php echo $sync_obj->get_field('id'); ?>][]" multiple="true">
 					<?php foreach( $users as $user ) : ?>
-						<option value="<?php echo esc_attr($user->ID); ?>"><?php echo esc_html($user->user_login); ?></option>
+						<option value="<?php echo esc_attr($user->ID); ?>" <?php selected(true, in_array($user->ID, $currents_values[$sync_obj->get_field('id')])); ?>><?php echo esc_html($user->user_login); ?></option>
 					<?php endforeach; ?>
 				</select>
 			

@@ -8,10 +8,23 @@ class BEA_CSF_Admin_Notifications {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
+		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
+		
 		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
 		add_action( 'admin_enqueue_scripts', array(__CLASS__, 'admin_enqueue_scripts') );
 	}
 
+	public static function admin_init() {
+		if ( isset($_POST['sync_notifications']) && is_array($_POST['sync_notifications']) ) {
+			check_admin_referer('update-bea-csf-notifications');
+			
+			foreach( $_POST['sync_notifications'] as $sync_id => $users_id ) {
+				$_POST['sync_notifications'][$sync_id] = array_map( 'intval', $_POST['sync_notifications'][$sync_id] );
+			}
+			update_option( BEA_CSF_OPTION . '-notifications', $_POST['sync_notifications'] );
+		}
+	}
+	
 	public static function admin_menu() {
 		add_options_page( __('Content Sync Notifications', BEA_CSF_LOCALE), __('Sync Notification', BEA_CSF_LOCALE), 'manage_options', 'bea-csfc-notifications', array( __CLASS__, 'render_page' ) );
 	}
@@ -43,6 +56,12 @@ class BEA_CSF_Admin_Notifications {
 				$users = array_merge( $users_query->get_results(), $users );
 			}
 		}
+		
+		// Get syncs with notifications enabled
+		$syncs = BEA_CSF_Synchronizations::get( array('notifications' => 1) );
+		
+		// Get current values
+		$currents_values = get_option( BEA_CSF_OPTION . '-notifications' );
 		
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/client-page-settings-notification.php' );
