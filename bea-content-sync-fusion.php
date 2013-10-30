@@ -63,6 +63,9 @@ function init_bea_content_sync_fusion() {
 		require_once(BEA_CSF_DIR.'libraries/meta-for-taxonomies/meta-for-taxonomies.php');
 	}
 	
+	// Synchronizations
+	BEA_CSF_Synchronizations::init_from_db();
+	
 	// Server
 	new BEA_CSF_Server_Attachment();
 	new BEA_CSF_Server_PostType();
