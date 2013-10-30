@@ -111,7 +111,7 @@ class BEA_CSF_Synchronizations {
 		}
 
 		// Get sync id
-		$current_sync_id = $sync_obj->get_field();
+		$current_sync_id = $sync_obj->get_field( 'id' );
 
 		// Check if object exists
 		if ( !isset( $current_options[$current_sync_id] ) ) {
