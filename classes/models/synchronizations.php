@@ -20,7 +20,18 @@ class BEA_CSF_Synchronizations {
 		return self::$_bea_csf_synchronizations;
 	}
 
-	public static function get( $args = array( ), $operator = 'AND', $in_array = false ) {
+	/**
+	 * Get a list of all registered synchronizations
+	 * Inspiration : get_post_types() / wp_list_filter() / wp_filter_object_list()
+	 *
+	 * @param array $args An array of key => value arguments to match against each object
+	 * @param string $operator The logical operation to perform. 'or' means only one element
+	 *      from the array needs to match; 'and' means all elements must match. The default is 'and'.
+	 * @param bool|string $field A field from the object to place instead of the entire object
+	 * @param bool $in_array Allow usage of "in_array" function for array field object
+	 * @return array A list of objects or object fields
+	 */
+	public static function get( $args = array( ), $operator = 'AND', $field = false, $in_array = false ) {
 		$list = self::get_all();
 		if ( empty( $list ) ) {
 			return array( );
@@ -29,7 +40,7 @@ class BEA_CSF_Synchronizations {
 		if ( empty( $args ) ) {
 			return $list;
 		}
-
+		
 		$operator = strtoupper( $operator );
 		$count = count( $args );
 
@@ -38,17 +49,21 @@ class BEA_CSF_Synchronizations {
 			$matched = 0;
 
 			foreach ( $args as $m_key => $m_value ) {
-				$obj_value = $obj->get_field($m_key);
-				if ( $obj_value == $m_value || ($in_array == true && is_array($obj_value) && in_array($m_value, $obj_value)) ) {
+				$obj_value = $obj->get_field( $m_key );
+				if ( $obj_value == $m_value || ($in_array == true && is_array( $obj_value ) && in_array( $m_value, $obj_value )) ) {
 					$matched++;
 				}
 			}
 
 			if ( ( 'AND' == $operator && $matched == $count ) || ( 'OR' == $operator && $matched > 0 ) || ( 'NOT' == $operator && 0 == $matched ) ) {
-				$filtered[$key] = $obj;
+				if ( $field == false ) {
+					$filtered[$key] = $obj;
+				} else {
+					$filtered[$key] = $obj->get_field( $field );
+				}
 			}
 		}
-		
+
 		return $filtered;
 	}
 
