@@ -45,9 +45,9 @@ class BEA_CSF_Synchronization {
 		
 		$this->_register_hooks = array();
 		foreach ( $this->emitters as $emitter_blog_id ) {
-			// Attachmentss
-			$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $emitter_blog_id;
-			$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $emitter_blog_id;
+			// Attachments, consider this post type as classic content. Medias are only sync if linked to a content
+			// $this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $emitter_blog_id;
+			// $this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $emitter_blog_id;
 			
 			// Posts
 			$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $this->post_type . '/' . $emitter_blog_id;
