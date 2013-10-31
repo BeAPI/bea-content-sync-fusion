@@ -20,7 +20,6 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
 		if ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . self::admin_slug . '-edit' ) { // Edit page
-			
 		} elseif ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . self::admin_slug . '-add' ) {
 			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/js/jquery.multi-select.js', array( 'jquery' ), '0.9.8', true );
 			wp_enqueue_script( 'bea-csf-admin-add', BEA_CSF_URL . 'assets/js/bea-csf-admin-add.js', array( 'lou-multi-select' ), BEA_CSF_VERSION, true );
@@ -79,12 +78,11 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		// if edit, merge array
 		if ( $edit == true ) {
 
-			$current_sync = BEA_CSF_Synchronizations::get( array('id' => $_GET['sync_id']) );
+			$current_sync = BEA_CSF_Synchronizations::get( array( 'id' => $_GET['sync_id'] ) );
 			if ( $current_sync == false ) {
 				wp_die( __( 'This synchronization ID not exists. Tcheater ?', BEA_CSF_LOCALE ) );
 			}
-			$current_sync = current($current_sync); // take first result
-			
+			$current_sync = current( $current_sync ); // take first result
 		} else {
 			$_POST['sync'] = (!isset( $_POST['sync'] ) ) ? array( ) : $_POST['sync'];
 
@@ -111,8 +109,8 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	public static function admin_init() {
 		if ( isset( $_POST['update-bea-csf-settings'] ) && isset( $_POST['sync'] ) ) { // Save
 			check_admin_referer( 'update-bea-csf-settings' );
-			
-			$_POST['sync'] = stripslashes_deep($_POST['sync']);
+
+			$_POST['sync'] = stripslashes_deep( $_POST['sync'] );
 
 			if ( empty( $_POST['sync']['label'] ) ) {
 				add_settings_error( BEA_CSF_LOCALE, 'settings_updated', __( 'You must defined a label.', BEA_CSF_LOCALE ), 'error' );
@@ -139,7 +137,22 @@ class BEA_CSF_Admin_Synchronizations_Network {
 				add_settings_error( BEA_CSF_LOCALE, 'settings_updated', $result->get_error_message(), 'error' );
 			}
 
-			wp_redirect( network_admin_url( 'admin.php?page=' . self::admin_slug . '-edit' ) );
+			wp_redirect( network_admin_url( 'admin.php?page=' . self::admin_slug . '-edit&message=merged' ) );
+			exit();
+		}
+		
+		if ( isset( $_GET['page'] ) && $_GET['page'] == 'bea-csf-edit' && isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['sync_id'] ) ) { // Delete
+			check_admin_referer( 'delete-sync' );
+			
+			$current_sync = BEA_CSF_Synchronizations::get( array( 'id' => $_GET['sync_id'] ) );
+			if ( $current_sync == false ) {
+				wp_die( __( 'This synchronization ID not exists. Tcheater ?', BEA_CSF_LOCALE ) );
+			}
+			
+			$current_sync = current( $current_sync ); // take first result
+			BEA_CSF_Synchronizations::delete( $current_sync );
+			
+			wp_redirect( network_admin_url( 'admin.php?page=' . self::admin_slug . '-edit&message=deleted' ) );
 			exit();
 		}
 
@@ -167,7 +180,6 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		return $sites;
 	}
 
-	
 	public static function get_sites( $blogs_id = array( ), $field = false ) {
 		if ( empty( $blogs_id ) ) {
 			return '';
@@ -181,10 +193,10 @@ class BEA_CSF_Admin_Synchronizations_Network {
 			if ( !isset( $blogs[$blog_id] ) ) {
 				continue;
 			}
-			
+
 			if ( $field == false ) {
 				$filtered[] = $blogs[$blog_id];
-			} elseif( isset($blogs[$blog_id][$field]) ) {
+			} elseif ( isset( $blogs[$blog_id][$field] ) ) {
 				$filtered[] = $blogs[$blog_id][$field];
 			} else {
 				continue;
