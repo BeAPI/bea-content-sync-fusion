@@ -25,13 +25,23 @@
 		</p>
 		
 		<p>
-			<label><?php _e('Custom post type', BEA_CSF_LOCALE); ?></label>
+			<label><?php _e('Post type', BEA_CSF_LOCALE); ?></label>
 			<select class="widefat" name="sync[post_type]">
 				<?php foreach( get_post_types(array('public' => true), 'objects') as $post_type ) : ?>
 					<option value="<?php echo esc_attr($post_type->name); ?>" <?php selected($post_type->name, $current_sync->get_field('post_type')); ?>><?php echo esc_html($post_type->labels->name); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span class="description"><?php _e('You must select the type of content that you want to sync', BEA_CSF_LOCALE); ?></span>
+		</p>
+		
+		<p id="bea-csf-taxonomies-block">
+			<label><?php _e('Taxonomies', BEA_CSF_LOCALE); ?></label>
+			<select multiple="multiple" class="widefat multiple-helper" name="sync[taxonomies][]">
+				<?php foreach( get_taxonomies(array('public' => true), 'objects') as $taxonomy ) : ?>
+					<option value="<?php echo esc_attr($taxonomy->name); ?>" <?php selected(true, in_array($taxonomy->name, (array)$current_sync->get_field('taxonomies'))); ?>><?php echo esc_html($taxonomy->labels->name); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<span class="description"><?php _e('You must select taxonomies related to content that you want to sync', BEA_CSF_LOCALE); ?></span>
 		</p>
 		
 		<p>

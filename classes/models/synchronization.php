@@ -1,20 +1,21 @@
 <?php
 class BEA_CSF_Synchronization {
-	private $_fields = array( 'id', 'active', 'label', 'post_type', 'mode', 'status', 'notifications', 'emitters', 'receivers' );
+
+	private $_fields = array( 'id', 'active', 'label', 'post_type', 'taxonomies', 'mode', 'status', 'notifications', 'emitters', 'receivers' );
 	private $_is_locked = true;
 	private $_register_hooks = array( );
-	
 	// Public fields for this synchronization
 	public $id = 1;
 	public $active = 1;
 	public $label = '';
 	public $post_type = '';
+	public $taxonomies = array( );
 	public $mode = '';
 	public $status = '';
 	public $notifications = 1;
 	public $emitters = array( );
 	public $receivers = array( );
-	
+
 	/**
 	 * Construct, allow set fields, all register actions
 	 * 
@@ -24,7 +25,7 @@ class BEA_CSF_Synchronization {
 		$this->set_fields( $fields );
 		$this->register_actions();
 	}
-	
+
 	/**
 	 * Register hooks depending synchronization configuration
 	 * 
@@ -35,35 +36,44 @@ class BEA_CSF_Synchronization {
 		if ( $this->active == 0 || $this->has_conflict() ) {
 			return false;
 		}
-		
+
 		// Stars with the hooks deregister previously recorded especially in the case of a re-register!
-		if ( !empty($this->_register_hooks) ) {
-			foreach( $this->_register_hooks as $hook_name ) {
-				remove_action( $hook_name, array($this, 'send_to_receivers'), 10, 1 );
+		if ( !empty( $this->_register_hooks ) ) {
+			foreach ( $this->_register_hooks as $hook_name ) {
+				remove_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 1 );
 			}
 		}
-		
-		$this->_register_hooks = array();
+
+		// Flush registered hooks
+		$this->_register_hooks = array( );
+
+		// No emitters ? Go out !
+		if ( empty( $this->emitters ) ) {
+			return false;
+		}
+
 		foreach ( $this->emitters as $emitter_blog_id ) {
 			// Attachments, consider this post type as classic content. Medias are only sync if linked to a content
 			// $this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $emitter_blog_id;
 			// $this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $emitter_blog_id;
-			
 			// Posts
 			$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $this->post_type . '/' . $emitter_blog_id;
 			$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $this->post_type . '/' . $emitter_blog_id;
-			
+
 			// Terms
-			// TODO : Manage an array
-			$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . 'category' . '/' . $emitter_blog_id;
-			$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . 'category' . '/' . $emitter_blog_id;
+			if ( !empty( $this->taxonomies ) ) {
+				foreach ( $this->taxonomies as $taxonomy ) {
+					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $emitter_blog_id;
+				}
+			}
 		}
-		
+
 		// Call the unique action hook !
-		foreach( $this->_register_hooks as $hook_name ) {
-			add_action( $hook_name, array($this, 'send_to_receivers'), 10, 1 );
+		foreach ( $this->_register_hooks as $hook_name ) {
+			add_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 1 );
 		}
-		
+
 		return true;
 	}
 
@@ -74,16 +84,16 @@ class BEA_CSF_Synchronization {
 	 * @return boolean
 	 */
 	public function set_fields( $fields = array( ) ) {
-		if ( empty($fields) ) {
+		if ( empty( $fields ) ) {
 			return false;
 		}
-		
+
 		foreach ( $fields as $field_name => $field_value ) {
 			if ( in_array( $field_name, $this->_fields ) ) {
 				$this->{$field_name} = maybe_unserialize( $field_value );
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -116,7 +126,7 @@ class BEA_CSF_Synchronization {
 			return false;
 		}
 	}
-	
+
 	/**
 	 * If a synchronization possess blogs as both transmitters and receivers as when there is a conflict!
 	 * 
@@ -140,7 +150,7 @@ class BEA_CSF_Synchronization {
 	public function unlock() {
 		$this->_is_locked = false;
 	}
-	
+
 	/**
 	 * Test if synchronisation is allowed to edition on BO
 	 * @return type
@@ -158,25 +168,25 @@ class BEA_CSF_Synchronization {
 	public function send_to_receivers( $hook_data ) {
 		// Get current filter
 		$current_filter = current_filter();
-		
+
 		// Explode filter for get object and method
-		$current_filter_data = explode('/', $current_filter);
-		
+		$current_filter_data = explode( '/', $current_filter );
+
 		// Set data into variable for improve lisibility
 		$object = $current_filter_data[1];
 		$method = $current_filter_data[2];
-		
+
 		// Get data from SERVER class
-		$data_to_send = call_user_func( array( 'BEA_CSF_Server_'.$object, $method ), $hook_data );
+		$data_to_send = call_user_func( array( 'BEA_CSF_Server_' . $object, $method ), $hook_data );
 		if ( $data_to_send == false ) {
 			// TODO: Log
 			return false;
 		}
-		
+
 		// Send data for each receivers
 		foreach ( $this->receivers as $receiver_blog_id ) {
 			switch_to_blog( $receiver_blog_id );
-			$result = call_user_func( array( 'BEA_CSF_Client_'.$object, $method ), $data_to_send );
+			$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_send );
 			// var_dump($result);
 			restore_current_blog();
 		}

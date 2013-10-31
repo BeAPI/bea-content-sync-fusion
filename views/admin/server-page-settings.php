@@ -40,6 +40,16 @@
 						if ( $post_type_object != false ) {
 							$post_type_label = $post_type_object->labels->name;
 						}
+						
+						// Get taxonomies labels from taxo name
+						$taxonomies_label = array();
+						foreach( $sync->get_field('taxonomies') as $taxonomy_name ) {
+							$taxonomy_object = get_taxonomy( $taxonomy_name );
+							if ( $taxonomy_object != false ) {
+								$taxonomies_label[] = $taxonomy_object->labels->name;
+							}
+						}
+						$taxonomies_label = implode(', ', $taxonomies_label);
 
 						$i++;
 						$class = ( $class == 'alternate' ) ? '' : 'alternate';
@@ -63,7 +73,7 @@
 							<td><?php echo esc_html( $i18n_true_false[$sync->get_field('active')] ); ?></td>
 							<td><strong><?php echo esc_html( $i18n_true_false[$sync->has_conflict()] ); ?></strong></td>
 							<td><?php echo esc_html( $post_type_label ); ?></td>
-							<td><?php echo esc_html( 'tAXOS' ); ?></td>
+							<td><?php echo esc_html( $taxonomies_label ); ?></td>
 							<td><?php echo esc_html( $sync->get_field('mode') ); ?></td>
 							<td><?php echo esc_html( $sync->get_field('status') ); ?></td>
 							<td><?php echo esc_html( $i18n_true_false[$sync->get_field('notifications')] ); ?></td>
