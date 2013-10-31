@@ -3,7 +3,7 @@ class BEA_CSF_Client_Attachment {
 	/**
 	 * Delete a attachment, take the master ID and try to find the new ID for delete it !
 	 */
-	public static function remove_attachement( $master_id = 0 ) {
+	public static function delete( $master_id = 0 ) {
 		// Test datas validity
 		$master_id = (int) $master_id;
 		if ( $master_id == 0 ) {
@@ -11,7 +11,7 @@ class BEA_CSF_Client_Attachment {
 		}
 		
 		// Post exist
-		$local_id = BEA_CSF_Client_Base::get_post_id_from_meta( 'master_id', $master_id );
+		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $master_id );
 		if ( $local_id > 0 ) {
 			wp_delete_attachment( $local_id, true );
 		}
@@ -23,17 +23,17 @@ class BEA_CSF_Client_Attachment {
 	/**
 	 * Delete a attachment, take the master ID and try to find the new ID for delete it !
 	 */
-	public static function merge_attachment( $media = false ) {
+	public static function merge( $media = false ) {
 		// Clean values
 		if ( $media == false || !is_array($media) ) {
 			return new WP_Error('invalid_datas', 'Error - Datas is invalid.' );
 		}
 		
 		// Media exists ?
-		$current_media_id = BEA_CSF_Client_Base::get_post_id_from_meta( 'master_id', $media['ID'] );
+		$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $media['ID'] );
 		
 		// Parent media ?
-		$current_master_parent_id = (int) BEA_CSF_Client_Base::get_post_id_from_meta( 'master_id', $media['post_parent'] );
+		$current_master_parent_id = (int) BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $media['post_parent'] );
 		
 		// Merge or add ?
 		if ( $current_media_id > 0 ) { // Edit, update only main fields

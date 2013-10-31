@@ -2,19 +2,19 @@
 class BEA_CSF_Plugin {
 
 	public static function activate() {
-		global $wpdb;
-
-		if ( !empty( $wpdb->charset ) )
-			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-		if ( !empty( $wpdb->collate ) )
-			$charset_collate .= " COLLATE $wpdb->collate";
-
-		// Add one library admin function for next function
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		
 	}
 
 	public static function deactivate() {
 		
+	}
+
+	/**
+	 * Get post ID from post meta with meta_key and meta_value
+	 */
+	public static function get_post_id_from_meta( $key, $value ) {
+		global $wpdb;
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s", $key, $value ) );
 	}
 
 }

@@ -12,8 +12,11 @@ class BEA_CSF_Synchronizations {
 		foreach ( $current_options as $key => $sync_obj ) {
 			$sync_obj->unlock();
 			$sync_obj->set_field( 'id', $key );
+			$sync_obj->register_actions();
 			self::$_bea_csf_synchronizations[] = $sync_obj;
 		}
+		
+		return true;
 	}
 
 	public static function get_all() {

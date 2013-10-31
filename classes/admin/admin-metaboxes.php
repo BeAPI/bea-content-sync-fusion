@@ -24,6 +24,8 @@ class BEA_CSF_Admin_Metaboxes {
 	}
 
 	public static function check_changes_auto_metabox( $post ) {
+		global $wpdb;
+		
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
 		if ( !isset( $_POST[BEA_CSF_OPTION . '-nonce-auto'] ) || !wp_verify_nonce( $_POST[BEA_CSF_OPTION . '-nonce-auto'], plugin_basename( __FILE__ ) ) ) {
@@ -33,8 +35,9 @@ class BEA_CSF_Admin_Metaboxes {
 		$previous_value = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
 		if ( isset( $_POST['exclude_from_sync'] ) && (int) $_POST['exclude_from_sync'] == 1 ) {
 			update_post_meta( $post->ID, '_exclude_from_sync', 1 );
-			if ( $previous_value == 0 ) { // This value have just changed, delete content for clients !
-				// BEA_CSF_Server_PostType::delete_post( $post->ID );
+			if ( $previous_value == 0 ) {
+				// This value have just changed, delete content for clients !
+				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post );
 			}
 		} else {
 			delete_post_meta( $post->ID, '_exclude_from_sync' );

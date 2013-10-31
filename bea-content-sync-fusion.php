@@ -37,7 +37,6 @@ require (BEA_CSF_DIR . 'classes/server/post_type.php');
 require (BEA_CSF_DIR . 'classes/server/taxonomy.php');
 
 // Library client
-require (BEA_CSF_DIR . 'classes/client/client.php');
 require (BEA_CSF_DIR . 'classes/client/attachment.php');
 require (BEA_CSF_DIR . 'classes/client/post_type.php');
 require (BEA_CSF_DIR . 'classes/client/taxonomy.php');
@@ -69,6 +68,7 @@ function init_bea_content_sync_fusion() {
 	BEA_CSF_Synchronizations::init_from_db();
 	
 	// Server
+	new BEA_CSF_Server_Client();
 	new BEA_CSF_Server_Attachment();
 	new BEA_CSF_Server_PostType();
 	new BEA_CSF_Server_Taxonomy();
