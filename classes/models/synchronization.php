@@ -31,6 +31,11 @@ class BEA_CSF_Synchronization {
 	 * @return boolean
 	 */
 	public function register_actions() {
+		// Register actions if sync is active and haven't a conflict emitters/receivers
+		if ( $this->active == 0 || $this->has_conflict() ) {
+			return false;
+		}
+		
 		// Stars with the hooks deregister previously recorded especially in the case of a re-register!
 		if ( !empty($this->_register_hooks) ) {
 			foreach( $this->_register_hooks as $hook_name ) {
