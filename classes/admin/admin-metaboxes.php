@@ -61,6 +61,7 @@ class BEA_CSF_Admin_Metaboxes {
 			$deleted_receivers = array_diff($previous_value, $_POST['post_receivers']);
 			if ( !empty($deleted_receivers) ) { // Theses values have just deleted, delete content for clients !
 				// TODO Make loop
+				// do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post );
 				// BEA_CSF_Server_PostType::delete_post( $post->ID );
 			}
 		} else {
