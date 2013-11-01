@@ -1,8 +1,13 @@
 <?php
 class BEA_CSF_Synchronizations {
-
+	
 	private static $_bea_csf_synchronizations = array( );
 
+	/**
+	 * Init synchronization from DB.
+	 *
+	 * @return boolean
+	 */
 	public static function init_from_db() {
 		$current_options = get_site_option( BEA_CSF_OPTION );
 		if ( $current_options == false ) {
@@ -19,12 +24,17 @@ class BEA_CSF_Synchronizations {
 		return true;
 	}
 
+	/**
+	 * Get a list of all registered synchronizations
+	 *
+	 * @return array A list of objects or object fields
+	 */
 	public static function get_all() {
 		return self::$_bea_csf_synchronizations;
 	}
 
 	/**
-	 * Get a list of all registered synchronizations
+	 * Get a restricted list of registered synchronizations
 	 * Inspiration : get_post_types() / wp_list_filter() / wp_filter_object_list()
 	 *
 	 * @param array $args An array of key => value arguments to match against each object
@@ -70,7 +80,7 @@ class BEA_CSF_Synchronizations {
 		return $filtered;
 	}
 
-	public static function register( $args ) {
+	public static function register( array $args ) {
 		// Default settings
 		$default_args = array(
 			'active' => true,
