@@ -11,14 +11,14 @@ class BEA_CSF_Client_Taxonomy {
 		}
 
 		// Get local ID for parent, from TT_ID
-		$term['parent_tt_id'] = (int) get_term_taxonomy_id_from_meta( '_origin_key', (int) $term['parent_tt_id'] );
+		$term['parent_tt_id'] = (int) get_term_taxonomy_id_from_meta( '_origin_key', $term['blogid'].':'.(int) $term['parent_tt_id'] );
 		if ( $term['parent_tt_id'] > 0 ) {
 			$term['parent'] = (int) get_term_id_from_term_taxonomy_id( $term['taxonomy'], $term['parent_tt_id'] );
 		}
 
 		// Term exists ?
 		$local_term_id = 0;
-		$local_tt_id = (int) get_term_taxonomy_id_from_meta( '_origin_key', (int) $term['term_taxonomy_id'] );
+		$local_tt_id = (int) get_term_taxonomy_id_from_meta( '_origin_key', $term['blogid'].':'.(int) $term['term_taxonomy_id'] );
 		if ( $local_tt_id > 0 ) {
 			$local_term_id = (int) get_term_id_from_term_taxonomy_id( $term['taxonomy'], $local_tt_id );
 		}
@@ -31,7 +31,7 @@ class BEA_CSF_Client_Taxonomy {
 			if ( is_wp_error( $new_term_id ) && $new_term_id->get_error_code() == 'term_exists' ) {
 				$term_exists_result = term_exists( $term['name'], $term['taxonomy'], $term['parent'] );
 				if ( $term_exists_result != false ) {
-					$local_tt_id = (int) get_term_taxonomy_id_from_meta( '_origin_key', (int) $term_exists_result['term_taxonomy_id'] );
+					$local_tt_id = (int) get_term_taxonomy_id_from_meta( '_origin_key', $term['blogid'].':'.(int) $term_exists_result['term_taxonomy_id'] );
 					if ( $local_tt_id == 0 ) { // No master ID? no sync item !
 						$new_term_id = $term_exists_result;
 						update_term_meta( $term['taxonomy'], $term_exists_result['term_id'], 'already_exists', 1 );
@@ -58,7 +58,7 @@ class BEA_CSF_Client_Taxonomy {
 		}
 
 		// Save master id
-		update_term_meta( $term['taxonomy'], $new_term_id, '_origin_key', $term['term_taxonomy_id'] );
+		update_term_meta( $term['taxonomy'], $new_term_id, '_origin_key', $term['blogid'].':'.$term['term_taxonomy_id'] );
 
 		// Get full term datas
 		$new_term = get_term( $new_term_id, $term['taxonomy'] );
@@ -79,7 +79,7 @@ class BEA_CSF_Client_Taxonomy {
 		}
 
 		// Term exists ?
-		$local_tt_id = (int) get_term_taxonomy_id_from_meta( '_origin_key', (int) $term['term_taxonomy_id'] );
+		$local_tt_id = (int) get_term_taxonomy_id_from_meta( '_origin_key', $term['blogid'].':'.(int) $term['term_taxonomy_id'] );
 		if ( $local_tt_id > 0 ) {
 			// Term already exist before sync, keep it !
 			$already_exists = (int) get_term_taxonomy_id_from_meta( 'already_exists', (int) $term['term_taxonomy_id'] );

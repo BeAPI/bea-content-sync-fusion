@@ -10,7 +10,7 @@ class BEA_CSF_Client_Attachment {
 		}
 		
 		// Post exist
-		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $attachment['ID'] );
+		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $attachment['blogid'].':'.$attachment['ID'] );
 		if ( $local_id > 0 ) {
 			wp_delete_attachment( $local_id, true );
 		}
@@ -29,10 +29,10 @@ class BEA_CSF_Client_Attachment {
 		}
 		
 		// Media exists ?
-		$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $attachment['ID'] );
+		$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $attachment['blogid'].':'.$attachment['ID'] );
 		
 		// Parent media ?
-		$current_master_parent_id = (int) BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $attachment['post_parent'] );
+		$current_master_parent_id = (int) BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $attachment['blogid'].':'.$attachment['post_parent'] );
 		
 		// Merge or add ?
 		if ( $current_media_id > 0 ) { // Edit, update only main fields
@@ -55,7 +55,7 @@ class BEA_CSF_Client_Attachment {
 				wp_update_post($updated_datas);
 				
 				// Save metas
-				update_post_meta( $new_media_id, '_origin_key', $attachment['ID']);
+				update_post_meta( $new_media_id, '_origin_key', $attachment['blogid'].':'.$attachment['ID']);
 				
 				// For return
 				$current_media_id = $new_media_id;

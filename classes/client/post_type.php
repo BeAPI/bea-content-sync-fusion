@@ -11,10 +11,10 @@ class BEA_CSF_Client_PostType {
 		}
 
 		// Post exists ?
-		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['ID'] );
+		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'].':'.$data['ID'] );
 
 		// Find local parent ?
-		$local_parent_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['post_parent'] );
+		$local_parent_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'].':'.$data['post_parent'] );
 		$data['post_parent'] = ( $local_parent_id > 0 ) ? $local_parent_id : 0;
 		
 		// Clone datas for post insertion
@@ -40,14 +40,14 @@ class BEA_CSF_Client_PostType {
 		delete_post_meta( $new_post_id, '_thumbnail_id' );
 
 		// Save old ID
-		update_post_meta( $new_post_id, '_origin_key', $data['ID'] );
+		update_post_meta( $new_post_id, '_origin_key', $data['blogid'].':'.$data['ID'] );
 
 		// Association with terms
 		if ( isset( $data['terms'] ) && is_array( $data['terms'] ) && !empty( $data['terms'] ) ) {
 			$term_ids = array( );
 
 			foreach ( $data['terms'] as $term ) {
-				$local_term_id = (int) get_term_id_from_meta( $term['taxonomy'], '_origin_key', (int) $term['term_id'] );
+				$local_term_id = (int) get_term_id_from_meta( $term['taxonomy'], '_origin_key', $data['blogid'].':'.(int) $term['term_id'] );
 				if ( $local_term_id == 0 ) {
 					$local_term_id = BEA_CSF_Client_Taxonomy::new_term( $term );
 				}
@@ -74,7 +74,7 @@ class BEA_CSF_Client_PostType {
 			// Loop for medias
 			foreach ( $data['medias'] as $media ) {
 				// Media exists ?
-				$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $media['ID'] );
+				$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'].':'.$media['ID'] );
 
 				// Merge or add ?
 				if ( $current_media_id > 0 ) { // Edit, update only main fields
@@ -96,7 +96,7 @@ class BEA_CSF_Client_PostType {
 						$current_media_id = wp_update_post( $updated_datas );
 
 						// Save metas
-						update_post_meta( $new_media_id, '_origin_key', $media['ID'] );
+						update_post_meta( $new_media_id, '_origin_key', $data['blogid'].':'.$media['ID'] );
 					} else {
 						continue;
 					}
@@ -125,7 +125,7 @@ class BEA_CSF_Client_PostType {
 		}
 
 		// Restore post thumb
-		$thumbnail_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['_thumbnail_id'] );
+		$thumbnail_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'].':'.$data['_thumbnail_id'] );
 		if ( $thumbnail_id > 0 ) {
 			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id );
 		} elseif ( $data['_thumbnail'] != false ) {
@@ -151,7 +151,7 @@ class BEA_CSF_Client_PostType {
 		}
 
 		// Post exist
-		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['ID'] );
+		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'].':'.$data['ID'] );
 		if ( $local_id > 0 ) {
 			wp_delete_post( $local_id, true );
 		}
