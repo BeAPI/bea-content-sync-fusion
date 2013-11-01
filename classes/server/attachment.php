@@ -43,7 +43,7 @@ class BEA_CSF_Server_Attachment {
 	 * @param integer $attachment_id
 	 * @return array|boolean
 	 */
-	public static function get_data( $attachment_id = 0 ) {
+	public static function get_data( (int) $attachment_id = 0 ) {
 		$attachment = get_post( $attachment_id, ARRAY_A, 'display' );
 		if ( empty( $attachment ) ) {
 			return false;

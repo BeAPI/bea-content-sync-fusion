@@ -3,9 +3,7 @@ class BEA_CSF_Client_Attachment {
 	/**
 	 * Delete a attachment, take the master ID and try to find the new ID for delete it !
 	 */
-	public static function delete( $master_id, BEA_CSF_Synchronization $sync ) {
-		// Test datas validity
-		$master_id = (int) $master_id;
+	public static function delete( (int) $master_id, BEA_CSF_Synchronization $sync ) {
 		if ( $master_id === 0 ) {
 			return new WP_Error('master_id', 'Error - Master ID is invalid.' );
 		}

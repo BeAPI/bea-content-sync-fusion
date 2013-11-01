@@ -144,10 +144,8 @@ class BEA_CSF_Client_PostType {
 	 * @param integer $master_id
 	 * @return \WP_Error|boolean
 	 */
-	public static function delete( $master_id = 0, BEA_CSF_Synchronization $sync ) {
-		// Test datas validity
-		$master_id = (int) $master_id;
-		if ( $master_id == 0 ) {
+	public static function delete( (int) $master_id = 0, BEA_CSF_Synchronization $sync ) {
+		if ( $master_id === 0 ) {
 			return new WP_Error( 'invalid_id', 'Error - Post ID is invalid.' );
 		}
 
