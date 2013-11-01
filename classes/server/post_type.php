@@ -36,17 +36,13 @@ class BEA_CSF_Server_PostType {
 			}
 		}
 
-		// TODO: Optimize code
 		// Init medias children
 		$post['medias'] = array( );
 
 		// Get medias attachment
-		$attachments = get_children( array( 'post_parent' => $post['ID'], 'post_type' => 'attachment' ), ARRAY_A );
+		$attachments = get_children( array( 'post_parent' => $post['ID'], 'post_type' => 'attachment' ) );
 		foreach ( $attachments as $attachment ) {
-			$attachment['meta'] = get_post_custom( $attachment['ID'] );
-			$attachment['attachment_url'] = get_permalink( $attachment['ID'] );
-			$attachment['attachment_dir'] = get_attached_file( $attachment['ID'] );
-			$post['medias'][] = $attachment;
+			$post['medias'][] = BEA_CSF_Server_Attachment::get_data( $attachment );
 		}
 
 		// Add Server URL

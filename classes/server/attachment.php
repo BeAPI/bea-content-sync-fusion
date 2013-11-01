@@ -8,7 +8,7 @@ class BEA_CSF_Server_Attachment {
 	 * @return array
 	 */
 	public static function merge( WP_Post $attachment, BEA_CSF_Synchronization $sync ) {
-		return self::get_data( $attachment->ID );
+		return self::get_data( $attachment );
 	}
 
 	/**
@@ -40,11 +40,11 @@ class BEA_CSF_Server_Attachment {
 	/**
 	 * Generic method for get all data need for sync
 	 * 
-	 * @param integer $attachment_id
+	 * @param integer|WP_Post $attachment_id
 	 * @return array|boolean
 	 */
-	public static function get_data( (int) $attachment_id = 0 ) {
-		$attachment = get_post( $attachment_id, ARRAY_A, 'display' );
+	public static function get_data( $attachment = false ) {
+		$attachment = get_post( $attachment, ARRAY_A, 'display' );
 		if ( empty( $attachment ) ) {
 			return false;
 		}
