@@ -40,7 +40,7 @@ class BEA_CSF_Synchronization {
 		// Stars with the hooks deregister previously recorded especially in the case of a re-register!
 		if ( !empty( $this->_register_hooks ) ) {
 			foreach ( $this->_register_hooks as $hook_name ) {
-				remove_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 1 );
+				remove_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 2 );
 			}
 		}
 
@@ -71,7 +71,7 @@ class BEA_CSF_Synchronization {
 
 		// Call the unique action hook !
 		foreach ( $this->_register_hooks as $hook_name ) {
-			add_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 1 );
+			add_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 2 );
 		}
 
 		return true;
@@ -165,7 +165,7 @@ class BEA_CSF_Synchronization {
 	 * @param mixed $hook_data
 	 * @return boolean
 	 */
-	public function send_to_receivers( $hook_data ) {
+	public function send_to_receivers( $hook_data, $receivers_exclusion = array() ) {
 		// Get current filter
 		$current_filter = current_filter();
 
@@ -185,6 +185,10 @@ class BEA_CSF_Synchronization {
 
 		// Send data for each receivers
 		foreach ( $this->receivers as $receiver_blog_id ) {
+			if ( in_array($receiver_blog_id, (array) $receivers_exclusion) ) {
+				continue;
+			}
+
 			switch_to_blog( $receiver_blog_id );
 			$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_send, $this );
 			// var_dump($result);

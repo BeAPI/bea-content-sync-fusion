@@ -37,7 +37,7 @@ class BEA_CSF_Admin_Metaboxes {
 			update_post_meta( $post->ID, '_exclude_from_sync', 1 );
 			if ( $previous_value == 0 ) {
 				// This value have just changed, delete content for clients !
-				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post );
+				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, array() );
 			}
 		} else {
 			delete_post_meta( $post->ID, '_exclude_from_sync' );
@@ -59,12 +59,12 @@ class BEA_CSF_Admin_Metaboxes {
 			update_post_meta( $post->ID, '_post_receivers', $_POST['post_receivers'] );
 			
 			$deleted_receivers = array_diff($previous_value, $_POST['post_receivers']);
-			if ( !empty($deleted_receivers) ) { // Theses values have just deleted, delete content for clients !
-				// TODO Make loop
-				// do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post );
-				// BEA_CSF_Server_PostType::delete_post( $post->ID );
+			if ( !empty($deleted_receivers) ) {
+				// Theses values have just deleted, delete content for clients !
+				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $deleted_receivers );
 			}
 		} else {
+			// TODO: If empty selection, delete old receivers ?
 			delete_post_meta( $post->ID, '_post_receivers' );
 		}
 

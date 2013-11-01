@@ -37,7 +37,7 @@ class BEA_CSF_Server_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $wpdb->blogid, $attachment );
+		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $wpdb->blogid, $attachment, array() );
 		return true;
 	}
 
@@ -55,7 +55,7 @@ class BEA_CSF_Server_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $wpdb->blogid, $attachment );
+		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $wpdb->blogid, $attachment, array() );
 		return true;
 	}
 
@@ -86,21 +86,24 @@ class BEA_CSF_Server_Client {
 			return false;
 		}
 		
+		// Auto Sync - Exclude meta ?
+		$is_excluded_from_sync = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
+		if ( $is_excluded_from_sync === 1 ) {
+			return false;
+		}
+
+		// Manual sync - Selected receivers
+		$_post_receivers = (array) get_post_meta( $post->ID, '_post_receivers', true );
+
 		if ( $new_status == 'publish' ) {
 			// Check status ?
 			if ( $post->post_status != 'publish' ) {
 				return false;
 			}
-			
-			// Exclude meta ?
-			$current_value = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
-			if ( $current_value == 1 ) {
-				return false;
-			}
-			
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . $wpdb->blogid, $post );
+
+			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $_post_receivers );
 		} elseif ( $new_status != $old_status && $old_status == 'publish' ) {
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post );
+			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $_post_receivers );
 		}
 
 		return true;
@@ -114,7 +117,7 @@ class BEA_CSF_Server_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post );
+		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, array() );
 		return true;
 	}
 
@@ -127,7 +130,7 @@ class BEA_CSF_Server_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $term );
+		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, array() );
 		return true;
 	}
 
@@ -140,7 +143,7 @@ class BEA_CSF_Server_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $wpdb->blogid, $term );
+		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, array() );
 		return true;
 	}
 
