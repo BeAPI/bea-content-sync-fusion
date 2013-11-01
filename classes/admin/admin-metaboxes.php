@@ -37,7 +37,7 @@ class BEA_CSF_Admin_Metaboxes {
 			update_post_meta( $post->ID, '_exclude_from_sync', 1 );
 			if ( $previous_value == 0 ) {
 				// This value have just changed, delete content for clients !
-				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, array() );
+				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false );
 			}
 		} else {
 			delete_post_meta( $post->ID, '_exclude_from_sync' );
@@ -47,25 +47,33 @@ class BEA_CSF_Admin_Metaboxes {
 	}
 
 	public static function check_changes_manual_metabox( $post ) {
+		global $wpdb;
+		
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
 		if ( !isset( $_POST[BEA_CSF_OPTION . '-nonce-manual'] ) || !wp_verify_nonce( $_POST[BEA_CSF_OPTION . '-nonce-manual'], plugin_basename( __FILE__ ) ) ) {
 			return false;
 		}
 
-		$previous_value = (array) get_post_meta( $post->ID, '_post_receivers', true );
+		// Set default value
+		$new_post_receivers = array();
+
+		// Get _POST data if form is filled
 		if ( isset( $_POST['post_receivers'] ) && !empty( $_POST['post_receivers'] ) ) {
-			$_POST['post_receivers'] = array_map( 'intval', $_POST['post_receivers'] );
-			update_post_meta( $post->ID, '_post_receivers', $_POST['post_receivers'] );
-			
-			$deleted_receivers = array_diff($previous_value, $_POST['post_receivers']);
-			if ( !empty($deleted_receivers) ) {
-				// Theses values have just deleted, delete content for clients !
-				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $deleted_receivers );
-			}
-		} else {
-			// TODO: If empty selection, delete old receivers ?
-			delete_post_meta( $post->ID, '_post_receivers' );
+			$new_post_receivers = array_map( 'intval', $_POST['post_receivers'] );	
+		}
+
+		// Get previous values
+		$old_post_receivers = (array) get_post_meta( $post->ID, '_post_receivers', true );
+
+		// Set new value
+		update_post_meta( $post->ID, '_post_receivers', $new_post_receivers );
+
+		// Calcul difference for send delete notification for uncheck action
+		$receivers_to_delete = array_diff($old_post_receivers, $new_post_receivers);
+		if ( !empty($receivers_to_delete) ) {
+			// Theses values have just deleted, delete content for clients !
+			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $receivers_to_delete );
 		}
 
 		return true;

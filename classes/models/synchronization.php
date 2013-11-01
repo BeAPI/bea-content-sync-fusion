@@ -163,9 +163,15 @@ class BEA_CSF_Synchronization {
 	 * Generic method to get data from emitter and sent theses to receivers
 	 * 
 	 * @param mixed $hook_data
+	 * @param false|array $receivers_inclusion
 	 * @return boolean
 	 */
-	public function send_to_receivers( $hook_data, $receivers_exclusion = array() ) {
+	public function send_to_receivers( $hook_data, $receivers_inclusion = false ) {
+		// Inclusion is not FALSE? But a empty array ? 
+		if ( is_array($receivers_inclusion) && empty($receivers_inclusion) ) {
+			return false;
+		}
+
 		// Get current filter
 		$current_filter = current_filter();
 
@@ -185,7 +191,8 @@ class BEA_CSF_Synchronization {
 
 		// Send data for each receivers
 		foreach ( $this->receivers as $receiver_blog_id ) {
-			if ( in_array($receiver_blog_id, (array) $receivers_exclusion) ) {
+			// Keep only ID on inclusion custom param
+			if ( is_array($receivers_inclusion) && !in_array($receiver_blog_id, $receivers_inclusion) ) {
 				continue;
 			}
 

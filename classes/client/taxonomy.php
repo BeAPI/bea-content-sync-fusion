@@ -125,8 +125,8 @@ class BEA_CSF_Client_Taxonomy {
 	 * oa	
 	 * @author Amaury Balmer
 	 */
-	public static function get_media_id( (int) $tt_id = 0 ) {
-		if ( $tt_id === 0 || !function_exists( 'taxonomy_image_plugin_get_associations' ) ) {
+	public static function get_media_id( $tt_id = 0 ) {
+		if ( (int) $tt_id === 0 || !function_exists( 'taxonomy_image_plugin_get_associations' ) ) {
 			return false;
 		}
 
@@ -150,8 +150,8 @@ class BEA_CSF_Client_Taxonomy {
 	 * 
 	 * @author Amaury Balmer
 	 */
-	public static function set_media_id( (int) $tt_id = 0, (int) $image_id = 0 ) {
-		if ( $tt_id === 0 || $image_id === 0 || !function_exists( 'taxonomy_image_plugin_get_associations' ) ) {
+	public static function set_media_id( $tt_id = 0, $image_id = 0 ) {
+		if ( (int) $tt_id === 0 || (int) $image_id === 0 || !function_exists( 'taxonomy_image_plugin_get_associations' ) ) {
 			return false;
 		}
 
