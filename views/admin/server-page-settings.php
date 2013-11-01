@@ -23,7 +23,7 @@
 			<tbody id="the-list" class="list:clients">
 				<?php
 				if ( $registered_syncs == false || empty( $registered_syncs ) ) :
-					echo '<tr><td colspan="9">' . sprintf(__( 'No synchronization exists. Want to <a href="%s">create one</a>?', BEA_CSF_LOCALE ), network_admin_url('admin.php?page='. self::admin_slug . '-add')) . '</td></tr>';
+					echo '<tr><td colspan="9">' . sprintf(__( 'No synchronization exists. Want to <a href="%s">create one</a>?', BEA_CSF_LOCALE ), network_admin_url('admin.php?page='. 'bea-csf-add')) . '</td></tr>';
 				else :
 					$class = 'alternate';
 					$i = 0;
@@ -60,10 +60,9 @@
 								<div class="row-actions">
 									<span class="edit">
 										<?php if ( !$sync->is_locked() ) : ?>
-											<a href="<?php echo add_query_arg( array('action' => 'edit', 'sync_id' => $sync->get_field('id') ), network_admin_url( 'admin.php?page=' . self::admin_slug.'-add' ) ); ?>"><?php _e( 'Edit', BEA_CSF_LOCALE ); ?></a>
+											<a href="<?php echo add_query_arg( array('action' => 'edit', 'sync_id' => $sync->get_field('id') ), network_admin_url( 'admin.php?page=' . 'bea-csf-add' ) ); ?>"><?php _e( 'Edit', BEA_CSF_LOCALE ); ?></a>
 											|
-											<a class="delete" href="<?php echo wp_nonce_url( add_query_arg( array('action' => 'delete', 'sync_id' => $sync->get_field('id') ), network_admin_url( 'admin.php?page=' . self::admin_slug.'-edit' ) ), 'delete-sync' ); ?>" onclick="return confirm('<?php echo esc_js( sprintf( __( "You are about to delete this sync '%s'\n  'Cancel' to stop, 'OK' to delete." ), $sync->get_field('label') ) ); ?>');"><?php _e( 'Delete', BEA_CSF_LOCALE ); ?></a>
-											<!--<a class="delete" onclick="return confirm('<?php echo esc_js( sprintf( __( "You are about to fush clients for '%s'\n  'Cancel' to stop, 'OK' to delete." ), $sync->get_field('name') ) ); ?>');" href="<?php echo wp_nonce_url( network_admin_url( 'settings.php?page=' . self::admin_slug ) . '&amp;action=flush&amp;label=' . esc_attr( $sync->get_field('label') ), 'flush-client-' . $sync->get_field('label') ); ?>"><?php _e( 'Flush clients', BEA_CSF_LOCALE ); ?></a>-->
+											<a class="delete" href="<?php echo wp_nonce_url( add_query_arg( array('action' => 'delete', 'sync_id' => $sync->get_field('id') ), network_admin_url( 'admin.php?page=' . 'bea-csf-edit' ) ), 'delete-sync' ); ?>" onclick="return confirm('<?php echo esc_js( sprintf( __( "You are about to delete this sync '%s'\n  'Cancel' to stop, 'OK' to delete." ), $sync->get_field('label') ) ); ?>');"><?php _e( 'Delete', BEA_CSF_LOCALE ); ?></a>
 										<?php else : ?>
 											<?php _e( 'This item is locked because registered since the developer API.', BEA_CSF_LOCALE ); ?>
 										<?php endif; ?>

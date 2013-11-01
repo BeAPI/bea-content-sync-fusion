@@ -3,8 +3,6 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 	private static $_default_fields = array( 'label' => '', 'post_type' => '', 'mode' => 'auto', 'status' => 'publish', 'notifications' => 'true', 'emitters' => array( ), 'receivers' => array( ) );
 
-	const admin_slug = 'bea-csf';
-
 	/**
 	 * Constructor
 	 *
@@ -25,8 +23,8 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 * @author Amaury Balmer
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
-		if ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . self::admin_slug . '-edit' ) { // Edit page
-		} elseif ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . self::admin_slug . '-add' ) {
+		if ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . 'bea-csf-edit' ) { // Edit page
+		} elseif ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . 'bea-csf-add' ) {
 			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/js/jquery.multi-select.js', array( 'jquery' ), '0.9.8', true );
 			wp_enqueue_script( 'bea-csf-admin-add', BEA_CSF_URL . 'assets/js/bea-csf-admin-add.js', array( 'lou-multi-select' ), BEA_CSF_VERSION, true );
 			wp_localize_script( 'bea-csf-admin-add', 'beaCsfAdminAdd', array( 'selectableHeader' => __( 'Selectable items', BEA_CSF_LOCALE ), 'selectionHeader' => __( 'Selection items', BEA_CSF_LOCALE ) ) );
@@ -42,9 +40,9 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 * @author Amaury Balmer
 	 */
 	public static function network_admin_menu() {
-		add_menu_page( __( 'Content Sync', BEA_CSF_LOCALE ), __( 'Content Sync', BEA_CSF_LOCALE ), 'manage_options', self::admin_slug . '-edit', '', BEA_CSF_URL . '/assets/images/arrow-continue.png' );
-		add_submenu_page( self::admin_slug . '-edit', __( 'Edit', BEA_CSF_LOCALE ), __( 'Edit', BEA_CSF_LOCALE ), 'manage_options', self::admin_slug . '-edit', array( __CLASS__, 'render_page_edit' ) );
-		add_submenu_page( self::admin_slug . '-edit', __( 'Add', BEA_CSF_LOCALE ), __( 'Add', BEA_CSF_LOCALE ), 'manage_options', self::admin_slug . '-add', array( __CLASS__, 'render_page_add' ) );
+		add_menu_page( __( 'Content Sync', BEA_CSF_LOCALE ), __( 'Content Sync', BEA_CSF_LOCALE ), 'manage_options', 'bea-csf-edit', '', BEA_CSF_URL . '/assets/images/arrow-continue.png' );
+		add_submenu_page( 'bea-csf-edit', __( 'Edit', BEA_CSF_LOCALE ), __( 'Edit', BEA_CSF_LOCALE ), 'manage_options', 'bea-csf-edit', array( __CLASS__, 'render_page_edit' ) );
+		add_submenu_page( 'bea-csf-edit', __( 'Add', BEA_CSF_LOCALE ), __( 'Add', BEA_CSF_LOCALE ), 'manage_options', 'bea-csf-add', array( __CLASS__, 'render_page_add' ) );
 	}
 
 	/**
@@ -143,7 +141,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 				add_settings_error( BEA_CSF_LOCALE, 'settings_updated', $result->get_error_message(), 'error' );
 			}
 
-			wp_redirect( network_admin_url( 'admin.php?page=' . self::admin_slug . '-edit&message=merged' ) );
+			wp_redirect( network_admin_url( 'admin.php?page=' . 'bea-csf-edit&message=merged' ) );
 			exit();
 		}
 		
@@ -158,7 +156,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 			$current_sync = current( $current_sync ); // take first result
 			BEA_CSF_Synchronizations::delete( $current_sync );
 			
-			wp_redirect( network_admin_url( 'admin.php?page=' . self::admin_slug . '-edit&message=deleted' ) );
+			wp_redirect( network_admin_url( 'admin.php?page=' . 'bea-csf-edit&message=deleted' ) );
 			exit();
 		}
 
