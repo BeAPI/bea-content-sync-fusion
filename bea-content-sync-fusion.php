@@ -69,9 +69,6 @@ function init_bea_content_sync_fusion() {
 	
 	// Server
 	new BEA_CSF_Server_Client();
-	new BEA_CSF_Server_Attachment();
-	new BEA_CSF_Server_PostType();
-	new BEA_CSF_Server_Taxonomy();
 
 	// Admin
 	if ( is_admin() ) {
