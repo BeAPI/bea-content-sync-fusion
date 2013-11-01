@@ -53,6 +53,11 @@ if ( is_admin() ) {
 	require( BEA_CSF_DIR . 'classes/admin/admin-notifications.php' );
 }
 
+// Load builtin plugin "meta for taxo", if not already installed and actived
+if ( !function_exists('get_term_taxonomy_meta') ) {
+	require_once(BEA_CSF_DIR.'libraries/meta-for-taxonomies/meta-for-taxonomies.php');
+}
+
 // Plugin activate/desactive hooks
 register_activation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'deactivate' ) );
@@ -62,11 +67,6 @@ add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );
 function init_bea_content_sync_fusion() {
 	// Load translations
 	load_plugin_textdomain( BEA_CSF_LOCALE, false, basename( BEA_CSF_DIR ) . '/languages' );
-	
-	// Load builtin plugin "meta for taxo", if not already installed and actived
-	if ( !function_exists('get_term_taxonomy_meta') ) {
-		require_once(BEA_CSF_DIR.'libraries/meta-for-taxonomies/meta-for-taxonomies.php');
-	}
 	
 	// Synchronizations
 	BEA_CSF_Synchronizations::init_from_db();
