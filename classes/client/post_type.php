@@ -134,7 +134,7 @@ class BEA_CSF_Client_PostType {
 				update_post_meta( $new_post_id, '_thumbnail_id', $media_id );
 			}
 		}
-
+		
 		return $new_post_id;
 	}
 

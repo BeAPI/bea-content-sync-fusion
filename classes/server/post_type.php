@@ -49,7 +49,7 @@ class BEA_CSF_Server_PostType {
 		$post['server_url'] = home_url( '/' );
 		$uploads = wp_upload_dir();
 		$post['upload_url'] = $uploads['baseurl'];
-
+		
 		return $post;
 	}
 

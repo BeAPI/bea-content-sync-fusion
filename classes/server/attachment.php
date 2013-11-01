@@ -42,9 +42,9 @@ class BEA_CSF_Server_Attachment {
 			return false;
 		}
 
-		$attachment['meta'] = get_post_custom( $attachment_id );
-		$attachment['attachment_url'] = get_permalink( $attachment_id );
-		$attachment['attachment_dir'] = get_attached_file( $attachment_id );
+		$attachment['meta'] = get_post_custom( $attachment['ID'] );
+		$attachment['attachment_url'] = get_permalink( $attachment['ID'] );
+		$attachment['attachment_dir'] = get_attached_file( $attachment['ID'] );
 
 		return $attachment;
 	}

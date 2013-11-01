@@ -191,7 +191,7 @@ class BEA_CSF_Synchronization {
 		}
 
 		// Append origin blog id to data to transfer
-		$data_to_transfer['blog_id'] = (int) $blogid;
+		$data_to_transfer['blogid'] = (int) $blogid;
 
 		// Send data for each receivers
 		foreach ( $this->receivers as $receiver_blog_id ) {
