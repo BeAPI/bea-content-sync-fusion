@@ -25,13 +25,13 @@ define( 'BEA_CSF_DIR', plugin_dir_path( __FILE__ ) );
 
 // Plugin various
 require (BEA_CSF_DIR . 'classes/plugin.php');
+require (BEA_CSF_DIR . 'classes/client.php');
 
 // Models
 require (BEA_CSF_DIR . 'classes/models/synchronization.php');
 require (BEA_CSF_DIR . 'classes/models/synchronizations.php');
 
 // Library server
-require (BEA_CSF_DIR . 'classes/server/client.php');
 require (BEA_CSF_DIR . 'classes/server/attachment.php');
 require (BEA_CSF_DIR . 'classes/server/post_type.php');
 require (BEA_CSF_DIR . 'classes/server/taxonomy.php');
