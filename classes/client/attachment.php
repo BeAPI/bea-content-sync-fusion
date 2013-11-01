@@ -3,14 +3,14 @@ class BEA_CSF_Client_Attachment {
 	/**
 	 * Delete a attachment, take the master ID and try to find the new ID for delete it !
 	 */
-	public static function delete( array $media, BEA_CSF_Synchronization $sync ) {
+	public static function delete( array $attachment, BEA_CSF_Synchronization $sync ) {
 		// Clean values
-		if ( empty($media) || !is_array($media) ) {
+		if ( empty($attachment) || !is_array($attachment) ) {
 			return new WP_Error('invalid_datas', 'Error - Datas is invalid.' );
 		}
 		
 		// Post exist
-		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $media['ID'] );
+		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $attachment['ID'] );
 		if ( $local_id > 0 ) {
 			wp_delete_attachment( $local_id, true );
 		}
@@ -22,40 +22,40 @@ class BEA_CSF_Client_Attachment {
 	/**
 	 * Delete a attachment, take the master ID and try to find the new ID for delete it !
 	 */
-	public static function merge( array $media, BEA_CSF_Synchronization $sync ) {
+	public static function merge( array $attachment, BEA_CSF_Synchronization $sync ) {
 		// Clean values
-		if ( empty($media) || !is_array($media) ) {
+		if ( empty($attachment) || !is_array($attachment) ) {
 			return new WP_Error('invalid_datas', 'Error - Datas is invalid.' );
 		}
 		
 		// Media exists ?
-		$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $media['ID'] );
+		$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $attachment['ID'] );
 		
 		// Parent media ?
-		$current_master_parent_id = (int) BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $media['post_parent'] );
+		$current_master_parent_id = (int) BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $attachment['post_parent'] );
 		
 		// Merge or add ?
 		if ( $current_media_id > 0 ) { // Edit, update only main fields
 			$updated_datas = array();
 			$updated_datas['ID'] = $current_media_id;
-			$updated_datas['post_title'] = $media['post_title'];
-			$updated_datas['post_content'] = $media['post_content'];
-			$updated_datas['post_excerpt'] = $media['post_excerpt'];
+			$updated_datas['post_title'] = $attachment['post_title'];
+			$updated_datas['post_content'] = $attachment['post_content'];
+			$updated_datas['post_excerpt'] = $attachment['post_excerpt'];
 			$updated_datas['post_parent'] = $current_master_parent_id;
 			wp_update_post($updated_datas);
 		} else { // Insert with WP media public static function
-			$new_media_id = self::media_sideload_image( $media['attachment_dir'], $current_master_parent_id, null );
+			$new_media_id = self::media_sideload_image( $attachment['attachment_dir'], $current_master_parent_id, null );
 			if ( !is_wp_error($new_media_id) && $new_media_id > 0 ) {
 				// Stock main fields from server
 				$updated_datas = array();
 				$updated_datas['ID'] = $new_media_id;
-				$updated_datas['post_title'] = $media['post_title'];
-				$updated_datas['post_content'] = $media['post_content'];
-				$updated_datas['post_excerpt'] = $media['post_excerpt'];
+				$updated_datas['post_title'] = $attachment['post_title'];
+				$updated_datas['post_content'] = $attachment['post_content'];
+				$updated_datas['post_excerpt'] = $attachment['post_excerpt'];
 				wp_update_post($updated_datas);
 				
 				// Save metas
-				update_post_meta( $new_media_id, 'master_id', $media['ID']);
+				update_post_meta( $new_media_id, 'master_id', $attachment['ID']);
 				
 				// For return
 				$current_media_id = $new_media_id;
