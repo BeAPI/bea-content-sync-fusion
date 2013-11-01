@@ -18,6 +18,12 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
 	}
 
+	/**
+	 * Register JS/CSS on edit/add page
+	 *
+	 * @return void
+	 * @author Amaury Balmer
+	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
 		if ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . self::admin_slug . '-edit' ) { // Edit page
 		} elseif ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . self::admin_slug . '-add' ) {
@@ -159,6 +165,12 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		return true;
 	}
 
+	/**
+	 * Helper: Get sites list for a network ID
+	 *
+	 * @return array|boolean
+	 * @author Amaury Balmer
+	 */
 	public static function get_sites_from_network( $network_id = 0 ) {
 		global $wpdb;
 
@@ -180,6 +192,12 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		return $sites;
 	}
 
+	/**
+	 * Helper: Get filtred sites list for a network ID, all data or one field
+	 *
+	 * @return array|string
+	 * @author Amaury Balmer
+	 */
 	public static function get_sites( $blogs_id = array( ), $field = false ) {
 		if ( empty( $blogs_id ) ) {
 			return '';
