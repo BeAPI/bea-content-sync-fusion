@@ -106,7 +106,7 @@ class BEA_CSF_Server_Client {
 		return true;
 	}
 
-	public static function delete_post( $post_id ) {
+	public static function delete_post( $post_id = 0 ) {
 		global $wpdb;
 
 		$post = get_post( $post_id );
@@ -118,7 +118,7 @@ class BEA_CSF_Server_Client {
 		return true;
 	}
 
-	public static function delete_term( $term_id, $tt_id, $taxonomy ) {
+	public static function delete_term( $term_id = 0, $tt_id = 0, $taxonomy = false ) {
 		global $wpdb;
 
 		// Get term
@@ -131,7 +131,7 @@ class BEA_CSF_Server_Client {
 		return true;
 	}
 
-	public static function merge_term( $term_id, $tt_id, $taxonomy ) {
+	public static function merge_term( $term_id = 0, $tt_id = 0, $taxonomy = false ) {
 		global $wpdb;
 
 		// Get term

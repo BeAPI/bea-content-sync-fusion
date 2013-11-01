@@ -3,10 +3,10 @@ class BEA_CSF_Client_Attachment {
 	/**
 	 * Delete a attachment, take the master ID and try to find the new ID for delete it !
 	 */
-	public static function delete( $master_id = 0, BEA_CSF_Synchronization $sync ) {
+	public static function delete( $master_id, BEA_CSF_Synchronization $sync ) {
 		// Test datas validity
 		$master_id = (int) $master_id;
-		if ( $master_id == 0 ) {
+		if ( $master_id === 0 ) {
 			return new WP_Error('master_id', 'Error - Master ID is invalid.' );
 		}
 		
@@ -23,9 +23,9 @@ class BEA_CSF_Client_Attachment {
 	/**
 	 * Delete a attachment, take the master ID and try to find the new ID for delete it !
 	 */
-	public static function merge( $media = false, BEA_CSF_Synchronization $sync ) {
+	public static function merge( array $media, BEA_CSF_Synchronization $sync ) {
 		// Clean values
-		if ( $media == false || !is_array($media) ) {
+		if ( empty($media) || !is_array($media) ) {
 			return new WP_Error('invalid_datas', 'Error - Datas is invalid.' );
 		}
 		

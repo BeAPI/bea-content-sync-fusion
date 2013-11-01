@@ -4,9 +4,9 @@ class BEA_CSF_Client_PostType {
 	/**
 	 * Add post on DB
 	 */
-	public static function merge( $data, BEA_CSF_Synchronization $sync ) {
+	public static function merge( array $data, BEA_CSF_Synchronization $sync ) {
 		// Clean values
-		if ( $data == false || !is_array( $data ) ) {
+		if ( empty($data) || !is_array( $data ) ) {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 

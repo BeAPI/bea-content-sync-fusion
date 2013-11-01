@@ -3,7 +3,7 @@ class BEA_CSF_Server_Attachment {
 
 	/**
 	 * Insert or update attachment 
-	 * @global type $wpdb
+	 *
 	 * @param WP_Post $attachment
 	 * @return array
 	 */
@@ -15,7 +15,7 @@ class BEA_CSF_Server_Attachment {
 	 * Get deletation data
 	 * 
 	 * @param WP_Post $attachment
-	 * @return array|boolean
+	 * @return integer|boolean
 	 */
 	public static function delete( WP_Post $attachment, BEA_CSF_Synchronization $sync ) {
 		// Is attachement of post OR term ?
