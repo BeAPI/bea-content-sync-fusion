@@ -1,11 +1,11 @@
 <?php
 class BEA_CSF_Server_PostType {
 
-	public static function delete( WP_Post $post ) {
+	public static function delete( WP_Post $post, BEA_CSF_Synchronization $sync ) {
 		return $post->ID;
 	}
 
-	public static function merge( WP_Post $object ) {
+	public static function merge( WP_Post $object, BEA_CSF_Synchronization $sync ) {
 		// Transform objet to array
 		$object = (array) $object;
 

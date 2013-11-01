@@ -177,7 +177,7 @@ class BEA_CSF_Synchronization {
 		$method = $current_filter_data[2];
 
 		// Get data from SERVER class
-		$data_to_send = call_user_func( array( 'BEA_CSF_Server_' . $object, $method ), $hook_data );
+		$data_to_send = call_user_func( array( 'BEA_CSF_Server_' . $object, $method ), $hook_data, $this );
 		if ( $data_to_send == false ) {
 			// TODO: Log
 			return false;
@@ -186,7 +186,7 @@ class BEA_CSF_Synchronization {
 		// Send data for each receivers
 		foreach ( $this->receivers as $receiver_blog_id ) {
 			switch_to_blog( $receiver_blog_id );
-			$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_send );
+			$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_send, $this );
 			// var_dump($result);
 			restore_current_blog();
 		}

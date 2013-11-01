@@ -4,14 +4,14 @@ class BEA_CSF_Server_Taxonomy {
 	/**
 	 * Check for term deletion and send it to client
 	 */
-	public static function delete( stdClass $term ) {
+	public static function delete( stdClass $term, BEA_CSF_Synchronization $sync ) {
 		return (array) $term;
 	}
 
 	/**
 	 * Check for new term and send it to client
 	 */
-	public static function merge( stdClass $term ) {
+	public static function merge( stdClass $term, BEA_CSF_Synchronization $sync ) {
 		// Get parent TT_ID
 		if ( $term->parent > 0 ) {
 			$parent_term = get_term( $term->parent, $term->taxonomy );

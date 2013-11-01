@@ -7,7 +7,7 @@ class BEA_CSF_Server_Attachment {
 	 * @param WP_Post $attachment
 	 * @return array
 	 */
-	public static function merge( WP_Post $attachment ) {
+	public static function merge( WP_Post $attachment, BEA_CSF_Synchronization $sync ) {
 		return self::get_data( $attachment->ID );
 	}
 
@@ -17,7 +17,7 @@ class BEA_CSF_Server_Attachment {
 	 * @param WP_Post $attachment
 	 * @return array|boolean
 	 */
-	public static function delete( WP_Post $attachment ) {
+	public static function delete( WP_Post $attachment, BEA_CSF_Synchronization $sync ) {
 		// Is attachement of post OR term ?
 		$parent = get_post( $attachment->post_parent );
 

@@ -4,7 +4,7 @@ class BEA_CSF_Client_Taxonomy {
 	/**
 	 * Add term on DB
 	 */
-	public static function merge( $data = false ) {
+	public static function merge( $data = false, BEA_CSF_Synchronization $sync ) {
 		// Test datas validity
 		if ( $data == false || !is_array( $data ) ) {
 			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );
@@ -93,7 +93,7 @@ class BEA_CSF_Client_Taxonomy {
 	 * @param array $data
 	 * @return \WP_Error|boolean
 	 */
-	public static function delete( $data = array( ) ) {
+	public static function delete( $data = array( ), BEA_CSF_Synchronization $sync ) {
 		// Test datas validity
 		if ( empty( $data ) || !is_array( $data ) ) {
 			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );

@@ -4,7 +4,7 @@ class BEA_CSF_Client_PostType {
 	/**
 	 * Add post on DB
 	 */
-	public static function merge( $data ) {
+	public static function merge( $data, BEA_CSF_Synchronization $sync ) {
 		// Clean values
 		if ( $data == false || !is_array( $data ) ) {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
@@ -144,7 +144,7 @@ class BEA_CSF_Client_PostType {
 	 * @param integer $master_id
 	 * @return \WP_Error|boolean
 	 */
-	public static function delete( $master_id = 0 ) {
+	public static function delete( $master_id = 0, BEA_CSF_Synchronization $sync ) {
 		// Test datas validity
 		$master_id = (int) $master_id;
 		if ( $master_id == 0 ) {
