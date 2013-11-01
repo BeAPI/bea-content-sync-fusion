@@ -46,7 +46,7 @@ class BEA_CSF_Admin_Restrictions {
 	 * @return array
 	 */
 	public static function post_class( array $classes, $class, $post_ID ) {
-		$master_id = get_post_meta( $post_ID, 'master_id', true );
+		$master_id = get_post_meta( $post_ID, '_origin_key', true );
 		if ( $master_id != false && (int) $master_id > 0 ) {
 			$classes[] = 'locked-content master-' . $master_id;
 		}
@@ -89,7 +89,7 @@ class BEA_CSF_Admin_Restrictions {
 			return false;
 		}
 
-		$master_id = get_post_meta( $current_post->ID, 'master_id', true );
+		$master_id = get_post_meta( $current_post->ID, '_origin_key', true );
 		if ( $master_id != false && (int)$master_id > 0 ) {
 			do_action( 'edit_protected_content', $master_id );
 			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', BEA_CSF_LOCALE ) );
@@ -106,7 +106,7 @@ class BEA_CSF_Admin_Restrictions {
 	 * @return array
 	 */
 	public static function tag_row_actions( array $actions, stdClass $term ) {
-		$master_id = get_term_taxonomy_meta( (int) $term->term_taxonomy_id, 'master_id', true );
+		$master_id = get_term_taxonomy_meta( (int) $term->term_taxonomy_id, '_origin_key', true );
 		if ( $master_id != false && (int)$master_id > 0 ) {
 			unset($actions['edit'], $actions['inline hide-if-no-js'], $actions['delete']);
 			$actions['view'] .= '<span class="locked-term-parent"></span>';
@@ -142,7 +142,7 @@ class BEA_CSF_Admin_Restrictions {
 			return false;
 		}
 
-		$master_id = get_term_taxonomy_meta( $current_term->term_taxonomy_id, 'master_id', true );
+		$master_id = get_term_taxonomy_meta( $current_term->term_taxonomy_id, '_origin_key', true );
 		if ( $master_id != false && (int) $master_id > 0 ) {
 			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', BEA_CSF_LOCALE ) );
 		}
