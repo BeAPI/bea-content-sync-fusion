@@ -1,5 +1,5 @@
 <?php
-class BEA_CSF_Server_Client {
+class BEA_CSF_Client {
 
 	public function __construct() {
 		// Attachments

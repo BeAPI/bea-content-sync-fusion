@@ -68,7 +68,7 @@ function init_bea_content_sync_fusion() {
 	BEA_CSF_Synchronizations::init_from_db();
 	
 	// Server
-	new BEA_CSF_Server_Client();
+	new BEA_CSF_Client();
 
 	// Admin
 	if ( is_admin() ) {
