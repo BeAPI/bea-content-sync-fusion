@@ -5,23 +5,23 @@ class BEA_CSF_Server_PostType {
 		return $post->ID;
 	}
 
-	public static function merge( WP_Post $object, BEA_CSF_Synchronization $sync ) {
+	public static function merge( WP_Post $post, BEA_CSF_Synchronization $sync ) {
 		// Transform objet to array
-		$object = (array) $object;
+		$post = (array) $post;
 
 		// Get post metas
-		$object['_thumbnail_id'] = (int) get_post_meta( $object['ID'], '_thumbnail_id', true );
-		if ( $object['_thumbnail_id'] > 0 ) {
-			$object['_thumbnail'] = BEA_CSF_Server_Attachment::get_attachment_data( $object['_thumbnail_id'] );
+		$post['_thumbnail_id'] = (int) get_post_meta( $post['ID'], '_thumbnail_id', true );
+		if ( $post['_thumbnail_id'] > 0 ) {
+			$post['_thumbnail'] = BEA_CSF_Server_Attachment::get_attachment_data( $post['_thumbnail_id'] );
 		} else {
-			$object['_thumbnail'] = false;
+			$post['_thumbnail'] = false;
 		}
 
 		// Get terms for this object
-		$taxonomies = get_object_taxonomies( $object['post_type'] );
+		$taxonomies = get_object_taxonomies( $post['post_type'] );
 		if ( $taxonomies != false ) {
-			$object['terms'] = wp_get_object_terms( $object['ID'], $taxonomies );
-			foreach ( $object['terms'] as $taxonomy => $term ) {
+			$post['terms'] = wp_get_object_terms( $post['ID'], $taxonomies );
+			foreach ( $post['terms'] as $taxonomy => $term ) {
 				// Get parent TT_ID
 				if ( $term->parent > 0 ) {
 					$parent_term = get_term( $term->parent, $taxonomy );
@@ -32,29 +32,29 @@ class BEA_CSF_Server_PostType {
 					$term->parent_tt_id = 0;
 				}
 
-				$object['terms'][$taxonomy] = (array) $term;
+				$post['terms'][$taxonomy] = (array) $term;
 			}
 		}
 
 		// TODO: Optimize code
 		// Init medias children
-		$object['medias'] = array( );
+		$post['medias'] = array( );
 
 		// Get medias attachment
-		$attachments = get_children( array( 'post_parent' => $object['ID'], 'post_type' => 'attachment' ), ARRAY_A );
+		$attachments = get_children( array( 'post_parent' => $post['ID'], 'post_type' => 'attachment' ), ARRAY_A );
 		foreach ( $attachments as $attachment ) {
 			$attachment['meta'] = get_post_custom( $attachment['ID'] );
 			$attachment['attachment_url'] = get_permalink( $attachment['ID'] );
 			$attachment['attachment_dir'] = get_attached_file( $attachment['ID'] );
-			$object['medias'][] = $attachment;
+			$post['medias'][] = $attachment;
 		}
 
 		// Add Server URL
-		$object['server_url'] = home_url( '/' );
+		$post['server_url'] = home_url( '/' );
 		$uploads = wp_upload_dir();
-		$object['upload_url'] = $uploads['baseurl'];
+		$post['upload_url'] = $uploads['baseurl'];
 
-		return $object;
+		return $post;
 	}
 
 }

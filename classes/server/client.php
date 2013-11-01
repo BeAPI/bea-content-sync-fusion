@@ -59,15 +59,15 @@ class BEA_CSF_Server_Client {
 		return true;
 	}
 
-	public static function merge_post_meta( $meta_id = 0, $object_id = 0, $meta_key = '' ) {
+	public static function merge_post_meta( $meta_id = 0, $post_id = 0, $meta_key = '' ) {
 		if ( $meta_key == '_thumbnail_id' ) {
-			$object = get_post( $object_id );
-			if ( $object == false || is_wp_error( $object ) ) {
+			$post = get_post( $post_id );
+			if ( $post == false || is_wp_error( $post ) ) {
 				return false;
 			}
 
 			// Use transition post status method (avoid duplicate code)
-			self::transition_post_status( $object->post_status, $object->post_status, $object );
+			self::transition_post_status( $post->post_status, $post->post_status, $post );
 			return true;
 		}
 
@@ -81,19 +81,19 @@ class BEA_CSF_Server_Client {
 			return false;
 		}
 
-		$object = get_post( $post );
-		if ( $object == false || is_wp_error( $object ) ) {
+		$post = get_post( $post );
+		if ( $post == false || is_wp_error( $post ) ) {
 			return false;
 		}
 		
 		if ( $new_status == 'publish' ) {
 			// Check status ?
-			if ( $object->post_status != 'publish' ) {
+			if ( $post->post_status != 'publish' ) {
 				return false;
 			}
 			
 			// Exclude meta ?
-			$current_value = (int) get_post_meta( $object->ID, '_exclude_from_sync', true );
+			$current_value = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
 			if ( $current_value == 1 ) {
 				return false;
 			}
