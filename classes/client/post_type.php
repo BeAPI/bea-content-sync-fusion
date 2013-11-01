@@ -49,7 +49,7 @@ class BEA_CSF_Client_PostType {
 			foreach ( $data['terms'] as $term ) {
 				$local_term_id = (int) get_term_id_from_meta( $term['taxonomy'], '_origin_key', $data['blogid'].':'.(int) $term['term_id'] );
 				if ( $local_term_id == 0 ) {
-					$local_term_id = BEA_CSF_Client_Taxonomy::new_term( $term );
+					$local_term_id = BEA_CSF_Client_Taxonomy::merge( $term, $sync );
 				}
 
 				if ( $local_term_id > 0 ) {
@@ -129,12 +129,12 @@ class BEA_CSF_Client_PostType {
 		if ( $thumbnail_id > 0 ) {
 			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id );
 		} elseif ( $data['_thumbnail'] != false ) {
-			$media_id = BEA_CSF_Client_Attachment::merge_attachment( $data['_thumbnail'] );
+			$media_id = BEA_CSF_Client_Attachment::merge( $data['_thumbnail'], $sync );
 			if ( $media_id > 0 ) {
 				update_post_meta( $new_post_id, '_thumbnail_id', $media_id );
 			}
 		}
-		
+
 		return $new_post_id;
 	}
 
