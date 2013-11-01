@@ -11,7 +11,7 @@
 
   Copyright 2013 - BeAPI Team (technique@beapi.fr)
   
-  TODO : Mirror mode (deleting inclusion) | Unlink relation from receivers
+  TODO : Mirror mode (deleting inclusion) | Unlink relation from receivers | AJAX Taxo for Sync edition | Master ID must be containe BLOG ID
  */
 
 // Plugin constants
