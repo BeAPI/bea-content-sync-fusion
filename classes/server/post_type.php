@@ -2,7 +2,7 @@
 class BEA_CSF_Server_PostType {
 
 	public static function delete( WP_Post $post, BEA_CSF_Synchronization $sync ) {
-		return $post->ID;
+		return (array) $post;
 	}
 
 	public static function merge( WP_Post $post, BEA_CSF_Synchronization $sync ) {

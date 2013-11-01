@@ -3,13 +3,14 @@ class BEA_CSF_Client_Attachment {
 	/**
 	 * Delete a attachment, take the master ID and try to find the new ID for delete it !
 	 */
-	public static function delete( $master_id, BEA_CSF_Synchronization $sync ) {
-		if ( (int) $master_id === 0 ) {
-			return new WP_Error('master_id', 'Error - Master ID is invalid.' );
+	public static function delete( array $media, BEA_CSF_Synchronization $sync ) {
+		// Clean values
+		if ( empty($media) || !is_array($media) ) {
+			return new WP_Error('invalid_datas', 'Error - Datas is invalid.' );
 		}
 		
 		// Post exist
-		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $master_id );
+		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $media['ID'] );
 		if ( $local_id > 0 ) {
 			wp_delete_attachment( $local_id, true );
 		}

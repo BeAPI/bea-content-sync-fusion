@@ -16,7 +16,7 @@ class BEA_CSF_Client_PostType {
 		// Find local parent ?
 		$local_parent_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $data['post_parent'] );
 		$data['post_parent'] = ( $local_parent_id > 0 ) ? $local_parent_id : 0;
-
+		
 		// Clone datas for post insertion
 		$data_for_post = $data;
 		unset( $data_for_post['medias'], $data_for_post['terms'], $data_for_post['tags_input'], $data_for_post['post_category'] );
@@ -144,13 +144,14 @@ class BEA_CSF_Client_PostType {
 	 * @param integer $master_id
 	 * @return \WP_Error|boolean
 	 */
-	public static function delete( $master_id = 0, BEA_CSF_Synchronization $sync ) {
-		if ( (int) $master_id === 0 ) {
-			return new WP_Error( 'invalid_id', 'Error - Post ID is invalid.' );
+	public static function delete( array $data, BEA_CSF_Synchronization $sync ) {
+		// Clean values
+		if ( empty($data) || !is_array( $data ) ) {
+			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
 		// Post exist
-		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $master_id );
+		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( 'master_id', $data['ID'] );
 		if ( $local_id > 0 ) {
 			wp_delete_post( $local_id, true );
 		}

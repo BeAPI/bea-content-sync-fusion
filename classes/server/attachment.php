@@ -19,18 +19,18 @@ class BEA_CSF_Server_Attachment {
 	 */
 	public static function delete( WP_Post $attachment, BEA_CSF_Synchronization $sync ) {
 		// Is attachement of post OR term ?
-		$parent = get_post( $attachment->post_parent );
+		$parent = get_post( $attachment->post_parent, ARRAY_A );
 
 		// Is post parent ?
 		if ( !empty( $parent ) ) {
-			return $attachment->ID;
+			return $attachment;
 		} elseif ( function_exists( 'taxonomy_image_plugin_get_associations' ) && empty( $parent ) ) { // TODO: Keep this code ?
 			// Get associations
 			$assocs = taxonomy_image_plugin_get_associations();
 
 			// Search value and delete
-			if ( array_search( $attachment->ID, $assocs ) !== false ) {
-				return $attachment->ID;
+			if ( array_search( $attachment['ID'], $assocs ) !== false ) {
+				return $attachment;
 			}
 		}
 
@@ -44,7 +44,7 @@ class BEA_CSF_Server_Attachment {
 	 * @return array|boolean
 	 */
 	public static function get_data( $attachment = false ) {
-		$attachment = get_post( $attachment, ARRAY_A, 'display' );
+		$attachment = get_post( $attachment, ARRAY_A );
 		if ( empty( $attachment ) ) {
 			return false;
 		}

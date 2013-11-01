@@ -15,7 +15,7 @@ if ( !function_exists('get_current_term') ) :
 		// Get current term
 		$term = wp_cache_get( $key, 'terms' );
 		if ( $term == false || $term == null ) {
-			$term = get_term_by( 'slug', get_query_var('term'), get_query_var('taxonomy'), OBJECT, 'display' );
+			$term = get_term_by( 'slug', get_query_var('term'), get_query_var('taxonomy'), OBJECT );
 			if ( $term == false ) {
 				return false;
 			}
