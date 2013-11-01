@@ -22,16 +22,9 @@ class BEA_CSF_Server_Attachment {
 		$parent = get_post( $attachment->post_parent, ARRAY_A );
 
 		// Is post parent ?
+		// TODO ? Keep this code ?
 		if ( !empty( $parent ) ) {
 			return $attachment;
-		} elseif ( function_exists( 'taxonomy_image_plugin_get_associations' ) && empty( $parent ) ) { // TODO: Keep this code ?
-			// Get associations
-			$assocs = taxonomy_image_plugin_get_associations();
-
-			// Search value and delete
-			if ( array_search( $attachment['ID'], $assocs ) !== false ) {
-				return $attachment;
-			}
 		}
 
 		return false;

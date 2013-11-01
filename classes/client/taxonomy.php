@@ -63,27 +63,6 @@ class BEA_CSF_Client_Taxonomy {
 		// Get full term datas
 		$new_term = get_term( $new_term_id, $data['taxonomy'] );
 
-		// An image related to
-		if ( isset( $data['image'] ) && !empty( $data['image'] ) ) {
-			$new_image_id = $data['image']['ID'];
-		} else {
-			$new_image_id = 0;
-		}
-
-		// A media exist for this term on this client ?
-		$current_media_id = self::get_media_id( $new_term->term_taxonomy_id );
-		if ( $current_media_id != $new_image_id ) {
-			wp_delete_attachment( $current_media_id, true ); // Delete current media if a new media is loaded !
-		}
-
-		// Medias exist ?
-		if ( $new_image_id != 0 ) {
-			$new_media_id = self::mediaSideloadImage( esc_url( trailingslashit( $data['upload_url'] ) . $data['image']['meta']['_wp_attached_file'][0] ), 0, null );
-			if ( !is_wp_error( $new_media_id ) ) {
-				self::set_media_id( $new_term->term_taxonomy_id, $new_media_id );
-			}
-		}
-
 		return (int) $new_term->term_id;
 	}
 
@@ -115,53 +94,6 @@ class BEA_CSF_Client_Taxonomy {
 		}
 
 		return true;
-	}
-
-	/**
-	 * Get the term image with the taxonomy image plugin
-	 *
-	 * @param int $tt_id Term Taxonomy Id, required
-	 * @return integer|bool False on failure. The MediaID.
-	 * oa	
-	 * @author Amaury Balmer
-	 */
-	public static function get_media_id( $tt_id = 0 ) {
-		if ( (int) $tt_id === 0 || !function_exists( 'taxonomy_image_plugin_get_associations' ) ) {
-			return false;
-		}
-
-		// Get associations in the admin
-		$assocs = taxonomy_image_plugin_get_associations();
-
-		// Check if the term is associated yet
-		if ( isset( $assocs[$tt_id] ) ) {
-			return $assocs[$tt_id];
-		}
-
-		return false;
-	}
-
-	/**
-	 * Get the term image with the taxonomy image plugin
-	 *
-	 * @param int $tt_id Term Taxonomy Id, required
-	 * @param int $image_id Media ID, required
-	 * @return integer|bool False on failure. The MediaID.
-	 * 
-	 * @author Amaury Balmer
-	 */
-	public static function set_media_id( $tt_id = 0, $image_id = 0 ) {
-		if ( (int) $tt_id === 0 || (int) $image_id === 0 || !function_exists( 'taxonomy_image_plugin_get_associations' ) ) {
-			return false;
-		}
-
-		$assoc = taxonomy_image_plugin_get_associations();
-		$assoc[$tt_id] = $image_id;
-		if ( update_option( 'taxonomy_image_plugin', taxonomy_image_plugin_sanitize_associations( $assoc ) ) ) {
-			return true;
-		}
-
-		return false;
 	}
 
 }
