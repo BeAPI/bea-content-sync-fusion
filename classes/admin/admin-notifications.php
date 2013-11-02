@@ -63,7 +63,7 @@ class BEA_CSF_Admin_Notifications {
 		$syncs = BEA_CSF_Synchronizations::get( array('notifications' => 1, 'receivers' => $wpdb->blogid), 'AND', false, true );
 		
 		// Get current values
-		$currents_values = get_option( BEA_CSF_OPTION . '-notifications' );
+		$current_values = get_option( BEA_CSF_OPTION . '-notifications' );
 		
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/client-page-settings-notification.php' );
