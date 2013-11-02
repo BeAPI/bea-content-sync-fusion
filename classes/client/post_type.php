@@ -26,6 +26,11 @@ class BEA_CSF_Client_PostType {
 			$data_for_post['ID'] = $local_id;
 			$new_post_id = wp_update_post( $data_for_post );
 		} else {
+			// Sync settings, allow change post status. Apply only for POST creation
+			if ( $sync->status == 'pending' ) {
+				$data_for_post['post_status'] = 'pending';
+			}
+
 			$data_for_post['import_id'] = $data_for_post['ID'];
 			unset( $data_for_post['ID'] );
 			$new_post_id = wp_insert_post( $data_for_post );
