@@ -52,6 +52,11 @@ class BEA_CSF_Client_PostType {
 			$term_ids = array( );
 
 			foreach ( $data['terms'] as $term ) {
+				// Sync settings, check if term is in an allowed taxonomy
+				if ( !empty($sync->taxonomies) && !in_array($term['taxonomy'], (array) $sync->taxonomies) ) {
+					continue;
+				}
+
 				$local_term_id = (int) get_term_id_from_meta( $term['taxonomy'], '_origin_key', $data['blogid'].':'.(int) $term['term_id'] );
 				if ( $local_term_id == 0 ) {
 					$local_term_id = BEA_CSF_Client_Taxonomy::merge( $term, $sync );
