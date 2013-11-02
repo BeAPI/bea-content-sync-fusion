@@ -40,7 +40,7 @@ class BEA_CSF_Synchronization {
 		// Stars with the hooks deregister previously recorded especially in the case of a re-register!
 		if ( !empty( $this->_register_hooks ) ) {
 			foreach ( $this->_register_hooks as $hook_name ) {
-				remove_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 2 );
+				remove_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 4 );
 			}
 		}
 
@@ -71,7 +71,7 @@ class BEA_CSF_Synchronization {
 
 		// Call the unique action hook !
 		foreach ( $this->_register_hooks as $hook_name ) {
-			add_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 2 );
+			add_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 4 );
 		}
 
 		return true;
@@ -163,12 +163,19 @@ class BEA_CSF_Synchronization {
 	 * Generic method to get data from emitter and sent theses to receivers
 	 * 
 	 * @param mixed $hook_data
+	 * @param boolean $excluded_from_sync
 	 * @param false|array $receivers_inclusion
+	 * @param boolean $ignore_mode
 	 * @return boolean
 	 */
-	public function send_to_receivers( $hook_data, $receivers_inclusion = false ) {
-		// Inclusion is not FALSE? But a empty array ? 
-		if ( is_array($receivers_inclusion) && empty($receivers_inclusion) && $this->mode == 'manual' ) {
+	public function send_to_receivers( $hook_data, $excluded_from_sync = false, $receivers_inclusion = false, $ignore_mode = false ) {
+		// Inclusion is not FALSE? But a empty array ? On manual mode or ignore mode ?
+		if ( ( $this->mode == 'manual' || $ignore_mode == true ) && is_array($receivers_inclusion) && empty($receivers_inclusion) ) {
+			return false;
+		}
+
+		// Emitter content is excluded from SYNC ?
+		if ( ( $this->mode == 'auto' || $ignore_mode == true ) && $excluded_from_sync === true ) {
 			return false;
 		}
 
@@ -196,7 +203,7 @@ class BEA_CSF_Synchronization {
 		// Send data for each receivers
 		foreach ( $this->receivers as $receiver_blog_id ) {
 			// Keep only ID on inclusion custom param
-			if ( is_array($receivers_inclusion) && !in_array($receiver_blog_id, $receivers_inclusion) && $this->mode == 'manual' ) {
+			if ( ( $this->mode == 'manual' || $ignore_mode == true ) && is_array($receivers_inclusion) && !in_array($receiver_blog_id, $receivers_inclusion) ) {
 				continue;
 			}
 

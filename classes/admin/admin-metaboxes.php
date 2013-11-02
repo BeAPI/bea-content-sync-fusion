@@ -37,7 +37,7 @@ class BEA_CSF_Admin_Metaboxes {
 			update_post_meta( $post->ID, '_exclude_from_sync', 1 );
 			if ( $previous_value == 0 ) {
 				// This value have just changed, delete content for clients !
-				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false );
+				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false, false, false );
 			}
 		} else {
 			delete_post_meta( $post->ID, '_exclude_from_sync' );
@@ -73,7 +73,7 @@ class BEA_CSF_Admin_Metaboxes {
 		$receivers_to_delete = array_diff($old_post_receivers, $new_post_receivers);
 		if ( !empty($receivers_to_delete) ) {
 			// Theses values have just deleted, delete content for clients !
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $receivers_to_delete );
+			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false, $receivers_to_delete, true );
 		}
 
 		return true;

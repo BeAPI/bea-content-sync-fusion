@@ -15,7 +15,6 @@
 	Mirror mode (deleting inclusion)
 	Unlink relation from receivers
 	AJAX Taxo for Sync edition
-	A post type with 2 mode sync / Manage inclusion ?
  */
 
 // Plugin constants
