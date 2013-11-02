@@ -147,7 +147,9 @@ class BEA_CSF_Client_PostType {
 			}
 		}
 
-		return $new_post_id;
+		$new_post = get_post( $new_post_id );
+		$new_post->is_edition = ( $local_id != 0 ) ? true : false;
+		return $new_post;
 	}
 
 	/**

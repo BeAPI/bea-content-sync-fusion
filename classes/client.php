@@ -21,6 +21,9 @@ class BEA_CSF_Client {
 		add_action( 'create_term', array( __CLASS__, 'merge_term' ), 20, 3 );
 		add_action( 'edit_term', array( __CLASS__, 'merge_term' ), 20, 3 );
 		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), 20, 3 );
+
+		// Notifications 
+		add_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
 	}
 
 	public static function delete_attachment( $attachment_id = 0 ) {
@@ -143,6 +146,65 @@ class BEA_CSF_Client {
 
 		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, false, false );
 		return true;
+	}
+
+	public static function send_notifications( $result, $object, $method, $blogid, BEA_CSF_Synchronization $sync ) {
+		// Enable notification only post type edition/addition
+		if ( $object != 'PostType' || $method != 'merge' ) {
+			return false;
+		}
+
+		// Test if result of insertion are an error
+		if ( is_wp_error($result) ) {
+			return false;
+		}
+
+		// Notify only if result is an addition on DB, not edition...
+		if( isset($result->is_edition) && $result->is_edition == true ) {
+			return false;
+		}
+
+		// Get current DB options
+		$current_values = get_option( BEA_CSF_OPTION . '-notifications' );
+
+		// Get users ID for current sync
+		if ( !isset($current_values[$sync->id]) ) {
+			return false;
+		}
+		
+		// Get current user logged
+		$current_user = get_current_user();
+
+		// Get post author
+		$post_author = new WP_User( $result->post_author );
+
+		// Prepare subject text
+		$subject = sprintf( __('New or update post on website : %s', BEA_CSF_LOCALE), get_bloginfo('name') );
+
+		// Loop on users to notify
+		foreach( $current_values[$sync->id] as $user_id ) {
+			$user = new WP_User( $user_id );
+			if ( empty($user) || is_wp_error($user) || $user->ID == $current_user->ID ) { // Test user validity, and exclude current user logged from self-notifications
+				continue;
+			}
+
+			// Prepare message text
+			$message  = sprintf( __( 'Post title : "%s"' ), $result->post_title ) . "\r\n";
+			$message .= sprintf( __('Author : %s'), $post_author->display_name ) . "\r\n";
+			$message .= sprintf( __('E-mail : %s'), $post_author->user_email ) . "\r\n";
+			$message .= sprintf( __('Permalink: %s'), get_permalink( $result ) ) . "\r\n";
+			if ( user_can( $user->ID, 'edit_post', $result->ID ) ) {
+				if ( EMPTY_TRASH_DAYS ) {
+					$message .= sprintf( __('Trash it: %s'), get_delete_post_link($result->ID) ) . "\r\n";
+				} else {
+					$message .= sprintf( __('Delete it: %s'), get_delete_post_link($result->ID) ) . "\r\n";
+				}
+				$message .= sprintf( __('Edit it: %s'), get_edit_post_link($result->ID) ) . "\r\n";
+			}
+
+			// Send mail
+			wp_mail( $user->user_email, $subject, $message );
+		}
 	}
 
 }

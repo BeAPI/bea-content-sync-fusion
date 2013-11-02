@@ -208,7 +208,15 @@ class BEA_CSF_Synchronization {
 			}
 
 			switch_to_blog( $receiver_blog_id );
+
+			// Send data to CLIENT classes
 			$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_transfer, $this );
+
+			// Allow users notifications
+			if ( (int) $this->notifications == 1 ) {
+				do_action( 'bea-csf-client-notifications', $result, $object, $method, $blogid, $this );
+			}
+
 			// var_dump($result);
 			restore_current_blog();
 		}
