@@ -1,30 +1,29 @@
 <?php
 class BEA_CSF_Admin_Restrictions {
+	private static $capabilities_to_check = array('edit_post', 'delete_post', 'delete_page', 'edit_page');
+
 	/**
-	 * Constructor
+	 * Constructor, register hooks
 	 *
 	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct( ) {
-		global $wpdb;
-		
-		// Get current options
-		$current_options = (array) get_site_option( BEA_CSF_OPTION );
-		if ( !isset($current_options['clients']) || !in_array($wpdb->blogid, $current_options['clients']) ) {
-			return false;
-		}
-		
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
-		
-		// Post type
-		add_filter( 'post_class', array( __CLASS__, 'post_class' ), 10, 3 );
-		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
-		
-		// Taxonomy
+
+		// Post row
+		add_filter( 'page_row_actions', array( __CLASS__, 'post_row_actions' ), 10, 2 );
+		add_filter( 'post_row_actions', array( __CLASS__, 'post_row_actions' ), 10, 2 );
+		add_action( 'admin_init', array( __CLASS__, 'admin_init_check_post_publishing' ) );
+
+		// Term row
 		add_filter( 'tag_row_actions', array( __CLASS__, 'tag_row_actions' ), 10, 2 );
+		add_action( 'admin_init', array( __CLASS__, 'admin_init_check_term_edition' ) );
+
+		// Play with capabilities
+		add_filter( 'map_meta_cap', array( __CLASS__, 'map_meta_cap' ), 10, 4 );
 	}
-	
+
 	/**
 	 * Register JS and CSS for client part
 	 * 
@@ -36,92 +35,67 @@ class BEA_CSF_Admin_Restrictions {
 			wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array( ), BEA_CSF_VERSION, 'all' );
 		}
 	}
-	
+
 	/**
-	 * Add locked class on contents list
+	 * Remove some actions on post list when a post have an original key
 	 * 
-	 * @param array $classes
-	 * @param string $class
-	 * @param integer $post_ID
+	 * @param array $post
+	 * @param WP_Post $post
 	 * @return array
 	 */
-	public static function post_class( array $classes, $class, $post_ID ) {
-		$master_id = get_post_meta( $post_ID, '_origin_key', true );
-		if ( $master_id != false && (int) $master_id > 0 ) {
-			$classes[] = 'locked-content master-' . $master_id;
+	public static function post_row_actions( array $actions, WP_Post $post ) {
+		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
+		if ( $_origin_key != false ) {
+			if ( $post->post_status == 'pending' ) {
+				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ) ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
+				
+				if ( current_user_can('publish_post', $post->ID) ) {
+					$actions['publish'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array('action' => 'bea-csf-publish', 'ID' => $post->ID) ), 'bea-csf-publish' ) ) . '">Publish</a>';
+				}
+			}
 		}
+		
+		return $actions;
+	}
 
-		return $classes;
+	public static function admin_init_check_post_publishing() {
+		if ( isset($_GET['action']) && $_GET['action'] == 'bea-csf-publish' && isset($_GET['ID']) && (int) $_GET['ID'] > 0 ) {
+			check_admin_referer('bea-csf-publish');
+			
+			wp_publish_post( (int) $_GET['ID'] );
+
+			$redirect_url = remove_query_arg('action');
+			$redirect_url = remove_query_arg('ID', $redirect_url );
+			$redirect_url = remove_query_arg('_wpnonce', $redirect_url );
+			wp_redirect( $redirect_url );
+			exit();
+		}
 	}
 
 	/**
-	 * Check _POST data for post or term edition
-	 */
-	public static function admin_init( ) {
-		self::check_post_edition();
-		self::check_term_edition();
-	}
-	
-	/**
-	 * Block request for post edition
-	 * 
-	 * @global string $pagenow
-	 * @return boolean
-	 */
-	public static function check_post_edition() {
-		global $pagenow;
-
-		// Not an edit page ?
-		if ( $pagenow != 'post.php' ) {
-			return false;
-		}
-
-		// No action on edit page ?
-		if ( !isset( $_GET['post'] ) || $_GET['action'] != 'edit' ) {
-			return false;
-		}
-
-		// Get current post with post_id
-		$current_post = get_post( $_id = (int)$_GET['post'] );
-
-		// Object not exist ?
-		if ( empty( $current_post ) ) {
-			return false;
-		}
-
-		$master_id = get_post_meta( $current_post->ID, '_origin_key', true );
-		if ( $master_id != false && (int)$master_id > 0 ) {
-			do_action( 'edit_protected_content', $master_id );
-			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', BEA_CSF_LOCALE ) );
-		}
-
-		return true;
-	}
-	
-	/**
-	 * Remove some actions on tag list
+	 * Remove some actions on tag list when a post have an original key
 	 * 
 	 * @param array $actions
-	 * @param object $term
+	 * @param stdClass $term
 	 * @return array
 	 */
 	public static function tag_row_actions( array $actions, stdClass $term ) {
-		$master_id = get_term_taxonomy_meta( (int) $term->term_taxonomy_id, '_origin_key', true );
-		if ( $master_id != false && (int)$master_id > 0 ) {
+		$_origin_key = get_term_taxonomy_meta( $term->term_taxonomy_id, '_origin_key', true );
+		if ( $_origin_key != false ) {
 			unset($actions['edit'], $actions['inline hide-if-no-js'], $actions['delete']);
 			$actions['view'] .= '<span class="locked-term-parent"></span>';
 		}
 		
 		return $actions;
 	}
-	
-	/**
+
+/**
 	 * Block request for term edition
 	 * 
 	 * @global string $pagenow
 	 * @return boolean
 	 */
-	public static function check_term_edition() {
+	public static function admin_init_check_term_edition() {
 		global $pagenow;
 
 		// Not an edit page ?
@@ -142,11 +116,33 @@ class BEA_CSF_Admin_Restrictions {
 			return false;
 		}
 
-		$master_id = get_term_taxonomy_meta( $current_term->term_taxonomy_id, '_origin_key', true );
-		if ( $master_id != false && (int) $master_id > 0 ) {
+		$_origin_key = get_term_taxonomy_meta( $current_term->term_taxonomy_id, '_origin_key', true );
+		if ( $_origin_key != false ) {
 			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', BEA_CSF_LOCALE ) );
 		}
 
 		return true;
+	}
+	
+	/**
+	 *  Play with Capabilities API for remove "edit/delete" cap when a post have an original key
+	 * 
+	 * @param array $caps
+	 * @param string $cap
+	 * @param integer $user_id
+	 * @param array $args
+	 * @return array
+	 */
+	public static function map_meta_cap( $caps, $cap, $user_id, $args ) {
+		global $tag;
+		
+		if ( in_array($cap, self::$capabilities_to_check) ) {
+			$_origin_key = get_post_meta( $args[0], '_origin_key', true );
+			if ( $_origin_key != false ) {
+				$caps[] = 'do_not_allow';
+			}
+		}
+
+		return $caps;
 	}
 }
