@@ -88,6 +88,12 @@ class BEA_CSF_Admin_Metaboxes {
 	public static function add_meta_boxes( $post_type, $post ) {
 		global $wpdb;
 		
+		// Exclude content created by sync plugin
+		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
+		if ( $_origin_key != false ) {
+			return false;
+		}
+
 		// Get syncs for current post_type and mode set to "auto"
 		$syncs_with_auto_state = BEA_CSF_Synchronizations::get( array( 'post_type' => $post_type, 'mode' => 'auto', 'emitters' => $wpdb->blogid ), 'AND', false, true  );
 		if ( !empty( $syncs_with_auto_state ) ) {
