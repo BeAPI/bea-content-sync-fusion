@@ -2,7 +2,10 @@
 class BEA_CSF_Plugin {
 
 	public static function activate() {
-		
+		// Call function activation of Meta for Taxonomies plugin
+		if ( function_exists('install_table_termmeta') ) {
+			install_table_termmeta();
+		}
 	}
 
 	public static function deactivate() {
