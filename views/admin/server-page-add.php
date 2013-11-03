@@ -27,7 +27,7 @@
 		<p>
 			<label><?php _e('Post type', BEA_CSF_LOCALE); ?></label>
 			<select class="widefat" name="sync[post_type]">
-				<?php foreach( get_post_types(array('public' => true), 'objects') as $post_type ) : ?>
+				<?php foreach( get_post_types(array(), 'objects') as $post_type ) : ?>
 					<option value="<?php echo esc_attr($post_type->name); ?>" <?php selected($post_type->name, $current_sync->get_field('post_type')); ?>><?php echo esc_html($post_type->labels->name); ?></option>
 				<?php endforeach; ?>
 			</select>
