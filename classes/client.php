@@ -40,6 +40,12 @@ class BEA_CSF_Client {
 			return false;
 		}
 
+		// Exclude content created by sync plugin
+		$_origin_key = get_post_meta( $attachment->ID, '_origin_key', true );
+		if ( $_origin_key != false ) {
+			return false;
+		}
+
 		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $wpdb->blogid, $attachment, false, false, false );
 		return true;
 	}
@@ -55,6 +61,12 @@ class BEA_CSF_Client {
 
 		// Is attachment ?
 		if ( $attachment->post_type !== 'attachment' ) {
+			return false;
+		}
+
+		// Exclude content created by sync plugin
+		$_origin_key = get_post_meta( $attachment->ID, '_origin_key', true );
+		if ( $_origin_key != false ) {
 			return false;
 		}
 
@@ -88,6 +100,12 @@ class BEA_CSF_Client {
 		if ( $post == false || is_wp_error( $post ) ) {
 			return false;
 		}
+
+		// Exclude content created by sync plugin
+		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
+		if ( $_origin_key != false ) {
+			return false;
+		}
 		
 		// Auto Sync - Exclude meta ?
 		$is_excluded_from_sync = (boolean) get_post_meta( $post->ID, '_exclude_from_sync', true );
@@ -118,6 +136,12 @@ class BEA_CSF_Client {
 			return false;
 		}
 
+		// Exclude content created by sync plugin
+		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
+		if ( $_origin_key != false ) {
+			return false;
+		}
+
 		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false, false, false );
 		return true;
 	}
@@ -131,6 +155,12 @@ class BEA_CSF_Client {
 			return false;
 		}
 
+		// Exclude content created by sync plugin
+		$_origin_key = get_term_taxonomy_meta( $term->term_taxonomy_id, '_origin_key', true );
+		if ( $_origin_key != false ) {
+			return false;
+		}
+
 		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, false, false );
 		return true;
 	}
@@ -141,6 +171,12 @@ class BEA_CSF_Client {
 		// Get term
 		$term = get_term( $term_id, $taxonomy );
 		if ( $term == false || is_wp_error( $term ) ) {
+			return false;
+		}
+
+		// Exclude content created by sync plugin
+		$_origin_key = get_term_taxonomy_meta( $term->term_taxonomy_id, '_origin_key', true );
+		if ( $_origin_key != false ) {
 			return false;
 		}
 
