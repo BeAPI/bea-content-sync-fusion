@@ -2,6 +2,10 @@
 class BEA_CSF_Client {
 
 	public function __construct() {
+		self::register_hooks();
+	}
+
+	public static function register_hooks() {
 		// Attachments
 		add_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), 20, 1 );
 		add_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), 20, 1 );
@@ -24,6 +28,31 @@ class BEA_CSF_Client {
 
 		// Notifications 
 		add_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
+	}
+
+	public static function unregister_hooks() {
+		// Attachments
+		remove_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), 20, 1 );
+		remove_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), 20, 1 );
+		remove_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), 20, 1 );
+
+		// Attachments - Manage AJAX actions on thumbnail post changes
+		if ( isset( $_POST['thumbnail_id'] ) ) {
+			remove_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), 20, 3 );
+			remove_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), 20, 3 );
+		}
+
+		// Post types
+		remove_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), 20, 3 );
+		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), 20, 1 );
+
+		// Terms
+		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), 20, 3 );
+		remove_action( 'edit_term', array( __CLASS__, 'merge_term' ), 20, 3 );
+		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), 20, 3 );
+
+		// Notifications 
+		remove_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
 	}
 
 	public static function delete_attachment( $attachment_id = 0 ) {

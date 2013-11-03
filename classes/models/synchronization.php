@@ -196,7 +196,7 @@ class BEA_CSF_Synchronization {
 			// TODO: Log
 			return false;
 		}
-
+		
 		// Append origin blog id to data to transfer
 		$data_to_transfer['blogid'] = (int) $blogid;
 
@@ -209,8 +209,14 @@ class BEA_CSF_Synchronization {
 
 			switch_to_blog( $receiver_blog_id );
 
+			// Deactive hooks plugin
+			BEA_CSF_Client::unregister_hooks();
+
 			// Send data to CLIENT classes
 			$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_transfer, $this );
+
+			// Reactive hooks plugin
+			BEA_CSF_Client::register_hooks();
 
 			// Allow users notifications
 			if ( (int) $this->notifications == 1 ) {
