@@ -5,13 +5,13 @@ Plugin URI: http://www.beapi.fr
 Description: Add table for term taxonomy meta and some methods for use it. Inspiration from core post meta.
 Author: Be API
 Author URI: http://beapi.fr
-Version: 1.1.5
+Version: 1.2
 */
 
 // 1. Setup table name for term taxonomy meta
 global $wpdb;
-$wpdb->tables[] = 'term_taxo_meta';
-$wpdb->term_taxometa = $wpdb->prefix . 'term_taxo_meta';
+$wpdb->tables[] = 'term_taxometa';
+$wpdb->term_taxometa = $wpdb->prefix . 'term_taxometa';
 
 // 2. Library
 require_once( dirname(__FILE__) . '/inc/functions.meta.php' );
