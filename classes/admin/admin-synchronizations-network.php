@@ -62,7 +62,16 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 		// Display message
 		settings_errors( BEA_CSF_LOCALE );
-
+		
+		// Get current setting
+		$current_settings = get_site_option('csf_adv_settings');
+		
+		// Get P2P registered connection
+		$p2p_registered_connections = array();
+		if ( class_exists( 'P2P_Connection_Type_Factory') ) {
+			$p2p_registered_connections = P2P_Connection_Type_Factory::get_all_instances();
+		}
+		
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-page-settings.php' );
 
@@ -94,6 +103,12 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 			$current_sync = new BEA_CSF_Synchronization( $current_sync_fields );
 		}
+		
+		// Get P2P registered connection
+		$p2p_registered_connections = array();
+		if ( class_exists( 'P2P_Connection_Type_Factory') ) {
+			$p2p_registered_connections = P2P_Connection_Type_Factory::get_all_instances();
+		}
 
 		// Display message
 		settings_errors( BEA_CSF_LOCALE );
@@ -111,6 +126,14 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 * @author Amaury Balmer
 	 */
 	public static function admin_init() {
+		if ( isset($_POST['update-bea-csf-adv-settings']) ) {
+			check_admin_referer( 'update-bea-csf-adv-settings' );
+			
+			$option_value = isset( $_POST['csf_adv_settings'] ) ? stripslashes_deep( $_POST['csf_adv_settings'] ) : 0;
+			update_site_option('csf_adv_settings', $option_value );
+			add_settings_error( BEA_CSF_LOCALE, 'settings_updated', __('Advanced settings updated with success !', BEA_CSF_LOCALE), 'updated' );
+		}
+		
 		if ( isset( $_POST['update-bea-csf-settings'] ) && isset( $_POST['sync'] ) ) { // Save
 			check_admin_referer( 'update-bea-csf-settings' );
 

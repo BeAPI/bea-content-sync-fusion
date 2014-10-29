@@ -9,7 +9,7 @@ class BEA_CSF_Client_Taxonomy {
 		if ( empty($term) || !is_array( $term ) ) {
 			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );
 		}
-
+		
 		// Get local ID for parent, from TT_ID
 		$term['parent_tt_id'] = (int) get_term_taxonomy_id_from_meta( '_origin_key', $term['blogid'].':'.(int) $term['parent_tt_id'] );
 		if ( $term['parent_tt_id'] > 0 ) {
@@ -56,14 +56,31 @@ class BEA_CSF_Client_Taxonomy {
 		if ( $new_term_id == 0 ) {
 			return new WP_Error( 'term_id_invalid', 'Error - Term ID is egal to 0' );
 		}
+		
+		// Save all metas for new post
+		if ( isset( $term['meta_data'] ) && is_array( $term['meta_data'] ) && !empty( $term['meta_data'] ) ) {
+			foreach ( $term['meta_data'] as $key => $values ) {
+				// Never sync origin key
+				if ( $key == '_origin_key' ) {
+					continue;
+				}
+				
+				if ( count($values) > 1 || !isset($values[0]) ) {
+					// TODO: Management exception, SO RARE in WP !
+					continue;
+				} else {
+					update_term_meta( $term['taxonomy'], $new_term_id, $key, $values[0] );
+				}
+			}
+		}
 
 		// Save master id
 		update_term_meta( $term['taxonomy'], $new_term_id, '_origin_key', $term['blogid'].':'.$term['term_taxonomy_id'] );
 
 		// Get full term datas
-		$new_term = get_term( $new_term_id, $term['taxonomy'] );
+		// $new_term = get_term( $new_term_id, $term['taxonomy'] );
 
-		return (int) $new_term->term_id;
+		return (int) $new_term_id;
 	}
 
 	/**
@@ -82,11 +99,11 @@ class BEA_CSF_Client_Taxonomy {
 		$local_tt_id = (int) get_term_taxonomy_id_from_meta( '_origin_key', $term['blogid'].':'.(int) $term['term_taxonomy_id'] );
 		if ( $local_tt_id > 0 ) {
 			// Term already exist before sync, keep it !
-			$already_exists = (int) get_term_taxonomy_id_from_meta( 'already_exists', (int) $term['term_taxonomy_id'] );
+			$already_exists = (int) get_term_taxonomy_id_from_meta( 'already_exists', 1 );
 			if ( $already_exists == 1 ) {
 				return false;
 			}
-
+			
 			$local_term_id = (int) get_term_id_from_term_taxonomy_id( $term['taxonomy'], $local_tt_id );
 			if ( $local_term_id > 0 ) {
 				wp_delete_term( $local_term_id, $term['taxonomy'] );

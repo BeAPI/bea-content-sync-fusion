@@ -9,6 +9,12 @@ class BEA_CSF_Admin_Restrictions {
 	 * @author Amaury Balmer
 	 */
 	public function __construct( ) {
+		// Get current setting
+		$current_settings = get_site_option('csf_adv_settings');
+		if ( isset($current_settings['unlock-mode']) && $current_settings['unlock-mode'] == '1' ) {
+			return false;
+		}
+		
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
 
 		// Post row
@@ -22,6 +28,8 @@ class BEA_CSF_Admin_Restrictions {
 
 		// Play with capabilities
 		add_filter( 'map_meta_cap', array( __CLASS__, 'map_meta_cap' ), 10, 4 );
+		
+		return true;
 	}
 
 	/**
@@ -136,13 +144,17 @@ class BEA_CSF_Admin_Restrictions {
 	public static function map_meta_cap( $caps, $cap, $user_id, $args ) {
 		global $tag;
 		
-		if ( in_array($cap, self::$capabilities_to_check) ) {
+		$capabilities = apply_filters( 'bea_csf_capabilities', self::$capabilities_to_check );
+		if ( !is_array( $capabilities ) ) {
+			return $caps;
+		}
+		if ( in_array($cap, $capabilities ) ) {
 			$_origin_key = get_post_meta( $args[0], '_origin_key', true );
 			if ( $_origin_key != false ) {
 				$caps[] = 'do_not_allow';
 			}
 		}
-
+		
 		return $caps;
 	}
 }

@@ -13,6 +13,9 @@
 					<th scope="col" class="manage-column "><?php _e( 'Confict ?', BEA_CSF_LOCALE ); ?></th>
 					<th scope="col"><?php _e( 'Post type', BEA_CSF_LOCALE ); ?></th>
 					<th scope="col"><?php _e( 'Taxonomies', BEA_CSF_LOCALE ); ?></th>
+					<?php if ( class_exists('P2P_Connection_Type_Factory') ) : ?>
+						<th scope="col"><?php _e( 'P2P', BEA_CSF_LOCALE ); ?></th>
+					<?php endif; ?>
 					<th scope="col"><?php _e( 'Mode', BEA_CSF_LOCALE ); ?></th>
 					<th scope="col"><?php _e( 'Default status', BEA_CSF_LOCALE ); ?></th>
 					<th scope="col"><?php _e( 'Notifications ?', BEA_CSF_LOCALE ); ?></th>
@@ -35,7 +38,7 @@
 						}
 
 						// Get post type label from cpt name
-						$post_type_label = '';
+						$post_type_label = '-';
 						$post_type_object = get_post_type_object( $sync->get_field('post_type') );
 						if ( $post_type_object != false ) {
 							$post_type_label = $post_type_object->labels->name;
@@ -50,6 +53,9 @@
 							}
 						}
 						$taxonomies_label = implode(', ', $taxonomies_label);
+						
+						// Get P2P labels from taxo name
+						$p2p_label = implode(', ', (array) $sync->get_field('p2p_connections') );
 
 						$i++;
 						$class = ( $class == 'alternate' ) ? '' : 'alternate';
@@ -73,6 +79,9 @@
 							<td><strong><?php echo esc_html( $i18n_true_false[$sync->has_conflict()] ); ?></strong></td>
 							<td><?php echo esc_html( $post_type_label ); ?></td>
 							<td><?php echo esc_html( $taxonomies_label ); ?></td>
+							<?php if ( class_exists('P2P_Connection_Type_Factory') ) : ?>
+								<td><?php echo esc_html( $p2p_label ); ?></td>
+							<?php endif; ?>
 							<td><?php echo esc_html( $sync->get_field('mode') ); ?></td>
 							<td><?php echo esc_html( $sync->get_field('status') ); ?></td>
 							<td><?php echo esc_html( $i18n_true_false[$sync->get_field('notifications')] ); ?></td>
@@ -86,4 +95,30 @@
 			</tbody>
 		</table>
 	</div><!-- /col-container -->
+	
+		
+	<h3><?php _e("Content Sync: Advanced settings", BEA_CSF_LOCALE); ?></h3>
+	<div id="col-container">
+		<form action="" method="post">
+			<table class="form-table">
+				<tbody>
+					<tr valign="top">
+						<th scope="row"><?php _e("Special mode", BEA_CSF_LOCALE); ?></th>
+						<td>
+							<fieldset>
+								<label for="csf-unlock-mode">
+									<input name="csf_adv_settings[unlock-mode]" <?php checked( is_array( $current_settings ) && $current_settings['unlock-mode'] == '1', true ); ?> type="checkbox" id="csf-unlock-mode" value="1"> <?php _e("Remove all content edition restrictions", BEA_CSF_LOCALE); ?>
+								</label>
+							</fieldset>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<?php wp_nonce_field('update-bea-csf-adv-settings'); ?>
+			<p class="submit">
+				<input class="button-primary" type="submit" name="update-bea-csf-adv-settings" value="<?php _e("Save", BEA_CSF_LOCALE); ?>" />
+			</p>
+		</form>
+	</div>
 </div>

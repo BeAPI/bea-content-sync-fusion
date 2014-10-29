@@ -15,19 +15,10 @@ class BEA_CSF_Server_Attachment {
 	 * Get deletation data
 	 * 
 	 * @param WP_Post $attachment
-	 * @return integer|boolean
+	 * @return array
 	 */
 	public static function delete( WP_Post $attachment, BEA_CSF_Synchronization $sync ) {
-		// Is attachement of post OR term ?
-		$parent = get_post( $attachment->post_parent, ARRAY_A );
-
-		// Is post parent ?
-		// TODO ? Keep this code ?
-		if ( !empty( $parent ) ) {
-			return $attachment;
-		}
-
-		return false;
+		return self::get_data( $attachment );
 	}
 
 	/**
@@ -42,7 +33,7 @@ class BEA_CSF_Server_Attachment {
 			return false;
 		}
 
-		$attachment['meta'] = get_post_custom( $attachment['ID'] );
+		$attachment['meta_data'] = get_post_custom( $attachment['ID'] );
 		$attachment['attachment_url'] = get_permalink( $attachment['ID'] );
 		$attachment['attachment_dir'] = get_attached_file( $attachment['ID'] );
 

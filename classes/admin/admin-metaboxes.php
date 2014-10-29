@@ -16,7 +16,12 @@ class BEA_CSF_Admin_Metaboxes {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return false;
 		}
-
+		
+		// Go out if post is revision
+		if ( $post->post_type == 'revision' ) {
+			return false;
+		}
+		
 		// Exclude content created by sync plugin
 		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
 		if ( $_origin_key != false ) {
@@ -70,14 +75,16 @@ class BEA_CSF_Admin_Metaboxes {
 		}
 
 		// Get previous values
-		$old_post_receivers = (array) get_post_meta( $post->ID, '_post_receivers', true );
-
+		$old_post_receivers = (array)get_post_meta( $post->ID, '_post_receivers', true );
+		$old_post_receivers = array_filter($old_post_receivers, 'trim');
+		
 		// Set new value
 		update_post_meta( $post->ID, '_post_receivers', $new_post_receivers );
-
+		
 		// Calcul difference for send delete notification for uncheck action
 		$receivers_to_delete = array_diff($old_post_receivers, $new_post_receivers);
-		if ( !empty($receivers_to_delete) ) {
+		
+		if ( !empty($receivers_to_delete) && !empty($old_post_receivers) ) {
 			// Theses values have just deleted, delete content for clients !
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false, $receivers_to_delete, true );
 		}
@@ -166,6 +173,30 @@ class BEA_CSF_Admin_Metaboxes {
 
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-metabox-manual.php' );
+	}
+	
+	public static function is_valid_post_id( $post_id = 0, $blog_id = 0 ) {
+		if ( self::is_valid_blog_id($blog_id) ) {
+			switch_to_blog($blog_id);
+				$post_exists = get_post( (int) $post_id );
+				$post_exists = ( empty($post_exists) || is_wp_error($post_exists) ) ? false : true;
+			restore_current_blog();
+			
+			return $post_exists;
+		}
+		
+		return false;
+	}
+	
+	public static function is_valid_blog_id( $blog_id = 0 ) {
+		$blogs_id = BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network();
+		foreach( BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network() as $site ) {
+			if ( $site['blog_id'] == $blog_id ) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 }

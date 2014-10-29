@@ -27,6 +27,7 @@
 		<p>
 			<label><?php _e('Post type', BEA_CSF_LOCALE); ?></label>
 			<select class="widefat" name="sync[post_type]">
+				<option value=""><?php _e('No post type, sync only taxo !', BEA_CSF_LOCALE); ?></option>
 				<?php foreach( get_post_types(array(), 'objects') as $post_type ) : ?>
 					<option value="<?php echo esc_attr($post_type->name); ?>" <?php selected($post_type->name, $current_sync->get_field('post_type')); ?>><?php echo esc_html($post_type->labels->name); ?></option>
 				<?php endforeach; ?>
@@ -43,6 +44,18 @@
 			</select>
 			<span class="description"><?php _e('You must select taxonomies related to content that you want to sync', BEA_CSF_LOCALE); ?></span>
 		</p>
+		
+		<?php if ( class_exists('P2P_Connection_Type_Factory') ) : ?>
+		<p id="bea-csf-p2p-block">
+			<label><?php _e('P2P connections', BEA_CSF_LOCALE); ?></label>
+			<select multiple="multiple" class="widefat multiple-helper" name="sync[p2p_connections][]">
+				<?php foreach( $p2p_registered_connections as $p2p_name => $p2p_obj ) : ?>
+					<option value="<?php echo esc_attr($p2p_name); ?>" <?php selected(true, in_array($p2p_name, (array)$current_sync->get_field('p2p_connections'))); ?>><?php echo esc_html($p2p_name); ?></option>
+				<?php endforeach; ?>
+			</select>
+			<span class="description"><?php _e('You must select P2P connection that you want to sync', BEA_CSF_LOCALE); ?></span>
+		</p>
+		<?php endif; ?>
 		
 		<p>
 			<label><?php _e('Mode', BEA_CSF_LOCALE); ?></label>
@@ -61,7 +74,7 @@
 					<option value="<?php echo esc_attr($value); ?>" <?php selected($value, $current_sync->get_field('status')); ?>><?php echo esc_html($label); ?></option>
 				<?php endforeach; ?>
 			</select>
-			<span class="description"><?php _e('When content is published and it is sent to other sites, it is automatically set to the status "published", you can also set the "pending" status and provide an opportunity for each admin to validate or not the content.', BEA_CSF_LOCALE); ?></span>
+			<span class="description"><?php _e('When content is published and it is sent to other sites, it is automatically set to the status "published", you can also set the "pending" status and provide an opportunity for each admin to validate or not the content. (only for post type)', BEA_CSF_LOCALE); ?></span>
 		</p>
 		
 		<p>

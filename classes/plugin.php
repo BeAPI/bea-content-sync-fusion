@@ -11,6 +11,13 @@ class BEA_CSF_Plugin {
 	public static function deactivate() {
 		
 	}
+	
+	public static function wpmu_new_blog() {
+		// Call function activation of Meta for Taxonomies plugin
+		if ( function_exists('install_table_termmeta') ) {
+			install_table_termmeta();
+		}
+	}
 
 	/**
 	 * Get post ID from post meta with meta_key and meta_value

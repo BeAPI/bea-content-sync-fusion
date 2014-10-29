@@ -7,24 +7,28 @@ class BEA_CSF_Client {
 
 	public static function register_hooks() {
 		// Attachments
-		add_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), 20, 1 );
-		add_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), 20, 1 );
-		add_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), 20, 1 );
+		add_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX , 1 );
+		add_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX , 1 );
+		add_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX , 1 );
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			add_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), 20, 3 );
-			add_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), 20, 3 );
+			add_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX , 3 );
+			add_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX , 3 );
 		}
 
 		// Post types
-		add_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), 20, 3 );
-		add_action( 'delete_post', array( __CLASS__, 'delete_post' ), 20, 1 );
+		add_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX , 3 );
+		add_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX , 1 );
 
 		// Terms
-		add_action( 'create_term', array( __CLASS__, 'merge_term' ), 20, 3 );
-		add_action( 'edit_term', array( __CLASS__, 'merge_term' ), 20, 3 );
-		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), 20, 3 );
+		add_action( 'create_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX , 3 );
+		add_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX , 3 );
+		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX , 3 );
+		
+		// P2P
+		add_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX , 1 );
+		add_action( 'p2p_delete_connections', array( __CLASS__, 'p2p_delete_connections' ), PHP_INT_MAX , 1 );
 
 		// Notifications 
 		add_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
@@ -32,24 +36,28 @@ class BEA_CSF_Client {
 
 	public static function unregister_hooks() {
 		// Attachments
-		remove_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), 20, 1 );
-		remove_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), 20, 1 );
-		remove_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), 20, 1 );
+		remove_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX , 1 );
+		remove_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX , 1 );
+		remove_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX , 1 );
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			remove_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), 20, 3 );
-			remove_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), 20, 3 );
+			remove_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX , 3 );
+			remove_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX , 3 );
 		}
 
 		// Post types
-		remove_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), 20, 3 );
-		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), 20, 1 );
+		remove_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX , 3 );
+		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX , 1 );
 
 		// Terms
-		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), 20, 3 );
-		remove_action( 'edit_term', array( __CLASS__, 'merge_term' ), 20, 3 );
-		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), 20, 3 );
+		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX , 3 );
+		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX , 3 );
+		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX , 3 );
+		
+		// P2P
+		remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX , 1 );
+		remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX , 1 );
 
 		// Notifications 
 		remove_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
@@ -109,7 +117,7 @@ class BEA_CSF_Client {
 			if ( $post == false || is_wp_error( $post ) ) {
 				return false;
 			}
-
+			
 			// Use transition post status method (avoid duplicate code)
 			self::transition_post_status( $post->post_status, $post->post_status, $post );
 			return true;
@@ -120,13 +128,18 @@ class BEA_CSF_Client {
 
 	public static function transition_post_status( $new_status = '', $old_status = '', $post = null ) {
 		global $wpdb;
-
+		
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return false;
 		}
 
 		$post = get_post( $post );
 		if ( $post == false || is_wp_error( $post ) ) {
+			return false;
+		}
+		
+		// Go out if post is revision
+		if ( $post->post_type == 'revision' ) {
 			return false;
 		}
 
@@ -144,16 +157,32 @@ class BEA_CSF_Client {
 
 		// Check for new publication
 		if ( $new_status == 'publish' ) {
-			// Check status ?
-			if ( $post->post_status != 'publish' ) {
-				return false;
-			}
-
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $is_excluded_from_sync, $_post_receivers, false );
+			add_action( 'save_post', array( __CLASS__, 'save_post' ), 100, 2 );
 		} elseif ( $new_status != $old_status && $old_status == 'publish' ) { // Check for unpublish
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $is_excluded_from_sync, $_post_receivers, false );
 		}
 
+		return true;
+	}
+	
+	public static function save_post( $post_id, WP_Post $post ) {
+		global $wpdb;
+		
+		// Go out if post is revision
+		if ( $post->post_type == 'revision' ) {
+			return false;
+		}
+		
+		// Exec once
+		remove_action( 'save_post', array( __CLASS__, 'save_post' ), 100, 2 );
+		
+		// Auto Sync - Exclude meta ?
+		$is_excluded_from_sync = (boolean) get_post_meta( $post->ID, '_exclude_from_sync', true );
+
+		// Manual sync - Selected receivers
+		$_post_receivers = get_post_meta( $post->ID, '_post_receivers', true );
+		
+		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $is_excluded_from_sync, $_post_receivers, false );
 		return true;
 	}
 
@@ -162,6 +191,11 @@ class BEA_CSF_Client {
 
 		$post = get_post( $post_id );
 		if ( $post == false || is_wp_error( $post ) ) {
+			return false;
+		}
+		
+		// Go out if post is revision
+		if ( $post->post_type == 'revision' ) {
 			return false;
 		}
 
@@ -174,23 +208,51 @@ class BEA_CSF_Client {
 		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false, false, false );
 		return true;
 	}
-
-	public static function delete_term( $term_id = 0, $tt_id = 0, $taxonomy = false ) {
+	
+	public static function p2p_created_connection( $p2p_id = 0  ) {
 		global $wpdb;
-
-		// Get term
-		$term = get_term( $term_id, $taxonomy );
-		if ( $term == false || is_wp_error( $term ) ) {
+		
+		$connection = p2p_get_connection( (int) $p2p_id );
+		if ( $connection == false ) {
 			return false;
 		}
+		
+		do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'merge' . '/' . $connection->p2p_type . '/' . $wpdb->blogid, $connection, false, false, false );
+		return true;
+	}
 
+	public static function p2p_delete_connections( $p2p_ids = array() ) {
+		global $wpdb;
+		
+		$p2p_ids = (array) $p2p_ids;
+		foreach ( $p2p_ids as $p2p_id ) {
+			$connection = p2p_get_connection( (int) $p2p_id );
+			if ( $connection == false ) {
+				continue;
+			}
+			
+			do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'delete' . '/' . $connection->p2p_type . '/' . $wpdb->blogid, $connection, false, false, false );
+		}
+
+		return true;
+	}
+
+	public static function delete_term( $term_id = 0, $tt_id = 0, $taxonomy = '' ) {
+		global $wpdb;
+		
+		// Rebuild fake obj
+		$deleted_term = new stdClass();
+		$deleted_term->term_id = $term_id;
+		$deleted_term->term_taxonomy_id = $tt_id;
+		$deleted_term->taxonomy = $taxonomy;
+		
 		// Exclude content created by sync plugin
-		$_origin_key = get_term_taxonomy_meta( $term->term_taxonomy_id, '_origin_key', true );
+		$_origin_key = get_term_taxonomy_meta( $deleted_term->term_taxonomy_id, '_origin_key', true );
 		if ( $_origin_key != false ) {
 			return false;
 		}
-
-		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, false, false );
+		
+		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $deleted_term, false, false, false );
 		return true;
 	}
 
@@ -208,8 +270,11 @@ class BEA_CSF_Client {
 		if ( $_origin_key != false ) {
 			return false;
 		}
+		
+		// Manual sync - Selected receivers
+		$_term_receivers = get_term_taxonomy_meta( $term->term_taxonomy_id, '_term_receivers', true );
 
-		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, false, false );
+		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $_term_receivers, false );
 		return true;
 	}
 
