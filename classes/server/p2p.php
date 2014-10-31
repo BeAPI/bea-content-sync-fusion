@@ -5,7 +5,9 @@ class BEA_CSF_Server_P2P {
 	 * Add connection on DB
 	 */
 	public static function merge( $connection, BEA_CSF_Synchronization $sync ) {
-		return (array) $connection;
+		$connection = (array) $connection;
+		$connection['p2p_obj'] = p2p_type( $connection['p2p_type'] );
+		return $connection;
 	}
 
 	/**
@@ -15,7 +17,9 @@ class BEA_CSF_Server_P2P {
 	 * @return \WP_Error|boolean
 	 */
 	public static function delete( $connection, BEA_CSF_Synchronization $sync ) {
-		return (array) $connection;
+		$connection = (array) $connection;
+		$connection['p2p_obj'] = p2p_type( $connection['p2p_type'] );
+		return $connection;
 	}
 
 }
