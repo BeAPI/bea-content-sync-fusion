@@ -4,6 +4,11 @@ class BEA_CSF_Client_Taxonomy {
 
 	/**
 	 * Add term on DB
+	 *
+	 * @param array $term
+	 * @param array $sync_fields
+	 *
+	 * @return mixed|void
 	 */
 	public static function merge( array $term, array $sync_fields ) {
 		// Test datas validity

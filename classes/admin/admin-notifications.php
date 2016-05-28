@@ -5,7 +5,6 @@ class BEA_CSF_Admin_Notifications {
 	/**
 	 * Constructor
 	 *
-	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {

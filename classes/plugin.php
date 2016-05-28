@@ -160,6 +160,11 @@ class BEA_CSF_Plugin {
 
 	/**
 	 * Get post ID from post meta with meta_key and meta_value
+	 *
+	 * @param $key
+	 * @param $value
+	 *
+	 * @return int
 	 */
 	public static function get_post_id_from_meta( $key, $value ) {
 		global $wpdb;

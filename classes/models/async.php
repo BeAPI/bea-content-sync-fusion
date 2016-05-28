@@ -4,7 +4,9 @@ class BEA_CSF_Async {
 	/**
 	 * Generic method to get data from emitter and sent theses to receivers
 	 *
-	 * @return boolean
+	 * @param bool $quantity
+	 *
+	 * @return bool
 	 */
 	public static function process_queue( $quantity = false ) {
 		// Get data to sync
@@ -159,9 +161,8 @@ class BEA_CSF_Async {
 	}
 
 	/**
-	 * @param $id
-	 *
 	 * @return mixed
+	 *
 	 */
 	public static function get_all() {
 		global $wpdb;
@@ -172,9 +173,10 @@ class BEA_CSF_Async {
 	}
 
 	/**
-	 * @param $id
+	 * @param int $quantity
 	 *
 	 * @return mixed
+	 *
 	 */
 	public static function get_results( $quantity = 100 ) {
 		global $wpdb;

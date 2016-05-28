@@ -7,6 +7,8 @@ class BEA_CSF_Server_Attachment {
 	 *
 	 * @param WP_Post|integer $attachment
 	 *
+	 * @param array $sync_fields
+	 *
 	 * @return array
 	 */
 	public static function merge( $attachment, array $sync_fields ) {
@@ -27,7 +29,7 @@ class BEA_CSF_Server_Attachment {
 	/**
 	 * Generic method for get all data need for sync
 	 *
-	 * @param WP_Post|integer $attachment_id
+	 * @param WP_Post|integer|bool $attachment
 	 *
 	 * @return array|boolean
 	 */

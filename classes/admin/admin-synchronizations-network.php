@@ -15,7 +15,6 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	/**
 	 * Constructor
 	 *
-	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
@@ -28,7 +27,8 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	/**
 	 * Register JS/CSS on edit/add page
 	 *
-	 * @return void
+	 * @param string $hook_suffix
+	 *
 	 * @author Amaury Balmer
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
@@ -99,8 +99,6 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-page-settings.php' );
-
-		return true;
 	}
 
 	/**
@@ -140,8 +138,6 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-page-add.php' );
-
-		return true;
 	}
 
 	/**
@@ -157,8 +153,6 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-page-queue.php' );
-
-		return true;
 	}
 
 	/**
@@ -183,18 +177,13 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 			if ( empty( $_POST['sync']['label'] ) ) {
 				add_settings_error( 'bea-content-sync-fusion', 'settings_updated', __( 'You must defined a label.', 'bea-content-sync-fusion' ), 'error' );
-
-				return true;
+				return;
 			}
 			if ( empty( $_POST['sync']['emitters'] ) ) {
 				add_settings_error( 'bea-content-sync-fusion', 'settings_updated', __( 'You must defined at least one emitter.', 'bea-content-sync-fusion' ), 'error' );
-
-				return true;
 			}
 			if ( empty( $_POST['sync']['receivers'] ) ) {
 				add_settings_error( 'bea-content-sync-fusion', 'settings_updated', __( 'You must defined at least one receiver.', 'bea-content-sync-fusion' ), 'error' );
-
-				return true;
 			}
 
 			$current_sync_fields = wp_parse_args( $_POST['sync'], self::$_default_fields );
@@ -239,14 +228,15 @@ class BEA_CSF_Admin_Synchronizations_Network {
 			wp_redirect( network_admin_url( 'admin.php?page=' . 'bea-csf-queue&message=deleted' ) );
 			exit();
 		}
-
-		return true;
 	}
 
 	/**
 	 * Helper: Get sites list for a network ID
 	 *
-	 * @return array|boolean
+	 * @param int $network_id
+	 * @param bool $get_blog_name
+	 *
+	 * @return array|bool
 	 * @author Amaury Balmer
 	 */
 	public static function get_sites_from_network( $network_id = 0, $get_blog_name = true ) {
@@ -274,6 +264,9 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 	/**
 	 * Helper: Get filtred sites list for a network ID, all data or one field
+	 *
+	 * @param array $blogs_id
+	 * @param bool $field
 	 *
 	 * @return array|string
 	 * @author Amaury Balmer

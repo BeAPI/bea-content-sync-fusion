@@ -44,38 +44,38 @@ class BEA_CSF_Client {
 
 	public static function unregister_hooks() {
 		// Attachments
-		remove_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX, 1 );
-		remove_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX, 1 );
-		remove_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX, 1 );
+		remove_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX );
+		remove_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX );
+		remove_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX );
 
 		// Attachments crop
-		remove_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX, 5 );
+		remove_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX );
 		remove_filter( 'wp_update_attachment_metadata', array(
 			__CLASS__,
 			'wp_update_attachment_metadata'
-		), PHP_INT_MAX, 2 );
+		), PHP_INT_MAX );
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			remove_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
-			remove_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
+			remove_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
+			remove_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
 		}
 
 		// Post types
-		remove_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX, 3 );
-		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX, 1 );
+		remove_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX );
+		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX );
 
 		// Terms
-		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX, 3 );
-		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX, 3 );
-		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX, 3 );
+		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX );
+		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX );
+		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX );
 
 		// P2P
-		// remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
-		// remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX, 1 );
+		// remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX );
+		// remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX );
 
 		// Notifications 
-		remove_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
+		remove_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10 );
 	}
 
 	/**
@@ -482,6 +482,6 @@ class BEA_CSF_Client {
 			// Send mail
 			wp_mail( $user->user_email, $subject, $message );
 		}
+		return true;
 	}
-
 }

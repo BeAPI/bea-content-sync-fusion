@@ -5,7 +5,6 @@ class BEA_CSF_Admin_Terms {
 	/**
 	 * Constructor
 	 *
-	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
@@ -24,7 +23,7 @@ class BEA_CSF_Admin_Terms {
 		// Get origin key
 		$_origin_key = get_term_taxonomy_meta( $term->term_taxonomy_id, '_origin_key', true );
 		if ( empty( $_origin_key ) ) {
-			return false;
+			return;
 		}
 
 		// SPLIT data
@@ -48,7 +47,7 @@ class BEA_CSF_Admin_Terms {
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
 		if ( ! isset( $_POST['bea-csf-admin-terms'] ) || ! wp_verify_nonce( $_POST['bea-csf-admin-terms'], plugin_basename( __FILE__ ) ) ) {
-			return false;
+			return;
 		}
 
 		if ( isset( $_POST['term_emitter'] ) &&

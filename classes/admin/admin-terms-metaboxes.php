@@ -5,7 +5,6 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 	/**
 	 * Constructor
 	 *
-	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
@@ -41,7 +40,7 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 	public static function form( $term ) {
 		$sync_obj = self::taxonomy_has_manual_sync( $term->taxonomy );
 		if ( $sync_obj === false ) {
-			return false;
+			return;
 		}
 
 		// Use nonce for verification
@@ -51,8 +50,7 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		$current_values = get_term_taxonomy_meta( $term->term_taxonomy_id, '_term_receivers', true );
 
 		// Get sites destination from syncs
-		$sync_receivers = $sync_obj->get_field( 'receivers' );
-		$sync_receivers = BEA_CSF_Admin_Synchronizations_Network::get_sites( $sync_receivers );
+		$sync_receivers = BEA_CSF_Admin_Synchronizations_Network::get_sites( $sync_obj->get_field( 'receivers' ) );
 
 		// Get names from syncs
 		$sync_names = array();

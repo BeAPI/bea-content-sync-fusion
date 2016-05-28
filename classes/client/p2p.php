@@ -13,6 +13,11 @@ class BEA_CSF_Client_P2P {
 
 	/**
 	 * Add connection on DB
+	 *
+	 * @param array $data
+	 * @param array $sync_fields
+	 *
+	 * @return bool
 	 */
 	public static function merge( array $data, array $sync_fields ) {
 		// P2P Type must be sync ?
@@ -62,14 +67,16 @@ class BEA_CSF_Client_P2P {
 	/**
 	 * Delete a connection, take the master id, try to find the new ID and delete local connection
 	 *
-	 * @param array $term
+	 * @param array $data
+	 * @param array $sync_fields
 	 *
-	 * @return \WP_Error|boolean
+	 * @return bool|WP_Error
+	 *
 	 */
 	public static function delete( array $data, array $sync_fields ) {
 		// P2P Type must be sync ?
 		if ( ! in_array( $data['p2p_type'], $sync_fields['p2p_connections'] ) ) {
-			return false;
+			return;
 		}
 
 		// From (post/users)
@@ -90,7 +97,7 @@ class BEA_CSF_Client_P2P {
 
 		// If from or empty not exists, stop process
 		if ( empty( $p2p_from_local ) || empty( $p2p_to_local ) ) {
-			return false;
+			return;
 		}
 
 		// Delete connection

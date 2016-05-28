@@ -6,14 +6,13 @@ class BEA_CSF_Admin_Restrictions {
 	/**
 	 * Constructor, register hooks
 	 *
-	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
 		// Get current setting
 		$current_settings = get_site_option( 'csf_adv_settings' );
 		if ( isset( $current_settings['unlock-mode'] ) && $current_settings['unlock-mode'] == '1' ) {
-			return false;
+			return;
 		}
 
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
@@ -29,8 +28,6 @@ class BEA_CSF_Admin_Restrictions {
 
 		// Play with capabilities
 		add_filter( 'map_meta_cap', array( __CLASS__, 'map_meta_cap' ), 10, 4 );
-
-		return true;
 	}
 
 	/**
@@ -48,8 +45,8 @@ class BEA_CSF_Admin_Restrictions {
 	/**
 	 * Remove some actions on post list when a post have an original key
 	 *
-	 * @param array $post
-	 * @param WP_Post $post
+	 * @param array $actions
+	 * @param array|WP_Post $post
 	 *
 	 * @return array
 	 */

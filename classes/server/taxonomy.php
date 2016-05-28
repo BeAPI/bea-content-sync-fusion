@@ -5,7 +5,7 @@ class BEA_CSF_Server_Taxonomy {
 	/**
 	 * Check for term deletion and send it to client
 	 *
-	 * @param stdClass|boolean|string $post
+	 * @param $term
 	 * @param array $sync_fields
 	 *
 	 * @return mixed|null|void
@@ -35,7 +35,7 @@ class BEA_CSF_Server_Taxonomy {
 	/**
 	 * Check for new term and send it to client
 	 *
-	 * @param stdClass|boolean|integer $post
+	 * @param $term stdClass
 	 * @param array $sync_fields
 	 *
 	 * @return mixed|null|void

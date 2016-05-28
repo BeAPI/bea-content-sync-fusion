@@ -25,10 +25,11 @@ class BEA_BROADCAST_Symlink {
 	 * @param $new_attachment_id : the current file id
 	 * @param $original_file_path : the path of the current file
 	 *
+	 * @param $data_transferred
+	 *
 	 * @return true
 	 */
-	public static function after_copy_file( $new_attachment_id, $original_file_path, $post_id, $data_transferred ) {
-		global $wpdb;
+	public static function after_copy_file( $new_attachment_id, $original_file_path, $data_transferred ) {
 
 		remove_filter( 'intermediate_image_sizes_advanced', '__return_empty_array' );
 

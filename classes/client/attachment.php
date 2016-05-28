@@ -159,9 +159,10 @@ class BEA_CSF_Client_Attachment {
 	 *
 	 * @param string $file_path The full path of the file to copy
 	 * @param int $post_id The post ID the media is to be associated with
-	 * @param string $origin_key Origin key with blog_id and post_id
+	 * @param $data_transferred
 	 *
-	 * @return integer Return media ID on success or ZERO !
+	 * @return int Return media ID on success or ZERO !
+	 *
 	 */
 	public static function copy_file( $file_path, $post_id, $data_transferred ) {
 		require_once( ABSPATH . '/wp-admin/includes/media.php' );
@@ -207,7 +208,7 @@ class BEA_CSF_Client_Attachment {
 	public static function post_metas( $media_id, $metas ) {
 
 		if ( ! is_array( $metas ) ) {
-			return false;
+			return;
 		}
 
 		// unset attachment attached file

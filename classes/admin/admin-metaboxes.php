@@ -5,7 +5,6 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Constructor
 	 *
-	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
@@ -96,7 +95,10 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Adds the meta box container in edit post / page
 	 *
-	 * @return boolean
+	 * @param $post_type
+	 * @param $post
+	 *
+	 * @return bool
 	 * @author Amaury Balmer
 	 */
 	public static function add_meta_boxes( $post_type, $post ) {
@@ -140,7 +142,9 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Form for allow exclusion for synchronization !
 	 *
-	 * @return void
+	 * @param $post
+	 * @param $metabox
+	 *
 	 * @author Amaury Balmer
 	 */
 	public static function metabox_content_auto( $post, $metabox ) {
@@ -163,7 +167,9 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Form for custom sync, choose receivers !
 	 *
-	 * @return void
+	 * @param $post
+	 * @param $metabox
+	 *
 	 * @author Amaury Balmer
 	 */
 	public static function metabox_content_manual( $post, $metabox ) {

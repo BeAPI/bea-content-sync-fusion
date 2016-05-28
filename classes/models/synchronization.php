@@ -279,7 +279,10 @@ class BEA_CSF_Synchronization {
 	/**
 	 * Helper: Get sites list for a network ID
 	 *
-	 * @return array|boolean
+	 * @param int $network_id
+	 * @param bool $get_blog_name
+	 *
+	 * @return array|bool
 	 * @author Amaury Balmer
 	 */
 	public static function get_sites_from_network( $network_id = 0, $get_blog_name = true ) {
