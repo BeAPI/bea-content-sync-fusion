@@ -7,6 +7,8 @@
   Author: BeAPI
   Author URI: http://beapi.fr
   Network: true
+  Text Domain: bea-content-sync-fusion
+  Domain Path: /languages
 
   -------------------
   Copyright 2016 technique@beapi.fr
@@ -16,7 +18,6 @@
 // Plugin constants
 define( 'BEA_CSF_VERSION', '1.2.0' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
-define( 'BEA_CSF_LOCALE', 'bea-content-sync-fusion' );
 
 // Define the table relation variables
 if ( empty( $GLOBALS['wpdb']->bea_csf_relations ) ) {
@@ -91,7 +92,7 @@ add_action( 'wpmu_new_blog', array( 'BEA_CSF_Plugin', 'wpmu_new_blog' ) );
 add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );
 function init_bea_content_sync_fusion() {
 	// Load translations
-	load_plugin_textdomain( BEA_CSF_LOCALE, false, basename( BEA_CSF_DIR ) . '/languages' );
+	load_plugin_textdomain( 'bea-content-sync-fusion', false, basename( BEA_CSF_DIR ) . '/languages' );
 
 	// Synchronizations
 	BEA_CSF_Synchronizations::init_from_db();

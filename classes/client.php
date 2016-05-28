@@ -456,7 +456,7 @@ class BEA_CSF_Client {
 		$post_author = new WP_User( $result->post_author );
 
 		// Prepare subject text
-		$subject = sprintf( __( 'New or update post on website : %s', BEA_CSF_LOCALE ), get_bloginfo( 'name' ) );
+		$subject = sprintf( __( 'New or update post on website : %s', 'bea-content-sync-fusion' ), get_bloginfo( 'name' ) );
 
 		// Loop on users to notify
 		foreach ( $current_values[ $sync_fields['id'] ] as $user_id ) {

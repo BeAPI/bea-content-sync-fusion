@@ -27,7 +27,7 @@ class BEA_CSF_Admin_Notifications {
 	}
 
 	public static function admin_menu() {
-		add_options_page( __( 'Content Sync Notifications', BEA_CSF_LOCALE ), __( 'Sync Notification', BEA_CSF_LOCALE ), 'manage_options', 'bea-csfc-notifications', array(
+		add_options_page( __( 'Content Sync Notifications', 'bea-content-sync-fusion' ), __( 'Sync Notification', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csfc-notifications', array(
 			__CLASS__,
 			'render_page'
 		) );
@@ -43,8 +43,8 @@ class BEA_CSF_Admin_Notifications {
 			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/js/jquery.multi-select.js', array( 'jquery' ), '0.9.8', true );
 			wp_enqueue_script( 'bea-csf-admin-notifications', BEA_CSF_URL . 'assets/js/bea-csf-admin-notifications.js', array( 'lou-multi-select' ), BEA_CSF_VERSION, true );
 			wp_localize_script( 'bea-csf-admin-notifications', 'beaCsfAdminNotifications', array(
-				'selectableHeader' => __( 'Selectable users', BEA_CSF_LOCALE ),
-				'selectionHeader'  => __( 'Selection users', BEA_CSF_LOCALE )
+				'selectableHeader' => __( 'Selectable users', 'bea-content-sync-fusion' ),
+				'selectionHeader'  => __( 'Selection users', 'bea-content-sync-fusion' )
 			) );
 			wp_enqueue_style( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/css/multi-select.css', array(), '0.9.8', 'screen' );
 			wp_enqueue_style( 'bea-csf-admin-notifications', BEA_CSF_URL . 'assets/css/bea-csf-admin-notifications.css', array(), BEA_CSF_VERSION );

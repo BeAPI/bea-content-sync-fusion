@@ -132,7 +132,7 @@ class BEA_CSF_Admin_Restrictions {
 
 		$_origin_key = get_term_taxonomy_meta( $current_term->term_taxonomy_id, '_origin_key', true );
 		if ( $_origin_key != false ) {
-			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', BEA_CSF_LOCALE ) );
+			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
 		}
 
 		return true;
