@@ -126,6 +126,8 @@
 		<p>
 			<label><?php _e( 'Emitters', BEA_CSF_LOCALE ); ?></label>
 			<select class="widefat multiple-helper" name="sync[emitters][]" multiple="true">
+				<option
+					value="all" <?php selected( in_array( 'all', $current_sync->get_field( 'emitters' ) ), true ); ?>><?php echo esc_html( 'All' ); ?></option>
 				<?php foreach ( self::get_sites_from_network() as $site ) : ?>
 					<option
 						value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'emitters' ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>

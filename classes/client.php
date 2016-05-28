@@ -250,9 +250,9 @@ class BEA_CSF_Client {
 		// Check for new publication
 		if ( 'publish' == $new_status || 'future' == $new_status || 'offline' == $new_status ) {
 			//add_action( 'save_post', array( __CLASS__, 'save_post' ), 100, 2 );
-			if ( class_exists( 'acf' ) ) {
+			/*if ( class_exists( 'acf' ) ) {
 				do_action( 'acf/save_post', $post->ID );
-			}
+			}*/
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $is_excluded_from_sync, $_post_receivers, false );
 		} elseif ( $new_status != $old_status && 'publish' == $old_status ) { // Check for unpublish
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $is_excluded_from_sync, $_post_receivers, false );
@@ -403,13 +403,13 @@ class BEA_CSF_Client {
 		}
 
 		// Exclude content created by sync plugin
-		$_origin_key = get_term_taxonomy_meta( $term->term_taxonomy_id, '_origin_key', true );
+		$_origin_key = get_term_meta( $term->term_taxonomy_id, '_origin_key', true );
 		if ( $_origin_key != false ) {
 			return false;
 		}
 
 		// Manual sync - Selected receivers
-		$_term_receivers = get_term_taxonomy_meta( $term->term_taxonomy_id, '_term_receivers', true );
+		$_term_receivers = get_term_meta( $term->term_taxonomy_id, '_term_receivers', true );
 
 		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $_term_receivers, false );
 

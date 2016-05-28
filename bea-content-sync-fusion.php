@@ -1,23 +1,20 @@
 <?php
 /*
-  Plugin Name: BEA - Content Synchronization - Fusion
-  Plugin URI: http://www.beapi.fr
+  Plugin Name: BEA - Content Synchronization
+  Plugin URI: http://beapi.fr
   Description: Manage content synchronization across a WordPress multisite
-  Version: 1.1
+  Version: 1.2.0
   Author: BeAPI
-  Author URI: http://www.beapi.fr
+  Author URI: http://beapi.fr
   Network: true
 
-  Copyright 2013 - BeAPI Team (technique@beapi.fr)
-  
-  TODO : 
-	Mirror mode (deleting inclusion)
-	Unlink relation from receivers
-	AJAX Taxo for Sync edition
+  -------------------
+  Copyright 2016 technique@beapi.fr
+  Took from r***l project to handle composer feature
  */
 
 // Plugin constants
-define( 'BEA_CSF_VERSION', '1.1' );
+define( 'BEA_CSF_VERSION', '1.2.0' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_LOCALE', 'bea-content-sync-fusion' );
 
@@ -46,6 +43,7 @@ define( 'BEA_CSF_DIR', plugin_dir_path( __FILE__ ) );
 // Plugin various
 require( BEA_CSF_DIR . 'classes/plugin.php' );
 require( BEA_CSF_DIR . 'classes/client.php' );
+require( BEA_CSF_DIR . 'classes/symlink.php' );
 
 // Functions various
 require( BEA_CSF_DIR . 'functions/api.php' );
@@ -61,13 +59,13 @@ require( BEA_CSF_DIR . 'classes/models/synchronizations.php' );
 require( BEA_CSF_DIR . 'classes/server/attachment.php' );
 require( BEA_CSF_DIR . 'classes/server/post_type.php' );
 require( BEA_CSF_DIR . 'classes/server/taxonomy.php' );
-// require( BEA_CSF_DIR . 'classes/server/p2p.php' );
+require( BEA_CSF_DIR . 'classes/server/p2p.php' );
 
 // Library client
 require( BEA_CSF_DIR . 'classes/client/attachment.php' );
 require( BEA_CSF_DIR . 'classes/client/post_type.php' );
 require( BEA_CSF_DIR . 'classes/client/taxonomy.php' );
-// require( BEA_CSF_DIR . 'classes/client/p2p.php' );
+require( BEA_CSF_DIR . 'classes/client/p2p.php' );
 
 // Call admin classes
 if ( is_admin() ) {
@@ -100,7 +98,7 @@ function init_bea_content_sync_fusion() {
 
 	// Server
 	new BEA_CSF_Client();
-
+	new BEA_BROADCAST_Symlink();
 	// Admin
 	if ( is_admin() ) {
 		new BEA_CSF_Admin_Synchronizations_Network();

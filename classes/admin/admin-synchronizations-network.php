@@ -286,7 +286,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		$filtered = array();
 		foreach ( $blogs_id as $blog_id ) {
 			if ( $blog_id == 'all' ) {
-				$filtered[] = esc_html( 'All, except emitters' );
+				$filtered[] = esc_html( 'All' );
 				continue;
 			}
 

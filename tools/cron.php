@@ -1,21 +1,11 @@
 <?php
-/**
- * (c) 2015 BeAPI
- *
- * Usage : php cron.php [domain] [/path]
- * forge.bearstech.com/trac/wiki/JobQueue
- *
- */
-
 // Define lock file for skip concurrential process, create file into TMP PHP folder
-define( 'LOCKFILE', sys_get_temp_dir() . '/bea-content-sync-fusion.lock' );
+define( 'LOCKFILE', sys_get_temp_dir() . '/bea-content-sync-fusion-'.get_current_user().'.lock' );
 
 // Lock file exist ?
-/*
 if ( is_file( LOCKFILE ) ) {
 	exit( 1 );
 }
-*/
 
 if ( ! defined( 'STDIN' ) ) {
 	die( 'Only CLI' );
@@ -51,7 +41,7 @@ define( 'SFML_ALLOW_LOGIN_ACCESS', true );
 // Try to load WordPress !
 try {
 	if ( ! defined( 'ABSPATH' ) ) {
-		require_once( dirname( __FILE__ ) . '/../../../../wp-load.php' );
+		require( dirname( __FILE__ ) . '/../../../../wp/wp-load.php' );
 	}
 } catch ( ErrorException $e ) {
 	var_dump( $e->getMessage() ); // Debug
@@ -71,16 +61,22 @@ if ( function_exists( 'set_time_limit' ) ) {
 	set_time_limit( 0 );
 }
 
+//Fix for CRON Symlink !
+require_once(ABSPATH . 'wp-admin/includes/admin.php');
+
+if ( !class_exists('BEA_CSF_Async') )
+	die('Plugin not enabled on this network');
+
 // Create fake _POST variable
 $_POST = array();
 
 // Create lock file
-// touch( LOCKFILE );
+touch( LOCKFILE );
 
 // Process 200 items by 200 items
-BEA_CSF_Async::process_queue( 200 );
+BEA_CSF_Async::process_queue( 500 );
 
 // Remove lock file
-// unlink( LOCKFILE );
+unlink( LOCKFILE );
 
 exit( 0 );

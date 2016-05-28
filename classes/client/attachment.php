@@ -57,6 +57,7 @@ class BEA_CSF_Client_Attachment {
 			$updated_datas                 = array();
 			$updated_datas['ID']           = $current_media_id;
 			$updated_datas['post_title']   = $data['post_title'];
+			$updated_datas['post_author']  = $data['post_author'];
 			$updated_datas['post_content'] = $data['post_content'];
 			$updated_datas['post_excerpt'] = $data['post_excerpt'];
 			$updated_datas['post_parent']  = $current_master_parent_id;
@@ -66,7 +67,7 @@ class BEA_CSF_Client_Attachment {
 			self::post_metas($current_media_id, $data['post_custom']);
 
 			BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $current_media_id );
-
+		
 			do_action( 'bea_csf.client_attachment_after_update', $current_media_id, $data['attachment_dir'], $current_master_parent_id, $data );
 		} else { // Insert with WP media public static function
 			$new_media_id = self::copy_file( $data['attachment_dir'], $current_master_parent_id, $data );
@@ -75,6 +76,7 @@ class BEA_CSF_Client_Attachment {
 				$updated_datas                 = array();
 				$updated_datas['ID']           = $new_media_id;
 				$updated_datas['post_title']   = $data['post_title'];
+				$updated_datas['post_author']  = $data['post_author'];
 				$updated_datas['post_content'] = $data['post_content'];
 				$updated_datas['post_excerpt'] = $data['post_excerpt'];
 				wp_update_post( $updated_datas );
@@ -118,7 +120,6 @@ class BEA_CSF_Client_Attachment {
 				}
 
 				$local_term_id = 0;
-				wp_cache_flush();
 				if ( $wpdb->blogid == $term['original_blog_id'] ) { // Is blog id origin is the same of current blog ?
 					$_origin_term_id = get_term_id_from_term_taxonomy_id( $term['taxonomy'], $term['original_term_taxonomy_id'] );
 					$local_term      = get_term( (int) $_origin_term_id, $term['taxonomy'] );

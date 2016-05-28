@@ -1,14 +1,20 @@
-=== Meta for taxonomies ===
-Contributors: momo360modena
-Donate link: http://www.beapi.fr/donate/
-Tags: tags, taxonomies, custom taxonomies, termmeta, meta, term meta, taxonomy, meta taxonomy
-Requires at least: 3.0
-Tested up to: 4.0
-Stable tag: 1.2.2
+# Meta for taxonomies #
+**Contributors:** momo360modena
+  
+**Donate link:** http://www.beapi.fr/donate/
+  
+**Tags:** tags, taxonomies, custom taxonomies, termmeta, meta, term meta, taxonomy, meta taxonomy
+  
+**Requires at least:** 3.0
+  
+**Tested up to:** 4.0
+  
+**Stable tag:** 1.2.2
+  
 
 No UI ! This plugin implements the WP Meta API for terms. Metadatas is attached to taxonomy context and not terms, this way allow to have metas different for the same term on 2 different taxonomies !
 
-== Description ==
+## Description ##
 
 Add meta for any taxonomies. 
 Meta is attached to taxonomy context and not terms, this way allow to have metas different for the same term on 2 different taxonomies. 
@@ -35,13 +41,13 @@ And many others...
 	
 For full info go the [Meta for taxonomies](https://github.com/herewithme/meta-for-taxonomies) Github page.
 
-== Installation ==
+## Installation ##
 
 1. Download, unzip and upload to your WordPress plugins directory
 2. Activate the plugin within you WordPress Administration Backend
 3. Develop your plugin for used it !
 
-== Changelog ==
+## Changelog ##
 
 * 1.2.2
 	* Fix cache_group key
@@ -68,8 +74,8 @@ For full info go the [Meta for taxonomies](https://github.com/herewithme/meta-fo
 * 1.0.0
 	* Initial version
 	
-== Frequently Asked Questions ==
+## Frequently Asked Questions ##
 
-== Screenshots ==
+## Screenshots ##
 
 == Upgrade Notice ==

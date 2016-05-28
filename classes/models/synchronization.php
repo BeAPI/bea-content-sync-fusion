@@ -63,7 +63,7 @@ class BEA_CSF_Synchronization {
 		}
 
 		// Register actions if sync is active and haven't a conflict emitters/receivers
-		if ( $this->active == 0 || $this->has_conflict() ) {
+		if ( $this->active == 0 ) {
 			return false;
 		}
 
@@ -78,11 +78,12 @@ class BEA_CSF_Synchronization {
 		$this->_register_hooks = array();
 
 		// No emitters ? Go out !
-		if ( empty( $this->emitters ) ) {
+		$emitters = $this->get_emitters();
+		if ( empty( $emitters ) ) {
 			return false;
 		}
 
-		foreach ( $this->emitters as $emitter_blog_id ) {
+		foreach ( $emitters as $emitter_blog_id ) {
 			// Register this hook only for post type attachment for evite doublon sync item
 			if ( $this->post_type == 'attachment' ) { // Specific CPT : Attachments
 				
@@ -237,19 +238,38 @@ class BEA_CSF_Synchronization {
 	 * @return array
 	 */
 	public function get_receivers() {
+		global $wpdb;
+
 		$results = array();
 		foreach ( $this->receivers as $key => $receiver_blog_id ) {
 			if ( $receiver_blog_id == 'all' ) {
 				// Get all sites
 				$blogs = self::get_sites_from_network( 0, false );
 				foreach ( $blogs as $blog ) {
-					// Exclude emitters
-					if ( ! in_array( $blog['blog_id'], $this->emitters ) ) {
+					// Exclude current emitter
+					if ( $blog['blog_id'] != $wpdb->blogid ) {
 						$results[] = $blog['blog_id'];
 					}
 				}
 			} else {
 				$results[] = $receiver_blog_id;
+			}
+		}
+
+		return $results;
+	}
+
+	public function get_emitters() {
+		$results = array();
+		foreach ( $this->emitters as $key => $emitter_blog_id ) {
+			if ( $emitter_blog_id == 'all' ) {
+				// Get all sites
+				$blogs = self::get_sites_from_network( 0, false );
+				foreach ( $blogs as $blog ) {
+					$results[] = $blog['blog_id'];
+				}
+			} else {
+				$results[] = $emitter_blog_id;
 			}
 		}
 

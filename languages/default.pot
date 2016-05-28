@@ -1,0 +1,440 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: O&O - Content Synchronization - Fusion\n"
+"POT-Creation-Date: 2016-01-26 12:13+0100\n"
+"PO-Revision-Date: 2016-01-26 12:13+0100\n"
+"Last-Translator: Zainoudine Soulé <zsoule@beapi.fr>\n"
+"Language-Team: Rexel Team\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: esc_html__;esc_html_e;esc_attr__;esc_attr_e;__;_e\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
+
+#: ../views/admin/server-page-add.php:4
+msgid "Content Sync: Edit"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:6
+msgid "Content Sync: Add"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:12
+msgid "Label"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:16
+msgid ""
+"The label of the synchronization is mainly used for the administration "
+"console."
+msgstr ""
+
+#: ../views/admin/server-page-add.php:20
+msgid "Enable synchronization ?"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:24
+#: ../views/admin/server-page-add.php:114
+#: ../classes/admin/admin-synchronizations-network.php:83
+msgid "Yes"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:25
+#: ../views/admin/server-page-add.php:115
+#: ../classes/admin/admin-synchronizations-network.php:83
+msgid "No"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:33
+msgid ""
+"You may decide to temporarily disable a synchronization rule for logistical "
+"reasons!"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:37
+#: ../views/admin/server-page-settings.php:14
+msgid "Post type"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:39
+msgid "No post type, sync only taxo !"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:46
+msgid "You must select the type of content that you want to sync"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:50
+#: ../views/admin/server-page-settings.php:15
+msgid "Taxonomies"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:58
+msgid "You must select taxonomies related to content that you want to sync"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:63
+msgid "P2P connections"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:71
+msgid "You must select P2P connection that you want to sync"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:76
+#: ../views/admin/server-page-settings.php:19
+msgid "Mode"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:80
+msgid "Manual"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:81
+msgid "Automatic"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:89
+#: ../views/admin/server-page-add.php:135
+#: ../views/admin/server-page-add.php:149
+msgid ""
+"Mode automatically is completely transparent to the user, whereas the manual "
+"mode adds a meta box in the writing page."
+msgstr ""
+
+#: ../views/admin/server-page-add.php:93
+#: ../views/admin/server-page-settings.php:20
+msgid "Default status"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:97
+msgid "Publish"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:98
+msgid "Pending"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:106
+msgid ""
+"When content is published and it is sent to other sites, it is automatically "
+"set to the status \"published\", you can also set the \"pending\" status and "
+"provide an opportunity for each admin to validate or not the content. (only "
+"for post type)"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:110
+msgid "Enable notification settings on local admin ?"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:123
+msgid ""
+"Enabling this feature will add a page in the administrative console each "
+"site in order to choose the people notified when creating new content via "
+"the sync feature."
+msgstr ""
+
+#: ../views/admin/server-page-add.php:127
+#: ../views/admin/server-page-settings.php:22
+msgid "Emitters"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:139
+#: ../views/admin/server-page-settings.php:23
+msgid "Receivers"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:159
+#: ../views/admin/server-page-settings.php:134
+msgid "Save"
+msgstr ""
+
+#: ../views/admin/server-page-add.php:162
+#: ../classes/admin/admin-synchronizations-network.php:60
+msgid "Add"
+msgstr ""
+
+#: ../views/admin/client-page-settings-notification.php:3
+msgid "Content Sync: Notifications"
+msgstr ""
+
+#: ../views/admin/client-page-settings-notification.php:6
+msgid ""
+"This page allows you to choose what user must be notified when adding new "
+"content with sync feature. If no user is selected, no notification will be "
+"sent."
+msgstr ""
+
+#: ../views/admin/client-page-settings-notification.php:29
+msgid "Save settings"
+msgstr ""
+
+#: ../views/admin/server-term-metabox-manual.php:5
+#: ../views/admin/server-metabox-manual.php:2
+msgid ""
+"You can choose which sites should receive this content. Select no site does "
+"not synchronize this content."
+msgstr ""
+
+#: ../views/admin/server-term-metabox-manual.php:23
+#: ../views/admin/server-metabox-auto.php:12
+#: ../views/admin/server-metabox-manual.php:20
+#, php-format
+msgid ""
+"This content is concerned with these following synchronizations: <strong>%s</"
+"strong>"
+msgstr ""
+
+#: ../views/admin/client-terms-form.php:2
+msgid "Emitter"
+msgstr ""
+
+#: ../views/admin/client-terms-form.php:6
+msgid "Blog:"
+msgstr ""
+
+#: ../views/admin/client-terms-form.php:16
+msgid "Term:"
+msgstr ""
+
+#: ../views/admin/client-terms-form.php:18
+msgid "No term or invalid term"
+msgstr ""
+
+#: ../views/admin/server-metabox-auto.php:2
+msgid ""
+"This content will be transmitted to other network sites. You decide to "
+"exclude from synchronization by checking the box below."
+msgstr ""
+
+#: ../views/admin/server-metabox-auto.php:8
+msgid "Exclude this content from synchronization"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:3
+msgid "Content Sync: Settings"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:5
+msgid ""
+"This plugin gives you the ability to sync content published on a website "
+"network to one or more websites network of your choice."
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:11
+msgid "Name"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:12
+msgid "Enable ?"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:13
+msgid "Confict ?"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:17
+msgid "P2P"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:21
+msgid "Notifications ?"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:29
+#, php-format
+msgid "No synchronization exists. Want to <a href=\"%s\">create one</a>?"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:73
+#: ../classes/admin/admin-synchronizations-network.php:56
+msgid "Edit"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:79
+#, php-format
+msgid ""
+"You are about to delete this sync '%s'\n"
+"  'Cancel' to stop, 'OK' to delete."
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:79
+msgid "Delete"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:81
+msgid "This item is locked because registered since the developer API."
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:109
+msgid "Content Sync: Advanced settings"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:116
+msgid "Special mode"
+msgstr ""
+
+#: ../views/admin/server-page-settings.php:123
+msgid "Remove all content edition restrictions"
+msgstr ""
+
+#: ../views/admin/server-page-queue.php:2
+msgid "Content Sync: Queue"
+msgstr ""
+
+#: ../views/admin/server-page-queue.php:8
+msgid "Cron process 300 items by 300 items"
+msgstr ""
+
+#: ../views/admin/server-page-queue.php:10
+msgid "Number of items in the queue : "
+msgstr ""
+
+#: ../views/admin/server-page-queue.php:14
+#, php-format
+msgid "The file %s has been modified : "
+msgstr ""
+
+#: ../views/admin/server-page-queue.php:20
+msgid "Delete file lock"
+msgstr ""
+
+#: ../views/admin/server-page-queue.php:26
+#, php-format
+msgid "The file %s has been deleted"
+msgstr ""
+
+#: ../views/admin/server-page-queue.php:33
+msgid "Number of items in the queue of maintenance : "
+msgstr ""
+
+#: ../classes/client.php:459
+#, php-format
+msgid "New or update post on website : %s"
+msgstr ""
+
+#: ../classes/client.php:469
+#, php-format
+msgid "Post title : \"%s\""
+msgstr ""
+
+#: ../classes/client.php:470
+#, php-format
+msgid "Author : %s"
+msgstr ""
+
+#: ../classes/client.php:471
+#, php-format
+msgid "E-mail : %s"
+msgstr ""
+
+#: ../classes/client.php:472
+#, php-format
+msgid "Permalink: %s"
+msgstr ""
+
+#: ../classes/client.php:475
+#, php-format
+msgid "Trash it: %s"
+msgstr ""
+
+#: ../classes/client.php:477
+#, php-format
+msgid "Delete it: %s"
+msgstr ""
+
+#: ../classes/client.php:479
+#, php-format
+msgid "Edit it: %s"
+msgstr ""
+
+#: ../classes/admin/admin-restrictions.php:60
+#, php-format
+msgid "Preview &#8220;%s&#8221;"
+msgstr ""
+
+#: ../classes/admin/admin-restrictions.php:60
+msgid "Preview"
+msgstr ""
+
+#: ../classes/admin/admin-restrictions.php:135
+msgid ""
+"You are not allowed to edit this content. You must update it from your "
+"master site."
+msgstr ""
+
+#: ../classes/admin/admin-notifications.php:30
+msgid "Content Sync Notifications"
+msgstr ""
+
+#: ../classes/admin/admin-notifications.php:30
+msgid "Sync Notification"
+msgstr ""
+
+#: ../classes/admin/admin-notifications.php:46
+msgid "Selectable users"
+msgstr ""
+
+#: ../classes/admin/admin-notifications.php:47
+msgid "Selection users"
+msgstr ""
+
+#: ../classes/admin/admin-synchronizations-network.php:40
+msgid "Selectable items"
+msgstr ""
+
+#: ../classes/admin/admin-synchronizations-network.php:41
+msgid "Selection items"
+msgstr ""
+
+#: ../classes/admin/admin-synchronizations-network.php:55
+msgid "Content Sync"
+msgstr ""
+
+#: ../classes/admin/admin-synchronizations-network.php:64
+msgid "Queue"
+msgstr ""
+
+#: ../classes/admin/admin-synchronizations-network.php:118
+#: ../classes/admin/admin-synchronizations-network.php:218
+msgid "This synchronization ID not exists. Tcheater ?"
+msgstr ""
+
+#: ../classes/admin/admin-synchronizations-network.php:173
+msgid "Advanced settings updated with success !"
+msgstr ""
+
+#: ../classes/admin/admin-synchronizations-network.php:182
+msgid "You must defined a label."
+msgstr ""
+
+#: ../classes/admin/admin-synchronizations-network.php:187
+msgid "You must defined at least one emitter."
+msgstr ""
+
+#: ../classes/admin/admin-synchronizations-network.php:192
+msgid "You must defined at least one receiver."
+msgstr ""
+
+#: ../classes/admin/admin-metaboxes.php:118
+msgid "Synchronization (auto)"
+msgstr ""
+
+#: ../classes/admin/admin-metaboxes.php:131
+msgid "Synchronization (manual)"
+msgstr ""
+
+#: ../classes/client/taxonomy.php:11 ../classes/client/taxonomy.php:115
+msgid "Bad call, invalid datas."
+msgstr ""
+
+#: ../libraries/wordpress-settings-api-class/class.settings-api.php:347
+msgid "Browse"
+msgstr ""
+
+#: ../libraries/wordpress-settings-api-class/class.settings-api.php:501
+msgid "No section available"
+msgstr ""
