@@ -1,0 +1,8 @@
+/* Multiselect JS helper */
+.ms-container { width:100%; }
+.custom-header { text-align: center;font-weight:700;}
+
+/* Form */
+form p label { font-size:17px;display:block; margin:0 0 5px; }
+form p { padding:5px 0;border-bottom:1px solid #ccc; }
+.description { display:block; margin:5px 0; }
