@@ -1,5 +1,4 @@
 <div class="wrap">
-	<?php screen_icon( 'options-general' ); ?>
 	<h2><?php _e( "Content Sync: Notifications", 'bea-content-sync-fusion' ); ?></h2>
 
 	<div id="col-container">
