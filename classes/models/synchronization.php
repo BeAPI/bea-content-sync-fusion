@@ -58,7 +58,7 @@ class BEA_CSF_Synchronization {
 	public function register_actions() {
 		global $connection_taxo_duplicate;
 
-		if( !isset($connection_taxo_duplicate) ) {
+		if ( ! isset( $connection_taxo_duplicate ) ) {
 			$connection_taxo_duplicate = array();
 		}
 
@@ -86,31 +86,31 @@ class BEA_CSF_Synchronization {
 		foreach ( $emitters as $emitter_blog_id ) {
 			// Register this hook only for post type attachment for evite doublon sync item
 			if ( $this->post_type == 'attachment' ) { // Specific CPT : Attachments
-				
+
 				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $emitter_blog_id;
 				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $emitter_blog_id;
-			
+
 			} else { // Classic CPT : Posts/Pages
 
 				if ( ! empty( $this->post_type ) ) {
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $this->post_type . '/' . $emitter_blog_id;
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $this->post_type . '/' . $emitter_blog_id;
 				}
-			
+
 			}
 
 			// Terms for all kind of CPT
 			if ( ! empty( $this->taxonomies ) ) {
 				foreach ( $this->taxonomies as $taxonomy ) {
 					// Skip register if taxo is already register on another synchro
-					if ( isset($connection_taxo_duplicate[$taxonomy . '/' . $emitter_blog_id]) ) {
+					if ( isset( $connection_taxo_duplicate[ $taxonomy . '/' . $emitter_blog_id ] ) ) {
 						continue;
 					}
 
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $emitter_blog_id;
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $emitter_blog_id;
 
-					$connection_taxo_duplicate[$taxonomy . '/' . $emitter_blog_id] = true;
+					$connection_taxo_duplicate[ $taxonomy . '/' . $emitter_blog_id ] = true;
 				}
 			}
 
@@ -337,9 +337,9 @@ class BEA_CSF_Synchronization {
 		$current_filter_data = explode( '/', $this->_current_filter );
 
 		// Set data into variable for improve lisibility
-		$this->_current_object = $current_filter_data[1];
-		$this->_current_method = $current_filter_data[2];
-		$this->_current_blog_id = $current_filter_data[4];
+		$this->_current_object    = $current_filter_data[1];
+		$this->_current_method    = $current_filter_data[2];
+		$this->_current_blog_id   = $current_filter_data[4];
 		$this->_current_object_id = $this->get_id_from_object();
 
 		// Send data for each receivers
@@ -372,15 +372,15 @@ class BEA_CSF_Synchronization {
 		}
 
 		do_action( 'bea-csf-after-send_to_receivers', $this );
-		
+
 		return true;
 	}
 
 	public function get_id_from_object() {
 		if ( $this->_current_object == 'PostType' || $this->_current_object == 'Attachment' ) {
 			return $this->_hook_data->ID;
-		} elseif( $this->_current_object == 'Taxonomy' ) {
-			return $this->_hook_data->taxonomy.'|||'.$this->_hook_data->term_id;
+		} elseif ( $this->_current_object == 'Taxonomy' ) {
+			return $this->_hook_data->taxonomy . '|||' . $this->_hook_data->term_id;
 		}
 
 		return 0;

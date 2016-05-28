@@ -80,7 +80,10 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		$registered_syncs = BEA_CSF_Synchronizations::get_all();
 
 		// Translation, yes/no
-		$i18n_true_false = array( '1' => __( 'Yes', 'bea-content-sync-fusion' ), '0' => __( 'No', 'bea-content-sync-fusion' ) );
+		$i18n_true_false = array(
+			'1' => __( 'Yes', 'bea-content-sync-fusion' ),
+			'0' => __( 'No', 'bea-content-sync-fusion' )
+		);
 
 		// Display message
 		settings_errors( 'bea-content-sync-fusion' );

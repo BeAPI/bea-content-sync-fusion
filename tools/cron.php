@@ -1,6 +1,6 @@
 <?php
 // Define lock file for skip concurrential process, create file into TMP PHP folder
-define( 'LOCKFILE', sys_get_temp_dir() . '/bea-content-sync-fusion-'.get_current_user().'.lock' );
+define( 'LOCKFILE', sys_get_temp_dir() . '/bea-content-sync-fusion-' . get_current_user() . '.lock' );
 
 // Lock file exist ?
 if ( is_file( LOCKFILE ) ) {
@@ -62,10 +62,11 @@ if ( function_exists( 'set_time_limit' ) ) {
 }
 
 //Fix for CRON Symlink !
-require_once(ABSPATH . 'wp-admin/includes/admin.php');
+require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 
-if ( !class_exists('BEA_CSF_Async') )
-	die('Plugin not enabled on this network');
+if ( ! class_exists( 'BEA_CSF_Async' ) ) {
+	die( 'Plugin not enabled on this network' );
+}
 
 // Create fake _POST variable
 $_POST = array();

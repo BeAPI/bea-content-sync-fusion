@@ -75,8 +75,8 @@ class BEA_CSF_Plugin {
 		/**
 		 * Indexes for table `wp_bea_csf_queue`
 		 * ALTER TABLE `wp_bea_csf_queue` ADD UNIQUE KEY `unicity_key` (`hook_data`(255),`current_filter`(255),`receiver_blog_id`,`fields`(255));
-		  **/
-		
+		 **/
+
 		if ( ! function_exists( 'dbDelta' ) ) {
 			if ( ! is_admin() ) {
 				return false;

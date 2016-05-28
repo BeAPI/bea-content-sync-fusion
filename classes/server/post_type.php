@@ -9,7 +9,7 @@ class BEA_CSF_Server_PostType {
 	 * @return mixed|null|void
 	 */
 	public static function delete( $post, array $sync_fields ) {
-		if ( empty($post) ) {
+		if ( empty( $post ) ) {
 			return false;
 		}
 
@@ -31,12 +31,12 @@ class BEA_CSF_Server_PostType {
 	 * @return mixed|null|void
 	 */
 	public static function merge( $post, array $sync_fields ) {
-		if ( empty($post) ) {
+		if ( empty( $post ) ) {
 			return false;
 		}
 
 		// Get object from object or ID
-		$post = get_post($post);
+		$post = get_post( $post );
 		if ( empty( $post ) ) {
 			return false;
 		}

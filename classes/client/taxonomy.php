@@ -46,10 +46,10 @@ class BEA_CSF_Client_Taxonomy {
 		} else {
 			//$edit = true;
 			$new_term_id = wp_update_term( $local_term_id, $term['taxonomy'], array(
-				'name' => $term['name'],
+				'name'        => $term['name'],
 				'description' => $term['description'],
-				'slug' => $term['slug'],
-				'parent' => $term['parent']
+				'slug'        => $term['slug'],
+				'parent'      => $term['parent']
 			) );
 		}
 

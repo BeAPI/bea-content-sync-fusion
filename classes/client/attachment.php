@@ -64,10 +64,10 @@ class BEA_CSF_Client_Attachment {
 			wp_update_post( $updated_datas );
 
 			// update all meta
-			self::post_metas($current_media_id, $data['post_custom']);
+			self::post_metas( $current_media_id, $data['post_custom'] );
 
 			BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $current_media_id );
-		
+
 			do_action( 'bea_csf.client_attachment_after_update', $current_media_id, $data['attachment_dir'], $current_master_parent_id, $data );
 		} else { // Insert with WP media public static function
 			$new_media_id = self::copy_file( $data['attachment_dir'], $current_master_parent_id, $data );
@@ -85,7 +85,7 @@ class BEA_CSF_Client_Attachment {
 				update_post_meta( $new_media_id, '_origin_key', $data['blogid'] . ':' . $data['ID'] );
 
 				// update all meta
-				self::post_metas($new_media_id, $data['post_custom']);
+				self::post_metas( $new_media_id, $data['post_custom'] );
 
 				BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $new_media_id );
 
@@ -175,7 +175,7 @@ class BEA_CSF_Client_Attachment {
 
 			// Create tmp file copy
 			$temp_file = tempnam( sys_get_temp_dir(), 'wp' );
-			copy($file_path, $temp_file);
+			copy( $file_path, $temp_file );
 
 			// Set variables for storage / fix file filename for query strings
 			$file_array             = array();
@@ -204,7 +204,7 @@ class BEA_CSF_Client_Attachment {
 	 * @param $media_id
 	 * @param $metas
 	 */
-	public static function post_metas($media_id, $metas) {
+	public static function post_metas( $media_id, $metas ) {
 
 		if ( ! is_array( $metas ) ) {
 			return false;

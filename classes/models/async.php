@@ -48,7 +48,7 @@ class BEA_CSF_Async {
 			if ( $data_to_transfer == false ) {
 				// Remove from queue
 				self::delete( $sync->id );
-				
+
 				continue;
 			}
 
@@ -57,7 +57,7 @@ class BEA_CSF_Async {
 
 			// Receiver blog exist always ?
 			$blog_data = get_blog_details( $sync->receiver_blog_id, false );
-			if( $blog_data === false ) {
+			if ( $blog_data === false ) {
 				// Remove from queue
 				self::delete( $sync->id );
 
@@ -75,7 +75,7 @@ class BEA_CSF_Async {
 
 			// Flush POST variables
 			$_backup_POST = $_POST;
-			$_POST = array();
+			$_POST        = array();
 
 			// Send data to CLIENT classes
 			$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_transfer, $sync->fields );
@@ -116,7 +116,7 @@ class BEA_CSF_Async {
 			return $pre;
 		}
 
-		add_filter( 'query', array(__CLASS__, 'alter_query_ignore_insert') );
+		add_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
 
 		/** @var WPDB $wpdb */
 		$wpdb->insert(
@@ -131,7 +131,7 @@ class BEA_CSF_Async {
 			'INSERT'
 		);
 
-		remove_filter( 'query', array(__CLASS__, 'alter_query_ignore_insert') );
+		remove_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
 
 		return $wpdb->insert_id;
 	}
@@ -140,7 +140,8 @@ class BEA_CSF_Async {
 	 * Update on fly request on MySQL
 	 */
 	public static function alter_query_ignore_insert( $query ) {
-		$query = str_replace('INSERT', 'INSERT IGNORE', $query);
+		$query = str_replace( 'INSERT', 'INSERT IGNORE', $query );
+
 		return $query;
 	}
 

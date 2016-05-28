@@ -137,7 +137,7 @@ class BEA_CSF_Client_PostType {
 				// TODO: Use Attachment method ?
 				// Media exists ?
 				$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $media['ID'] );
-				if ( empty($current_media_id) ) {
+				if ( empty( $current_media_id ) ) {
 					continue;
 				}
 
@@ -174,18 +174,18 @@ class BEA_CSF_Client_PostType {
 				*/
 
 				// Get size array
-				if( isset( $media['meta_data'] ) ) {
-					$thumbs = maybe_unserialize($media['meta_data']['_wp_attachment_metadata'][0]);
-					$base_url = esc_url(trailingslashit($data['upload_url']) . trailingslashit(dirname($media['meta_data']['_wp_attached_file'][0])));
+				if ( isset( $media['meta_data'] ) ) {
+					$thumbs   = maybe_unserialize( $media['meta_data']['_wp_attachment_metadata'][0] );
+					$base_url = esc_url( trailingslashit( $data['upload_url'] ) . trailingslashit( dirname( $media['meta_data']['_wp_attached_file'][0] ) ) );
 
 					// Try to replace old link by new (for thumbs)
-					foreach ($thumbs['sizes'] as $key => $size) {
-						$img = wp_get_attachment_image_src($current_media_id, $key);
-						$search_replace[$base_url . $size['file']] = $img[0];
+					foreach ( $thumbs['sizes'] as $key => $size ) {
+						$img                                         = wp_get_attachment_image_src( $current_media_id, $key );
+						$search_replace[ $base_url . $size['file'] ] = $img[0];
 					}
 
 					// Add url attachment link to replace
-					$search_replace[$media['attachment_url']] = get_permalink($current_media_id);
+					$search_replace[ $media['attachment_url'] ] = get_permalink( $current_media_id );
 				}
 			}
 

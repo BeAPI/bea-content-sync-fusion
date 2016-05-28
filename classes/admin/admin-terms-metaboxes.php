@@ -21,8 +21,9 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		global $wpdb;
 
 		// Get syncs for current post_type and mode set to "manual"
-		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array( 'mode'     => 'manual',
-		                                                                 'emitters' => $wpdb->blogid,
+		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array(
+			'mode'     => 'manual',
+			'emitters' => $wpdb->blogid,
 		), 'AND', false, true );
 		if ( empty( $syncs_with_manual_state ) ) {
 			return false;

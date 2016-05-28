@@ -33,8 +33,8 @@ if ( empty( $GLOBALS['wpdb']->bea_csf_queue ) ) {
 }
 
 if ( empty( $GLOBALS['wpdb']->bea_csf_queue_maintenance ) ) {
-	$GLOBALS['wpdb']->bea_csf_queue_maintenance      = $GLOBALS['wpdb']->base_prefix . 'bea_csf_queue_maintenance';
-	$GLOBALS['wpdb']->ms_global_tables[] = 'bea_csf_queue_maintenance';
+	$GLOBALS['wpdb']->bea_csf_queue_maintenance = $GLOBALS['wpdb']->base_prefix . 'bea_csf_queue_maintenance';
+	$GLOBALS['wpdb']->ms_global_tables[]        = 'bea_csf_queue_maintenance';
 }
 
 // Plugin URL and PATH

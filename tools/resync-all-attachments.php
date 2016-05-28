@@ -12,7 +12,7 @@ if ( ! isset( $argv ) || count( $argv ) < 3 ) {
 
 //Domain
 $domain = ( isset( $argv[1] ) ) ? $argv[1] : '';
-$path = ( isset( $argv[2] ) ) ? $argv[2] : '/';
+$path   = ( isset( $argv[2] ) ) ? $argv[2] : '/';
 
 // Fake WordPress, build server array
 $_SERVER = array(
