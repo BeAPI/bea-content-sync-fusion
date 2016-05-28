@@ -99,7 +99,7 @@ function init_bea_content_sync_fusion() {
 
 	// Server
 	new BEA_CSF_Client();
-	new BEA_BROADCAST_Symlink();
+	new BEA_CSF_Symlink();
 	// Admin
 	if ( is_admin() ) {
 		new BEA_CSF_Admin_Synchronizations_Network();

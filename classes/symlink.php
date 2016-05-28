@@ -1,6 +1,6 @@
 <?php
 
-class BEA_BROADCAST_Symlink {
+class BEA_CSF_Symlink {
 	static $backup_sizes = array();
 
 	public function __construct() {
