@@ -120,6 +120,13 @@ class BEA_CSF_Relations {
 		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE id = %d", $id ) );
 	}
 
+	public static function get_post_id_from( $emitter_blog_id, $receiver_blog_id, $receiver_id ) {
+		global $wpdb;
+
+		/** @var WPDB $wpdb */
+		return $wpdb->get_row( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE emitter_blog_id = %d AND receiver_blog_id = %d AND  receiver_id = %s", $emitter_blog_id, $receiver_blog_id, $receiver_id ) );
+	}
+
 	/**
 	 * @param $id
 	 *

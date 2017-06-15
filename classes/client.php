@@ -229,16 +229,6 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		$allow_bidirectional_sync = apply_filters( 'bea_csf.client.post_type.allow_bidirectional_sync', '__return_false', $post );
-		if ( false === $allow_bidirectional_sync ) {
-			// Exclude content created by sync plugin
-			$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
-
-			if ( false != $_origin_key ) {
-				return false;
-			}
-		}
-
 		// Auto Sync - Exclude meta ?
 		$is_excluded_from_sync = (boolean) get_post_meta( $post->ID, '_exclude_from_sync', true );
 
