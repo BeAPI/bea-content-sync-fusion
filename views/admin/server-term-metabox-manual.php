@@ -2,7 +2,7 @@
 	<th scope="row"><label for="description">Synchronizations (manual)</label></th>
 	<td>
 		<p>
-			<?php _e( 'You can choose which sites should receive this content. Select no site does not synchronize this content.', 'bea-content-sync-fusion' ); ?>
+			<?php _e( 'You can choose which sites should receive this content. Select no site does not synchronize this content.', BEA_CSF_LOCALE ); ?>
 		</p>
 
 		<div class="wp-tab-panel">
@@ -19,8 +19,10 @@
 			</ul>
 		</div>
 
-		<p>
-			<?php printf( __( 'This content is concerned with these following synchronizations: <strong>%s</strong>', 'bea-content-sync-fusion' ), implode( ', ', $sync_names ) ); ?>
-		</p>
+		<?php if( !empty($sync_names) ) : ?>
+			<p>
+				<?php printf( __( 'This content is concerned with these following synchronizations: <strong>%s</strong>', BEA_CSF_LOCALE ), implode( ', ', $sync_names ) ); ?>
+			</p>
+		<?php endif; ?>
 	</td>
 </tr>

@@ -3,11 +3,6 @@
 class BEA_CSF_Plugin {
 
 	public static function activate() {
-		// Call function activation of Meta for Taxonomies plugin
-		if ( function_exists( 'install_table_termmeta' ) ) {
-			install_table_termmeta();
-		}
-
 		self::create_relations_table();
 
 		// Create table for queue
@@ -75,8 +70,8 @@ class BEA_CSF_Plugin {
 		/**
 		 * Indexes for table `wp_bea_csf_queue`
 		 * ALTER TABLE `wp_bea_csf_queue` ADD UNIQUE KEY `unicity_key` (`hook_data`(255),`current_filter`(255),`receiver_blog_id`,`fields`(255));
-		 **/
-
+		  **/
+		
 		if ( ! function_exists( 'dbDelta' ) ) {
 			if ( ! is_admin() ) {
 				return false;
@@ -152,19 +147,10 @@ class BEA_CSF_Plugin {
 	}
 
 	public static function wpmu_new_blog() {
-		// Call function activation of Meta for Taxonomies plugin
-		if ( function_exists( 'install_table_termmeta' ) ) {
-			install_table_termmeta();
-		}
 	}
 
 	/**
 	 * Get post ID from post meta with meta_key and meta_value
-	 *
-	 * @param $key
-	 * @param $value
-	 *
-	 * @return int
 	 */
 	public static function get_post_id_from_meta( $key, $value ) {
 		global $wpdb;

@@ -71,8 +71,8 @@ foreach ( $blog_ids as $b_id ) {
 	$terms = $wpdb->get_results( "
 			SELECT tt.term_id, tt.taxonomy
 			FROM $wpdb->term_taxonomy tt
-			INNER JOIN $wpdb->term_taxometa ttm
-				ON tt.term_taxonomy_id = ttm.term_taxo_id
+			INNER JOIN $wpdb->termmeta ttm
+				ON tt.term_id = ttm.term_id
 			WHERE ttm.meta_key = '_origin_key'" );
 
 	printf( "Found %s term(s)\n", count( $terms ) );

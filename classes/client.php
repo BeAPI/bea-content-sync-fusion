@@ -35,47 +35,47 @@ class BEA_CSF_Client {
 		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX, 3 );
 
 		// P2P
-		// add_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
-		// add_action( 'p2p_delete_connections', array( __CLASS__, 'p2p_delete_connections' ), PHP_INT_MAX, 1 );
+		add_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
+		add_action( 'p2p_delete_connections', array( __CLASS__, 'p2p_delete_connections' ), PHP_INT_MAX, 1 );
 
 		// Notifications 
-		add_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
+		//add_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
 	}
 
 	public static function unregister_hooks() {
 		// Attachments
-		remove_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX );
-		remove_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX );
-		remove_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX );
+		remove_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX, 1 );
+		remove_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX, 1 );
+		remove_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX, 1 );
 
 		// Attachments crop
-		remove_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX );
+		remove_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX, 5 );
 		remove_filter( 'wp_update_attachment_metadata', array(
 			__CLASS__,
 			'wp_update_attachment_metadata'
-		), PHP_INT_MAX );
+		), PHP_INT_MAX, 2 );
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			remove_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
-			remove_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
+			remove_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
+			remove_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
 		}
 
 		// Post types
-		remove_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX );
-		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX );
+		remove_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX, 3 );
+		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX, 1 );
 
 		// Terms
-		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX );
-		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX );
-		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX );
+		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX, 3 );
+		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX, 3 );
+		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX, 3 );
 
 		// P2P
-		// remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX );
-		// remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX );
+		remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
+		remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX, 1 );
 
 		// Notifications 
-		remove_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10 );
+		// remove_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
 	}
 
 	/**
@@ -229,11 +229,14 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		// Exclude content created by sync plugin
-		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
+		$allow_bidirectional_sync = apply_filters( 'bea_csf.client.post_type.allow_bidirectional_sync', '__return_false', $post );
+		if ( false === $allow_bidirectional_sync ) {
+			// Exclude content created by sync plugin
+			$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
 
-		if ( false != $_origin_key ) {
-			return false;
+			if ( false != $_origin_key ) {
+				return false;
+			}
 		}
 
 		// Auto Sync - Exclude meta ?
@@ -250,9 +253,9 @@ class BEA_CSF_Client {
 		// Check for new publication
 		if ( 'publish' == $new_status || 'future' == $new_status || 'offline' == $new_status ) {
 			//add_action( 'save_post', array( __CLASS__, 'save_post' ), 100, 2 );
-			/*if ( class_exists( 'acf' ) ) {
+			if ( class_exists( 'acf' ) ) {
 				do_action( 'acf/save_post', $post->ID );
-			}*/
+			}
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $is_excluded_from_sync, $_post_receivers, false );
 		} elseif ( $new_status != $old_status && 'publish' == $old_status ) { // Check for unpublish
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $is_excluded_from_sync, $_post_receivers, false );
@@ -260,36 +263,6 @@ class BEA_CSF_Client {
 
 		return true;
 	}
-
-	/**
-	 * @param $post_id
-	 * @param WP_Post $post
-	 *
-	 * @return bool
-	 */
-	/*
-	public static function save_post( $post_id, WP_Post $post ) {
-		global $wpdb;
-
-		// Go out if post is revision
-		if ( $post->post_type == 'revision' ) {
-			return false;
-		}
-
-		// Exec once
-		remove_action( 'save_post', array( __CLASS__, 'save_post' ), 100, 2 );
-
-		// Auto Sync - Exclude meta ?
-		$is_excluded_from_sync = (boolean) get_post_meta( $post->ID, '_exclude_from_sync', true );
-
-		// Manual sync - Selected receivers
-		$_post_receivers = get_post_meta( $post->ID, '_post_receivers', true );
-
-		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, $is_excluded_from_sync, $_post_receivers, false );
-
-		return true;
-	}
-	*/
 
 	/**
 	 * @param int $post_id
@@ -300,19 +273,22 @@ class BEA_CSF_Client {
 		global $wpdb;
 
 		$post = get_post( $post_id );
-		if ( $post == false || is_wp_error( $post ) ) {
+		if ( false === $post || is_wp_error( $post ) ) {
 			return false;
 		}
 
 		// Go out if post is revision
-		if ( $post->post_type == 'revision' ) {
+		if ( 'revision' == $post->post_type ) {
 			return false;
 		}
+		$allow_bidirectional_sync = apply_filters( 'bea_csf.client.post_type.allow_bidirectional_sync', '__return_false', $post );
+		if ( false === $allow_bidirectional_sync ) {
+			// Exclude content created by sync plugin
+			$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
 
-		// Exclude content created by sync plugin
-		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
-		if ( $_origin_key != false ) {
-			return false;
+			if ( false != $_origin_key ) {
+				return false;
+			}
 		}
 
 		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false, false, false );
@@ -376,7 +352,7 @@ class BEA_CSF_Client {
 		$deleted_term->taxonomy         = $taxonomy;
 
 		// Exclude content created by sync plugin
-		$_origin_key = get_term_taxonomy_meta( $deleted_term->term_taxonomy_id, '_origin_key', true );
+		$_origin_key = get_term_meta( $deleted_term->term_id, '_origin_key', true );
 		if ( $_origin_key != false ) {
 			return false;
 		}
@@ -403,13 +379,13 @@ class BEA_CSF_Client {
 		}
 
 		// Exclude content created by sync plugin
-		$_origin_key = get_term_meta( $term->term_taxonomy_id, '_origin_key', true );
+		$_origin_key = get_term_meta( $term->term_id, '_origin_key', true );
 		if ( $_origin_key != false ) {
 			return false;
 		}
 
 		// Manual sync - Selected receivers
-		$_term_receivers = get_term_meta( $term->term_taxonomy_id, '_term_receivers', true );
+		$_term_receivers = (array) get_term_meta( $term->term_id, '_term_receivers', true );
 
 		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $_term_receivers, false );
 
@@ -456,7 +432,7 @@ class BEA_CSF_Client {
 		$post_author = new WP_User( $result->post_author );
 
 		// Prepare subject text
-		$subject = sprintf( __( 'New or update post on website : %s', 'bea-content-sync-fusion' ), get_bloginfo( 'name' ) );
+		$subject = sprintf( __( 'New or update post on website : %s', BEA_CSF_LOCALE ), get_bloginfo( 'name' ) );
 
 		// Loop on users to notify
 		foreach ( $current_values[ $sync_fields['id'] ] as $user_id ) {
@@ -482,6 +458,6 @@ class BEA_CSF_Client {
 			// Send mail
 			wp_mail( $user->user_email, $subject, $message );
 		}
-		return true;
 	}
+
 }

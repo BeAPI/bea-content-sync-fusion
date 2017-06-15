@@ -89,13 +89,13 @@ class BEA_CSF_Synchronizations {
 		// Default settings
 		$default_args = array(
 			'active'        => true,
-			'label'         => 'Sync media',
-			'post_type'     => 'attachment',
+			'label'         => '',
+			'post_type'     => 'post',
 			'mode'          => 'auto', // manual OR auto
 			'status'        => 'publish', // publish OR pending
 			'notifications' => '1', // 1 OR 0
-			'emitters'      => array( 'all' ),
-			'receivers'     => array( 'all' )
+			'emitters'      => array(),
+			'receivers'     => array()
 		);
 		$args         = wp_parse_args( $args, $default_args );
 

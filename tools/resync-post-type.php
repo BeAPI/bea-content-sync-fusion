@@ -6,22 +6,26 @@ if ( php_sapi_name() !== 'cli' || isset( $_SERVER['REMOTE_ADDR'] ) ) {
 // Get first arg
 if ( ! isset( $argv ) || count( $argv ) < 2 ) {
 	echo "Missing parameters.\n";
-	echo "script usage: php resync-post-type.php [domain]\n";
+	echo "script usage: php resync-post-type.php [domain] [path] [post_type]\n";
 	die();
 }
 
 //Domain
 $domain = ( isset( $argv[1] ) ) ? $argv[1] : '';
+$path   = ( isset( $argv[2] ) ) ? $argv[2] : '/';
+$cpt    = ( isset( $argv[3] ) ) ? $argv[3] : 'all';
 
 // Fake WordPress, build server array
 $_SERVER = array(
+	'REQUEST_METHOD'  => 'GET',
+	'SERVER_PROTOCOL' => 'http/1.1',
+	'SERVER_PORT'     => 80,
 	'HTTP_HOST'       => $domain,
 	'SERVER_NAME'     => $domain,
-	'REQUEST_URI'     => '',
-	'REQUEST_METHOD'  => 'GET',
-	'SCRIPT_NAME'     => basename( __FILE__ ),
-	'SCRIPT_FILENAME' => basename( __FILE__ ),
-	'PHP_SELF'        => basename( __FILE__ )
+	'REQUEST_URI'     => $path,
+	'SCRIPT_NAME'     => 'index.php',
+	'SCRIPT_FILENAME' => 'index.php',
+	'PHP_SELF'        => $path . 'index.php',
 );
 
 @ini_set( 'memory_limit', - 1 );
@@ -29,14 +33,14 @@ $_SERVER = array(
 
 define( 'SFML_ALLOW_LOGIN_ACCESS', true );
 
-require( dirname( __FILE__ ) . '/../../../../wp-load.php' );
+require( dirname( __FILE__ ) . '/../../../../wp/wp-load.php' );
 require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 
 @ini_set( 'memory_limit', - 1 );
 @ini_set( 'display_errors', 1 );
 
 $posts = get_posts( array(
-	'post_type'      => 'any',
+	'post_type'      => $cpt,
 	'post_status'    => 'any',
 	'posts_per_page' => - 1,
 ) );

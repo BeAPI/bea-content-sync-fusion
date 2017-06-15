@@ -88,22 +88,21 @@ class BEA_CSF_Client_PostType {
 				}
 
 				// If term has an "origin_key", use it to get its local ID !
-				$term['original_blog_id'] = $term['original_term_taxonomy_id'] = 0;
+				$term['original_blog_id'] = $term['original_term_id'] = 0;
 				if ( isset( $term['meta_data']['_origin_key'][0] ) ) {
 					$_origin_key_data                  = explode( ':', $term['meta_data']['_origin_key'][0] );
 					$term['original_blog_id']          = (int) $_origin_key_data[0];
-					$term['original_term_taxonomy_id'] = (int) $_origin_key_data[1];
+					$term['original_term_id'] = (int) $_origin_key_data[1];
 				}
 
 				$local_term_id = 0;
 				if ( $wpdb->blogid == $term['original_blog_id'] ) { // Is blog id origin is the same of current blog ?
-					$_origin_term_id = get_term_id_from_term_taxonomy_id( $term['taxonomy'], $term['original_term_taxonomy_id'] );
-					$local_term      = get_term( (int) $_origin_term_id, $term['taxonomy'] );
+					$local_term      = get_term( (int) $term['original_term_id'], $term['taxonomy'] );
 					if ( $local_term != false && ! is_wp_error( $local_term ) ) {
 						$local_term_id = (int) $local_term->term_id;
 					}
 				} else {
-					$local_term_id = (int) get_term_id_from_meta( $term['taxonomy'], '_origin_key', $data['blogid'] . ':' . (int) $term['term_taxonomy_id'] );
+					$local_term_id = (int) get_term_id_from_meta( '_origin_key', $data['blogid'] . ':' . (int) $term['term_id'], $term['taxonomy'] );
 				}
 
 				/*
@@ -137,7 +136,7 @@ class BEA_CSF_Client_PostType {
 				// TODO: Use Attachment method ?
 				// Media exists ?
 				$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $media['ID'] );
-				if ( empty( $current_media_id ) ) {
+				if ( empty($current_media_id) ) {
 					continue;
 				}
 
@@ -174,18 +173,18 @@ class BEA_CSF_Client_PostType {
 				*/
 
 				// Get size array
-				if ( isset( $media['meta_data'] ) ) {
-					$thumbs   = maybe_unserialize( $media['meta_data']['_wp_attachment_metadata'][0] );
-					$base_url = esc_url( trailingslashit( $data['upload_url'] ) . trailingslashit( dirname( $media['meta_data']['_wp_attached_file'][0] ) ) );
+				if( isset( $media['meta_data'] ) ) {
+					$thumbs = maybe_unserialize($media['meta_data']['_wp_attachment_metadata'][0]);
+					$base_url = esc_url(trailingslashit($data['upload_url']) . trailingslashit(dirname($media['meta_data']['_wp_attached_file'][0])));
 
 					// Try to replace old link by new (for thumbs)
-					foreach ( $thumbs['sizes'] as $key => $size ) {
-						$img                                         = wp_get_attachment_image_src( $current_media_id, $key );
-						$search_replace[ $base_url . $size['file'] ] = $img[0];
+					foreach ($thumbs['sizes'] as $key => $size) {
+						$img = wp_get_attachment_image_src($current_media_id, $key);
+						$search_replace[$base_url . $size['file']] = $img[0];
 					}
 
 					// Add url attachment link to replace
-					$search_replace[ $media['attachment_url'] ] = get_permalink( $current_media_id );
+					$search_replace[$media['attachment_url']] = get_permalink($current_media_id);
 				}
 			}
 

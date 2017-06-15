@@ -3,17 +3,17 @@ if ( php_sapi_name() !== 'cli' || isset( $_SERVER['REMOTE_ADDR'] ) ) {
 	die( 'CLI Only' );
 }
 
-
 // Get first arg
-if ( ! isset( $argv ) || count( $argv ) < 2 ) {
+if ( ! isset( $argv ) || count( $argv ) < 3 ) {
 	echo "Missing parameters.\n";
-	echo "script usage: php resync-all-attachments.php [domain] [path]\n";
+	echo "script usage: php flush-post-type.php [domain] [path] [post_type]\n";
 	die();
 }
 
 //Domain
 $domain = ( isset( $argv[1] ) ) ? $argv[1] : '';
 $path   = ( isset( $argv[2] ) ) ? $argv[2] : '/';
+$cpt    = ( isset( $argv[3] ) ) ? $argv[3] : 'all';
 
 // Fake WordPress, build server array
 $_SERVER = array(
@@ -58,31 +58,22 @@ if ( function_exists( 'set_time_limit' ) ) {
 	set_time_limit( 0 );
 }
 
-@ini_set( 'memory_limit', - 1 );
-@ini_set( 'display_errors', 1 );
-
-$attachments = get_posts( array(
-	'post_type'      => 'attachment',
-	'post_status'    => 'any',
+$posts = get_posts( array(
+	'post_type'      => $cpt,
+	'post_status'    => 'offline',
 	'posts_per_page' => - 1,
-	'post_parent'    => null,
+	'no_found_rows'  => true,
 ) );
 
-if ( empty( $attachments ) ) {
-	printf( "No attachment found\n" );
+if ( empty( $posts ) ) {
+	printf( "No post found\n" );
 	die();
 }
 
-printf( "Found %s attachment(s)\n", count( $attachments ) );
-foreach ( $attachments as $e ) {
-	if ( ! is_a( $e, 'WP_Post' ) ) {
-		continue;
-	}
-
-	printf( "Synchronizing attachment %s\n", $e->ID );
-
-	do_action( 'edit_attachment', $e->ID );
+printf( "Found %s post(s)\n", count( $posts ) );
+foreach ( $posts as $e ) {
+	wp_delete_post( $e->ID );
 }
 
-printf( "Finish synchronizing attachments\n" );
+printf( "Finish synchronizing posts\n" );
 die();

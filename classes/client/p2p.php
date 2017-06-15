@@ -13,20 +13,16 @@ class BEA_CSF_Client_P2P {
 
 	/**
 	 * Add connection on DB
-	 *
-	 * @param array $data
-	 * @param array $sync_fields
-	 *
-	 * @return bool
 	 */
 	public static function merge( array $data, array $sync_fields ) {
+
 		// P2P Type must be sync ?
 		if ( ! in_array( $data['p2p_type'], $sync_fields['p2p_connections'] ) ) {
 			return false;
 		}
 
 		// From (post/users)
-		if ( $data['p2p_obj']->side['from']->get_object_type() == 'post' ) {
+		if ( $data['p2p_obj']->side['from']->get_object_type() != 'user' ) {
 			// Posts exists ?
 			$p2p_from_local = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $data['p2p_from'] );
 		} else {
@@ -40,7 +36,7 @@ class BEA_CSF_Client_P2P {
 		}
 
 		// To (post/users)
-		if ( $data['p2p_obj']->side['to']->get_object_type() == 'post' ) {
+		if ( $data['p2p_obj']->side['to']->get_object_type() != 'user' ) {
 			// Posts exists ?
 			$p2p_to_local = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $data['p2p_to'] );
 		} else {
@@ -67,20 +63,18 @@ class BEA_CSF_Client_P2P {
 	/**
 	 * Delete a connection, take the master id, try to find the new ID and delete local connection
 	 *
-	 * @param array $data
-	 * @param array $sync_fields
+	 * @param array $term
 	 *
-	 * @return bool|WP_Error
-	 *
+	 * @return \WP_Error|boolean
 	 */
 	public static function delete( array $data, array $sync_fields ) {
 		// P2P Type must be sync ?
 		if ( ! in_array( $data['p2p_type'], $sync_fields['p2p_connections'] ) ) {
-			return;
+			return false;
 		}
 
 		// From (post/users)
-		if ( $data['p2p_obj']->side['from']->get_object_type() == 'post' ) {
+		if ( $data['p2p_obj']->side['from']->get_object_type() != 'user' ) {
 			// Posts exists ?
 			$p2p_from_local = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $data['p2p_from'] );
 		} else {
@@ -88,7 +82,7 @@ class BEA_CSF_Client_P2P {
 		}
 
 		// To (post/users)
-		if ( $data['p2p_obj']->side['to']->get_object_type() == 'post' ) {
+		if ( $data['p2p_obj']->side['to']->get_object_type() != 'user' ) {
 			// Posts exists ?
 			$p2p_to_local = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $data['p2p_to'] );
 		} else {
@@ -97,7 +91,7 @@ class BEA_CSF_Client_P2P {
 
 		// If from or empty not exists, stop process
 		if ( empty( $p2p_from_local ) || empty( $p2p_to_local ) ) {
-			return;
+			return false;
 		}
 
 		// Delete connection

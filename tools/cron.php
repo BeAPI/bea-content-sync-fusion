@@ -1,12 +1,4 @@
 <?php
-// Define lock file for skip concurrential process, create file into TMP PHP folder
-define( 'LOCKFILE', sys_get_temp_dir() . '/bea-content-sync-fusion-' . get_current_user() . '.lock' );
-
-// Lock file exist ?
-if ( is_file( LOCKFILE ) ) {
-	exit( 1 );
-}
-
 if ( ! defined( 'STDIN' ) ) {
 	die( 'Only CLI' );
 }
@@ -17,6 +9,20 @@ if ( count( $argv ) == 3 ) {
 } else {
 	die( 'Missing args ! Usage : php cron.php [domain] [/path]' );
 }
+
+
+$out = str_replace( '/', '', $path );
+
+$lock_file = 'bea_content_sync_fusion_cron_' . $out . '.lock';
+if ( is_file( $lock_file ) ) {
+	return false;
+}
+
+// Try to create lock file
+if ( ! touch( $lock_file ) ) {
+	die( 'Impossible to run this cron, impossible to write lock file !' );
+}
+
 
 // Fake WordPress, build server array
 $_SERVER = array(
@@ -72,12 +78,13 @@ if ( ! class_exists( 'BEA_CSF_Async' ) ) {
 $_POST = array();
 
 // Create lock file
-touch( LOCKFILE );
+touch( $lock_file );
 
 // Process 200 items by 200 items
 BEA_CSF_Async::process_queue( 500 );
+wp_cache_flush();
 
 // Remove lock file
-unlink( LOCKFILE );
-
+unlink( $lock_file );
+die( 'OK' );
 exit( 0 );

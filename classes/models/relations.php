@@ -121,14 +121,9 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param $type
-	 * @param $emitter_blog_id
-	 * @param $emitter_id
-	 * @param $receiver_blog_id
-	 * @param $receiver_id
+	 * @param $id
 	 *
 	 * @return mixed
-	 *
 	 */
 	public static function exists( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;

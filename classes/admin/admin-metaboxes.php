@@ -5,6 +5,7 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Constructor
 	 *
+	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
@@ -95,10 +96,7 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Adds the meta box container in edit post / page
 	 *
-	 * @param $post_type
-	 * @param $post
-	 *
-	 * @return bool
+	 * @return boolean
 	 * @author Amaury Balmer
 	 */
 	public static function add_meta_boxes( $post_type, $post ) {
@@ -117,7 +115,7 @@ class BEA_CSF_Admin_Metaboxes {
 			'emitters'  => $wpdb->blogid
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_auto_state ) ) {
-			add_meta_box( BEA_CSF_OPTION . 'metabox-auto', __( 'Synchronization (auto)', 'bea-content-sync-fusion' ), array(
+			add_meta_box( BEA_CSF_OPTION . 'metabox-auto', __( 'Synchronization (auto)', BEA_CSF_LOCALE ), array(
 				__CLASS__,
 				'metabox_content_auto'
 			), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_auto_state ) );
@@ -130,7 +128,7 @@ class BEA_CSF_Admin_Metaboxes {
 			'emitters'  => $wpdb->blogid
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_manual_state ) ) {
-			add_meta_box( BEA_CSF_OPTION . 'metabox-manual', __( 'Synchronization (manual)', 'bea-content-sync-fusion' ), array(
+			add_meta_box( BEA_CSF_OPTION . 'metabox-manual', __( 'Synchronization (manual)', BEA_CSF_LOCALE ), array(
 				__CLASS__,
 				'metabox_content_manual'
 			), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_manual_state ) );
@@ -142,9 +140,7 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Form for allow exclusion for synchronization !
 	 *
-	 * @param $post
-	 * @param $metabox
-	 *
+	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public static function metabox_content_auto( $post, $metabox ) {
@@ -167,9 +163,7 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Form for custom sync, choose receivers !
 	 *
-	 * @param $post
-	 * @param $metabox
-	 *
+	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public static function metabox_content_manual( $post, $metabox ) {

@@ -1,23 +1,26 @@
 <?php
 /*
-  Plugin Name: BEA - Content Synchronization
-  Plugin URI: http://beapi.fr
+  Plugin Name: BEA - Content Synchronization - Fusion
+  Plugin URI: http://www.beapi.fr
   Description: Manage content synchronization across a WordPress multisite
-  Version: 1.2.0
+  Version: 2.0.2
   Author: BeAPI
-  Author URI: http://beapi.fr
+  Author URI: http://www.beapi.fr
   Network: true
-  Text Domain: bea-content-sync-fusion
-  Domain Path: /languages
+  Required WP : 4.6
 
-  -------------------
-  Copyright 2016 technique@beapi.fr
-  Took from r***l project to handle composer feature
+  Copyright 2013-2017 - BeAPI Team (technique@beapi.fr)
+  
+  TODO : 
+	Mirror mode (deleting inclusion)
+	Unlink relation from receivers
+	AJAX Taxo for Sync edition
  */
 
 // Plugin constants
-define( 'BEA_CSF_VERSION', '1.2.0' );
+define( 'BEA_CSF_VERSION', '2.0.2' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
+define( 'BEA_CSF_LOCALE', 'bea-content-sync-fusion' );
 
 // Define the table relation variables
 if ( empty( $GLOBALS['wpdb']->bea_csf_relations ) ) {
@@ -33,8 +36,8 @@ if ( empty( $GLOBALS['wpdb']->bea_csf_queue ) ) {
 }
 
 if ( empty( $GLOBALS['wpdb']->bea_csf_queue_maintenance ) ) {
-	$GLOBALS['wpdb']->bea_csf_queue_maintenance = $GLOBALS['wpdb']->base_prefix . 'bea_csf_queue_maintenance';
-	$GLOBALS['wpdb']->ms_global_tables[]        = 'bea_csf_queue_maintenance';
+	$GLOBALS['wpdb']->bea_csf_queue_maintenance      = $GLOBALS['wpdb']->base_prefix . 'bea_csf_queue_maintenance';
+	$GLOBALS['wpdb']->ms_global_tables[] = 'bea_csf_queue_maintenance';
 }
 
 // Plugin URL and PATH
@@ -44,7 +47,6 @@ define( 'BEA_CSF_DIR', plugin_dir_path( __FILE__ ) );
 // Plugin various
 require( BEA_CSF_DIR . 'classes/plugin.php' );
 require( BEA_CSF_DIR . 'classes/client.php' );
-require( BEA_CSF_DIR . 'classes/symlink.php' );
 
 // Functions various
 require( BEA_CSF_DIR . 'functions/api.php' );
@@ -78,11 +80,6 @@ if ( is_admin() ) {
 	require( BEA_CSF_DIR . 'classes/admin/admin-terms-metaboxes.php' );
 }
 
-// Load builtin plugin "meta for taxo", if not already installed and actived
-if ( ! function_exists( 'get_term_taxonomy_meta' ) ) {
-	require( BEA_CSF_DIR . 'libraries/meta-for-taxonomies/meta-for-taxonomies.php' );
-}
-
 // Plugin activate/desactive hooks
 register_activation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'deactivate' ) );
@@ -92,14 +89,14 @@ add_action( 'wpmu_new_blog', array( 'BEA_CSF_Plugin', 'wpmu_new_blog' ) );
 add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );
 function init_bea_content_sync_fusion() {
 	// Load translations
-	load_plugin_textdomain( 'bea-content-sync-fusion', false, basename( BEA_CSF_DIR ) . '/languages' );
+	load_plugin_textdomain( BEA_CSF_LOCALE, false, basename( BEA_CSF_DIR ) . '/languages' );
 
 	// Synchronizations
 	BEA_CSF_Synchronizations::init_from_db();
 
 	// Server
 	new BEA_CSF_Client();
-	new BEA_CSF_Symlink();
+
 	// Admin
 	if ( is_admin() ) {
 		new BEA_CSF_Admin_Synchronizations_Network();

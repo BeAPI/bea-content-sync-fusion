@@ -7,8 +7,6 @@ class BEA_CSF_Server_Attachment {
 	 *
 	 * @param WP_Post|integer $attachment
 	 *
-	 * @param array $sync_fields
-	 *
 	 * @return array
 	 */
 	public static function merge( $attachment, array $sync_fields ) {
@@ -29,7 +27,7 @@ class BEA_CSF_Server_Attachment {
 	/**
 	 * Generic method for get all data need for sync
 	 *
-	 * @param WP_Post|integer|bool $attachment
+	 * @param WP_Post|integer $attachment_id
 	 *
 	 * @return array|boolean
 	 */
@@ -42,7 +40,7 @@ class BEA_CSF_Server_Attachment {
 		$attachment['post_custom']    = get_post_custom( $attachment['ID'] );
 		$attachment['attachment_url'] = get_permalink( $attachment['ID'] );
 		$attachment['attachment_dir'] = get_attached_file( $attachment['ID'] );
-		$attachment['metadata']       = wp_get_attachment_metadata( $attachment['ID'] );
+		$attachment['metadata'] 	  = wp_get_attachment_metadata( $attachment['ID'] );
 
 		// Get terms for this object
 		$taxonomies = get_object_taxonomies( $attachment['post_type'] );

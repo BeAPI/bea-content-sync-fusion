@@ -63,7 +63,7 @@ class BEA_CSF_Synchronization {
 		}
 
 		// Register actions if sync is active and haven't a conflict emitters/receivers
-		if ( $this->active == 0 ) {
+		if ( $this->active == 0 || $this->has_conflict() ) {
 			return false;
 		}
 
@@ -78,12 +78,11 @@ class BEA_CSF_Synchronization {
 		$this->_register_hooks = array();
 
 		// No emitters ? Go out !
-		$emitters = $this->get_emitters();
-		if ( empty( $emitters ) ) {
+		if ( empty( $this->emitters ) ) {
 			return false;
 		}
 
-		foreach ( $emitters as $emitter_blog_id ) {
+		foreach ( $this->emitters as $emitter_blog_id ) {
 			// Register this hook only for post type attachment for evite doublon sync item
 			if ( $this->post_type == 'attachment' ) { // Specific CPT : Attachments
 
@@ -104,7 +103,7 @@ class BEA_CSF_Synchronization {
 				foreach ( $this->taxonomies as $taxonomy ) {
 					// Skip register if taxo is already register on another synchro
 					if ( isset( $connection_taxo_duplicate[ $taxonomy . '/' . $emitter_blog_id ] ) ) {
-						continue;
+						//continue;
 					}
 
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $emitter_blog_id;
@@ -115,14 +114,12 @@ class BEA_CSF_Synchronization {
 			}
 
 			// P2P
-			/*
 			if ( ! empty( $this->p2p_connections ) ) {
 				foreach ( $this->p2p_connections as $p2p_connection ) {
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'P2P' . '/' . 'delete' . '/' . $p2p_connection . '/' . $emitter_blog_id;
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'P2P' . '/' . 'merge' . '/' . $p2p_connection . '/' . $emitter_blog_id;
 				}
 			}
-			*/
 		}
 
 		// Call the unique action hook !
@@ -238,16 +235,14 @@ class BEA_CSF_Synchronization {
 	 * @return array
 	 */
 	public function get_receivers() {
-		global $wpdb;
-
 		$results = array();
 		foreach ( $this->receivers as $key => $receiver_blog_id ) {
 			if ( $receiver_blog_id == 'all' ) {
 				// Get all sites
 				$blogs = self::get_sites_from_network( 0, false );
 				foreach ( $blogs as $blog ) {
-					// Exclude current emitter
-					if ( $blog['blog_id'] != $wpdb->blogid ) {
+					// Exclude emitters
+					if ( ! in_array( $blog['blog_id'], $this->emitters ) ) {
 						$results[] = $blog['blog_id'];
 					}
 				}
@@ -259,30 +254,10 @@ class BEA_CSF_Synchronization {
 		return $results;
 	}
 
-	public function get_emitters() {
-		$results = array();
-		foreach ( $this->emitters as $key => $emitter_blog_id ) {
-			if ( $emitter_blog_id == 'all' ) {
-				// Get all sites
-				$blogs = self::get_sites_from_network( 0, false );
-				foreach ( $blogs as $blog ) {
-					$results[] = $blog['blog_id'];
-				}
-			} else {
-				$results[] = $emitter_blog_id;
-			}
-		}
-
-		return $results;
-	}
-
 	/**
 	 * Helper: Get sites list for a network ID
 	 *
-	 * @param int $network_id
-	 * @param bool $get_blog_name
-	 *
-	 * @return array|bool
+	 * @return array|boolean
 	 * @author Amaury Balmer
 	 */
 	public static function get_sites_from_network( $network_id = 0, $get_blog_name = true ) {
@@ -384,6 +359,8 @@ class BEA_CSF_Synchronization {
 			return $this->_hook_data->ID;
 		} elseif ( $this->_current_object == 'Taxonomy' ) {
 			return $this->_hook_data->taxonomy . '|||' . $this->_hook_data->term_id;
+		}elseif( $this->_current_object == 'P2P' ){
+			return $this->_hook_data;
 		}
 
 		return 0;

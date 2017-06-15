@@ -31,6 +31,17 @@ class BEA_CSF_Server_PostType {
 	 * @return mixed|null|void
 	 */
 	public static function merge( $post, array $sync_fields ) {
+		return apply_filters( 'bea_csf.server.posttype.merge', self::get_data( $post ), $sync_fields );
+	}
+
+	/**
+	 * Generic method for get all data need for sync
+	 *
+	 * @param WP_Post|integer $post
+	 *
+	 * @return array|boolean
+	 */
+	public static function get_data( $post ) {
 		if ( empty( $post ) ) {
 			return false;
 		}
@@ -88,7 +99,7 @@ class BEA_CSF_Server_PostType {
 		$uploads            = bea_csf_upload_dir();
 		$post['upload_url'] = $uploads['baseurl'];
 
-		return apply_filters( 'bea_csf.server.posttype.merge', $post, $sync_fields );
+		return $post;
 	}
 
 }

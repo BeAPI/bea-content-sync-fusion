@@ -5,6 +5,7 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 	/**
 	 * Constructor
 	 *
+	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
@@ -20,9 +21,8 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		global $wpdb;
 
 		// Get syncs for current post_type and mode set to "manual"
-		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array(
-			'mode'     => 'manual',
-			'emitters' => $wpdb->blogid,
+		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array( 'mode'     => 'manual',
+		                                                                 'emitters' => $wpdb->blogid,
 		), 'AND', false, true );
 		if ( empty( $syncs_with_manual_state ) ) {
 			return false;
@@ -40,23 +40,26 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 	public static function form( $term ) {
 		$sync_obj = self::taxonomy_has_manual_sync( $term->taxonomy );
 		if ( $sync_obj === false ) {
-			return;
+			return false;
 		}
 
 		// Use nonce for verification
 		wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION . '-term-nonce-manual' );
 
 		// Get values for current term
-		$current_values = get_term_taxonomy_meta( $term->term_taxonomy_id, '_term_receivers', true );
+		$current_values = (array) get_term_meta( $term->term_id, '_term_receivers', true );
 
 		// Get sites destination from syncs
-		$sync_receivers = BEA_CSF_Admin_Synchronizations_Network::get_sites( $sync_obj->get_field( 'receivers' ) );
+		$sync_receivers = $sync_obj->get_field( 'receivers' );
+		$sync_receivers = BEA_CSF_Admin_Synchronizations_Network::get_sites( $sync_receivers );
 
 		// Get names from syncs
 		$sync_names = array();
+		/*
 		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
 			$sync_names[] = $sync_obj->get_field( 'label' );
 		}
+		*/
 
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-term-metabox-manual.php' );
@@ -85,11 +88,11 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		}
 
 		// Get previous values
-		$old_term_receivers = (array) get_term_taxonomy_meta( $term->term_taxonomy_id, '_term_receivers', true );
+		$old_term_receivers = (array) get_term_meta( $term->term_id, '_term_receivers', true );
 		$old_term_receivers = array_filter( $old_term_receivers, 'trim' );
 
 		// Set new value
-		update_term_taxonomy_meta( $term->term_taxonomy_id, '_term_receivers', $new_term_receivers );
+		update_term_meta( $term->term_id, '_term_receivers', $new_term_receivers );
 
 		// Calcul difference for send delete notification for uncheck action
 		$receivers_to_delete = array_diff( $old_term_receivers, $new_term_receivers );

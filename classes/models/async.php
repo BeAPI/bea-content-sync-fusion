@@ -4,9 +4,7 @@ class BEA_CSF_Async {
 	/**
 	 * Generic method to get data from emitter and sent theses to receivers
 	 *
-	 * @param bool $quantity
-	 *
-	 * @return bool
+	 * @return boolean
 	 */
 	public static function process_queue( $quantity = false ) {
 		// Get data to sync
@@ -47,10 +45,9 @@ class BEA_CSF_Async {
 				'BEA_CSF_Server_' . $object,
 				$method,
 			), $sync->hook_data, $sync->fields );
-			if ( $data_to_transfer == false ) {
+			if ( false === $data_to_transfer ) {
 				// Remove from queue
 				self::delete( $sync->id );
-
 				continue;
 			}
 
@@ -59,7 +56,7 @@ class BEA_CSF_Async {
 
 			// Receiver blog exist always ?
 			$blog_data = get_blog_details( $sync->receiver_blog_id, false );
-			if ( $blog_data === false ) {
+			if ( false === $blog_data ) {
 				// Remove from queue
 				self::delete( $sync->id );
 
@@ -89,7 +86,7 @@ class BEA_CSF_Async {
 			BEA_CSF_Client::register_hooks();
 
 			// Allow users notifications
-			if ( (int) $sync->fields['notifications'] == 1 ) {
+			if ( 1 === (int) $sync->fields['notifications'] ) {
 				do_action( 'bea-csf-client-notifications', $result, $object, $method, $blog_id, $sync->fields );
 			}
 
@@ -127,7 +124,7 @@ class BEA_CSF_Async {
 				'hook_data'        => maybe_serialize( $hook_data ),
 				'current_filter'   => $current_filter,
 				'receiver_blog_id' => $receiver_blog_id,
-				'fields'           => maybe_serialize( $fields )
+				'fields'           => maybe_serialize( $fields ),
 			),
 			array( '%s', '%s', '%d', '%s' ),
 			'INSERT'
@@ -161,8 +158,9 @@ class BEA_CSF_Async {
 	}
 
 	/**
-	 * @return mixed
+	 * @param $id
 	 *
+	 * @return mixed
 	 */
 	public static function get_all() {
 		global $wpdb;
@@ -173,10 +171,9 @@ class BEA_CSF_Async {
 	}
 
 	/**
-	 * @param int $quantity
+	 * @param $id
 	 *
 	 * @return mixed
-	 *
 	 */
 	public static function get_results( $quantity = 100 ) {
 		global $wpdb;

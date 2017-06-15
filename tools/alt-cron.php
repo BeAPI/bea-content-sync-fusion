@@ -8,7 +8,7 @@
  */
 
 // Define lock file for skip concurrential process, create file into TMP PHP folder
-define( 'LOCKFILE', sys_get_temp_dir() . '/bea-content-sync-fusion-' . get_current_user() . '.lock' );
+define( 'LOCKFILE', sys_get_temp_dir() . '/bea-content-sync-fusion.lock' );
 
 // Lock file exist ?
 /*

@@ -21,7 +21,7 @@ $_SERVER = array(
 	'REQUEST_METHOD'  => 'GET',
 	'SCRIPT_NAME'     => basename( __FILE__ ),
 	'SCRIPT_FILENAME' => basename( __FILE__ ),
-	'PHP_SELF'        => basename( __FILE__ )
+	'PHP_SELF'        => basename( __FILE__ ),
 );
 
 @ini_set( 'memory_limit', - 1 );
@@ -29,7 +29,7 @@ $_SERVER = array(
 
 define( 'SFML_ALLOW_LOGIN_ACCESS', true );
 
-require( dirname( __FILE__ ) . '/../../../../wp-load.php' );
+require( dirname( __FILE__ ) . '/../../../../wp/wp-load.php' );
 require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 
 @ini_set( 'memory_limit', - 1 );

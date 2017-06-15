@@ -6,13 +6,14 @@ class BEA_CSF_Admin_Restrictions {
 	/**
 	 * Constructor, register hooks
 	 *
+	 * @return void
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
 		// Get current setting
 		$current_settings = get_site_option( 'csf_adv_settings' );
 		if ( isset( $current_settings['unlock-mode'] ) && $current_settings['unlock-mode'] == '1' ) {
-			return;
+			return false;
 		}
 
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
@@ -28,6 +29,8 @@ class BEA_CSF_Admin_Restrictions {
 
 		// Play with capabilities
 		add_filter( 'map_meta_cap', array( __CLASS__, 'map_meta_cap' ), 10, 4 );
+
+		return true;
 	}
 
 	/**
@@ -45,8 +48,8 @@ class BEA_CSF_Admin_Restrictions {
 	/**
 	 * Remove some actions on post list when a post have an original key
 	 *
-	 * @param array $actions
-	 * @param array|WP_Post $post
+	 * @param array $post
+	 * @param WP_Post $post
 	 *
 	 * @return array
 	 */
@@ -86,12 +89,12 @@ class BEA_CSF_Admin_Restrictions {
 	 * Remove some actions on tag list when a post have an original key
 	 *
 	 * @param array $actions
-	 * @param stdClass $term
+	 * @param WP_Term $term
 	 *
 	 * @return array
 	 */
-	public static function tag_row_actions( array $actions, stdClass $term ) {
-		$_origin_key = get_term_taxonomy_meta( $term->term_taxonomy_id, '_origin_key', true );
+	public static function tag_row_actions( array $actions, WP_Term $term ) {
+		$_origin_key = get_term_meta( $term->term_id, '_origin_key', true );
 		if ( $_origin_key != false ) {
 			unset( $actions['edit'], $actions['inline hide-if-no-js'], $actions['delete'] );
 			$actions['view'] .= '<span class="locked-term-parent"></span>';
@@ -127,9 +130,9 @@ class BEA_CSF_Admin_Restrictions {
 			return false;
 		}
 
-		$_origin_key = get_term_taxonomy_meta( $current_term->term_taxonomy_id, '_origin_key', true );
+		$_origin_key = get_term_meta( $current_term->term_id, '_origin_key', true );
 		if ( $_origin_key != false ) {
-			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
+			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', BEA_CSF_LOCALE ) );
 		}
 
 		return true;
