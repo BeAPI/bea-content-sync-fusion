@@ -14,10 +14,7 @@ class BEA_CSF_Client {
 
 		// Attachments crop
 		add_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX, 5 );
-		add_filter( 'wp_update_attachment_metadata', array(
-			__CLASS__,
-			'wp_update_attachment_metadata'
-		), PHP_INT_MAX, 2 );
+		add_filter( 'wp_update_attachment_metadata', array( __CLASS__, 'wp_update_attachment_metadata' ), PHP_INT_MAX, 2 );
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
@@ -50,10 +47,7 @@ class BEA_CSF_Client {
 
 		// Attachments crop
 		remove_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX, 5 );
-		remove_filter( 'wp_update_attachment_metadata', array(
-			__CLASS__,
-			'wp_update_attachment_metadata'
-		), PHP_INT_MAX, 2 );
+		remove_filter( 'wp_update_attachment_metadata', array( __CLASS__, 'wp_update_attachment_metadata' ), PHP_INT_MAX, 2 );
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
@@ -124,12 +118,6 @@ class BEA_CSF_Client {
 
 		// Is attachment ?
 		if ( $attachment->post_type !== 'attachment' ) {
-			return false;
-		}
-
-		// Exclude content created by sync plugin
-		$_origin_key = get_post_meta( $attachment->ID, '_origin_key', true );
-		if ( $_origin_key != false ) {
 			return false;
 		}
 

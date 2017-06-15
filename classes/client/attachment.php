@@ -46,29 +46,33 @@ class BEA_CSF_Client_Attachment {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
+
 		// Media exists ?
-		$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $data['ID'] );
+		$current_media_id = BEA_CSF_Relations::get_post_id_from( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['ID'] );
 
 		// Parent media ?
-		$current_master_parent_id = (int) BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $data['post_parent'] );
+		$current_master_parent_id = BEA_CSF_Relations::get_post_id_from( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'] );
+		$current_master_parent_id = ! empty( $current_master_parent_id ) && (int) $current_master_parent_id->emitter_id ? (int) $current_master_parent_id->emitter_id : 0;
+
 
 		// Merge or add ?
-		if ( $current_media_id > 0 ) { // Edit, update only main fields
+		if ( ! empty( $current_media_id ) && (int) $current_media_id->emitter_id ) { // Edit, update only main fields
 			$updated_datas                   = array();
-			$updated_datas['ID']             = $current_media_id;
+			$updated_datas['ID']             = $current_media_id->emitter_id;
 			$updated_datas['post_title']     = $data['post_title'];
 			$updated_datas['post_content']   = $data['post_content'];
 			$updated_datas['post_excerpt']   = $data['post_excerpt'];
 			$updated_datas['post_mime_type'] = $data['post_mime_type'];
 			$updated_datas['post_parent']    = $current_master_parent_id;
+
 			wp_update_post( $updated_datas );
 
 			// update all meta
-			self::post_metas( $current_media_id, $data['post_custom'] );
+			self::post_metas( $current_media_id->emitter_id, $data['post_custom'] );
 
-			BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $current_media_id );
+			BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $current_media_id->emitter_id );
 
-			do_action( 'bea_csf.client_attachment_after_update', $current_media_id, $data['attachment_dir'], $current_master_parent_id, $data );
+			do_action( 'bea_csf.client_attachment_after_update', $current_media_id->emitter_id, $data['attachment_dir'], $current_master_parent_id, $data );
 		} else { // Insert with WP media public static function
 
 			// Stock main fields from server
@@ -81,9 +85,6 @@ class BEA_CSF_Client_Attachment {
 			$new_media_id                    = wp_insert_post( $updated_datas );
 
 			if ( ! is_wp_error( $new_media_id ) && $new_media_id > 0 ) {
-
-				// Save metas
-				update_post_meta( $new_media_id, '_origin_key', $data['blogid'] . ':' . $data['ID'] );
 
 				// update all meta
 				self::post_metas( $new_media_id, $data['post_custom'] );
@@ -116,15 +117,15 @@ class BEA_CSF_Client_Attachment {
 				// If term has an "origin_key", use it to get its local ID !
 				$term['original_blog_id'] = $term['original_term_id'] = 0;
 				if ( isset( $term['meta_data']['_origin_key'][0] ) ) {
-					$_origin_key_data                  = explode( ':', $term['meta_data']['_origin_key'][0] );
-					$term['original_blog_id']          = (int) $_origin_key_data[0];
+					$_origin_key_data         = explode( ':', $term['meta_data']['_origin_key'][0] );
+					$term['original_blog_id'] = (int) $_origin_key_data[0];
 					$term['original_term_id'] = (int) $_origin_key_data[1];
 				}
 
 				$local_term_id = 0;
 				wp_cache_flush();
 				if ( $wpdb->blogid == $term['original_blog_id'] ) { // Is blog id origin is the same of current blog ?
-					$local_term      = get_term( (int) $term['original_term_id'], $term['taxonomy'] );
+					$local_term = get_term( (int) $term['original_term_id'], $term['taxonomy'] );
 					if ( $local_term != false && ! is_wp_error( $local_term ) ) {
 						$local_term_id = (int) $local_term->term_id;
 					}
