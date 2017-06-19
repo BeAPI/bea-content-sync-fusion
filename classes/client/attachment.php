@@ -48,10 +48,10 @@ class BEA_CSF_Client_Attachment {
 
 
 		// Media exists ?
-		$current_media_id = BEA_CSF_Relations::get_post_id_from( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['ID'] );
+		$current_media_id = BEA_CSF_Relations::get_post_id_from_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['ID'] );
 
 		// Parent media ?
-		$current_master_parent_id = BEA_CSF_Relations::get_post_id_from( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'] );
+		$current_master_parent_id = BEA_CSF_Relations::get_post_id_from_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'] );
 		$current_master_parent_id = ! empty( $current_master_parent_id ) && (int) $current_master_parent_id->emitter_id ? (int) $current_master_parent_id->emitter_id : 0;
 
 

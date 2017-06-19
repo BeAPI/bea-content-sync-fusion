@@ -19,11 +19,11 @@ class BEA_CSF_Client_PostType {
 		}
 
 		// Post exists ?
-		$local_id = BEA_CSF_Relations::get_post_id_from( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['ID'] );
+		$local_id = BEA_CSF_Relations::get_post_id_from_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['ID'] );
 
 		// Find local parent ?
 		if ( isset( $data['post_parent'] ) ) {
-			$local_parent_id     = BEA_CSF_Relations::get_post_id_from( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'] );
+			$local_parent_id     = BEA_CSF_Relations::get_post_id_from_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'] );
 			$data['post_parent'] = ! empty( $local_parent_id ) && (int) $local_parent_id->emitter_id > 0 ? $local_parent_id->emitter_id : 0;
 		}
 
@@ -196,9 +196,9 @@ class BEA_CSF_Client_PostType {
 		}
 
 		// Restore post thumb
-		$thumbnail_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $data['_thumbnail_id'] );
-		if ( $thumbnail_id > 0 ) {
-			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id );
+		$thumbnail_id = BEA_CSF_Relations::get_post_id_from_emitter( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_thumbnail_id'] );
+		if ( ! empty( $thumbnail_id ) && (int) $thumbnail_id->receiver_id ) {
+			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id->receiver_id );
 		} elseif ( $data['_thumbnail'] != false ) {
 			$data['_thumbnail']['blogid'] = $data['blogid'];
 			$media_id                     = BEA_CSF_Client_Attachment::merge( $data['_thumbnail'], $sync_fields );
