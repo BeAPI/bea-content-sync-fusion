@@ -38,7 +38,7 @@ class BEA_CSF_Client_PostType {
 
 		} else {
 			// Sync settings, allow change post status. Apply only for POST creation
-			if ( $sync_fields['status'] == 'pending' ) {
+			if ( 'pending' === $sync_fields['status'] ) {
 				$data_for_post['post_status'] = 'pending';
 			}
 

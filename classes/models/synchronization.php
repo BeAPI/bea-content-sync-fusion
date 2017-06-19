@@ -334,7 +334,7 @@ class BEA_CSF_Synchronization {
 			}
 
 			// Keep only ID on inclusion custom param
-			if ( ( $this->mode == 'manual' || $ignore_mode == true ) && is_array( $receivers_inclusion ) && ! in_array( $receiver_blog_id, $receivers_inclusion ) ) {
+			if ( ( 'manual' === $this->mode || true === $ignore_mode ) && is_array( $receivers_inclusion ) && ! in_array( $receiver_blog_id, $receivers_inclusion ) ) {
 				continue;
 			}
 
@@ -355,11 +355,11 @@ class BEA_CSF_Synchronization {
 	}
 
 	public function get_id_from_object() {
-		if ( $this->_current_object == 'PostType' || $this->_current_object == 'Attachment' ) {
+		if ( 'PostType' === $this->_current_object || 'Attachment' === $this->_current_object ) {
 			return $this->_hook_data->ID;
-		} elseif ( $this->_current_object == 'Taxonomy' ) {
+		} elseif ( 'Taxonomy' === $this->_current_object ) {
 			return $this->_hook_data->taxonomy . '|||' . $this->_hook_data->term_id;
-		}elseif( $this->_current_object == 'P2P' ){
+		} elseif ( 'P2P' === $this->_current_object ) {
 			return $this->_hook_data;
 		}
 
