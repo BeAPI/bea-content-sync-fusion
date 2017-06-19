@@ -314,12 +314,6 @@ class BEA_CSF_Client {
 		$deleted_term->term_taxonomy_id = $tt_id;
 		$deleted_term->taxonomy         = $taxonomy;
 
-		// Exclude content created by sync plugin
-		$_origin_key = get_term_meta( $deleted_term->term_id, '_origin_key', true );
-		if ( $_origin_key != false ) {
-			return false;
-		}
-
 		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $deleted_term, false, false, false );
 
 		return true;
@@ -338,12 +332,6 @@ class BEA_CSF_Client {
 		// Get term
 		$term = get_term( $term_id, $taxonomy );
 		if ( $term == false || is_wp_error( $term ) ) {
-			return false;
-		}
-
-		// Exclude content created by sync plugin
-		$_origin_key = get_term_meta( $term->term_id, '_origin_key', true );
-		if ( $_origin_key != false ) {
 			return false;
 		}
 

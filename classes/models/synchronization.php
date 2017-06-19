@@ -103,7 +103,7 @@ class BEA_CSF_Synchronization {
 				foreach ( $this->taxonomies as $taxonomy ) {
 					// Skip register if taxo is already register on another synchro
 					if ( isset( $connection_taxo_duplicate[ $taxonomy . '/' . $emitter_blog_id ] ) ) {
-						//continue;
+						continue;
 					}
 
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $emitter_blog_id;
