@@ -56,7 +56,7 @@ class BEA_CSF_Client_P2P {
 
 		// Create connection
 		p2p_type( $data['p2p_type'] )->connect( $p2p_from_local, $p2p_to_local, array(
-			'date' => current_time( 'mysql' )
+			'date' => current_time( 'mysql' ),
 		) );
 	}
 
@@ -108,7 +108,11 @@ class BEA_CSF_Client_P2P {
 		if ( ! isset( $blogs[ $wpdb->blogid ] ) ) {
 			add_user_to_blog( $wpdb->blogid, $user_id, $prefered_role );
 		} else {
-			wp_update_user( array( 'ID' => $user_id, 'role' => $prefered_role ) );
+			wp_update_user( array(
+					'ID'   => $user_id,
+					'role' => $prefered_role,
+				)
+			);
 		}
 	}
 

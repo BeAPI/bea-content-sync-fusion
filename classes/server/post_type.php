@@ -17,6 +17,7 @@ class BEA_CSF_Server_PostType {
 		$post = array(
 			'ID' => $post,
 		);
+
 		if ( empty( $post ) ) {
 			return false;
 		}
@@ -76,7 +77,7 @@ class BEA_CSF_Server_PostType {
 
 		// Get terms for this object
 		$taxonomies = get_object_taxonomies( $post['post_type'] );
-		if ( $taxonomies != false ) {
+		if ( false != $taxonomies ) {
 			$post['terms']      = wp_get_object_terms( $post['ID'], $taxonomies );
 			$post['taxonomies'] = $taxonomies;
 
@@ -89,7 +90,13 @@ class BEA_CSF_Server_PostType {
 		$post['medias'] = array();
 
 		// Get medias attachment
-		$attachments = get_children( array( 'post_parent' => $post['ID'], 'post_type' => 'attachment' ) );
+		$attachments = get_children(
+			array(
+				'post_parent' => $post['ID'],
+				'post_type'   => 'attachment',
+			)
+		);
+
 		foreach ( $attachments as $attachment ) {
 			$post['medias'][] = BEA_CSF_Server_Attachment::get_data( $attachment );
 		}

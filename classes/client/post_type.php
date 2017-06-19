@@ -123,7 +123,6 @@ class BEA_CSF_Client_PostType {
 					continue;
 				}
 
-
 				wp_update_post( array(
 						'ID'          => $current_media_id->receiver_id,
 						'post_parent' => $new_post_id,
@@ -136,7 +135,7 @@ class BEA_CSF_Client_PostType {
 		$thumbnail_id = BEA_CSF_Relations::get_post_id_from_emitter( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_thumbnail_id'] );
 		if ( ! empty( $thumbnail_id ) && (int) $thumbnail_id->receiver_id > 0 ) {
 			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id->receiver_id );
-		} elseif ( $data['_thumbnail'] != false ) {
+		} elseif ( false != $data['_thumbnail'] ) {
 			$data['_thumbnail']['blogid'] = $data['blogid'];
 			$media_id                     = BEA_CSF_Client_Attachment::merge( $data['_thumbnail'], $sync_fields );
 			if ( $media_id > 0 ) {

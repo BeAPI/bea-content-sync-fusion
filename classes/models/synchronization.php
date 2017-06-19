@@ -13,7 +13,7 @@ class BEA_CSF_Synchronization {
 		'status',
 		'notifications',
 		'emitters',
-		'receivers'
+		'receivers',
 	);
 	private $_is_locked = true;
 	private $_register_hooks = array();
@@ -63,7 +63,7 @@ class BEA_CSF_Synchronization {
 		}
 
 		// Register actions if sync is active and haven't a conflict emitters/receivers
-		if ( $this->active == 0 || $this->has_conflict() ) {
+		if ( 0 === $this->active || $this->has_conflict() ) {
 			return false;
 		}
 
@@ -84,7 +84,7 @@ class BEA_CSF_Synchronization {
 
 		foreach ( $this->emitters as $emitter_blog_id ) {
 			// Register this hook only for post type attachment for evite doublon sync item
-			if ( $this->post_type == 'attachment' ) { // Specific CPT : Attachments
+			if ( 'attachment' === $this->post_type ) { // Specific CPT : Attachments
 
 				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $emitter_blog_id;
 				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $emitter_blog_id;
@@ -237,7 +237,7 @@ class BEA_CSF_Synchronization {
 	public function get_receivers() {
 		$results = array();
 		foreach ( $this->receivers as $key => $receiver_blog_id ) {
-			if ( $receiver_blog_id == 'all' ) {
+			if ( 'all' === $receiver_blog_id ) {
 				// Get all sites
 				$blogs = self::get_sites_from_network( 0, false );
 				foreach ( $blogs as $blog ) {
@@ -263,7 +263,7 @@ class BEA_CSF_Synchronization {
 	public static function get_sites_from_network( $network_id = 0, $get_blog_name = true ) {
 		global $wpdb;
 
-		if ( $network_id == 0 ) {
+		if ( 0 === $network_id ) {
 			$network_id = $wpdb->siteid;
 		}
 
@@ -275,7 +275,7 @@ class BEA_CSF_Synchronization {
 		$sites = array();
 		foreach ( $results as $result ) {
 			$sites[ $result['blog_id'] ] = $result;
-			if ( $get_blog_name == true ) {
+			if ( true === $get_blog_name ) {
 				$sites[ $result['blog_id'] ]['blogname'] = get_blog_option( $result['blog_id'], 'blogname' );
 			}
 		}
@@ -299,12 +299,12 @@ class BEA_CSF_Synchronization {
 		unset( $hook_data );
 
 		// Inclusion is not FALSE? But a empty array ? On manual mode or ignore mode ?
-		if ( ( $this->mode == 'manual' || $ignore_mode == true ) && is_array( $receivers_inclusion ) && empty( $receivers_inclusion ) ) {
+		if ( ( 'manual' === $this->mode || true === $ignore_mode ) && is_array( $receivers_inclusion ) && empty( $receivers_inclusion ) ) {
 			return false;
 		}
 
 		// Emitter content is excluded from SYNC ?
-		if ( ( $this->mode == 'auto' || $ignore_mode == true ) && $excluded_from_sync === true ) {
+		if ( ( 'auto' === $this->mode || true === $ignore_mode ) && true === $excluded_from_sync ) {
 			return false;
 		}
 

@@ -44,7 +44,7 @@ class BEA_CSF_Server_Attachment {
 
 		// Get terms for this object
 		$taxonomies = get_object_taxonomies( $attachment['post_type'] );
-		if ( $taxonomies != false ) {
+		if ( false != $taxonomies ) {
 			$attachment['terms']      = wp_get_object_terms( $attachment['ID'], $taxonomies );
 			$attachment['taxonomies'] = $taxonomies;
 

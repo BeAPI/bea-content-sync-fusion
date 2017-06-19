@@ -137,7 +137,7 @@ class BEA_CSF_Client_Attachment {
 				wp_cache_flush();
 				if ( $wpdb->blogid == $term['original_blog_id'] ) { // Is blog id origin is the same of current blog ?
 					$local_term = get_term( (int) $term['original_term_id'], $term['taxonomy'] );
-					if ( $local_term != false && ! is_wp_error( $local_term ) ) {
+					if ( false != $local_term && ! is_wp_error( $local_term ) ) {
 						$local_term_id = (int) $local_term->term_id;
 					}
 				} else {

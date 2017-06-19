@@ -18,8 +18,8 @@ class BEA_CSF_Client {
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			add_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
-			add_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
+			add_action( 'updated_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
+			add_action( 'deleted_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
 		}
 
 		// Post types
@@ -267,7 +267,7 @@ class BEA_CSF_Client {
 		global $wpdb;
 
 		$connection = p2p_get_connection( (int) $p2p_id );
-		if ( $connection == false ) {
+		if ( false === $connection ) {
 			return false;
 		}
 
@@ -287,7 +287,7 @@ class BEA_CSF_Client {
 		$p2p_ids = (array) $p2p_ids;
 		foreach ( $p2p_ids as $p2p_id ) {
 			$connection = p2p_get_connection( (int) $p2p_id );
-			if ( $connection == false ) {
+			if ( false === $connection ) {
 				continue;
 			}
 
@@ -330,7 +330,7 @@ class BEA_CSF_Client {
 
 		// Get term
 		$term = get_term( $term_id, $taxonomy );
-		if ( $term == false || is_wp_error( $term ) ) {
+		if ( false === $term || is_wp_error( $term ) ) {
 			return false;
 		}
 
@@ -353,7 +353,7 @@ class BEA_CSF_Client {
 	 */
 	public static function send_notifications( $result, $object, $method, $blogid, array $sync_fields ) {
 		// Enable notification only post type edition/addition
-		if ( $object != 'PostType' || $method != 'merge' ) {
+		if ( 'PostType' != $object || 'merge' != $method ) {
 			return false;
 		}
 
@@ -363,7 +363,7 @@ class BEA_CSF_Client {
 		}
 
 		// Notify only if result is an addition on DB, not edition...
-		if ( isset( $result->is_edition ) && $result->is_edition == true ) {
+		if ( isset( $result->is_edition ) && true === $result->is_edition ) {
 			return false;
 		}
 
