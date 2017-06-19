@@ -84,37 +84,26 @@ class BEA_CSF_Client_PostType {
 					continue;
 				}
 
-				// If term has an "origin_key", use it to get its local ID !
-				$term['original_blog_id'] = $term['original_term_id'] = 0;
-				if ( isset( $term['meta_data']['_origin_key'][0] ) ) {
-					$_origin_key_data         = explode( ':', $term['meta_data']['_origin_key'][0] );
-					$term['original_blog_id'] = (int) $_origin_key_data[0];
-					$term['original_term_id'] = (int) $_origin_key_data[1];
+				$local_term_id = BEA_CSF_Relations::get_post_id_from_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], (int) $term['term_id'] );
+				if ( is_null( $local_term_id ) ) {
+					$local_term_id = BEA_CSF_Relations::get_post_id_from_emitter( $data['blogid'], $sync_fields['_current_receiver_blog_id'], (int) $term['term_id'] );
 				}
 
-				$local_term_id = 0;
-				if ( $wpdb->blogid == $term['original_blog_id'] ) { // Is blog id origin is the same of current blog ?
-					$local_term = get_term( (int) $term['original_term_id'], $term['taxonomy'] );
-					if ( $local_term != false && ! is_wp_error( $local_term ) ) {
-						$local_term_id = (int) $local_term->term_id;
+				$local_t_id = 0;
+				if ( ! empty( $local_term_id ) ) {
+					if ( isset( $local_term_id->receiver_id ) && (int) $local_term_id->receiver_id > 0 ) {
+						$local_t_id = (int) $local_term_id->receiver_id;
+					} elseif ( isset( $local_term_id->emitter_id ) && (int) $local_term_id->emitter_id > 0 ) {
+						$local_t_id = (int) $local_term_id->emitter_id;
 					}
-				} else {
-					$local_term_id = (int) get_term_id_from_meta( '_origin_key', $data['blogid'] . ':' . (int) $term['term_id'], $term['taxonomy'] );
 				}
 
-				/*
-				 * Do not allow term creation on this method
-				  if ( $local_term_id == 0 ) {
-				  $term['blogid'] = $data['blogid'];
-				  $local_term_id = BEA_CSF_Client_Taxonomy::merge( $term, $sync );
-				  }
-				 */
-				if ( $local_term_id > 0 ) {
+				if ( $local_t_id > 0 ) {
 					if ( ! isset( $term_ids[ $term['taxonomy'] ] ) ) {
 						$term_ids[ $term['taxonomy'] ] = array();
 					}
 
-					$term_ids[ $term['taxonomy'] ][] = $local_term_id;
+					$term_ids[ $term['taxonomy'] ][] = $local_t_id;
 				}
 			}
 
@@ -122,7 +111,7 @@ class BEA_CSF_Client_PostType {
 				wp_set_object_terms( $new_post_id, $local_term_ids, $taxonomy, false );
 			}
 		}
-		
+
 		// Medias exist ?
 		if ( is_array( $data['medias'] ) && ! empty( $data['medias'] ) ) {
 			// Loop for medias
