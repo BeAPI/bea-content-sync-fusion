@@ -32,7 +32,7 @@ class BEA_CSF_Client_PostType {
 		unset( $data_for_post['medias'], $data_for_post['terms'], $data_for_post['tags_input'], $data_for_post['post_category'] );
 
 		// Merge post
-		if ( ! empty( $local_id ) && (int) $local_id->emitter_id ) {
+		if ( ! empty( $local_id ) && (int) $local_id->emitter_id > 0 ) {
 			$data_for_post['ID'] = $local_id->emitter_id;
 			$new_post_id         = wp_update_post( $data_for_post, true );
 
@@ -197,7 +197,7 @@ class BEA_CSF_Client_PostType {
 
 		// Restore post thumb
 		$thumbnail_id = BEA_CSF_Relations::get_post_id_from_emitter( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_thumbnail_id'] );
-		if ( ! empty( $thumbnail_id ) && (int) $thumbnail_id->receiver_id ) {
+		if ( ! empty( $thumbnail_id ) && (int) $thumbnail_id->receiver_id > 0 ) {
 			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id->receiver_id );
 		} elseif ( $data['_thumbnail'] != false ) {
 			$data['_thumbnail']['blogid'] = $data['blogid'];
@@ -231,14 +231,14 @@ class BEA_CSF_Client_PostType {
 		}
 
 		// Post exist
-		$local_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $data['ID'] );
-		if ( $local_id > 0 ) {
-			wp_delete_post( $local_id, true );
+		$local_id = BEA_CSF_Relations::get_post_id_from_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['ID'] );
+		if ( ! empty( $local_id ) && (int) $local_id->emitter_id > 0 ) {
+			wp_delete_post( $local_id->emitter_id, true );
 
-			BEA_CSF_Relations::delete_by_receiver( 'posttype', $GLOBALS['wpdb']->blogid, $local_id );
+			BEA_CSF_Relations::delete_by_receiver( 'posttype', $GLOBALS['wpdb']->blogid, $local_id->emitter_id );
 		}
 
-		return apply_filters( 'bea_csf.client.posttype.delete', $data, $sync_fields, $local_id );
+		return apply_filters( 'bea_csf.client.posttype.delete', $data, $sync_fields, $local_id->emitter_id );
 	}
 
 }

@@ -41,10 +41,7 @@ class BEA_CSF_Async {
 			switch_to_blog( $blog_id );
 
 			// Get data from SERVER class
-			$data_to_transfer = call_user_func( array(
-				'BEA_CSF_Server_' . $object,
-				$method,
-			), $sync->hook_data, $sync->fields );
+			$data_to_transfer = call_user_func( array( 'BEA_CSF_Server_' . $object,  $method, ), $sync->hook_data, $sync->fields );
 			if ( false === $data_to_transfer ) {
 				// Remove from queue
 				self::delete( $sync->id );
