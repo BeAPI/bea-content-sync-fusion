@@ -91,12 +91,6 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		// Exclude content created by sync plugin
-		$_origin_key = get_post_meta( $attachment->ID, '_origin_key', true );
-		if ( $_origin_key != false ) {
-			return false;
-		}
-
 		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $wpdb->blogid, $attachment, false, false, false );
 
 		return true;

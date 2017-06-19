@@ -16,14 +16,25 @@ class BEA_CSF_Client_Attachment {
 		}
 
 		// Post exist
-		$attachment_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $data['ID'] );
-		if ( $attachment_id > 0 ) {
-			do_action( 'bea_csf.before_delete_attachment', $attachment_id, $data );
+		$attachment_id = BEA_CSF_Relations::get_post_id_from_emitter( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'] );
+		if ( ! empty( $attachment_id ) && (int) $attachment_id->receiver_id > 0 ) {
+			do_action( 'bea_csf.before_delete_attachment', $attachment_id->receiver_id, $data );
 
-			wp_delete_attachment( $attachment_id, true );
-			BEA_CSF_Relations::delete_by_receiver( 'attachment', $GLOBALS['wpdb']->blogid, $attachment_id );
+			wp_delete_attachment( $attachment_id->receiver_id, true );
+			BEA_CSF_Relations::delete_by_receiver( 'attachment', $GLOBALS['wpdb']->blogid, $attachment_id->receiver_id );
 
-			do_action( 'bea_csf.after_delete_attachment', $attachment_id, $data );
+			do_action( 'bea_csf.after_delete_attachment', $attachment_id->receiver_id, $data );
+		} else {
+			// Post exist
+			$attachment_id = BEA_CSF_Relations::get_post_id_from_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['ID'] );
+			if ( ! empty( $attachment_id ) && (int) $attachment_id->emitter_id > 0 ) {
+				do_action( 'bea_csf.before_delete_attachment', $attachment_id->emitter_id, $data );
+
+				wp_delete_attachment( $attachment_id->emitter_id, true );
+				BEA_CSF_Relations::delete_by_receiver( 'attachment', $GLOBALS['wpdb']->blogid, $attachment_id->emitter_id );
+
+				do_action( 'bea_csf.after_delete_attachment', $attachment_id->emitter_id, $data );
+			}
 		}
 
 		return apply_filters( 'bea_csf.client.attachment.delete', true, $sync_fields );
