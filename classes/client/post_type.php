@@ -122,76 +122,24 @@ class BEA_CSF_Client_PostType {
 				wp_set_object_terms( $new_post_id, $local_term_ids, $taxonomy, false );
 			}
 		}
-
-		// Medias array
-		$search_replace = array();
-
+		
 		// Medias exist ?
 		if ( is_array( $data['medias'] ) && ! empty( $data['medias'] ) ) {
 			// Loop for medias
 			foreach ( $data['medias'] as $media ) {
-				// TODO: Use Attachment method ?
 				// Media exists ?
-				$current_media_id = BEA_CSF_Plugin::get_post_id_from_meta( '_origin_key', $data['blogid'] . ':' . $media['ID'] );
+				$current_media_id = BEA_CSF_Relations::get_post_id_from_emitter( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $media['ID'] );
 				if ( empty( $current_media_id ) ) {
+					//TO DO Insert new media ???
 					continue;
 				}
 
-				/*
-				// Merge or add ?
-				if ( $current_media_id > 0 ) { // Edit, update only main fields
-					$updated_datas                 = array();
-					$updated_datas['ID']           = $current_media_id;
-					$updated_datas['post_title']   = $media['post_title'];
-					$updated_datas['post_content'] = $media['post_content'];
-					$updated_datas['post_excerpt'] = $media['post_excerpt'];
-					wp_update_post( $updated_datas );
 
-					BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $media['ID'], $GLOBALS['wpdb']->blogid, $current_media_id );
-				} else { // Insert with WP media public static function
-					$new_media_id = BEA_CSF_Client_Attachment::copy_file( $media['attachment_dir'], $new_post_id, null );
-					if ( ! is_wp_error( $new_media_id ) && $new_media_id > 0 ) {
-						// Stock main fields from server
-						$updated_datas                 = array();
-						$updated_datas['ID']           = $new_media_id;
-						$updated_datas['post_title']   = $media['post_title'];
-						$updated_datas['post_content'] = $media['post_content'];
-						$updated_datas['post_excerpt'] = $media['post_excerpt'];
-						$current_media_id              = wp_update_post( $updated_datas );
-
-						// Save metas
-						update_post_meta( $new_media_id, '_origin_key', $data['blogid'] . ':' . $media['ID'] );
-
-						BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $media['ID'], $GLOBALS['wpdb']->blogid, $new_media_id );
-					} else {
-						continue;
-					}
-				}
-				*/
-
-				// Get size array
-				if ( isset( $media['meta_data'] ) ) {
-					$thumbs   = maybe_unserialize( $media['meta_data']['_wp_attachment_metadata'][0] );
-					$base_url = esc_url( trailingslashit( $data['upload_url'] ) . trailingslashit( dirname( $media['meta_data']['_wp_attached_file'][0] ) ) );
-
-					// Try to replace old link by new (for thumbs)
-					foreach ( $thumbs['sizes'] as $key => $size ) {
-						$img                                         = wp_get_attachment_image_src( $current_media_id, $key );
-						$search_replace[ $base_url . $size['file'] ] = $img[0];
-					}
-
-					// Add url attachment link to replace
-					$search_replace[ $media['attachment_url'] ] = get_permalink( $current_media_id );
-				}
-			}
-
-			// Update links on content
-			if ( ! empty( $search_replace ) ) {
-				$post                 = get_post( $new_post_id, ARRAY_A );
-				$post['post_content'] = strtr( $post['post_content'], $search_replace );
-				wp_update_post( $post );
-
-				do_action( 'bea_csf.client.posttype.replace_images', $search_replace, $post, $sync_fields );
+				wp_update_post( array(
+						'ID'          => $current_media_id->receiver_id,
+						'post_parent' => $new_post_id,
+					)
+				);
 			}
 		}
 
