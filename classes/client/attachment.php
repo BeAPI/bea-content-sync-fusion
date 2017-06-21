@@ -57,19 +57,17 @@ class BEA_CSF_Client_Attachment {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
-
 		// Media exists ?
-		$current_media_id = BEA_CSF_Relations::get_post_id_from_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['ID'] );
+		$current_media_id = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
 
 		// Parent media ?
-		$current_master_parent_id = BEA_CSF_Relations::get_post_id_from_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'] );
-		$current_master_parent_id = ! empty( $current_master_parent_id ) && (int) $current_master_parent_id->emitter_id ? (int) $current_master_parent_id->emitter_id : 0;
-
+		$current_master_parent_id = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
+		$current_master_parent_id = ! empty( $current_master_parent_id ) && (int) $current_master_parent_id > 0 ? (int) $current_master_parent_id : 0;
 
 		// Merge or add ?
-		if ( ! empty( $current_media_id ) && (int) $current_media_id->emitter_id ) { // Edit, update only main fields
+		if ( ! empty( $current_media_id ) && (int) $current_media_id > 0 ) { // Edit, update only main fields
 			$updated_datas                   = array();
-			$updated_datas['ID']             = $current_media_id->emitter_id;
+			$updated_datas['ID']             = $current_media_id;
 			$updated_datas['post_title']     = $data['post_title'];
 			$updated_datas['post_content']   = $data['post_content'];
 			$updated_datas['post_excerpt']   = $data['post_excerpt'];
@@ -79,11 +77,11 @@ class BEA_CSF_Client_Attachment {
 			wp_update_post( $updated_datas );
 
 			// update all meta
-			self::post_metas( $current_media_id->emitter_id, $data['post_custom'] );
+			self::post_metas( $current_media_id, $data['post_custom'] );
 
-			BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $current_media_id->emitter_id );
+			BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $current_media_id );
 
-			do_action( 'bea_csf.client_attachment_after_update', $current_media_id->emitter_id, $data['attachment_dir'], $current_master_parent_id, $data );
+			do_action( 'bea_csf.client_attachment_after_update', $current_media_id, $data['attachment_dir'], $current_master_parent_id, $data );
 		} else { // Insert with WP media public static function
 
 			// Stock main fields from server
