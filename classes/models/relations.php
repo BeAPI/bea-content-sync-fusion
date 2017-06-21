@@ -103,7 +103,7 @@ class BEA_CSF_Relations {
 		return $wpdb->delete( $wpdb->bea_csf_relations, array(
 			'type'             => $type,
 			'receiver_blog_id' => $receiver_blog_id,
-			'receiver_id'      => $receiver_id
+			'receiver_id'      => $receiver_id,
 		), array( '%s', '%d', '%d' ) );
 	}
 
