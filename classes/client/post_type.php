@@ -165,11 +165,11 @@ class BEA_CSF_Client_PostType {
 		}
 
 		// Post exist
-		$local_id = BEA_CSF_Relations::get_post_id_for_receiver( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'] );
-		if ( ! empty( $local_id ) && (int) $local_id->receiver_id > 0 ) {
-			wp_delete_post( $local_id->receiver_id, true );
+		$local_id = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		if ( ! empty( $local_id ) && (int) $local_id > 0 ) {
+			wp_delete_post( $local_id, true );
 
-			BEA_CSF_Relations::delete_by_emitter( 'posttype', (int) $GLOBALS['wpdb']->blogid, (int) $local_id->receiver_id );
+			BEA_CSF_Relations::delete_by_emitter( 'posttype', (int) $GLOBALS['wpdb']->blogid, (int) $local_id );
 		}
 
 		BEA_CSF_Relations::delete_by_emitter( 'posttype', (int) $data['blogid'], (int) $data['ID'] );
