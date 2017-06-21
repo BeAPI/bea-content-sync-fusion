@@ -22,7 +22,7 @@ class BEA_CSF_Client_PostType {
 		// Find local parent ?
 		if ( isset( $data['post_parent'] ) ) {
 			$local_parent_id     = BEA_CSF_Relations::get_post_for_any( $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'], $data['post_parent'] );
-			$data['post_parent'] = ! empty( $local_parent_id ) && (int) $local_parent_id->emitter_id > 0 ? $local_parent_id->emitter_id : 0;
+			$data['post_parent'] = ! empty( $local_parent_id ) && (int) $local_parent_id > 0 ? $local_parent_id : 0;
 		}
 
 		// Clone datas for post insertion
