@@ -114,39 +114,16 @@ class BEA_CSF_Client_Attachment {
 					continue;
 				}
 
-				// If term has an "origin_key", use it to get its local ID !
-				$term['original_blog_id'] = $term['original_term_id'] = 0;
-				if ( isset( $term['meta_data']['_origin_key'][0] ) ) {
-					$_origin_key_data         = explode( ':', $term['meta_data']['_origin_key'][0] );
-					$term['original_blog_id'] = (int) $_origin_key_data[0];
-					$term['original_term_id'] = (int) $_origin_key_data[1];
-				}
-
-				$local_term_id = 0;
-				wp_cache_flush();
-				if ( $wpdb->blogid == $term['original_blog_id'] ) { // Is blog id origin is the same of current blog ?
-					$local_term = get_term( (int) $term['original_term_id'], $term['taxonomy'] );
-					if ( false != $local_term && ! is_wp_error( $local_term ) ) {
-						$local_term_id = (int) $local_term->term_id;
-					}
-				} else {
-					$local_term_id = (int) get_term_id_from_meta( '_origin_key', $data['blogid'] . ':' . (int) $term['term_id'], $term['taxonomy'] );
-				}
-
-				/*
-				 * Do not allow term creation on this method
-				  if ( $local_term_id == 0 ) {
-				  $term['blogid'] = $data['blogid'];
-				  $local_term_id = BEA_CSF_Client_Taxonomy::merge( $term, $sync_fields );
-				  }
-				 */
-				if ( $local_term_id > 0 ) {
+				$local_term_id = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], (int) $term['term_id'], (int) $term['term_id'] );
+				if ( (int) $local_term_id > 0 ) {
 					if ( ! isset( $term_ids[ $term['taxonomy'] ] ) ) {
 						$term_ids[ $term['taxonomy'] ] = array();
 					}
 
-					$term_ids[ $term['taxonomy'] ][] = $local_term_id;
+					$term_ids[ $term['taxonomy'] ][] = (int) $local_term_id;
 				}
+
+				//TODO Doit on insérer le term s'il n'existe pas en liaison ?
 			}
 
 			foreach ( $term_ids as $taxonomy => $local_term_ids ) {
