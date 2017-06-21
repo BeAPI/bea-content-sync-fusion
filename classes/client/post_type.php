@@ -82,27 +82,16 @@ class BEA_CSF_Client_PostType {
 					continue;
 				}
 
-				$local_term_id = BEA_CSF_Relations::get_post_id_for_receiver( $sync_fields['_current_receiver_blog_id'], $data['blogid'], (int) $term['term_id'] );
-				if ( is_null( $local_term_id ) ) {
-					$local_term_id = BEA_CSF_Relations::get_post_id_for_emitter( $data['blogid'], $sync_fields['_current_receiver_blog_id'], (int) $term['term_id'] );
-				}
-
-				$local_t_id = 0;
-				if ( ! empty( $local_term_id ) ) {
-					if ( isset( $local_term_id->receiver_id ) && (int) $local_term_id->receiver_id > 0 ) {
-						$local_t_id = (int) $local_term_id->receiver_id;
-					} elseif ( isset( $local_term_id->emitter_id ) && (int) $local_term_id->emitter_id > 0 ) {
-						$local_t_id = (int) $local_term_id->emitter_id;
-					}
-				}
-
-				if ( $local_t_id > 0 ) {
+				$local_term_id = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], (int) $term['term_id'], (int) $term['term_id'] );
+				if ( (int) $local_term_id > 0 ) {
 					if ( ! isset( $term_ids[ $term['taxonomy'] ] ) ) {
 						$term_ids[ $term['taxonomy'] ] = array();
 					}
 
-					$term_ids[ $term['taxonomy'] ][] = $local_t_id;
+					$term_ids[ $term['taxonomy'] ][] = (int) $local_term_id;
 				}
+
+				//TODO Doit on insérer le term s'il n'existe pas en liaison ?
 			}
 
 			foreach ( $term_ids as $taxonomy => $local_term_ids ) {
@@ -115,14 +104,14 @@ class BEA_CSF_Client_PostType {
 			// Loop for medias
 			foreach ( $data['medias'] as $media ) {
 				// Media exists ?
-				$current_media_id = BEA_CSF_Relations::get_post_id_for_emitter( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $media['ID'] );
+				$current_media_id = (int) BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $media['ID'], $media['ID'] );
 				if ( empty( $current_media_id ) ) {
-					//TO DO Insert new media ???
+					//TODO Insert new media ???
 					continue;
 				}
 
 				wp_update_post( array(
-						'ID'          => $current_media_id->receiver_id,
+						'ID'          => $current_media_id,
 						'post_parent' => $new_post_id,
 					)
 				);
@@ -130,10 +119,11 @@ class BEA_CSF_Client_PostType {
 		}
 
 		// Restore post thumb
-		$thumbnail_id = BEA_CSF_Relations::get_post_id_for_emitter( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_thumbnail_id'] );
-		if ( ! empty( $thumbnail_id ) && (int) $thumbnail_id->receiver_id > 0 ) {
+		$thumbnail_id = (int) BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_thumbnail_id'], $data['_thumbnail_id'] );
+		if ( empty( $thumbnail_id ) && (int) $thumbnail_id > 0 ) {
 			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id->receiver_id );
 		} elseif ( false != $data['_thumbnail'] ) {
+			//TODO Si le média existe pas en BD > doublons ?
 			$data['_thumbnail']['blogid'] = $data['blogid'];
 			$media_id                     = BEA_CSF_Client_Attachment::merge( $data['_thumbnail'], $sync_fields );
 			if ( $media_id > 0 ) {
