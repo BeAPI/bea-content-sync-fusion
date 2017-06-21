@@ -10,7 +10,6 @@
 			<tr>
 				<th scope="col" class="manage-column "><?php _e( 'Name', BEA_CSF_LOCALE ); ?></th>
 				<th scope="col" class="manage-column "><?php _e( 'Enable ?', BEA_CSF_LOCALE ); ?></th>
-				<th scope="col" class="manage-column "><?php _e( 'Confict ?', BEA_CSF_LOCALE ); ?></th>
 				<th scope="col"><?php _e( 'Post type', BEA_CSF_LOCALE ); ?></th>
 				<th scope="col"><?php _e( 'Taxonomies', BEA_CSF_LOCALE ); ?></th>
 				<?php if ( class_exists( 'P2P_Connection_Type_Factory' ) ) : ?>
@@ -84,7 +83,6 @@
 							</div>
 						</td>
 						<td><?php echo esc_html( $i18n_true_false[ $sync->get_field( 'active' ) ] ); ?></td>
-						<td><strong><?php echo esc_html( $i18n_true_false[ $sync->has_conflict() ] ); ?></strong></td>
 						<td><?php echo esc_html( $post_type_label ); ?></td>
 						<td><?php echo esc_html( $taxonomies_label ); ?></td>
 						<?php if ( class_exists( 'P2P_Connection_Type_Factory' ) ) : ?>

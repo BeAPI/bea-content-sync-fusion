@@ -62,8 +62,7 @@ class BEA_CSF_Synchronization {
 			$connection_taxo_duplicate = array();
 		}
 
-		// Register actions if sync is active and haven't a conflict emitters/receivers
-		if ( 0 === $this->active || $this->has_conflict() ) {
+		if ( 0 === $this->active ) {
 			return false;
 		}
 
@@ -196,17 +195,6 @@ class BEA_CSF_Synchronization {
 		} else {
 			return false;
 		}
-	}
-
-	/**
-	 * If a synchronization possess blogs as both transmitters and receivers as when there is a conflict!
-	 *
-	 * @return boolean
-	 */
-	public function has_conflict() {
-		$result = array_intersect( (array) $this->emitters, (array) $this->receivers );
-
-		return ! empty( $result );
 	}
 
 	/**
