@@ -50,7 +50,6 @@ require( BEA_CSF_DIR . 'classes/client.php' );
 
 // Functions various
 require( BEA_CSF_DIR . 'functions/api.php' );
-require( BEA_CSF_DIR . 'functions/template.php' );
 
 // Models
 require( BEA_CSF_DIR . 'classes/models/async.php' );
