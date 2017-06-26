@@ -9,6 +9,7 @@ class BEA_CSF_Admin_Terms {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
+		return;
 		add_action( 'edit_category_form_fields', array( __CLASS__, 'form' ), 10, 1 );
 		add_action( 'edit_link_category_form_fields', array( __CLASS__, 'form' ), 10, 1 );
 		add_action( 'edit_tag_form_fields', array( __CLASS__, 'form' ), 10, 1 );
