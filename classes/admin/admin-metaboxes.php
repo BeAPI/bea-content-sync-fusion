@@ -19,9 +19,11 @@ class BEA_CSF_Admin_Metaboxes {
 		}
 
 		// Go out if post is revision
-		if ( $post->post_type == 'revision' ) {
+		if ( 'revision' === $post->post_type ) {
 			return false;
 		}
+
+		//TODO Check is emitter ?
 
 		// Exclude content created by sync plugin
 		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
@@ -47,7 +49,7 @@ class BEA_CSF_Admin_Metaboxes {
 		$previous_value = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
 		if ( isset( $_POST['exclude_from_sync'] ) && (int) $_POST['exclude_from_sync'] == 1 ) {
 			update_post_meta( $post->ID, '_exclude_from_sync', 1 );
-			if ( $previous_value == 0 ) {
+			if ( 0 == $previous_value ) {
 				// This value have just changed, delete content for clients !
 				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false, false, false );
 			}
@@ -102,22 +104,16 @@ class BEA_CSF_Admin_Metaboxes {
 	public static function add_meta_boxes( $post_type, $post ) {
 		global $wpdb;
 
-		// Exclude content created by sync plugin
-		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
-		if ( $_origin_key != false ) {
-			return false;
-		}
-
 		// Get syncs for current post_type and mode set to "auto"
 		$syncs_with_auto_state = BEA_CSF_Synchronizations::get( array(
 			'post_type' => $post_type,
 			'mode'      => 'auto',
-			'emitters'  => $wpdb->blogid
+			'emitters'  => $wpdb->blogid,
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_auto_state ) ) {
 			add_meta_box( BEA_CSF_OPTION . 'metabox-auto', __( 'Synchronization (auto)', BEA_CSF_LOCALE ), array(
 				__CLASS__,
-				'metabox_content_auto'
+				'metabox_content_auto',
 			), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_auto_state ) );
 		}
 
@@ -125,12 +121,12 @@ class BEA_CSF_Admin_Metaboxes {
 		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array(
 			'post_type' => $post_type,
 			'mode'      => 'manual',
-			'emitters'  => $wpdb->blogid
+			'emitters'  => $wpdb->blogid,
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_manual_state ) ) {
 			add_meta_box( BEA_CSF_OPTION . 'metabox-manual', __( 'Synchronization (manual)', BEA_CSF_LOCALE ), array(
 				__CLASS__,
-				'metabox_content_manual'
+				'metabox_content_manual',
 			), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_manual_state ) );
 		}
 

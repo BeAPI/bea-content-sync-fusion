@@ -21,9 +21,11 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		global $wpdb;
 
 		// Get syncs for current post_type and mode set to "manual"
-		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array( 'mode'     => 'manual',
-		                                                                 'emitters' => $wpdb->blogid,
-		), 'AND', false, true );
+		$syncs_with_manual_state = BEA_CSF_Synchronizations::get(
+			array(
+				'mode'     => 'manual',
+				'emitters' => $wpdb->blogid,
+			), 'AND', false, true );
 		if ( empty( $syncs_with_manual_state ) ) {
 			return false;
 		}
@@ -39,7 +41,7 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 
 	public static function form( $term ) {
 		$sync_obj = self::taxonomy_has_manual_sync( $term->taxonomy );
-		if ( $sync_obj === false ) {
+		if ( false === $sync_obj ) {
 			return false;
 		}
 
@@ -53,14 +55,6 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		$sync_receivers = $sync_obj->get_field( 'receivers' );
 		$sync_receivers = BEA_CSF_Admin_Synchronizations_Network::get_sites( $sync_receivers );
 
-		// Get names from syncs
-		$sync_names = array();
-		/*
-		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
-			$sync_names[] = $sync_obj->get_field( 'label' );
-		}
-		*/
-
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-term-metabox-manual.php' );
 	}
@@ -69,7 +63,7 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		global $wpdb;
 
 		$term = get_term( $term_id, $taxonomy );
-		if ( $term == false || is_wp_error( $term ) ) {
+		if ( false === $term || is_wp_error( $term ) ) {
 			return false;
 		}
 

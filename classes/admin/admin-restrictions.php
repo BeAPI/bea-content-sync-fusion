@@ -12,7 +12,7 @@ class BEA_CSF_Admin_Restrictions {
 	public function __construct() {
 		// Get current setting
 		$current_settings = get_site_option( 'csf_adv_settings' );
-		if ( isset( $current_settings['unlock-mode'] ) && $current_settings['unlock-mode'] == '1' ) {
+		if ( isset( $current_settings['unlock-mode'] ) && '1' === $current_settings['unlock-mode'] ) {
 			return false;
 		}
 
@@ -39,7 +39,7 @@ class BEA_CSF_Admin_Restrictions {
 	 * @param string $hook_suffix
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
-		if ( isset( $hook_suffix ) && ( $hook_suffix == 'edit.php' || $hook_suffix == 'edit-tags.php' ) ) {
+		if ( isset( $hook_suffix ) && ( 'edit.php' === $hook_suffix || 'edit-tags.php' === $hook_suffix ) ) {
 			wp_enqueue_script( 'bea-csf-admin-client', BEA_CSF_URL . 'assets/js/bea-csf-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
 			wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array(), BEA_CSF_VERSION, 'all' );
 		}
@@ -54,6 +54,7 @@ class BEA_CSF_Admin_Restrictions {
 	 * @return array
 	 */
 	public static function post_row_actions( array $actions, WP_Post $post ) {
+		//TODO Check if is emitter?
 		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
 		if ( $_origin_key != false ) {
 			if ( $post->post_status == 'pending' ) {
@@ -94,6 +95,7 @@ class BEA_CSF_Admin_Restrictions {
 	 * @return array
 	 */
 	public static function tag_row_actions( array $actions, WP_Term $term ) {
+		//TODO Check if is emitter?
 		$_origin_key = get_term_meta( $term->term_id, '_origin_key', true );
 		if ( $_origin_key != false ) {
 			unset( $actions['edit'], $actions['inline hide-if-no-js'], $actions['delete'] );
@@ -129,7 +131,7 @@ class BEA_CSF_Admin_Restrictions {
 		if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
 			return false;
 		}
-
+		//TODO Check if is emitter?
 		$_origin_key = get_term_meta( $current_term->term_id, '_origin_key', true );
 		if ( $_origin_key != false ) {
 			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', BEA_CSF_LOCALE ) );
@@ -156,6 +158,7 @@ class BEA_CSF_Admin_Restrictions {
 			return $caps;
 		}
 		if ( in_array( $cap, $capabilities ) ) {
+			//TODO Check if is emitter?
 			$_origin_key = get_post_meta( $args[0], '_origin_key', true );
 			if ( $_origin_key != false ) {
 				$caps[] = 'do_not_allow';
