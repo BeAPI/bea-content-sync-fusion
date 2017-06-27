@@ -64,8 +64,8 @@ class BEA_CSF_Admin_Restrictions {
 			'emitters'  => $wpdb->blogid,
 		), 'AND', false, true );
 
-		if ( $_origin_key != false && $_has_syncs == false ) {
-			if ( $post->post_status == 'pending' ) {
+		if ( false != $_origin_key && false == $_has_syncs ) {
+			if ( 'pending' == $post->post_status ) {
 				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ) ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
 
 				if ( current_user_can( 'publish_post', $post->ID ) ) {
