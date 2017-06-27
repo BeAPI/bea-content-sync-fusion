@@ -17,6 +17,27 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		add_action( 'edited_term', array( __CLASS__, 'save' ), 10, 3 );
 	}
 
+	public static function taxonomy_has_sync( $taxonomy = '' ) {
+		global $wpdb;
+
+		// Get syncs for current post_type and any mode
+		$syncs = BEA_CSF_Synchronizations::get(
+			array(
+				'emitters' => $wpdb->blogid,
+			), 'AND', false, true );
+		if ( empty( $syncs ) ) {
+			return false;
+		}
+
+		foreach ( $syncs as $sync ) {
+			if ( in_array( $taxonomy, $sync->taxonomies ) ) {
+				return $sync;
+			}
+		}
+
+		return false;
+	}
+
 	public static function taxonomy_has_manual_sync( $taxonomy = '' ) {
 		global $wpdb;
 

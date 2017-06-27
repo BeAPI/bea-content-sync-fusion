@@ -121,6 +121,7 @@ class BEA_CSF_Relations {
 	}
 
 	/**
+	 * @param $type
 	 * @param $emitter_blog_id
 	 * @param $receiver_blog_id
 	 * @param $emitter_id
@@ -129,15 +130,15 @@ class BEA_CSF_Relations {
 	 * @return bool
 	 * @author Alexandre Sadowski
 	 */
-	public static function get_post_for_any( $emitter_blog_id, $receiver_blog_id, $emitter_id, $receiver_id ) {
+	public static function get_post_for_any( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id, $receiver_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
-		$local_id = self::get_post_id_for_receiver( $emitter_blog_id, $receiver_blog_id, $emitter_id );
+		$local_id = self::get_post_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id );
 		if ( ! empty( $local_id ) && (int) $local_id->receiver_id > 0 ) {
 			return $local_id->receiver_id;
 		} else {
-			$local_id = self::get_post_id_for_emitter( $receiver_blog_id, $emitter_blog_id , $receiver_id );
+			$local_id = self::get_post_id_for_emitter( $type, $receiver_blog_id, $emitter_blog_id , $receiver_id );
 			if ( ! empty( $local_id ) && (int) $local_id->emitter_id > 0 ) {
 				return $local_id->emitter_id;
 			}
@@ -147,6 +148,7 @@ class BEA_CSF_Relations {
 	}
 
 	/**
+	 * @param $type
 	 * @param $emitter_blog_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
@@ -154,14 +156,15 @@ class BEA_CSF_Relations {
 	 * @return mixed
 	 * @author Alexandre Sadowski
 	 */
-	public static function get_post_id_for_receiver( $emitter_blog_id, $receiver_blog_id, $emitter_id ) {
+	public static function get_post_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE emitter_blog_id = %d AND receiver_blog_id = %d AND  emitter_id = %s", $emitter_blog_id, $receiver_blog_id, $emitter_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type = %s AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %s", $type, $emitter_blog_id, $receiver_blog_id, $emitter_id ) );
 	}
 
 	/**
+	 * @param $type
 	 * @param $emitter_blog_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
@@ -169,15 +172,29 @@ class BEA_CSF_Relations {
 	 * @return mixed
 	 * @author Alexandre Sadowski
 	 */
-	public static function get_post_id_for_emitter( $emitter_blog_id, $receiver_blog_id, $receiver_id ) {
+	public static function get_post_id_for_emitter( $type, $emitter_blog_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE emitter_blog_id = %d AND receiver_blog_id = %d AND  receiver_id = %s", $emitter_blog_id, $receiver_blog_id, $receiver_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type = %s AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %s", $type, $emitter_blog_id, $receiver_blog_id, $receiver_id ) );
 	}
 
 	/**
-	 * @param $id
+	 * @param $type
+	 * @param $receiver_blog_id
+	 * @param $receiver_id
+	 *
+	 * @return mixed
+	 * @author Alexandre Sadowski
+	 */
+	public static function current_object_is_synchronized( $type, $receiver_blog_id, $receiver_id ) {
+		global $wpdb;
+
+		/** @var WPDB $wpdb */
+		return $wpdb->get_row( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type = %s AND receiver_blog_id = %d AND receiver_id = %s", $type, $receiver_blog_id, $receiver_id ) );
+	}
+
+	/**
 	 *
 	 * @return mixed
 	 */

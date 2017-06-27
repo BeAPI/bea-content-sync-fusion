@@ -54,9 +54,17 @@ class BEA_CSF_Admin_Restrictions {
 	 * @return array
 	 */
 	public static function post_row_actions( array $actions, WP_Post $post ) {
-		//TODO Check if is emitter?
-		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
-		if ( $_origin_key != false ) {
+		global $wpdb;
+
+		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'posttype', $wpdb->blogid, $post->ID );
+
+		// Get syncs model for current post_type, with any mode status (manual and auto)
+		$_has_syncs = BEA_CSF_Synchronizations::get( array(
+			'post_type' => $post->post_type,
+			'emitters'  => $wpdb->blogid,
+		), 'AND', false, true );
+
+		if ( $_origin_key != false && $_has_syncs == false ) {
 			if ( $post->post_status == 'pending' ) {
 				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ) ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
 
@@ -95,9 +103,14 @@ class BEA_CSF_Admin_Restrictions {
 	 * @return array
 	 */
 	public static function tag_row_actions( array $actions, WP_Term $term ) {
-		//TODO Check if is emitter?
-		$_origin_key = get_term_meta( $term->term_id, '_origin_key', true );
-		if ( $_origin_key != false ) {
+		global $wpdb;
+
+		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'taxonomy', $wpdb->blogid, $term->term_id );
+
+		// Get syncs model for current post_type, with any mode status (manual and auto)
+		$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $term->taxonomy );
+
+		if ( $_origin_key != false && $_has_syncs == false ) {
 			unset( $actions['edit'], $actions['inline hide-if-no-js'], $actions['delete'] );
 			$actions['view'] .= '<span class="locked-term-parent"></span>';
 		}
@@ -112,7 +125,7 @@ class BEA_CSF_Admin_Restrictions {
 	 * @return boolean
 	 */
 	public static function admin_init_check_term_edition() {
-		global $pagenow;
+		global $pagenow, $wpdb;
 
 		// Not an edit page ?
 		if ( $pagenow != 'edit-tags.php' ) {
@@ -131,9 +144,13 @@ class BEA_CSF_Admin_Restrictions {
 		if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
 			return false;
 		}
-		//TODO Check if is emitter?
-		$_origin_key = get_term_meta( $current_term->term_id, '_origin_key', true );
-		if ( $_origin_key != false ) {
+
+		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'taxonomy', $wpdb->blogid, $current_term->term_id );
+
+		// Get syncs model for current post_type, with any mode status (manual and auto)
+		$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
+
+		if ( $_origin_key != false && $_has_syncs == false ) {
 			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', BEA_CSF_LOCALE ) );
 		}
 
@@ -151,16 +168,24 @@ class BEA_CSF_Admin_Restrictions {
 	 * @return array
 	 */
 	public static function map_meta_cap( $caps, $cap, $user_id, $args ) {
-		global $tag;
+		global $tag, $wpdb;
 
 		$capabilities = apply_filters( 'bea_csf_capabilities', self::$capabilities_to_check );
 		if ( ! is_array( $capabilities ) ) {
 			return $caps;
 		}
 		if ( in_array( $cap, $capabilities ) ) {
-			//TODO Check if is emitter?
-			$_origin_key = get_post_meta( $args[0], '_origin_key', true );
-			if ( $_origin_key != false ) {
+			$post = get_post($args[0]);
+
+			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'posttype', $wpdb->blogid, $post->ID );
+
+			// Get syncs model for current post_type, with any mode status (manual and auto)
+			$_has_syncs = BEA_CSF_Synchronizations::get( array(
+				'post_type' => $post->post_type,
+				'emitters'  => $wpdb->blogid,
+			), 'AND', false, true );
+
+			if ( $_origin_key != false && $_has_syncs == false ) {
 				$caps[] = 'do_not_allow';
 			}
 		}

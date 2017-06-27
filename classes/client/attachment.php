@@ -16,7 +16,7 @@ class BEA_CSF_Client_Attachment {
 		}
 
 		// Post exist
-		$attachment_id = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		$attachment_id = BEA_CSF_Relations::get_post_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
 		if ( ! empty( $attachment_id ) && (int) $attachment_id > 0 ) {
 			do_action( 'bea_csf.before_delete_attachment', $attachment_id, $data );
 
@@ -49,10 +49,10 @@ class BEA_CSF_Client_Attachment {
 		}
 
 		// Media exists ?
-		$current_media_id = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		$current_media_id = BEA_CSF_Relations::get_post_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
 
 		// Parent media ?
-		$current_master_parent_id = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
+		$current_master_parent_id = BEA_CSF_Relations::get_post_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
 		$current_master_parent_id = ! empty( $current_master_parent_id ) && (int) $current_master_parent_id > 0 ? (int) $current_master_parent_id : 0;
 
 		// Merge or add ?
@@ -114,7 +114,7 @@ class BEA_CSF_Client_Attachment {
 					continue;
 				}
 
-				$local_term_id = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], (int) $term['term_id'], (int) $term['term_id'] );
+				$local_term_id = BEA_CSF_Relations::get_post_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], (int) $term['term_id'], (int) $term['term_id'] );
 				if ( (int) $local_term_id > 0 ) {
 					if ( ! isset( $term_ids[ $term['taxonomy'] ] ) ) {
 						$term_ids[ $term['taxonomy'] ] = array();
@@ -123,7 +123,7 @@ class BEA_CSF_Client_Attachment {
 					$term_ids[ $term['taxonomy'] ][] = (int) $local_term_id;
 				}
 
-				//TODO Doit on insérer le term s'il n'existe pas en liaison ?
+				//TODO Doit on insérer le term s'il n'existe pas en liaison ? Un jour :)
 			}
 
 			foreach ( $term_ids as $taxonomy => $local_term_ids ) {

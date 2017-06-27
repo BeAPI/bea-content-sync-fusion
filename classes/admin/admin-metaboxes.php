@@ -23,14 +23,6 @@ class BEA_CSF_Admin_Metaboxes {
 			return false;
 		}
 
-		//TODO Check is emitter ?
-
-		// Exclude content created by sync plugin
-		$_origin_key = get_post_meta( $post->ID, '_origin_key', true );
-		if ( $_origin_key != false ) {
-			return false;
-		}
-
 		self::check_changes_auto_metabox( $post );
 		self::check_changes_manual_metabox( $post );
 

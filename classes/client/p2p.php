@@ -24,7 +24,7 @@ class BEA_CSF_Client_P2P {
 		// From (post/users)
 		if ( $data['p2p_obj']->side['from']->get_object_type() != 'user' ) {
 			// Posts exists ?
-			$p2p_from_local = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_from'], $data['p2p_from'] );
+			$p2p_from_local = BEA_CSF_Relations::get_post_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_from'], $data['p2p_from'] );
 		} else {
 			$p2p_from_local = $data['p2p_from'];
 
@@ -38,7 +38,7 @@ class BEA_CSF_Client_P2P {
 		// To (post/users)
 		if ( $data['p2p_obj']->side['to']->get_object_type() != 'user' ) {
 			// Posts exists ?
-			$p2p_to_local = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_to'], $data['p2p_to'] );
+			$p2p_to_local = BEA_CSF_Relations::get_post_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_to'], $data['p2p_to'] );
 		} else {
 			$p2p_to_local = $data['p2p_to'];
 
@@ -76,7 +76,7 @@ class BEA_CSF_Client_P2P {
 		// From (post/users)
 		if ( $data['p2p_obj']->side['from']->get_object_type() != 'user' ) {
 			// Posts exists ?
-			$p2p_from_local = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_from'], $data['p2p_from'] );
+			$p2p_from_local = BEA_CSF_Relations::get_post_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_from'], $data['p2p_from'] );
 		} else {
 			$p2p_from_local = $data['p2p_from'];
 		}
@@ -84,7 +84,7 @@ class BEA_CSF_Client_P2P {
 		// To (post/users)
 		if ( $data['p2p_obj']->side['to']->get_object_type() != 'user' ) {
 			// Posts exists ?
-			$p2p_to_local = BEA_CSF_Relations::get_post_for_any( $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_to'], $data['p2p_to'] );
+			$p2p_to_local = BEA_CSF_Relations::get_post_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_to'], $data['p2p_to'] );
 		} else {
 			$p2p_to_local = $data['p2p_to'];
 		}
