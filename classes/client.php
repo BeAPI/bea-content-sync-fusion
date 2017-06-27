@@ -82,12 +82,12 @@ class BEA_CSF_Client {
 
 		// Get post
 		$attachment = get_post( $attachment_id );
-		if ( $attachment == false || is_wp_error( $attachment ) ) {
+		if ( false == $attachment || is_wp_error( $attachment ) ) {
 			return false;
 		}
 
 		// Is attachment ?
-		if ( $attachment->post_type !== 'attachment' ) {
+		if ( 'attachment' !== $attachment->post_type ) {
 			return false;
 		}
 
@@ -106,12 +106,12 @@ class BEA_CSF_Client {
 
 		// Get post
 		$attachment = get_post( $attachment_id );
-		if ( $attachment == false || is_wp_error( $attachment ) ) {
+		if ( false == $attachment || is_wp_error( $attachment ) ) {
 			return false;
 		}
 
 		// Is attachment ?
-		if ( $attachment->post_type !== 'attachment' ) {
+		if ( 'attachment' !== $attachment->post_type ) {
 			return false;
 		}
 
@@ -133,7 +133,7 @@ class BEA_CSF_Client {
 	 */
 	public static function wp_save_image_editor_file( $bool, $filename, $image, $mime_type, $post_id ) {
 		$post = get_post( $post_id );
-		if ( $post == false || is_wp_error( $post ) ) {
+		if ( false == $post || is_wp_error( $post ) ) {
 			return $bool;
 		}
 
@@ -153,7 +153,7 @@ class BEA_CSF_Client {
 	 */
 	public static function wp_update_attachment_metadata( $data, $post_id ) {
 		$post = get_post( $post_id );
-		if ( $post == false || is_wp_error( $post ) ) {
+		if ( false == $post || is_wp_error( $post ) ) {
 			return $data;
 		}
 
@@ -171,9 +171,9 @@ class BEA_CSF_Client {
 	 * @return bool
 	 */
 	public static function merge_post_meta( $meta_id = 0, $post_id = 0, $meta_key = '' ) {
-		if ( $meta_key == '_thumbnail_id' ) {
+		if ( '_thumbnail_id' == $meta_key ) {
 			$post = get_post( $post_id );
-			if ( $post == false || is_wp_error( $post ) ) {
+			if ( false == $post || is_wp_error( $post ) ) {
 				return false;
 			}
 

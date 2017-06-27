@@ -40,7 +40,7 @@ class BEA_CSF_Server_Attachment {
 		$attachment['post_custom']    = get_post_custom( $attachment['ID'] );
 		$attachment['attachment_url'] = get_permalink( $attachment['ID'] );
 		$attachment['attachment_dir'] = get_attached_file( $attachment['ID'] );
-		$attachment['metadata'] 	  = wp_get_attachment_metadata( $attachment['ID'] );
+		$attachment['metadata']       = wp_get_attachment_metadata( $attachment['ID'] );
 
 		// Get terms for this object
 		$taxonomies = get_object_taxonomies( $attachment['post_type'] );

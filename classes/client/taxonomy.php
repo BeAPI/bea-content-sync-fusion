@@ -6,13 +6,11 @@ class BEA_CSF_Client_Taxonomy {
 	 * Add term on DB
 	 */
 	public static function merge( array $term, array $sync_fields ) {
-		// Test datas validity
 		if ( empty( $term ) || ! is_array( $term ) ) {
 			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );
 		}
 
-		// Term exists ?
-		$local_term_id = BEA_CSF_Relations::get_post_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );
+		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );
 		if ( ! empty( $local_term_id ) && (int) $local_term_id > 0 ) {
 			$new_term_id = wp_update_term( $local_term_id, $term['taxonomy'], array(
 				'name'        => $term['name'],
@@ -28,11 +26,10 @@ class BEA_CSF_Client_Taxonomy {
 			) );
 
 			// try to manage error when term already exist with the same name !
-			//TODO Check this part...
 			if ( is_wp_error( $new_term_id ) && $new_term_id->get_error_code() == 'term_exists' ) {
 				$term_exists_result = term_exists( $term['name'], $term['taxonomy'], $term['parent'] );
 				if ( false != $term_exists_result ) {
-					$local_term_id = BEA_CSF_Relations::get_post_id_for_receiver( 'taxonomy', $sync_fields['_current_receiver_blog_id'], $term['blogid'], (int) $term_exists_result['term_id'] );
+					$local_term_id = BEA_CSF_Relations::get_object_id_for_receiver( 'taxonomy', $sync_fields['_current_receiver_blog_id'], $term['blogid'], (int) $term_exists_result['term_id'] );
 					if ( ! empty( $local_term_id ) && (int) $local_term_id->emitter_id > 0 ) { // No master ID? no sync item !
 						$new_term_id = $term_exists_result;
 						update_term_meta( $term_exists_result['term_id'], 'already_exists', 1 );
@@ -87,13 +84,11 @@ class BEA_CSF_Client_Taxonomy {
 	 * @return bool|WP_Error
 	 */
 	public static function delete( array $term, array $sync_fields ) {
-		// Test datas validity
 		if ( empty( $term ) || ! is_array( $term ) ) {
 			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );
 		}
 
-		// Term exists ?
-		$local_term_id = BEA_CSF_Relations::get_post_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );
+		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );
 		if ( ! empty( $local_term_id ) && (int) $local_term_id > 0 ) {
 			// Term already exist before sync, keep it !
 			$already_exists = (int) get_term_id_from_meta( 'already_exists', 1 );

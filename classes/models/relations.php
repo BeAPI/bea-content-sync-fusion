@@ -121,24 +121,23 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param $type
-	 * @param $emitter_blog_id
-	 * @param $receiver_blog_id
-	 * @param $emitter_id
-	 * @param $receiver_id
+	 * @param string $type
+	 * @param int $emitter_blog_id
+	 * @param int $receiver_blog_id
+	 * @param int $emitter_id
+	 * @param int $receiver_id
 	 *
 	 * @return bool
 	 * @author Alexandre Sadowski
 	 */
-	public static function get_post_for_any( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id, $receiver_id ) {
-		global $wpdb;
+	public static function get_object_for_any( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id, $receiver_id ) {
 
-		/** @var WPDB $wpdb */
-		$local_id = self::get_post_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id );
+		$local_id = self::get_object_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id );
+
 		if ( ! empty( $local_id ) && (int) $local_id->receiver_id > 0 ) {
 			return $local_id->receiver_id;
 		} else {
-			$local_id = self::get_post_id_for_emitter( $type, $receiver_blog_id, $emitter_blog_id , $receiver_id );
+			$local_id = self::get_object_id_for_emitter( $type, $receiver_blog_id, $emitter_blog_id , $receiver_id );
 			if ( ! empty( $local_id ) && (int) $local_id->emitter_id > 0 ) {
 				return $local_id->emitter_id;
 			}
@@ -148,15 +147,15 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param $type
-	 * @param $emitter_blog_id
-	 * @param $receiver_blog_id
-	 * @param $receiver_id
+	 * @param string $type
+	 * @param int $emitter_blog_id
+	 * @param int $receiver_blog_id
+	 * @param int $emitter_id
 	 *
 	 * @return mixed
 	 * @author Alexandre Sadowski
 	 */
-	public static function get_post_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id ) {
+	public static function get_object_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
@@ -164,15 +163,15 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param $type
-	 * @param $emitter_blog_id
-	 * @param $receiver_blog_id
-	 * @param $receiver_id
+	 * @param string $type
+	 * @param int $emitter_blog_id
+	 * @param int $receiver_blog_id
+	 * @param int $receiver_id
 	 *
 	 * @return mixed
 	 * @author Alexandre Sadowski
 	 */
-	public static function get_post_id_for_emitter( $type, $emitter_blog_id, $receiver_blog_id, $receiver_id ) {
+	public static function get_object_id_for_emitter( $type, $emitter_blog_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
@@ -180,9 +179,9 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param $type
-	 * @param $receiver_blog_id
-	 * @param $receiver_id
+	 * @param string $type
+	 * @param int $receiver_blog_id
+	 * @param int $receiver_id
 	 *
 	 * @return mixed
 	 * @author Alexandre Sadowski

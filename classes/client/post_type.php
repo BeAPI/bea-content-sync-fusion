@@ -11,17 +11,15 @@ class BEA_CSF_Client_PostType {
 	 * @return mixed|null|void
 	 */
 	public static function merge( array $data, array $sync_fields ) {
-		// Clean values
 		if ( empty( $data ) || ! is_array( $data ) ) {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
-		// Post exists ?
-		$local_id = BEA_CSF_Relations::get_post_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		$local_id = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
 
 		// Find local parent ?
 		if ( isset( $data['post_parent'] ) ) {
-			$local_parent_id     = BEA_CSF_Relations::get_post_for_any( 'posttype', $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'], $data['post_parent'] );
+			$local_parent_id     = BEA_CSF_Relations::get_object_for_any( 'posttype', $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'], $data['post_parent'] );
 			$data['post_parent'] = ! empty( $local_parent_id ) && (int) $local_parent_id > 0 ? $local_parent_id : 0;
 		}
 
@@ -82,7 +80,7 @@ class BEA_CSF_Client_PostType {
 					continue;
 				}
 
-				$local_term_id = BEA_CSF_Relations::get_post_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], (int) $term['term_id'], (int) $term['term_id'] );
+				$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], (int) $term['term_id'], (int) $term['term_id'] );
 				if ( (int) $local_term_id > 0 ) {
 					if ( ! isset( $term_ids[ $term['taxonomy'] ] ) ) {
 						$term_ids[ $term['taxonomy'] ] = array();
@@ -91,7 +89,6 @@ class BEA_CSF_Client_PostType {
 					$term_ids[ $term['taxonomy'] ][] = (int) $local_term_id;
 				}
 
-				//TODO Doit on insérer le term s'il n'existe pas en liaison ?
 			}
 
 			foreach ( $term_ids as $taxonomy => $local_term_ids ) {
@@ -104,9 +101,8 @@ class BEA_CSF_Client_PostType {
 			// Loop for medias
 			foreach ( $data['medias'] as $media ) {
 				// Media exists ?
-				$current_media_id = (int) BEA_CSF_Relations::get_post_for_any( 'attachement', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $media['ID'], $media['ID'] );
+				$current_media_id = (int) BEA_CSF_Relations::get_object_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $media['ID'], $media['ID'] );
 				if ( empty( $current_media_id ) ) {
-					//TODO Insert new media ???
 					continue;
 				}
 
@@ -119,11 +115,10 @@ class BEA_CSF_Client_PostType {
 		}
 
 		// Restore post thumb
-		$thumbnail_id = (int) BEA_CSF_Relations::get_post_for_any( 'attachement', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_thumbnail_id'], $data['_thumbnail_id'] );
+		$thumbnail_id = (int) BEA_CSF_Relations::get_object_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_thumbnail_id'], $data['_thumbnail_id'] );
 		if ( empty( $thumbnail_id ) && (int) $thumbnail_id > 0 ) {
 			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id->receiver_id );
 		} elseif ( false != $data['_thumbnail'] ) {
-			//TODO Si le média existe pas en BD > doublons ?
 			$data['_thumbnail']['blogid'] = $data['blogid'];
 			$media_id                     = BEA_CSF_Client_Attachment::merge( $data['_thumbnail'], $sync_fields );
 			if ( $media_id > 0 ) {
@@ -149,13 +144,12 @@ class BEA_CSF_Client_PostType {
 	 * @internal param int $master_id
 	 */
 	public static function delete( array $data, array $sync_fields ) {
-		// Clean values
 		if ( empty( $data ) || ! is_array( $data ) ) {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
-		// Post exist
-		$local_id = BEA_CSF_Relations::get_post_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		$local_id = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+
 		if ( ! empty( $local_id ) && (int) $local_id > 0 ) {
 			wp_delete_post( $local_id, true );
 

@@ -75,33 +75,33 @@ class BEA_CSF_Client_P2P {
 
 		// From (post/users)
 		if ( $data['p2p_obj']->side['from']->get_object_type() != 'user' ) {
-			// Posts exists ?
-			$p2p_from_local = BEA_CSF_Relations::get_post_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_from'], $data['p2p_from'] );
+			$p2p_from_local = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_from'], $data['p2p_from'] );
 		} else {
 			$p2p_from_local = $data['p2p_from'];
 		}
 
 		// To (post/users)
 		if ( $data['p2p_obj']->side['to']->get_object_type() != 'user' ) {
-			// Posts exists ?
-			$p2p_to_local = BEA_CSF_Relations::get_post_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_to'], $data['p2p_to'] );
+			$p2p_to_local = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['p2p_to'], $data['p2p_to'] );
 		} else {
 			$p2p_to_local = $data['p2p_to'];
 		}
 
-		// If from or empty not exists, stop process
 		if ( empty( $p2p_from_local ) || empty( $p2p_to_local ) ) {
 			return false;
 		}
 
-		// Delete connection
 		p2p_type( $data['p2p_type'] )->disconnect( $p2p_from_local, $p2p_to_local );
 	}
 
+	/**
+	 * @param $user_id
+	 * @param string $prefered_role
+	 *
+	 */
 	public static function maybe_add_user_to_current_blog( $user_id, $prefered_role = 'subscriber' ) {
 		global $wpdb;
 
-		// Get blogs for user
 		$blogs = get_blogs_of_user( $user_id, true );
 
 		// Add user to current blog if not exist
