@@ -64,7 +64,7 @@ class BEA_CSF_Plugin {
             `receiver_blog_id` BIGINT(20),
             `fields` TEXT NOT NULL,
             PRIMARY KEY (id),
-            UNIQUE KEY `unicity_key` (`hook_data`(255),`current_filter`(255),`receiver_blog_id`,`fields`(255))
+            UNIQUE KEY `unicity_key` (`hook_data`(255),`current_filter`(255),`receiver_blog_id`)
         );";
 
 		/**
@@ -108,7 +108,7 @@ class BEA_CSF_Plugin {
             `receiver_blog_id` BIGINT(20),
             `fields` TEXT NOT NULL,
             PRIMARY KEY (id),
-            UNIQUE KEY `unicity_key` (`hook_data`(255),`current_filter`(255),`receiver_blog_id`,`fields`(255))
+            UNIQUE KEY `unicity_key` (`hook_data`(255),`current_filter`(255),`receiver_blog_id`)
         );";
 
 		/**
