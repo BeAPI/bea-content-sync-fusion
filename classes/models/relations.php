@@ -190,7 +190,7 @@ class BEA_CSF_Relations {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type = %s AND receiver_blog_id = %d AND receiver_id = %s", $type, $receiver_blog_id, $receiver_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s AND receiver_blog_id = %d AND receiver_id = %s", $type, $receiver_blog_id, $receiver_id ) );
 	}
 
 	/**
