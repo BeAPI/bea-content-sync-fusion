@@ -82,11 +82,6 @@ class BEA_CSF_Async {
 			// Reactive hooks plugin
 			BEA_CSF_Client::register_hooks();
 
-			// Allow users notifications
-			if ( 1 === (int) $sync->fields['notifications'] ) {
-				do_action( 'bea-csf-client-notifications', $result, $object, $method, $blog_id, $sync->fields );
-			}
-
 			// Remove from queue
 			self::delete( $sync->id );
 		}

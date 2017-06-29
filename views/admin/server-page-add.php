@@ -17,23 +17,6 @@
 		</p>
 
 		<p>
-			<label><?php _e( 'Enable synchronization ?', BEA_CSF_LOCALE ); ?></label>
-			<select class="widefat" name="sync[active]">
-				<?php foreach (
-					array(
-						'1' => __( 'Yes', BEA_CSF_LOCALE ),
-						'0' => __( 'No', BEA_CSF_LOCALE )
-					) as $value => $label
-				) : ?>
-					<option
-						value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $current_sync->get_field( 'active' ) ); ?>><?php echo esc_html( $label ); ?></option>
-				<?php endforeach; ?>
-			</select>
-			<span
-				class="description"><?php _e( 'You may decide to temporarily disable a synchronization rule for logistical reasons!', BEA_CSF_LOCALE ); ?></span>
-		</p>
-
-		<p>
 			<label><?php _e( 'Post type', BEA_CSF_LOCALE ); ?></label>
 			<select class="widefat" name="sync[post_type]">
 				<option value=""><?php _e( 'No post type, sync only taxo !', BEA_CSF_LOCALE ); ?></option>
@@ -104,23 +87,6 @@
 			</select>
 			<span
 				class="description"><?php _e( 'When content is published and it is sent to other sites, it is automatically set to the status "published", you can also set the "pending" status and provide an opportunity for each admin to validate or not the content. (only for post type)', BEA_CSF_LOCALE ); ?></span>
-		</p>
-
-		<p>
-			<label><?php _e( 'Enable notification settings on local admin ?', BEA_CSF_LOCALE ); ?></label>
-			<select class="widefat" name="sync[notifications]">
-				<?php foreach (
-					array(
-						'1' => __( 'Yes', BEA_CSF_LOCALE ),
-						'0' => __( 'No', BEA_CSF_LOCALE )
-					) as $value => $label
-				) : ?>
-					<option
-						value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $current_sync->get_field( 'notifications' ) ); ?>><?php echo esc_html( $label ); ?></option>
-				<?php endforeach; ?>
-			</select>
-			<span
-				class="description"><?php _e( 'Enabling this feature will add a page in the administrative console each site in order to choose the people notified when creating new content via the sync feature.', BEA_CSF_LOCALE ); ?></span>
 		</p>
 
 		<p>

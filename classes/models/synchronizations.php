@@ -93,7 +93,6 @@ class BEA_CSF_Synchronizations {
 			'post_type'     => 'post',
 			'mode'          => 'auto', // manual OR auto
 			'status'        => 'publish', // publish OR pending
-			'notifications' => '1', // 1 OR 0
 			'emitters'      => array(),
 			'receivers'     => array()
 		);

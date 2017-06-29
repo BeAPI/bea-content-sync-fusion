@@ -74,7 +74,6 @@ if ( is_admin() ) {
 	require( BEA_CSF_DIR . 'classes/admin/admin-synchronizations-network.php' );
 	require( BEA_CSF_DIR . 'classes/admin/admin-metaboxes.php' );
 	require( BEA_CSF_DIR . 'classes/admin/admin-restrictions.php' );
-	require( BEA_CSF_DIR . 'classes/admin/admin-notifications.php' );
 	require( BEA_CSF_DIR . 'classes/admin/admin-terms.php' );
 	require( BEA_CSF_DIR . 'classes/admin/admin-terms-metaboxes.php' );
 }
@@ -101,7 +100,6 @@ function init_bea_content_sync_fusion() {
 		new BEA_CSF_Admin_Synchronizations_Network();
 		new BEA_CSF_Admin_Metaboxes();
 		new BEA_CSF_Admin_Restrictions();
-		new BEA_CSF_Admin_Notifications();
 		new BEA_CSF_Admin_Terms();
 		new BEA_CSF_Admin_Terms_Metaboxes();
 	}

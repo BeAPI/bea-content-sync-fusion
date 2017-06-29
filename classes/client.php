@@ -34,9 +34,6 @@ class BEA_CSF_Client {
 		// P2P
 		add_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
 		add_action( 'p2p_delete_connections', array( __CLASS__, 'p2p_delete_connections' ), PHP_INT_MAX, 1 );
-
-		// Notifications 
-		//add_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
 	}
 
 	public static function unregister_hooks() {
@@ -67,9 +64,6 @@ class BEA_CSF_Client {
 		// P2P
 		remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
 		remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX, 1 );
-
-		// Notifications 
-		// remove_action( 'bea-csf-client-notifications', array( __CLASS__, 'send_notifications' ), 10, 5 );
 	}
 
 	/**
@@ -341,73 +335,4 @@ class BEA_CSF_Client {
 
 		return true;
 	}
-
-	/**
-	 * @param $result
-	 * @param $object
-	 * @param $method
-	 * @param $blogid
-	 * @param array $sync_fields
-	 *
-	 * @return bool
-	 */
-	public static function send_notifications( $result, $object, $method, $blogid, array $sync_fields ) {
-		// Enable notification only post type edition/addition
-		if ( 'PostType' != $object || 'merge' != $method ) {
-			return false;
-		}
-
-		// Test if result of insertion are an error
-		if ( is_wp_error( $result ) ) {
-			return false;
-		}
-
-		// Notify only if result is an addition on DB, not edition...
-		if ( isset( $result->is_edition ) && true === $result->is_edition ) {
-			return false;
-		}
-
-		// Get current DB options
-		$current_values = get_option( BEA_CSF_OPTION . '-notifications' );
-
-		// Get users ID for current sync
-		if ( ! isset( $current_values[ $sync_fields['id'] ] ) ) {
-			return false;
-		}
-
-		// Get current user logged
-		$current_user = wp_get_current_user();
-
-		// Get post author
-		$post_author = new WP_User( $result->post_author );
-
-		// Prepare subject text
-		$subject = sprintf( __( 'New or update post on website : %s', BEA_CSF_LOCALE ), get_bloginfo( 'name' ) );
-
-		// Loop on users to notify
-		foreach ( $current_values[ $sync_fields['id'] ] as $user_id ) {
-			$user = new WP_User( $user_id );
-			if ( empty( $user ) || is_wp_error( $user ) || $user->ID == $current_user->ID ) { // Test user validity, and exclude current user logged from self-notifications
-				continue;
-			}
-
-			// Prepare message text
-			$message = sprintf( __( 'Post title : "%s"' ), $result->post_title ) . "\r\n";
-			$message .= sprintf( __( 'Author : %s' ), $post_author->display_name ) . "\r\n";
-			$message .= sprintf( __( 'E-mail : %s' ), $post_author->user_email ) . "\r\n";
-			$message .= sprintf( __( 'Permalink: %s' ), get_permalink( $result ) ) . "\r\n";
-			if ( user_can( $user->ID, 'edit_post', $result->ID ) ) {
-				if ( EMPTY_TRASH_DAYS ) {
-					$message .= sprintf( __( 'Trash it: %s' ), get_delete_post_link( $result->ID ) ) . "\r\n";
-				} else {
-					$message .= sprintf( __( 'Delete it: %s' ), get_delete_post_link( $result->ID ) ) . "\r\n";
-				}
-				$message .= sprintf( __( 'Edit it: %s' ), get_edit_post_link( $result->ID ) ) . "\r\n";
-			}
-
-			// Send mail
-			wp_mail( $user->user_email, $subject, $message );
-		}
-	}
-
 }

@@ -17,7 +17,6 @@
 				<?php endif; ?>
 				<th scope="col"><?php _e( 'Mode', BEA_CSF_LOCALE ); ?></th>
 				<th scope="col"><?php _e( 'Default status', BEA_CSF_LOCALE ); ?></th>
-				<th scope="col"><?php _e( 'Notifications ?', BEA_CSF_LOCALE ); ?></th>
 				<th scope="col"><?php _e( 'Emitters', BEA_CSF_LOCALE ); ?></th>
 				<th scope="col"><?php _e( 'Receivers', BEA_CSF_LOCALE ); ?></th>
 			</tr>
@@ -90,7 +89,6 @@
 						<?php endif; ?>
 						<td><?php echo esc_html( $sync->get_field( 'mode' ) ); ?></td>
 						<td><?php echo esc_html( $sync->get_field( 'status' ) ); ?></td>
-						<td><?php echo esc_html( $i18n_true_false[ $sync->get_field( 'notifications' ) ] ); ?></td>
 						<td><?php echo implode( '<br />', self::get_sites( $sync->get_field( 'emitters' ), 'blogname' ) ); ?></td>
 						<td><?php echo implode( '<br />', self::get_sites( $sync->get_field( 'receivers' ), 'blogname' ) ); ?></td>
 					</tr>

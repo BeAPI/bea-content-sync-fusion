@@ -7,7 +7,6 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		'post_type'     => '',
 		'mode'          => 'auto',
 		'status'        => 'publish',
-		'notifications' => 'true',
 		'emitters'      => array(),
 		'receivers'     => array()
 	);
