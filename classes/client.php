@@ -27,9 +27,10 @@ class BEA_CSF_Client {
 		add_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX, 1 );
 
 		// Terms
-		add_action( 'create_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX, 3 );
-		add_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX, 3 );
-		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX, 3 );
+		// Use 990 priority for conflict with Polylang
+		add_action( 'create_term', array( __CLASS__, 'merge_term' ), 990, 3 );
+		add_action( 'edited_term', array( __CLASS__, 'merge_term' ), 990, 3 );
+		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), 990, 3 );
 
 		// P2P
 		add_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
@@ -330,7 +331,8 @@ class BEA_CSF_Client {
 
 		// Manual sync - Selected receivers
 		$_term_receivers = (array) get_term_meta( $term->term_id, '_term_receivers', true );
-
+		$_term_receivers = array_filter($_term_receivers);
+		
 		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $_term_receivers, false );
 
 		return true;

@@ -141,7 +141,7 @@ class BEA_CSF_Client_Attachment {
 
 		foreach ( $metas as $key_field => $value_field ) {
 			foreach ( $value_field as $key => $value ) {
-				update_post_meta( $media_id, $key_field, $value );
+				update_post_meta( $media_id, $key_field, maybe_unserialize( $value ) );
 			}
 		}
 	}
