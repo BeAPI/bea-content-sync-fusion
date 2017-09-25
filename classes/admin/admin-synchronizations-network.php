@@ -273,7 +273,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		 * @var array    $site_query_args : the query args
 		 * @var int|null $network_id      : the network id working on
 		 */
-		$site_query_args = apply_filters( 'bea_csf.classes.admin.admin_synchronization_network.query_args', $site_query_args, $network_id );
+		$site_query_args = apply_filters( 'bea_csf.admin.admin_synchronization_network.query_args', $site_query_args, $network_id );
 
 		$site_query = new WP_Site_Query( $site_query_args );
 		$sites      = $site_query->get_sites();
@@ -322,7 +322,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		 * @var array    $sites        : the retrieved sites \WP_Site object from \WP_Site_Query
 		 * @var int|null $network_id   : the network id working on
 		 */
-		return apply_filters( 'bea_csf.classes.admin.admin_synchronization_network.sites', $return_sites, $sites, $network_id );
+		return apply_filters( 'bea_csf.admin.admin_synchronization_network.sites', $return_sites, $sites, $network_id );
 	}
 
 	/**
