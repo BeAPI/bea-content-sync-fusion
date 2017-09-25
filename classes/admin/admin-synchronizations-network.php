@@ -322,7 +322,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		 * @var array    $sites        : the retrieved sites \WP_Site object from \WP_Site_Query
 		 * @var int|null $network_id   : the network id working on
 		 */
-		return apply_filters( 'classes.admin.admin_synchronization_network.sites', $return_sites, $sites, $network_id );
+		return apply_filters( 'bea_csf.classes.admin.admin_synchronization_network.sites', $return_sites, $sites, $network_id );
 	}
 
 	/**
