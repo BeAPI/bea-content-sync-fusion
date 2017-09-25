@@ -240,32 +240,89 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	}
 
 	/**
-	 * Helper: Get sites list for a network ID
+	 * Get sites list formatted for a network ID
+	 *
+	 * @var int|null $network_id :
+	 * - null => no network given, then work on current one
+	 * - 0    => work on all networks
+	 * - int  => work with the given network id
+	 *
+	 * @since 3.0.2
+	 *
+	 * @author Amaury Balmer | Maxime CULEA
 	 *
 	 * @return array|boolean
-	 * @author Amaury Balmer
 	 */
-	public static function get_sites_from_network( $network_id = 0, $get_blog_name = true ) {
-		global $wpdb;
-
-		if ( $network_id == 0 ) {
-			$network_id = $wpdb->siteid;
+	public static function get_sites_from_network( $network_id = null ) {
+		$site_query_args = array(
+			'public' => 1,
+		);
+		if ( is_null( $network_id ) ) {
+			$site_query_args['network__in'] = get_current_network_id();
+		} elseif ( ! empty( $network_id ) ) {
+			$site_query_args['network_id'] = $network_id;
 		}
 
-		$results = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, domain, path FROM $wpdb->blogs WHERE site_id = %d AND public = '1' AND archived = '0' AND mature = '0' AND spam = '0' AND deleted = '0' ORDER BY blog_id ASC", $network_id ), ARRAY_A );
-		if ( empty( $results ) ) {
+		/**
+		 * Filter the query args for getting sites from network.
+		 *
+		 * @since 3.0.2
+		 *
+		 * @author Maxime CULEA
+		 *
+		 * @var array    $site_query_args : the query args
+		 * @var int|null $network_id      : the network id working on
+		 */
+		$site_query_args = apply_filters( 'bea_csf.classes.admin.admin_synchronization_network.query_args', $site_query_args, $network_id );
+
+		$site_query = new WP_Site_Query( $site_query_args );
+		$sites      = $site_query->get_sites();
+		if ( empty( $sites ) ) {
 			return false;
 		}
 
-		$sites = array();
-		foreach ( $results as $result ) {
-			$sites[ $result['blog_id'] ] = $result;
-			if ( $get_blog_name == true ) {
-				$sites[ $result['blog_id'] ]['blogname'] = get_blog_option( $result['blog_id'], 'blogname' );
+		$return_sites = array();
+		foreach ( $sites as $site ) {
+			/* @var $site \WP_Site */
+			$return_sites[ $site->blog_id ] = array(
+				'network_id' => $site->network_id,
+				'blog_id'    => $site->blog_id,
+				'domain'     => $site->domain,
+				'path'       => $site->path
+			);
+
+			// Set the name : {network_name} {site_name}
+			$name = array();
+			// Check the query args for network
+			if ( isset( $site_query_args['network__in'] ) && empty( $site_query_args['network__in'] ) ) {
+				$name[] = get_network_option( $site->network_id, 'site_name' );
 			}
+			$name[] = get_blog_option( $site->blog_id, 'blogname' );
+
+			$return_sites[ $site->blog_id ]['blogname'] = implode( ' > ', $name );
 		}
 
-		return $sites;
+		// Sort by network id then blog_id
+		usort( $return_sites, function ( $a, $b ) {
+			if ( $a['network_id'] == $b ['network_id'] ) {
+				return ( $a['blog_id'] < $b ['blog_id'] ) ? - 1 : 1;
+			}
+
+			return ( $a['network_id'] < $b ['network_id'] ) ? - 1 : 1;
+		} );
+
+		/**
+		 * Filter the returned formatted sites.
+		 *
+		 * @since 3.0.2
+		 *
+		 * @author Maxime CULEA
+		 *
+		 * @var array    $return_sites : the formatted sites from \WP_Site_Query
+		 * @var array    $sites        : the retrieved sites \WP_Site object from \WP_Site_Query
+		 * @var int|null $network_id   : the network id working on
+		 */
+		return apply_filters( 'bea_csf.classes.admin.admin_synchronization_network.sites', $return_sites, $sites, $network_id );
 	}
 
 	/**

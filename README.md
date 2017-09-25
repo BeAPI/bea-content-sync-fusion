@@ -1,15 +1,21 @@
-bea-content-sync-fusion
+BEA Content Sync Fusion
 =======================
 
-Manage content synchronisation across a WordPress multisite
+Manage content synchronisation across a WordPress multisite.
 
-### 3.0.1
- * 26 July 2017
+## Compatibility
+Compatible up to WordPress 4.6.
+
+## Changelog
+
+### 3.0.2 - 5 Sept 2017
+ * Handle multiple networks for admin option
+
+### 3.0.1 - 26 July 2017
  * Fix unserialised datas of media after synch
  * Fix conflict with polylang on sync terms
  
-### 3.0.0
- * 29 June 2017
+### 3.0.0 - 29 June 2017
  * Work only on relations table, do not use old meta _origin_key
  * Synchronisations are bidirectional
  * Remove old code from notifications
