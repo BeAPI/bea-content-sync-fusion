@@ -225,7 +225,7 @@ class BEA_CSF_Synchronization {
 		foreach ( $this->receivers as $key => $receiver_blog_id ) {
 			if ( 'all' === $receiver_blog_id ) {
 				// Get all sites
-				$blogs = self::get_sites_from_network( 0, false );
+				$blogs = BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network( 0 );
 				foreach ( $blogs as $blog ) {
 					// Exclude emitters
 					if ( ! in_array( $blog['blog_id'], $this->emitters ) ) {
@@ -238,35 +238,6 @@ class BEA_CSF_Synchronization {
 		}
 
 		return $results;
-	}
-
-	/**
-	 * Helper: Get sites list for a network ID
-	 *
-	 * @return array|boolean
-	 * @author Amaury Balmer
-	 */
-	public static function get_sites_from_network( $network_id = 0, $get_blog_name = true ) {
-		global $wpdb;
-
-		if ( 0 === $network_id ) {
-			$network_id = $wpdb->siteid;
-		}
-
-		$results = $wpdb->get_results( $wpdb->prepare( "SELECT blog_id, domain, path FROM $wpdb->blogs WHERE site_id = %d AND public = '1' AND archived = '0' AND mature = '0' AND spam = '0' AND deleted = '0' ORDER BY blog_id ASC", $network_id ), ARRAY_A );
-		if ( empty( $results ) ) {
-			return false;
-		}
-
-		$sites = array();
-		foreach ( $results as $result ) {
-			$sites[ $result['blog_id'] ] = $result;
-			if ( true === $get_blog_name ) {
-				$sites[ $result['blog_id'] ]['blogname'] = get_blog_option( $result['blog_id'], 'blogname' );
-			}
-		}
-
-		return $sites;
 	}
 
 	/**
