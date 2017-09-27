@@ -3,12 +3,12 @@
 class BEA_CSF_Admin_Synchronizations_Network {
 
 	private static $_default_fields = array(
-		'label'         => '',
-		'post_type'     => '',
-		'mode'          => 'auto',
-		'status'        => 'publish',
-		'emitters'      => array(),
-		'receivers'     => array()
+		'label'     => '',
+		'post_type' => '',
+		'mode'      => 'auto',
+		'status'    => 'publish',
+		'emitters'  => array(),
+		'receivers' => array()
 	);
 
 	/**
@@ -255,7 +255,11 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 */
 	public static function get_sites_from_network( $network_id = null ) {
 		$site_query_args = array(
-			'public' => 1,
+			'public'   => 1,
+			'archived' => 0,
+			'mature'   => 0,
+			'spam'     => 0,
+			'deleted'  => 0,
 		);
 		if ( is_null( $network_id ) ) {
 			$site_query_args['network__in'] = get_current_network_id();
@@ -270,8 +274,8 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		 *
 		 * @author Maxime CULEA
 		 *
-		 * @var array    $site_query_args : the query args
-		 * @var int|null $network_id      : the network id working on
+		 * @var array $site_query_args : the query args
+		 * @var int|null $network_id : the network id working on
 		 */
 		$site_query_args = apply_filters( 'bea_csf.admin.admin_synchronization_network.query_args', $site_query_args, $network_id );
 
@@ -288,7 +292,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 				'network_id' => $site->network_id,
 				'blog_id'    => $site->blog_id,
 				'domain'     => $site->domain,
-				'path'       => $site->path
+				'path'       => $site->path,
 			);
 
 			// Set the name : {network_name} {site_name}
@@ -303,7 +307,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		}
 
 		// Sort by network id then blog_id
-		usort( $return_sites, function ( $a, $b ) {
+		uasort( $return_sites, function ( $a, $b ) {
 			if ( $a['network_id'] == $b ['network_id'] ) {
 				return ( $a['blog_id'] < $b ['blog_id'] ) ? - 1 : 1;
 			}
@@ -318,9 +322,9 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		 *
 		 * @author Maxime CULEA
 		 *
-		 * @var array    $return_sites : the formatted sites from \WP_Site_Query
-		 * @var array    $sites        : the retrieved sites \WP_Site object from \WP_Site_Query
-		 * @var int|null $network_id   : the network id working on
+		 * @var array $return_sites : the formatted sites from \WP_Site_Query
+		 * @var array $sites : the retrieved sites \WP_Site object from \WP_Site_Query
+		 * @var int|null $network_id : the network id working on
 		 */
 		return apply_filters( 'bea_csf.admin.admin_synchronization_network.sites', $return_sites, $sites, $network_id );
 	}
