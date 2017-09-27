@@ -251,6 +251,8 @@ class BEA_CSF_Synchronization {
 	 * @return bool
 	 */
 	public function send_to_receivers( $hook_data, $excluded_from_sync = false, $receivers_inclusion = false, $ignore_mode = false ) {
+		global $_bea_origin_blog_id;
+
 		// Set hook data into class var
 		$this->_hook_data = $hook_data;
 		unset( $hook_data );
@@ -279,6 +281,11 @@ class BEA_CSF_Synchronization {
 
 		// Send data for each receivers
 		foreach ( $this->get_receivers() as $receiver_blog_id ) {
+			// Skip infinite sync when emetter and receiver are reciprocal
+			if ( isset( $_bea_origin_blog_id ) && $_bea_origin_blog_id == $receiver_blog_id ) {
+				continue;
+			}
+
 			// Set receiver blog id as var class
 			$this->_current_receiver_blog_id = (int) $receiver_blog_id;
 
