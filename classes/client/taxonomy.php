@@ -6,9 +6,14 @@ class BEA_CSF_Client_Taxonomy {
 	 * Add term on DB
 	 */
 	public static function merge( array $term, array $sync_fields ) {
+		global $_bea_origin_blog_id;
+
 		if ( empty( $term ) || ! is_array( $term ) ) {
 			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );
 		}
+
+		// Define thius variable for skip infinite sync when emetter and receiver are reciprocal
+		$_bea_origin_blog_id = $term['blogid'];
 
 		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );
 		if ( ! empty( $local_term_id ) && (int) $local_term_id > 0 ) {
@@ -37,6 +42,9 @@ class BEA_CSF_Client_Taxonomy {
 				}
 			}
 		}
+
+		// Delete this variable for skip conflict with next item to sync
+		unset($_bea_origin_blog_id);
 
 		// Test merge/insertion
 		if ( is_wp_error( $new_term_id ) ) {

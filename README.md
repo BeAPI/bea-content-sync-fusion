@@ -8,6 +8,9 @@ Compatible up to WordPress 4.6.
 
 ## Changelog
 
+### 3.0.3 - 27 Sept 2017
+ * Fix infinite loop insertion for taxonomies
+ 
 ### 3.0.2 - 5 Sept 2017
  * Handle multiple networks for admin option
 
