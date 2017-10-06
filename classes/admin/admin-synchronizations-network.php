@@ -148,8 +148,14 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 */
 	public static function render_page_queue() {
 
-		// Edition or add ?
-		$edit = ( isset( $_GET['action'] ) && $_GET['action'] == 'edit' && isset( $_GET['sync_id'] ) ) ? true : false;
+		// Force flush ?
+		if ( isset($_POST) && isset($_POST['bea_csv_force_cron']) ) {
+			check_admin_referer( 'bea-csf-force-cron' );
+
+			// Process 30 items only
+			BEA_CSF_Async::process_queue( 30 );
+			wp_cache_flush();
+		}
 
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-page-queue.php' );

@@ -80,8 +80,8 @@ $_POST = array();
 // Create lock file
 touch( $lock_file );
 
-// Process 200 items by 200 items
-BEA_CSF_Async::process_queue( 500 );
+// Process items
+BEA_CSF_Async::process_queue( BEA_CSF_CRON_QTY );
 wp_cache_flush();
 
 // Remove lock file

@@ -47,6 +47,7 @@ require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 @ini_set( 'display_errors', 1 );
 
 // TODO: use WP_Site_Query
+// TODO: Implement network limitation
 /* @var $wpdb wpdb */
 global $wpdb;
 

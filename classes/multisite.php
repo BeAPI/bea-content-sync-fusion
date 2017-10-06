@@ -100,7 +100,7 @@ class BEA_CSF_Multisite {
 			'post_status' => 'any',
 			'nopaging' => true,
 			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false
+			'update_post_term_cache' => false,
 			'no_found_rows' => true,
 			'cache_results' => false
 		);
@@ -143,7 +143,7 @@ class BEA_CSF_Multisite {
 			'post_status' => 'any',
 			'nopaging' => true,
 			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false
+			'update_post_term_cache' => false,
 			'no_found_rows' => true,
 			'cache_results' => false
 		);
@@ -175,3 +175,4 @@ class BEA_CSF_Multisite {
 		}
 	}
 
+}
