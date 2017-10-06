@@ -9,10 +9,9 @@
   Network: true
   Required WP : 4.6
 
-  Copyright 2013-2017 - BeAPI Team (technique@beapi.fr)
+  Copyright 2013-2017 - Be API Team (technique@beapi.fr)
   
-  TODO : 
-	Mirror mode (deleting inclusion)
+  TODO :
 	Unlink relation from receivers
 	AJAX Taxo for Sync edition
  */
@@ -47,6 +46,7 @@ define( 'BEA_CSF_DIR', plugin_dir_path( __FILE__ ) );
 // Plugin various
 require( BEA_CSF_DIR . 'classes/plugin.php' );
 require( BEA_CSF_DIR . 'classes/client.php' );
+require( BEA_CSF_DIR . 'classes/multisite.php' );
 
 // Functions various
 require( BEA_CSF_DIR . 'functions/api.php' );
@@ -94,6 +94,7 @@ function init_bea_content_sync_fusion() {
 
 	// Server
 	new BEA_CSF_Client();
+	new BEA_CSF_Multisite();
 
 	// Admin
 	if ( is_admin() ) {
