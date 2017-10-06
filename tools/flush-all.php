@@ -1,4 +1,5 @@
 <?php
+die('TODO: Need to switch to new tables relations');
 if ( php_sapi_name() !== 'cli' || isset( $_SERVER['REMOTE_ADDR'] ) ) {
 	die( 'CLI Only' );
 }
@@ -24,14 +25,22 @@ $_SERVER = array(
 	'PHP_SELF'        => basename( __FILE__ )
 );
 
+// Force no limit memory and debug
 @ini_set( 'memory_limit', - 1 );
 @ini_set( 'display_errors', 1 );
 
+// Skip any cache, domain mapping, "SF move login" redirect
+define( 'WP_ADMIN', true );
+define( 'WP_CACHE', false );
+define( 'NO_MAINTENANCE', true );
+define( 'SUNRISE_LOADED', 1 );
 define( 'SFML_ALLOW_LOGIN_ACCESS', true );
 
-require( dirname( __FILE__ ) . '/../../../../wp-load.php' );
+// Load WP and WPadmin also
+require( dirname( __FILE__ ) . '/../../../../wp/wp-load.php' );
 require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 
+// Force no limit memory and debug
 @ini_set( 'memory_limit', - 1 );
 @ini_set( 'display_errors', 1 );
 

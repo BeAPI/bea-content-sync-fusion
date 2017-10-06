@@ -11,7 +11,7 @@ if ( ! isset( $argv ) || count( $argv ) < 2 ) {
 	die();
 }
 
-//Domain
+// User params
 $domain = ( isset( $argv[1] ) ) ? $argv[1] : '';
 $path   = ( isset( $argv[2] ) ) ? $argv[2] : '/';
 
@@ -28,61 +28,27 @@ $_SERVER = array(
 	'PHP_SELF'        => $path . 'index.php',
 );
 
-// Fake WordPress, plugin maintenance, no maintenance mode, no cache
+// Force no limit memory and debug
+@ini_set( 'memory_limit', - 1 );
+@ini_set( 'display_errors', 1 );
+
+// Skip any cache, domain mapping, "SF move login" redirect
 define( 'WP_ADMIN', true );
 define( 'WP_CACHE', false );
 define( 'NO_MAINTENANCE', true );
 define( 'SUNRISE_LOADED', 1 );
 define( 'SFML_ALLOW_LOGIN_ACCESS', true );
 
-// Try to load WordPress !
-try {
-	if ( ! defined( 'ABSPATH' ) ) {
-		require( dirname( __FILE__ ) . '/../../../../wp/wp-load.php' );
-	}
-} catch ( ErrorException $e ) {
-	var_dump( $e->getMessage() ); // Debug
-	die( 'Configuration seems incorrect because WordPress is trying to do an HTTP redirect or display anything !' );
-}
+// Load WP and WPadmin also
+require( dirname( __FILE__ ) . '/../../../../wp/wp-load.php' );
+require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 
-// PHP Configuration
-@error_reporting( E_ALL );
-@ini_set( 'display_startup_errors', '1' );
-@ini_set( 'display_errors', '1' );
-@ini_set( 'memory_limit', '512M' );
-@ini_set( 'max_execution_time', - 1 );
-if ( function_exists( 'ignore_user_abort' ) ) {
-	ignore_user_abort( 1 );
-}
-if ( function_exists( 'set_time_limit' ) ) {
-	set_time_limit( 0 );
-}
-
+// Force no limit memory and debug
 @ini_set( 'memory_limit', - 1 );
 @ini_set( 'display_errors', 1 );
 
-$attachments = get_posts( array(
-	'post_type'      => 'attachment',
-	'post_status'    => 'any',
-	'posts_per_page' => - 1,
-	'post_parent'    => null,
-) );
-
-if ( empty( $attachments ) ) {
-	printf( "No attachment found\n" );
-	die();
-}
-
-printf( "Found %s attachment(s)\n", count( $attachments ) );
-foreach ( $attachments as $e ) {
-	if ( ! is_a( $e, 'WP_Post' ) ) {
-		continue;
-	}
-
-	printf( "Synchronizing attachment %s\n", $e->ID );
-
-	do_action( 'edit_attachment', $e->ID );
-}
-
+// Attachments
+BEA_CSF_Multisite::sync_all_attachments( array(), true );
 printf( "Finish synchronizing attachments\n" );
+
 die();

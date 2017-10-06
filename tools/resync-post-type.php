@@ -10,7 +10,7 @@ if ( ! isset( $argv ) || count( $argv ) < 2 ) {
 	die();
 }
 
-//Domain
+// User params
 $domain = ( isset( $argv[1] ) ) ? $argv[1] : '';
 $path   = ( isset( $argv[2] ) ) ? $argv[2] : '/';
 $cpt    = ( isset( $argv[3] ) ) ? $argv[3] : 'all';
@@ -28,39 +28,33 @@ $_SERVER = array(
 	'PHP_SELF'        => $path . 'index.php',
 );
 
+// Force no limit memory and debug
 @ini_set( 'memory_limit', - 1 );
 @ini_set( 'display_errors', 1 );
 
+// Skip any cache, domain mapping, "SF move login" redirect
+define( 'WP_ADMIN', true );
+define( 'WP_CACHE', false );
+define( 'NO_MAINTENANCE', true );
+define( 'SUNRISE_LOADED', 1 );
 define( 'SFML_ALLOW_LOGIN_ACCESS', true );
 
+// Load WP and WPadmin also
 require( dirname( __FILE__ ) . '/../../../../wp/wp-load.php' );
 require_once( ABSPATH . 'wp-admin/includes/admin.php' );
 
+// Force no limit memory and debug
 @ini_set( 'memory_limit', - 1 );
 @ini_set( 'display_errors', 1 );
 
-$posts = get_posts( array(
-	'post_type'      => $cpt,
-	'post_status'    => 'any',
-	'posts_per_page' => - 1,
-) );
-
-if ( empty( $posts ) ) {
-	printf( "No post found\n" );
-	die();
+// User has restrict to one post_type ?
+$args = array();
+if ( 'all' !== $cpt ) {
+	$args['post_type'] = $cpt;
 }
 
-printf( "Found %s post(s)\n", count( $posts ) );
-foreach ( $posts as $e ) {
-	if ( ! is_a( $e, 'WP_Post' ) ) {
-		continue;
-	}
-
-	printf( "Synchronizing post %s\n", $e->ID );
-
-	do_action( 'transition_post_status', $e->post_status, $e->post_status, $e );
-	do_action( 'save_post', $e->ID, $e );
-}
-
+// Posts
+BEA_CSF_Multisite::sync_all_posts( $args, true );
 printf( "Finish synchronizing posts\n" );
+
 die();

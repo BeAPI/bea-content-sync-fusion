@@ -52,18 +52,36 @@ class BEA_CSF_Multisite {
 	 *
 	 * @return bool
 	 */
-	public static function sync_all_terms() {
-		$taxonomies = get_taxonomies( array(), 'names' );
+	public static function sync_all_terms( $args = array(), $terms_args = array(), $verbose = false ) {
+		// Get taxonomies names
+		$args = wp_parse_args( $args, array() );
+		$taxonomies = get_taxonomies( $args, 'names' );
 		if ( empty( $taxonomies ) ) {
+			if ( true === $verbose ) {
+				printf( "No taxinomies found\n" );
+			}
 			return false;
 		}
 
-		$results = get_terms( array_keys( $taxonomies ), array( 'hide_empty' => false ) );
+		// Get terms objects
+		$terms_args = wp_parse_args( $terms_args, array('hide_empty' => false) );
+		$results = get_terms( array_keys( $taxonomies ), $terms_args );
 		if ( is_wp_error( $results ) || empty( $results ) ) {
+			if ( true === $verbose ) {
+				printf( "No terms found for taxonomies : %s\n", implode(',', array_keys( $taxonomies )) );
+			}
 			return false;
+		}
+
+		if ( true === $verbose ) {
+			printf( "Found %s term(s)\n", count( $results ) );
 		}
 
 		foreach ( (array) $results as $result ) {
+			if ( true === $verbose ) {
+				printf( "Synchronizing term %s\n", $result->ID );
+			}
+
 			do_action( 'edited_term', $result->term_id, $result->term_taxonomy_id, $result->taxonomy );
 		}
 
@@ -76,8 +94,8 @@ class BEA_CSF_Multisite {
 	 *
 	 * @return bool
 	 */
-	public static function sync_all_attachments() {
-		$results = get_posts( array(
+	public static function sync_all_attachments( $args = array(), $verbose = false ) {
+		$default_args = array(
 			'post_type' => 'attachment',
 			'post_status' => 'any',
 			'nopaging' => true,
@@ -85,15 +103,28 @@ class BEA_CSF_Multisite {
 			'update_post_term_cache' => false
 			'no_found_rows' => true,
 			'cache_results' => false
-		) );
+		);
 
+		$args = wp_parse_args( $args, $default_args );
+		$results = get_posts( $args );
 		if ( empty( $results ) ) {
+			if ( true === $verbose ) {
+				printf( "No attachment found\n" );
+			}
 			return false;
+		}
+
+		if ( true === $verbose ) {
+			printf( "Found %s attachment(s)\n", count( $results ) );
 		}
 
 		foreach ( (array) $results as $result ) {
 			if ( ! is_a( $result, 'WP_Post' ) ) {
 				continue;
+			}
+
+			if ( true === $verbose ) {
+				printf( "Synchronizing attachment %s\n", $result->ID );
 			}
 
 			do_action( 'edit_attachment', $result->ID );
@@ -106,8 +137,8 @@ class BEA_CSF_Multisite {
 	 *
 	 * @return bool
 	 */
-	public static function sync_all_posts() {
-		$results = get_posts( array(
+	public static function sync_all_posts( $args = array(), $verbose = false ) {
+		$default_args = array(
 			'post_type' => 'any',
 			'post_status' => 'any',
 			'nopaging' => true,
@@ -115,15 +146,28 @@ class BEA_CSF_Multisite {
 			'update_post_term_cache' => false
 			'no_found_rows' => true,
 			'cache_results' => false
-		) );
+		);
 
+		$args = wp_parse_args( $args, $default_args );
+		$results = get_posts( $args );
 		if ( empty( $results ) ) {
+			if ( true === $verbose ) {
+				printf( "No posts found for post_type %s\n", $args['post_type'] );
+			}
 			return false;
+		}
+
+		if ( true === $verbose ) {
+			printf( "Found %s post(s)\n", count( $results ) );
 		}
 
 		foreach ( $results as $result ) {
 			if ( ! is_a( $result, 'WP_Post' ) ) {
 				continue;
+			}
+
+			if ( true === $verbose ) {
+				printf( "Synchronizing post %s\n", $result->ID );
 			}
 
 			do_action( 'transition_post_status', $result->post_status, $result->post_status, $result );
