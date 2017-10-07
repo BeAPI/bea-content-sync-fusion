@@ -179,18 +179,22 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param string $type
+	 * @param string $types
 	 * @param int $receiver_blog_id
 	 * @param int $receiver_id
 	 *
 	 * @return mixed
 	 * @author Alexandre Sadowski
 	 */
-	public static function current_object_is_synchronized( $type, $receiver_blog_id, $receiver_id ) {
+	public static function current_object_is_synchronized( $types, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
+		$types = array_map(function($v) {
+			return "'" . esc_sql($v) . "'";
+		}, (array) $types);
+		
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s AND receiver_blog_id = %d AND receiver_id = %s", $type, $receiver_blog_id, $receiver_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( ".implode(', ', $types)." ) AND receiver_blog_id = %d AND receiver_id = %s", $receiver_blog_id, $receiver_id ) );
 	}
 
 	/**
