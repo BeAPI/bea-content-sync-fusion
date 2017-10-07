@@ -103,7 +103,7 @@ class BEA_CSF_Admin_Metaboxes {
 			'emitters'  => $wpdb->blogid,
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_auto_state ) ) {
-			add_meta_box( BEA_CSF_OPTION . 'metabox-auto', __( 'Synchronization (auto)', BEA_CSF_LOCALE ), array(
+			add_meta_box( BEA_CSF_OPTION . 'metabox-auto', __( 'Synchronization (auto)', 'bea-content-sync-fusion' ), array(
 				__CLASS__,
 				'metabox_content_auto',
 			), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_auto_state ) );
@@ -116,7 +116,7 @@ class BEA_CSF_Admin_Metaboxes {
 			'emitters'  => $wpdb->blogid,
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_manual_state ) ) {
-			add_meta_box( BEA_CSF_OPTION . 'metabox-manual', __( 'Synchronization (manual)', BEA_CSF_LOCALE ), array(
+			add_meta_box( BEA_CSF_OPTION . 'metabox-manual', __( 'Synchronization (manual)', 'bea-content-sync-fusion' ), array(
 				__CLASS__,
 				'metabox_content_manual',
 			), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_manual_state ) );

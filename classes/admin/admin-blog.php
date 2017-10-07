@@ -26,7 +26,7 @@ class BEA_CSF_Admin_Blog {
 	 * @return array
 	 */
 	public static function manage_sites_action_links( $actions, $blog_id, $blogname ) {
-		$actions['resync'] = '<a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=resync_bea_csf_content&amp;id=' . $blog_id ), 'resync_blog_content_' . $blog_id ) ) . '">' . __( 'Resync content', BEA_CSF_LOCALE ) . '</a>';
+		$actions['resync'] = '<a href="' . esc_url( wp_nonce_url( network_admin_url( 'sites.php?action=resync_bea_csf_content&amp;id=' . $blog_id ), 'resync_blog_content_' . $blog_id ) ) . '">' . __( 'Resync content', 'bea-content-sync-fusion' ) . '</a>';
 
 		return $actions;
 	}
@@ -55,7 +55,7 @@ class BEA_CSF_Admin_Blog {
 	 */
 	public static function network_sites_updated_message( $msg = '' ) {
 		if ( isset($_GET['updated']) && $_GET['updated'] == 'resync_bea_csf_content' ) {
-			return __( 'Resync website OK.', BEA_CSF_LOCALE );
+			return __( 'Resync website OK.', 'bea-content-sync-fusion' );
 		}
 
 		return $msg;
@@ -68,7 +68,7 @@ class BEA_CSF_Admin_Blog {
 	public static function wp_dashboard_setup() {
 		wp_add_dashboard_widget(
 			'bea_csf_blog_admin_widget',
-			__('Content synchronization status', BEA_CSF_LOCALE),
+			__('Content synchronization status', 'bea-content-sync-fusion'),
 			array(__CLASS__, 'widget_render')
 		);	
 	}

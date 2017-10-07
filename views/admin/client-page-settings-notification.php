@@ -1,9 +1,9 @@
 <div class="wrap">
 	<?php screen_icon('options-general'); ?>
-	<h2><?php _e("Content Sync: Notifications", BEA_CSF_LOCALE); ?></h2>
+	<h2><?php _e("Content Sync: Notifications", 'bea-content-sync-fusion'); ?></h2>
 	
 	<div id="col-container">
-		<p><?php _e("This page allows you to choose what user must be notified when adding new content with sync feature. If no user is selected, no notification will be sent.", BEA_CSF_LOCALE); ?></p>
+		<p><?php _e("This page allows you to choose what user must be notified when adding new content with sync feature. If no user is selected, no notification will be sent.", 'bea-content-sync-fusion'); ?></p>
 		<form action="" method="post">
 			<?php foreach( $syncs as $sync_obj ) : 
 				if ( !isset($current_values[$sync_obj->get_field('id')]) ) {
@@ -22,7 +22,7 @@
 
 			<p class="submit">
 				<?php wp_nonce_field('update-bea-csf-notifications'); ?>
-				<input type="submit" class="button-primary" name="update-bea-csf-notifications" value="<?php _e('Save settings', BEA_CSF_LOCALE); ?>" />
+				<input type="submit" class="button-primary" name="update-bea-csf-notifications" value="<?php _e('Save settings', 'bea-content-sync-fusion'); ?>" />
 			</p>
 		</form>
 	</div><!-- /col-container -->

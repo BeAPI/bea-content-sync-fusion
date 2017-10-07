@@ -1,30 +1,30 @@
 <div class="wrap">
 	<?php screen_icon( 'options-general' ); ?>
-	<h2><?php _e( "Content Sync: Settings", BEA_CSF_LOCALE ); ?></h2>
+	<h2><?php _e( "Content Sync: Settings", 'bea-content-sync-fusion' ); ?></h2>
 
-	<p><?php _e( 'This plugin gives you the ability to sync content published on a website network to one or more websites network of your choice.', BEA_CSF_LOCALE ); ?></p>
+	<p><?php _e( 'This plugin gives you the ability to sync content published on a website network to one or more websites network of your choice.', 'bea-content-sync-fusion' ); ?></p>
 
 	<div id="col-container">
 		<table class="widefat tag fixed" cellspacing="0">
 			<thead>
 			<tr>
-				<th scope="col" class="manage-column "><?php _e( 'Name', BEA_CSF_LOCALE ); ?></th>
-				<th scope="col" class="manage-column "><?php _e( 'Enable ?', BEA_CSF_LOCALE ); ?></th>
-				<th scope="col"><?php _e( 'Post type', BEA_CSF_LOCALE ); ?></th>
-				<th scope="col"><?php _e( 'Taxonomies', BEA_CSF_LOCALE ); ?></th>
+				<th scope="col" class="manage-column "><?php _e( 'Name', 'bea-content-sync-fusion' ); ?></th>
+				<th scope="col" class="manage-column "><?php _e( 'Enable ?', 'bea-content-sync-fusion' ); ?></th>
+				<th scope="col"><?php _e( 'Post type', 'bea-content-sync-fusion' ); ?></th>
+				<th scope="col"><?php _e( 'Taxonomies', 'bea-content-sync-fusion' ); ?></th>
 				<?php if ( class_exists( 'P2P_Connection_Type_Factory' ) ) : ?>
-					<th scope="col"><?php _e( 'P2P', BEA_CSF_LOCALE ); ?></th>
+					<th scope="col"><?php _e( 'P2P', 'bea-content-sync-fusion' ); ?></th>
 				<?php endif; ?>
-				<th scope="col"><?php _e( 'Mode', BEA_CSF_LOCALE ); ?></th>
-				<th scope="col"><?php _e( 'Default status', BEA_CSF_LOCALE ); ?></th>
-				<th scope="col"><?php _e( 'Emitters', BEA_CSF_LOCALE ); ?></th>
-				<th scope="col"><?php _e( 'Receivers', BEA_CSF_LOCALE ); ?></th>
+				<th scope="col"><?php _e( 'Mode', 'bea-content-sync-fusion' ); ?></th>
+				<th scope="col"><?php _e( 'Default status', 'bea-content-sync-fusion' ); ?></th>
+				<th scope="col"><?php _e( 'Emitters', 'bea-content-sync-fusion' ); ?></th>
+				<th scope="col"><?php _e( 'Receivers', 'bea-content-sync-fusion' ); ?></th>
 			</tr>
 			</thead>
 			<tbody id="the-list" class="list:clients">
 			<?php
 			if ( $registered_syncs == false || empty( $registered_syncs ) ) :
-				echo '<tr><td colspan="9">' . sprintf( __( 'No synchronization exists. Want to <a href="%s">create one</a>?', BEA_CSF_LOCALE ), network_admin_url( 'admin.php?page=' . 'bea-csf-add' ) ) . '</td></tr>';
+				echo '<tr><td colspan="9">' . sprintf( __( 'No synchronization exists. Want to <a href="%s">create one</a>?', 'bea-content-sync-fusion' ), network_admin_url( 'admin.php?page=' . 'bea-csf-add' ) ) . '</td></tr>';
 			else :
 				$class = 'alternate';
 				$i     = 0;
@@ -68,15 +68,15 @@
 											<a href="<?php echo add_query_arg( array(
 												'action'  => 'edit',
 												'sync_id' => $sync->get_field( 'id' )
-											), network_admin_url( 'admin.php?page=' . 'bea-csf-add' ) ); ?>"><?php _e( 'Edit', BEA_CSF_LOCALE ); ?></a>
+											), network_admin_url( 'admin.php?page=' . 'bea-csf-add' ) ); ?>"><?php _e( 'Edit', 'bea-content-sync-fusion' ); ?></a>
 											|
 											<a class="delete" href="<?php echo wp_nonce_url( add_query_arg( array(
 												'action'  => 'delete',
 												'sync_id' => $sync->get_field( 'id' )
 											), network_admin_url( 'admin.php?page=' . 'bea-csf-edit' ) ), 'delete-sync' ); ?>"
-											   onclick="return confirm('<?php echo esc_js( sprintf( __( "You are about to delete this sync '%s'\n  'Cancel' to stop, 'OK' to delete." ), $sync->get_field( 'label' ) ) ); ?>');"><?php _e( 'Delete', BEA_CSF_LOCALE ); ?></a>
+											   onclick="return confirm('<?php echo esc_js( sprintf( __( "You are about to delete this sync '%s'\n  'Cancel' to stop, 'OK' to delete." ), $sync->get_field( 'label' ) ) ); ?>');"><?php _e( 'Delete', 'bea-content-sync-fusion' ); ?></a>
 										<?php else : ?>
-											<?php _e( 'This item is locked because registered since the developer API.', BEA_CSF_LOCALE ); ?>
+											<?php _e( 'This item is locked because registered since the developer API.', 'bea-content-sync-fusion' ); ?>
 										<?php endif; ?>
 									</span>
 							</div>
@@ -102,21 +102,21 @@
 	<!-- /col-container -->
 
 
-	<h3><?php _e( "Content Sync: Advanced settings", BEA_CSF_LOCALE ); ?></h3>
+	<h3><?php _e( "Content Sync: Advanced settings", 'bea-content-sync-fusion' ); ?></h3>
 
 	<div id="col-container">
 		<form action="" method="post">
 			<table class="form-table">
 				<tbody>
 				<tr valign="top">
-					<th scope="row"><?php _e( "Special mode", BEA_CSF_LOCALE ); ?></th>
+					<th scope="row"><?php _e( "Special mode", 'bea-content-sync-fusion' ); ?></th>
 					<td>
 						<fieldset>
 							<label for="csf-unlock-mode">
 								<input
 									name="csf_adv_settings[unlock-mode]" <?php checked( is_array( $current_settings ) && $current_settings['unlock-mode'] == '1', true ); ?>
 									type="checkbox" id="csf-unlock-mode"
-									value="1"> <?php _e( "Remove all content edition restrictions", BEA_CSF_LOCALE ); ?>
+									value="1"> <?php _e( "Remove all content edition restrictions", 'bea-content-sync-fusion' ); ?>
 							</label>
 						</fieldset>
 					</td>
@@ -127,7 +127,7 @@
 			<?php wp_nonce_field( 'update-bea-csf-adv-settings' ); ?>
 			<p class="submit">
 				<input class="button-primary" type="submit" name="update-bea-csf-adv-settings"
-				       value="<?php _e( "Save", BEA_CSF_LOCALE ); ?>"/>
+				       value="<?php _e( "Save", 'bea-content-sync-fusion' ); ?>"/>
 			</p>
 		</form>
 	</div>

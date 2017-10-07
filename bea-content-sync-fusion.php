@@ -19,7 +19,6 @@
 // Plugin constants
 define( 'BEA_CSF_VERSION', '3.0.5' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
-define( 'BEA_CSF_LOCALE', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
 
 // Define the table relation variables
@@ -89,7 +88,7 @@ add_action( 'wpmu_new_blog', array( 'BEA_CSF_Plugin', 'wpmu_new_blog' ) );
 add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );
 function init_bea_content_sync_fusion() {
 	// Load translations
-	load_plugin_textdomain( BEA_CSF_LOCALE, false, basename( BEA_CSF_DIR ) . '/languages' );
+	load_plugin_textdomain( 'bea-content-sync-fusion', false, basename( BEA_CSF_DIR ) . '/languages' );
 
 	// Synchronizations
 	BEA_CSF_Synchronizations::init_from_db();

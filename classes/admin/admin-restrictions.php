@@ -151,7 +151,7 @@ class BEA_CSF_Admin_Restrictions {
 		$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
 
 		if ( $_origin_key != false && $_has_syncs == false ) {
-			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', BEA_CSF_LOCALE ) );
+			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
 		}
 
 		return true;
