@@ -9,13 +9,16 @@ Compatible up to WordPress 4.9.x
 
 ## Changelog
 
-### 3.0.5 - 06 oct. 2017
+### 3.0.5 - 06-07 oct. 2017
  * Allow content resync during blog/site creation
  * Refactoring code for all CLI tools
  * Add blog widget for counter info, and add button for force sync
  * Fix media sync, use a shared folder between blogs
  * Add link action for "resync content" into sites list
  * Add button on queue network page for exec CRON (for debug usage)
+ * Fix restriction for attachment
+ * Update POT/POT
+ * Use string for i18n instead PHP constant
 
 ### 3.0.4 - 27 Sept 2017
  * Fix display admin emitters / receivers column
