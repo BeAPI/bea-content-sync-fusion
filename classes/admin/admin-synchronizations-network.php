@@ -150,14 +150,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		// Force flush ?
 		if ( isset($_POST) && isset($_POST['bea_csv_force_cron']) ) {
 			check_admin_referer( 'bea-csf-force-cron' );
-
-<<<<<<< HEAD
-=======
-		// Force flush ?
-		if ( isset($_POST) && isset($_POST['bea_csv_force_cron']) ) {
-			check_admin_referer( 'bea-csf-force-cron' );
-
->>>>>>> 9048b6791c81d2c708e4f8b18207b79b410db28a
+			
 			// Process 30 items only
 			BEA_CSF_Async::process_queue( 30 );
 			wp_cache_flush();
