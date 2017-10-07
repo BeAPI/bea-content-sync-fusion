@@ -15,6 +15,7 @@ Compatible up to WordPress 4.9.x
  * Add blog widget for counter info, and add button for force sync
  * Fix media sync, use a shared folder between blogs
  * Add link action for "resync content" into sites list
+ * Add button on queue network page for exec CRON (for debug usage)
 
 ### 3.0.4 - 27 Sept 2017
  * Fix display admin emitters / receivers column
