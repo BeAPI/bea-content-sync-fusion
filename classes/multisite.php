@@ -6,6 +6,9 @@ class BEA_CSF_Multisite {
 	 * Register hooks
 	 */
 	public function __construct() {
+		// Deactive media folder structure with sites/blog_id/
+		add_filter( 'site_option_' . 'ms_files_rewriting', '__return_true' );
+
 		add_action( 'wpmu_new_blog', array( __CLASS__, 'wpmu_new_blog' ) );
 	}
 
@@ -23,6 +26,8 @@ class BEA_CSF_Multisite {
 		self::sync_all_terms();
 		self::sync_all_attachments();
 		self::sync_all_posts();
+
+		remove_filter( 'bea_csf.pre_pre_send_data', array( __CLASS__, 'bea_csf_pre_pre_send_data' ), 10, 2 );
 
 		// TODO: Resend content from any blog ? Not only the First/MAIN (with the network admin)
 	}
@@ -100,7 +105,7 @@ class BEA_CSF_Multisite {
 			'post_status' => 'any',
 			'nopaging' => true,
 			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false
+			'update_post_term_cache' => false,
 			'no_found_rows' => true,
 			'cache_results' => false
 		);
@@ -143,7 +148,7 @@ class BEA_CSF_Multisite {
 			'post_status' => 'any',
 			'nopaging' => true,
 			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false
+			'update_post_term_cache' => false,
 			'no_found_rows' => true,
 			'cache_results' => false
 		);
@@ -175,3 +180,4 @@ class BEA_CSF_Multisite {
 		}
 	}
 
+}

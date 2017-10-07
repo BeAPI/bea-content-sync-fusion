@@ -52,7 +52,7 @@ class BEA_CSF_Server_Attachment {
 				$attachment['terms'][ $key ] = BEA_CSF_Server_Taxonomy::get_data( $term );
 			}
 		}
-
+		
 		return $attachment;
 	}
 

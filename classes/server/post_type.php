@@ -101,11 +101,6 @@ class BEA_CSF_Server_PostType {
 			$post['medias'][] = BEA_CSF_Server_Attachment::get_data( $attachment );
 		}
 
-		// Add Server URL
-		$post['server_url'] = home_url( '/' );
-		$uploads            = bea_csf_upload_dir();
-		$post['upload_url'] = $uploads['baseurl'];
-
 		return $post;
 	}
 

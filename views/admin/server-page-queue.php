@@ -5,7 +5,7 @@
 	global $wpdb;
 	$results = $wpdb->get_results( 'SELECT COUNT(id) as nbqueue FROM ' . $GLOBALS['wpdb']->bea_csf_queue, OBJECT );
 
-	echo '<p>' . __( 'Cron process 300 items by 300 items', BEA_CSF_LOCALE ) . '</p>';
+	echo '<p>' . sprintf( __( 'Cron process %d items by %d items', BEA_CSF_LOCALE ), BEA_CSF_CRON_QTY, BEA_CSF_CRON_QTY) . '</p>';
 
 	echo __( 'Number of items in the queue : ', BEA_CSF_LOCALE ) . reset( $results )->nbqueue;
 
@@ -34,4 +34,12 @@
 	}
 
 	?>
+
+	<h3><?php _e( 'For debug only (30 items only)', BEA_CSF_LOCALE ); ?></h3>
+	<form method="post">
+		<p class="submit">
+			<?php wp_nonce_field( 'bea-csf-force-cron' ); ?>
+			<input class="button-primary" type="submit" name="bea_csv_force_cron" value="<?php _e( 'Exec synchronization CRON now', BEA_CSF_LOCALE ); ?>" />
+		</p>
+	</form>
 </div>

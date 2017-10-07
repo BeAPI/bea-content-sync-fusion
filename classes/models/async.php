@@ -1,19 +1,19 @@
 <?php
-
 class BEA_CSF_Async {
 	/**
 	 * Generic method to get data from emitter and sent theses to receivers
 	 *
+	 * @param  boolean $quantity
+	 * @param  boolean
 	 * @return boolean
 	 */
-	public static function process_queue( $quantity = false ) {
+	public static function process_queue( $quantity = false, $receiver_blog_id = false ) {
 		// Get data to sync
 		if ( (int) $quantity > 0 ) {
-			$data_to_sync = self::get_results( $quantity );
+			$data_to_sync = self::get_results( $quantity, $receiver_blog_id );
 		} else {
-			$data_to_sync = self::get_all();
+			$data_to_sync = self::get_all( $receiver_blog_id );
 		}
-
 
 		// No data ?
 		if ( empty( $data_to_sync ) ) {
@@ -92,6 +92,8 @@ class BEA_CSF_Async {
 	}
 
 	/**
+	 * Add an item into queue
+	 * 
 	 * @param $hook_data
 	 * @param $current_filter
 	 * @param $receiver_blog_id
@@ -129,6 +131,9 @@ class BEA_CSF_Async {
 
 	/**
 	 * Update on fly request on MySQL
+	 *
+	 * @param  string $query
+	 * @return string
 	 */
 	public static function alter_query_ignore_insert( $query ) {
 		$query = str_replace( 'INSERT', 'INSERT IGNORE', $query );
@@ -137,9 +142,11 @@ class BEA_CSF_Async {
 	}
 
 	/**
+	 * Delte an item from queue
+	 * 
 	 * @param $id
 	 *
-	 * @return mixed
+	 * @return int|false
 	 */
 	public static function delete( $id ) {
 		global $wpdb;
@@ -150,28 +157,60 @@ class BEA_CSF_Async {
 	}
 
 	/**
-	 * @param $id
+	 * Get all items in queue
 	 *
-	 * @return mixed
+	 * @param integer $blog_id
+	 *
+	 * @return array
 	 */
-	public static function get_all() {
+	public static function get_all( $blog_id = 0 ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
+
+		if ( 0 < $blog_id ) {
+			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d", $blog_id ) );
+		}
 
 		return $wpdb->get_results( "SELECT * FROM $wpdb->bea_csf_queue" );
 	}
 
 	/**
-	 * @param $id
+	 * Get items
+	 * 
+	 * @param integer $quantity
+	 * @param integer $blog_id
 	 *
-	 * @return mixed
+	 * @return array
 	 */
-	public static function get_results( $quantity = 100 ) {
+	public static function get_results( $quantity = 100, $blog_id = 0  ) {
+		global $wpdb;
+
+		/** @var WPDB $wpdb */
+		
+		if ( 0 < $blog_id ) {
+			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d LIMIT %d", $blog_id, $quantity ) );
+		}
+
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue LIMIT %d", $quantity ) );
+	}
+
+	/**
+	 * Get counter items for a blog
+	 * 
+	 * @param integer $blog_id
+	 *
+	 * @return integer
+	 */
+	public static function get_counter( $blog_id = 0 ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue LIMIT %d", $quantity ) );
+		if ( 0 < $blog_id ) {
+			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d", $blog_id ) );
+		}
+
+		return (int) $wpdb->get_var( "SELECT COUNT(id) FROM $wpdb->bea_csf_queue" );
 	}
 }
