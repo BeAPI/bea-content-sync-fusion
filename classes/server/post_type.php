@@ -110,7 +110,7 @@ class BEA_CSF_Server_PostType {
 
 			$post['connections'] = array();
 			foreach( $results as $result_id ) {
-				$post['connections'][] = BEA_CSF_Server_P2P::merge( $result_id );
+				$post['connections'][] = BEA_CSF_Server_P2P::merge( $result_id, $sync_fields );
 			}
 		}
 
