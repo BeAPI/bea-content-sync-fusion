@@ -58,8 +58,9 @@ class BEA_CSF_Multisite {
 	 * @return bool
 	 */
 	public static function sync_all_terms( $args = array(), $terms_args = array(), $verbose = false ) {
-		// Get taxonomies names
 		$args = wp_parse_args( $args, array() );
+
+		// Get taxonomies names only
 		$taxonomies = get_taxonomies( $args, 'names' );
 		if ( empty( $taxonomies ) ) {
 			if ( true === $verbose ) {
@@ -134,6 +135,8 @@ class BEA_CSF_Multisite {
 
 			do_action( 'edit_attachment', $result->ID );
 		}
+		
+		return true;
 	}
 
 	/**
@@ -178,6 +181,43 @@ class BEA_CSF_Multisite {
 			do_action( 'transition_post_status', $result->post_status, $result->post_status, $result );
 			do_action( 'save_post', $result->ID, $result );
 		}
+
+		return true;
 	}
+
+	/**
+	 *
+	 * Synchronization all P2P connections
+	 *
+	 * @return bool
+	 */
+	public static function sync_all_p2p_connections( $args = array(), $verbose = false ) {
+		global $wpdb;
+
+		$args = wp_parse_args( $args, array() );
+		
+		$results = (array) $wpdb->get_col( "SELECT p2p_id FROM $wpdb->p2p" );
+		if ( empty( $results ) ) {
+			if ( true === $verbose ) {
+				printf( "No P2P connection found" );
+			}
+			return false;
+		}
+
+		if ( true === $verbose ) {
+			printf( "Found %s P2P connection(s)\n", count( $results ) );
+		}
+
+		foreach ( $results as $result_id ) {
+			if ( true === $verbose ) {
+				printf( "Synchronizing P2P connection %s\n", $result_id );
+			}
+
+			do_action( 'p2p_created_connection', $result_id );
+		}
+
+		return true;
+	}
+
 
 }
