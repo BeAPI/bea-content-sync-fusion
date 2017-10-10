@@ -126,6 +126,14 @@ class BEA_CSF_Client_PostType {
 			}
 		}
 
+		// Set P2P connections
+		if ( isset($post['connections']) && !empty($post['connections']) ) {
+			foreach( (array) $post['connections'] as $connection ) {
+				$connection['blogid'] = $data['blogid'];
+				BEA_CSF_Client_P2P::merge( $connection, $sync_fields );
+			}
+		}
+
 		$new_post = get_post( $new_post_id );
 		if ( ! empty( $new_post ) ) {
 			$new_post->is_edition = ( ! empty( $local_id ) && (int) $local_id ) ? true : false;

@@ -32,17 +32,20 @@ class BEA_CSF_Server_PostType {
 	 * @return mixed|null|void
 	 */
 	public static function merge( $post, array $sync_fields ) {
-		return apply_filters( 'bea_csf.server.posttype.merge', self::get_data( $post ), $sync_fields );
+		return apply_filters( 'bea_csf.server.posttype.merge', self::get_data( $post, $sync_fields ), $sync_fields );
 	}
 
 	/**
 	 * Generic method for get all data need for sync
 	 *
 	 * @param WP_Post|integer $post
+	 * @param array $sync_fields
 	 *
 	 * @return array|boolean
 	 */
-	public static function get_data( $post ) {
+	public static function get_data( $post, array $sync_fields ) {
+		global $wpdb;
+
 		if ( empty( $post ) ) {
 			return false;
 		}
@@ -99,6 +102,16 @@ class BEA_CSF_Server_PostType {
 
 		foreach ( $attachments as $attachment ) {
 			$post['medias'][] = BEA_CSF_Server_Attachment::get_data( $attachment );
+		}
+
+		// Get P2P connections
+		if ( defined('P2P_PLUGIN_VERSION') ) {
+			$results = (array) $wpdb->get_col( $wpdb->prepare("SELECT p2p_id FROM $wpdb->p2p WHERE p2p_from = %d OR p2p_to = %d", $post['ID'], $post['ID']) );
+
+			$post['connections'] = array();
+			foreach( $results as $result_id ) {
+				$post['connections'][] = BEA_CSF_Server_P2P::merge( $result_id );
+			}
 		}
 
 		return $post;
