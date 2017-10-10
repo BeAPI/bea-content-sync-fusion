@@ -59,7 +59,7 @@ if ( empty( $blog_ids ) ) {
 }
 printf( "Found %s blog(s)\n", count( $blog_ids ) );
 
-// Resync all contents for all blog
+// Resync all terms for all blog
 foreach ( $blog_ids as $_blog_id ) {
 	switch_to_blog( $_blog_id );
 
@@ -69,9 +69,29 @@ foreach ( $blog_ids as $_blog_id ) {
 	BEA_CSF_Multisite::sync_all_terms( array(), array(), true );
 	printf( "Finish synchronizing terms for blog %s\n", $_blog_id );
 
+	restore_current_blog();
+}
+
+
+// Resync all attachments for all blog
+foreach ( $blog_ids as $_blog_id ) {
+	switch_to_blog( $_blog_id );
+
+	printf( "Switch to blog %s\n", $_blog_id );
+
 	// Attachments
 	BEA_CSF_Multisite::sync_all_attachments( array(), true );
 	printf( "Finish synchronizing attachments for blog %s\n", $_blog_id );
+
+	restore_current_blog();
+}
+
+
+// Resync all posts for all blog
+foreach ( $blog_ids as $_blog_id ) {
+	switch_to_blog( $_blog_id );
+
+	printf( "Switch to blog %s\n", $_blog_id );
 
 	// Posts
 	BEA_CSF_Multisite::sync_all_posts( array(), true );
