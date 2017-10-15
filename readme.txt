@@ -1,2 +1,2 @@
-Tested up to: 4.4.3
-Stable tag: 1.2.0
+Tested up to: 4.8.2
+Stable tag: 3.0.4
