@@ -7,6 +7,10 @@ Manage content synchronisation across a WordPress multisite.
 
 Compatible up to WordPress 4.9.x
 
+## Requirements
+
+Require at least WordPress 4.6.x in order to use the `WP_Site_Query`.
+
 ## Changelog
 
 ### 3.0.5 - 06-07 oct. 2017
