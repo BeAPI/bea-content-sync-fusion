@@ -85,7 +85,6 @@ if ( is_admin() ) {
 // Plugin activate/desactive hooks
 register_activation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'deactivate' ) );
-add_action( 'wpmu_new_blog', array( 'BEA_CSF_Plugin', 'wpmu_new_blog' ) );
 
 // Init !
 add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );

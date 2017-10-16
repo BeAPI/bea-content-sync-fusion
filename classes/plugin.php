@@ -1,6 +1,4 @@
-<?php
-
-class BEA_CSF_Plugin {
+<?php class BEA_CSF_Plugin {
 
 	public static function activate() {
 		self::create_relations_table();
@@ -142,12 +140,7 @@ class BEA_CSF_Plugin {
 		return 'created';
 	}
 
-	public static function deactivate() {
-
-	}
-
-	public static function wpmu_new_blog() {
-	}
+	public static function deactivate() {}
 
 	/**
 	 * Get post ID from post meta with meta_key and meta_value
