@@ -3,17 +3,25 @@ BEA Content Sync Fusion
 
 Manage content synchronisation across a WordPress multisite.
 
+## Requirements
+
+* WordPress should be installed as [multisite](https://codex.wordpress.org/Create_A_Network) one.
+* Require at least WordPress 4.6.x, in order to use the `WP_Site_Query`.
+
 ## Compatibility
 
 Compatible up to WordPress 4.9.x
 
-## Requirements
+### Third plugins compatibility
 
-Require at least WordPress 4.6.x in order to use the `WP_Site_Query`.
+ * [Post Types Order](https://fr.wordpress.org/plugins/post-types-order/)
 
 ## Changelog
 
-### 3.0.5 - 06-07 oct. 2017
+### 3.0.6 - 15 Oct 2017
+ * Add Post Type Order addon.
+
+### 3.0.5 - 07 Oct 2017
  * Allow content resync during blog/site creation
  * Refactoring code for all CLI tools
  * Add blog widget for counter info, and add button for force sync

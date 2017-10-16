@@ -1,11 +1,11 @@
 <?php
 /*
   Plugin Name: BEA - Content Synchronization - Fusion
-  Plugin URI: http://www.beapi.fr
-  Description: Manage content synchronization across a WordPress multisite
-  Version: 3.0.5
-  Author: BeAPI
-  Author URI: http://www.beapi.fr
+  Plugin URI: https://beapi.fr
+  Description: Manage content synchronization across a WordPress multisite.
+  Version: 3.0.6
+  Author: Be API
+  Author URI: http://beapi.fr
   Network: true
   Required WP : 4.6
 
@@ -17,7 +17,7 @@
  */
 
 // Plugin constants
-define( 'BEA_CSF_VERSION', '3.0.5' );
+define( 'BEA_CSF_VERSION', '3.0.6' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
 
@@ -47,6 +47,9 @@ define( 'BEA_CSF_DIR', plugin_dir_path( __FILE__ ) );
 require( BEA_CSF_DIR . 'classes/plugin.php' );
 require( BEA_CSF_DIR . 'classes/client.php' );
 require( BEA_CSF_DIR . 'classes/multisite.php' );
+
+// Plugins addons
+require( BEA_CSF_DIR . 'classes/addons/post-types-order.php' );
 
 // Functions various
 require( BEA_CSF_DIR . 'functions/api.php' );
@@ -82,7 +85,6 @@ if ( is_admin() ) {
 // Plugin activate/desactive hooks
 register_activation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'activate' ) );
 register_deactivation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'deactivate' ) );
-add_action( 'wpmu_new_blog', array( 'BEA_CSF_Plugin', 'wpmu_new_blog' ) );
 
 // Init !
 add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );
@@ -96,6 +98,9 @@ function init_bea_content_sync_fusion() {
 	// Server
 	new BEA_CSF_Client();
 	new BEA_CSF_Multisite();
+
+	// Addons
+	new BEA_CSF_Addon_Post_Types_Order();
 
 	// Admin
 	if ( is_admin() ) {
