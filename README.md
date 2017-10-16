@@ -5,7 +5,7 @@ Manage content synchronisation across a WordPress multisite.
 
 ## Requirements
 
-* WordPress should be installed as [multisite](https://codex.wordpress.org/Create_A_Network) one.
+* WordPress should be installed as [multisite](https://codex.wordpress.org/Create_A_Network).
 * Require at least WordPress 4.6.x, in order to use the `WP_Site_Query`.
 
 ## Compatibility
