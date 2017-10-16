@@ -15,6 +15,7 @@ class BEA_CSF_Addon_Post_Types_Order {
 
 	/**
 	 * On ajax menu_order update, prefer update the post for CSF to be hooked
+	 * Also check if menu order has changed, to not load the CSF queue for nothing
 	 *
 	 * @param array $data : only contains the menu_order
 	 * @param $key
@@ -33,7 +34,6 @@ class BEA_CSF_Addon_Post_Types_Order {
 		// Get post's menu order to compare with the given one
 		$menu_order = get_post_field( 'menu_order', $post_id );
 		if ( empty( $menu_order ) || $menu_order == $data['menu_order'] ) {
-			// If same, early return
 			return $data;
 		}
 
