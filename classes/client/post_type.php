@@ -125,10 +125,10 @@ class BEA_CSF_Client_PostType {
 				update_post_meta( $new_post_id, '_thumbnail_id', $media_id );
 			}
 		}
-
+		
 		// Set P2P connections
-		if ( isset($post['connections']) && !empty($post['connections']) ) {
-			foreach( (array) $post['connections'] as $connection ) {
+		if ( isset($data['connections']) && !empty($data['connections']) ) {
+			foreach( (array) $data['connections'] as $connection ) {
 				$connection['blogid'] = $data['blogid'];
 				BEA_CSF_Client_P2P::merge( $connection, $sync_fields );
 			}
@@ -138,7 +138,7 @@ class BEA_CSF_Client_PostType {
 		if ( ! empty( $new_post ) ) {
 			$new_post->is_edition = ( ! empty( $local_id ) && (int) $local_id ) ? true : false;
 		}
-
+		
 		return apply_filters( 'bea_csf.client.posttype.merge', $data, $sync_fields, $new_post );
 	}
 
