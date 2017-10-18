@@ -10,6 +10,7 @@ class BEA_CSF_Server_P2P {
 	 */
 	public static function merge( $connection_id, array $sync_fields ) {
 		$connection = (array) p2p_get_connection( $connection_id );
+		$connection['p2p_obj'] = p2p_type( $connection['p2p_type'] );
 
 		return apply_filters( 'bea_csf.server.p2p.merge', $connection, $sync_fields );
 	}
@@ -23,6 +24,7 @@ class BEA_CSF_Server_P2P {
 	 */
 	public static function delete( $connection_id, array $sync_fields ) {
 		$connection = (array) p2p_get_connection( $connection_id );
+		$connection['p2p_obj'] = p2p_type( $connection['p2p_type'] );
 
 		return apply_filters( 'bea_csf.server.p2p.delete', $connection, $sync_fields );
 	}
