@@ -151,15 +151,9 @@ class BEA_CSF_Multisite {
 	 */
 	public static function sync_all_posts( $args = array(), $verbose = false ) {
 		global $wp_post_types;
-		$post_types = array();
-		if ( ! empty( $wp_post_types ) ) {
-			foreach ( $wp_post_types as $post_type => $value ) {
-				$post_types[] = $post_type;
-			}
-		}
 
 		$default_args = array(
-			'post_type'              => $post_types,
+			'post_type'              => array_keys( $wp_post_types ),
 			'post_status'            => 'any',
 			'nopaging'               => true,
 			'update_post_meta_cache' => false,
