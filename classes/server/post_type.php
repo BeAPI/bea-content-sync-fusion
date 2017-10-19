@@ -106,11 +106,11 @@ class BEA_CSF_Server_PostType {
 
 		// Get P2P connections
 		if ( defined('P2P_PLUGIN_VERSION') ) {
-			$results = (array) $wpdb->get_col( $wpdb->prepare("SELECT p2p_id FROM $wpdb->p2p WHERE p2p_from = %d OR p2p_to = %d", $post['ID'], $post['ID']) );
+			$results = (array) $wpdb->get_results( $wpdb->prepare("SELECT * FROM $wpdb->p2p WHERE p2p_from = %d OR p2p_to = %d", $post['ID'], $post['ID']) );
 
 			$post['connections'] = array();
-			foreach( $results as $result_id ) {
-				$post['connections'][] = BEA_CSF_Server_P2P::merge( $result_id, $sync_fields );
+			foreach( $results as $result ) {
+				$post['connections'][] = BEA_CSF_Server_P2P::merge( $result, $sync_fields );
 			}
 		}
 
