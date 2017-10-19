@@ -45,6 +45,7 @@ class BEA_CSF_Async {
 			if ( false === $data_to_transfer ) {
 				// Remove from queue
 				self::delete( $sync->id );
+
 				continue;
 			}
 
@@ -56,7 +57,7 @@ class BEA_CSF_Async {
 			if ( false === $blog_data ) {
 				// Remove from queue
 				self::delete( $sync->id );
-
+				
 				continue;
 			}
 
