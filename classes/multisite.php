@@ -1,4 +1,5 @@
 <?php
+
 class BEA_CSF_Multisite {
 	protected static $sync_blog_id;
 
@@ -66,16 +67,18 @@ class BEA_CSF_Multisite {
 			if ( true === $verbose ) {
 				printf( "No taxinomies found\n" );
 			}
+
 			return false;
 		}
 
 		// Get terms objects
-		$terms_args = wp_parse_args( $terms_args, array('hide_empty' => false) );
-		$results = get_terms( array_keys( $taxonomies ), $terms_args );
+		$terms_args = wp_parse_args( $terms_args, array( 'hide_empty' => false ) );
+		$results    = get_terms( array_keys( $taxonomies ), $terms_args );
 		if ( is_wp_error( $results ) || empty( $results ) ) {
 			if ( true === $verbose ) {
-				printf( "No terms found for taxonomies : %s\n", implode(',', array_keys( $taxonomies )) );
+				printf( "No terms found for taxonomies : %s\n", implode( ',', array_keys( $taxonomies ) ) );
 			}
+
 			return false;
 		}
 
@@ -102,21 +105,22 @@ class BEA_CSF_Multisite {
 	 */
 	public static function sync_all_attachments( $args = array(), $verbose = false ) {
 		$default_args = array(
-			'post_type' => 'attachment',
-			'post_status' => 'any',
-			'nopaging' => true,
+			'post_type'              => 'attachment',
+			'post_status'            => 'any',
+			'nopaging'               => true,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
-			'no_found_rows' => true,
-			'cache_results' => false
+			'no_found_rows'          => true,
+			'cache_results'          => false
 		);
 
-		$args = wp_parse_args( $args, $default_args );
+		$args    = wp_parse_args( $args, $default_args );
 		$results = get_posts( $args );
 		if ( empty( $results ) ) {
 			if ( true === $verbose ) {
 				printf( "No attachment found\n" );
 			}
+
 			return false;
 		}
 
@@ -135,7 +139,7 @@ class BEA_CSF_Multisite {
 
 			do_action( 'edit_attachment', $result->ID );
 		}
-		
+
 		return true;
 	}
 
@@ -146,22 +150,25 @@ class BEA_CSF_Multisite {
 	 * @return bool
 	 */
 	public static function sync_all_posts( $args = array(), $verbose = false ) {
+		global $wp_post_types;
+
 		$default_args = array(
-			'post_type' => 'any',
-			'post_status' => 'any',
-			'nopaging' => true,
+			'post_type'              => array_keys( $wp_post_types ),
+			'post_status'            => 'any',
+			'nopaging'               => true,
 			'update_post_meta_cache' => false,
 			'update_post_term_cache' => false,
-			'no_found_rows' => true,
-			'cache_results' => false
+			'no_found_rows'          => true,
+			'cache_results'          => false
 		);
 
-		$args = wp_parse_args( $args, $default_args );
+		$args    = wp_parse_args( $args, $default_args );
 		$results = get_posts( $args );
 		if ( empty( $results ) ) {
 			if ( true === $verbose ) {
 				printf( "No posts found for post_type %s\n", $args['post_type'] );
 			}
+
 			return false;
 		}
 
@@ -195,12 +202,13 @@ class BEA_CSF_Multisite {
 		global $wpdb;
 
 		$args = wp_parse_args( $args, array() );
-		
+
 		$results = (array) $wpdb->get_col( "SELECT p2p_id FROM $wpdb->p2p" );
 		if ( empty( $results ) ) {
 			if ( true === $verbose ) {
 				printf( "No P2P connection found" );
 			}
+
 			return false;
 		}
 
