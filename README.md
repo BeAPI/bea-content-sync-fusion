@@ -18,6 +18,10 @@ Compatible up to WordPress 4.9.x
 
 ## Changelog
 
+### 3.0.7 - 20 Oct 2017
+ * Fix P2P synchronisation
+ * Fix resync all content tools for CPT excluded from search
+
 ### 3.0.6 - 15 Oct 2017
  * Add Post Type Order addon.
 
