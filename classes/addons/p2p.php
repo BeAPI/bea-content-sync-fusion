@@ -1,21 +1,93 @@
-<?php
+<?php class BEA_CSF_Addon_P2P_Server {
 
-class BEA_CSF_Client_P2P {
-	/*
-	array (
+	function __construct() {
+		add_filter( 'bea_csf.server.posttype.get_data', [ $this, 'get_connections' ], 10, 2 );
+	}
+
+	/**
+	 * Get P2P connections
+	 *
+	 */
+	public function get_connections( $post, $sync_fields ) {
+		global $wpdb;
+		$results = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->p2p WHERE p2p_from = %d OR p2p_to = %d", $post['ID'], $post['ID'] ) );
+
+		$post['connections'] = array();
+		foreach ( $results as $result ) {
+			$post['connections'][] = $this->merge( $result, $sync_fields );
+		}
+	}
+
+	/**
+	 * Create connection
+	 *
+	 * @param  stdClass $connection [description]
+	 * @param  array $sync_fields [description]
+	 *
+	 * @return array                [description]
+	 */
+	public function merge( $connection, array $sync_fields ) {
+		$data            = (array) $connection;
+		$data['p2p_obj'] = p2p_type( $data['p2p_type'] );
+
+		return apply_filters( 'bea_csf.server.p2p.merge', $data, $sync_fields );
+	}
+
+	/**
+	 * Delete a connection, take the master id, try to find the new ID and delete local connection
+	 *
+	 * @param  stdClass $connection [description]
+	 * @param  array $sync_fields [description]
+	 *
+	 * @return array                [description]
+	 */
+	public static function delete( $connection, array $sync_fields ) {
+		// TODO : is this used anywhere ?
+
+		$data            = (array) $connection;
+		$data['p2p_obj'] = p2p_type( $data['p2p_type'] );
+
+		return apply_filters( 'bea_csf.server.p2p.delete', $data, $sync_fields );
+	}
+}
+
+class BEA_CSF_Addon_P2P_Client {
+	/* 	array (
 	  'p2p_id' => '7',
 	  'p2p_from' => '104',
 	  'p2p_to' => '29',
 	  'p2p_type' => 'establishment_to_ambassador',
 	  'blogid' => 1,
-	)
-	*/
+	) */
+
+	function __construct() {
+		add_action( 'bea_csf.client.posttype.merge', [ $this, 'set_p2p_connection' ], 10, 3 );
+	}
+
+	/**
+	 * Set P2P connections
+	 *
+	 * @author Maxime CULEA
+	 *
+	 * @param $data
+	 * @param $sync_fields
+	 * @param $new_post
+	 */
+	public function set_p2p_connection( $data, $sync_fields, $new_post ) {
+		if ( ! isset( $data['connections'] ) || empty( $data['connections'] ) ) {
+			return;
+		}
+
+		foreach ( (array) $data['connections'] as $connection ) {
+			$connection['blogid'] = $data['blogid'];
+			$this->merge( $connection, $sync_fields );
+		}
+	}
 
 	/**
 	 * Add connection on DB
 	 */
-	public static function merge( array $data, array $sync_fields ) {
-
+	public function merge( array $data, array $sync_fields ) {
 		// P2P Type must be sync ?
 		if ( ! in_array( $data['p2p_type'], $sync_fields['p2p_connections'] ) ) {
 			return false;
@@ -32,7 +104,7 @@ class BEA_CSF_Client_P2P {
 			$role = isset( $data['p2p_obj']->side['from']->query_vars['role'] ) ? $data['p2p_obj']->side['from']->query_vars['role'] : 'subscriber';
 
 			// Try to user to blog (if need) and set right role for this connection
-			self::maybe_add_user_to_current_blog( $p2p_from_local, $role );
+			$this->maybe_add_user_to_current_blog( $p2p_from_local, $role );
 		}
 
 		// To (post/users)
@@ -46,7 +118,7 @@ class BEA_CSF_Client_P2P {
 			$role = isset( $data['p2p_obj']->side['to']->query_vars['role'] ) ? $data['p2p_obj']->side['to']->query_vars['role'] : 'subscriber';
 
 			// Try to user to blog (if need) and set right role for this connection
-			self::maybe_add_user_to_current_blog( $p2p_to_local, $role );
+			$this->maybe_add_user_to_current_blog( $p2p_to_local, $role );
 		}
 
 		// If from or empty not exists, stop process
@@ -55,9 +127,7 @@ class BEA_CSF_Client_P2P {
 		}
 
 		// Create connection
-		p2p_type( $data['p2p_type'] )->connect( $p2p_from_local, $p2p_to_local, array(
-			'date' => current_time( 'mysql' ),
-		) );
+		return p2p_type( $data['p2p_type'] )->connect( $p2p_from_local, $p2p_to_local, [ 'date' => current_time( 'mysql' ) ] );
 	}
 
 	/**
@@ -68,6 +138,7 @@ class BEA_CSF_Client_P2P {
 	 * @return \WP_Error|boolean
 	 */
 	public static function delete( array $data, array $sync_fields ) {
+		// TODO : is this used anywhere ?
 		// P2P Type must be sync ?
 		if ( ! in_array( $data['p2p_type'], $sync_fields['p2p_connections'] ) ) {
 			return false;
@@ -99,7 +170,7 @@ class BEA_CSF_Client_P2P {
 	 * @param string $prefered_role
 	 *
 	 */
-	public static function maybe_add_user_to_current_blog( $user_id, $prefered_role = 'subscriber' ) {
+	public function maybe_add_user_to_current_blog( $user_id, $prefered_role = 'subscriber' ) {
 		global $wpdb;
 
 		$blogs = get_blogs_of_user( $user_id, true );
@@ -108,12 +179,7 @@ class BEA_CSF_Client_P2P {
 		if ( ! isset( $blogs[ $wpdb->blogid ] ) ) {
 			add_user_to_blog( $wpdb->blogid, $user_id, $prefered_role );
 		} else {
-			wp_update_user( array(
-					'ID'   => $user_id,
-					'role' => $prefered_role,
-				)
-			);
+			wp_update_user( array( 'ID' => $user_id, 'role' => $prefered_role ) );
 		}
 	}
-
 }
