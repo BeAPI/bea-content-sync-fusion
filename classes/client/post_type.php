@@ -126,18 +126,12 @@ class BEA_CSF_Client_PostType {
 			}
 		}
 
-		// Set P2P connections
-		if ( isset( $data['connections'] ) && ! empty( $data['connections'] ) ) {
-			foreach ( (array) $data['connections'] as $connection ) {
-				$connection['blogid'] = $data['blogid'];
-				BEA_CSF_Client_P2P::merge( $connection, $sync_fields );
-			}
-		}
-
 		$new_post = get_post( $new_post_id );
 		if ( ! empty( $new_post ) ) {
 			$new_post->is_edition = ( ! empty( $local_id ) && (int) $local_id ) ? true : false;
 		}
+
+		do_action( 'bea_csf.client.posttype.merge', $data, $sync_fields, $new_post );
 
 		return apply_filters( 'bea_csf.client.posttype.merge', $data, $sync_fields, $new_post );
 	}
