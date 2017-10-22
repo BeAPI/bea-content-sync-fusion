@@ -49,7 +49,7 @@ require( BEA_CSF_DIR . 'classes/client.php' );
 require( BEA_CSF_DIR . 'classes/multisite.php' );
 
 // Plugins addons
-require( BEA_CSF_DIR . 'classes/addons/post-types-order.php' );
+require( BEA_CSF_DIR . 'classes/addons/addons.php' );
 
 // Functions various
 require( BEA_CSF_DIR . 'functions/api.php' );
@@ -64,13 +64,11 @@ require( BEA_CSF_DIR . 'classes/models/synchronizations.php' );
 require( BEA_CSF_DIR . 'classes/server/attachment.php' );
 require( BEA_CSF_DIR . 'classes/server/post_type.php' );
 require( BEA_CSF_DIR . 'classes/server/taxonomy.php' );
-require( BEA_CSF_DIR . 'classes/server/p2p.php' );
 
 // Library client
 require( BEA_CSF_DIR . 'classes/client/attachment.php' );
 require( BEA_CSF_DIR . 'classes/client/post_type.php' );
 require( BEA_CSF_DIR . 'classes/client/taxonomy.php' );
-require( BEA_CSF_DIR . 'classes/client/p2p.php' );
 
 // Call admin classes
 if ( is_admin() ) {
@@ -100,7 +98,7 @@ function init_bea_content_sync_fusion() {
 	new BEA_CSF_Multisite();
 
 	// Addons
-	new BEA_CSF_Addon_Post_Types_Order();
+	new BEA_CSF_Addons();
 
 	// Admin
 	if ( is_admin() ) {
