@@ -104,17 +104,7 @@ class BEA_CSF_Server_PostType {
 			$post['medias'][] = BEA_CSF_Server_Attachment::get_data( $attachment );
 		}
 
-		// Get P2P connections
-		if ( defined('P2P_PLUGIN_VERSION') ) {
-			$results = (array) $wpdb->get_results( $wpdb->prepare("SELECT * FROM $wpdb->p2p WHERE p2p_from = %d OR p2p_to = %d", $post['ID'], $post['ID']) );
-
-			$post['connections'] = array();
-			foreach( $results as $result ) {
-				$post['connections'][] = BEA_CSF_Server_P2P::merge( $result, $sync_fields );
-			}
-		}
-
-		return $post;
+		return add_filter( 'bea_csf.server.posttype.get_data', $post, $sync_fields );
 	}
 
 }
