@@ -3,7 +3,7 @@
   Plugin Name: BEA - Content Synchronization - Fusion
   Plugin URI: https://beapi.fr
   Description: Manage content synchronization across a WordPress multisite.
-  Version: 3.0.7
+  Version: 3.0.8
   Author: Be API
   Author URI: http://beapi.fr
   Network: true
@@ -12,12 +12,11 @@
   Copyright 2013-2017 - Be API Team (technique@beapi.fr)
   
   TODO :
-	Unlink relation from receivers
 	AJAX Taxo for Sync edition
  */
 
 // Plugin constants
-define( 'BEA_CSF_VERSION', '3.0.7' );
+define( 'BEA_CSF_VERSION', '3.0.8' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
 
@@ -77,6 +76,7 @@ if ( is_admin() ) {
 	require( BEA_CSF_DIR . 'classes/admin/admin-blog.php' );
 	require( BEA_CSF_DIR . 'classes/admin/admin-synchronizations-network.php' );
 	require( BEA_CSF_DIR . 'classes/admin/admin-metaboxes.php' );
+	require( BEA_CSF_DIR . 'classes/admin/admin-client-metaboxes.php' );
 	require( BEA_CSF_DIR . 'classes/admin/admin-restrictions.php' );
 	require( BEA_CSF_DIR . 'classes/admin/admin-terms.php' );
 	require( BEA_CSF_DIR . 'classes/admin/admin-terms-metaboxes.php' );
@@ -106,6 +106,7 @@ function init_bea_content_sync_fusion() {
 	if ( is_admin() ) {
 		new BEA_CSF_Admin_Synchronizations_Network();
 		new BEA_CSF_Admin_Metaboxes();
+		new BEA_CSF_Admin_Client_Metaboxes();
 		new BEA_CSF_Admin_Restrictions();
 		new BEA_CSF_Admin_Terms();
 		new BEA_CSF_Admin_Terms_Metaboxes();

@@ -18,6 +18,10 @@ Compatible up to WordPress 4.9.x
 
 ## Changelog
 
+### 3.0.8 - 30 Oct 2017
+ * Feature: Allow to exclude a content for future updates, useful when restriction is deactivated
+
+
 ### 3.0.7 - 20 Oct 2017
  * Fix P2P synchronisation
  * Fix resync all content tools for CPT excluded from search
