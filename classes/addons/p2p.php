@@ -1,5 +1,4 @@
 <?php class BEA_CSF_Addon_P2P_Server {
-
 	function __construct() {
 		add_filter( 'bea_csf.server.posttype.get_data', [ $this, 'get_connections' ], 10, 2 );
 	}
@@ -52,16 +51,29 @@
 }
 
 class BEA_CSF_Addon_P2P_Client {
-	/* 	array (
-	  'p2p_id' => '7',
-	  'p2p_from' => '104',
-	  'p2p_to' => '29',
-	  'p2p_type' => 'establishment_to_ambassador',
-	  'blogid' => 1,
-	) */
-
+	/**
+	 * The connection looks like :
+	 * array (
+	 *  'p2p_id'    => '7',
+	 *  'p2p_from'  => '104',
+	 *  'p2p_to'    => '29',
+	 *  'p2p_type'  => 'establishment_to_ambassador',
+	 *  'blogid'    => 1
+	 * )
+	 */
 	function __construct() {
-		add_action( 'bea_csf.client.posttype.merge', [ $this, 'set_p2p_connection' ], 10, 3 );
+		add_action( 'bea_csf.client.posttype.merge', array( $this, 'set_p2p_connection' ), 10, 3 );
+
+		// P2P Client
+		add_action( 'p2p_created_connection', array( $this, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
+		add_action( 'p2p_delete_connections', array( __CLASS__, 'p2p_delete_connections' ), PHP_INT_MAX, 1 );
+
+		add_action( 'bea/csf/client/unregister_hooks', array( 'unregister_hooks' ) );
+	}
+
+	public function unregister_hooks() {
+		remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
+		remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX, 1 );
 	}
 
 	/**
@@ -181,5 +193,44 @@ class BEA_CSF_Addon_P2P_Client {
 		} else {
 			wp_update_user( array( 'ID' => $user_id, 'role' => $prefered_role ) );
 		}
+	}
+
+	/**
+	 * @param int $p2p_id
+	 *
+	 * @return bool
+	 */
+	public function p2p_created_connection( $p2p_id = 0 ) {
+		global $wpdb;
+
+		$connection = p2p_get_connection( (int) $p2p_id );
+		if ( false === $connection ) {
+			return false;
+		}
+
+		do_action( 'bea-csf/P2P/merge/' . $connection->p2p_type . '/' . $wpdb->blogid, $connection, false, false, false );
+
+		return true;
+	}
+
+	/**
+	 * @param array $p2p_ids
+	 *
+	 * @return bool
+	 */
+	public function p2p_delete_connections( $p2p_ids = array() ) {
+		global $wpdb;
+
+		$p2p_ids = (array) $p2p_ids;
+		foreach ( $p2p_ids as $p2p_id ) {
+			$connection = p2p_get_connection( (int) $p2p_id );
+			if ( false === $connection ) {
+				continue;
+			}
+
+			do_action( 'bea-csf/P2P/delete/' . $connection->p2p_type . '/' . $wpdb->blogid, $connection, false, false, false );
+		}
+
+		return true;
 	}
 }

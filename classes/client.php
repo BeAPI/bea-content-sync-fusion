@@ -31,10 +31,6 @@ class BEA_CSF_Client {
 		add_action( 'create_term', array( __CLASS__, 'merge_term' ), 990, 3 );
 		add_action( 'edited_term', array( __CLASS__, 'merge_term' ), 990, 3 );
 		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), 990, 3 );
-
-		// P2P
-		add_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
-		add_action( 'p2p_delete_connections', array( __CLASS__, 'p2p_delete_connections' ), PHP_INT_MAX, 1 );
 	}
 
 	public static function unregister_hooks() {
@@ -62,9 +58,7 @@ class BEA_CSF_Client {
 		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX, 3 );
 		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX, 3 );
 
-		// P2P
-		remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
-		remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX, 1 );
+		do_action( 'bea/csf/client/unregister_hooks' );
 	}
 
 	/**
@@ -249,45 +243,6 @@ class BEA_CSF_Client {
 		}
 
 		do_action( 'bea-csf/PostType/delete/' . $post->post_type . '/' . $wpdb->blogid, $post, false, false, false );
-
-		return true;
-	}
-
-	/**
-	 * @param int $p2p_id
-	 *
-	 * @return bool
-	 */
-	public static function p2p_created_connection( $p2p_id = 0 ) {
-		global $wpdb;
-
-		$connection = p2p_get_connection( (int) $p2p_id );
-		if ( false === $connection ) {
-			return false;
-		}
-
-		do_action( 'bea-csf/P2P/merge/' . $connection->p2p_type . '/' . $wpdb->blogid, $connection, false, false, false );
-
-		return true;
-	}
-
-	/**
-	 * @param array $p2p_ids
-	 *
-	 * @return bool
-	 */
-	public static function p2p_delete_connections( $p2p_ids = array() ) {
-		global $wpdb;
-
-		$p2p_ids = (array) $p2p_ids;
-		foreach ( $p2p_ids as $p2p_id ) {
-			$connection = p2p_get_connection( (int) $p2p_id );
-			if ( false === $connection ) {
-				continue;
-			}
-
-			do_action( 'bea-csf/P2P/delete/' . $connection->p2p_type . '/' . $wpdb->blogid, $connection, false, false, false );
-		}
 
 		return true;
 	}
