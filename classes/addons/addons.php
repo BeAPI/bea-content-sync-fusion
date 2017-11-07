@@ -5,8 +5,7 @@
 		// Conditionally load P2P classes
 		if ( defined( 'P2P_PLUGIN_VERSION' ) ) {
 			require( BEA_CSF_DIR . 'classes/addons/p2p.php' );
-			new BEA_CSF_Addon_P2P_Server();
-			new BEA_CSF_Addon_P2P_Client();
+			new BEA_CSF_Addon_P2P();
 		}
 
 		// Conditionally load post types order class
