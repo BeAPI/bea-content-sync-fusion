@@ -72,7 +72,6 @@ foreach ( $blog_ids as $_blog_id ) {
 	restore_current_blog();
 }
 
-
 // Resync all attachments for all blog
 foreach ( $blog_ids as $_blog_id ) {
 	switch_to_blog( $_blog_id );
@@ -86,31 +85,7 @@ foreach ( $blog_ids as $_blog_id ) {
 	restore_current_blog();
 }
 
-// Resync all posts for all blog
-foreach ( $blog_ids as $_blog_id ) {
-	switch_to_blog( $_blog_id );
-
-	printf( "Switch to blog %s\n", $_blog_id );
-
-	// Posts
-	BEA_CSF_Multisite::sync_all_posts( array(), true );
-	printf( "Finish synchronizing posts for blog %s\n", $_blog_id );
-
-	restore_current_blog();
-}
-
-// Resync all P2P syncs for all blog
-foreach ( $blog_ids as $_blog_id ) {
-	switch_to_blog( $_blog_id );
-
-	printf( "Switch to blog %s\n", $_blog_id );
-
-	// Posts
-	BEA_CSF_Multisite::sync_all_p2p_connections( array(), true );
-	printf( "Finish synchronizing synchronizations for blog %s\n", $_blog_id );
-
-	restore_current_blog();
-}
+do_action( 'bea/csf/tools/resync_all' );
 
 printf( "Finish sync all network contents !\n" );
 die();
