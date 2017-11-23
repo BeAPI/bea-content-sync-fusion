@@ -13,3 +13,5 @@ wp-content/backups/
 sitemap.xml
 sitemap.xml.gz
 sftp-config.json
+.idea/
+.idea
