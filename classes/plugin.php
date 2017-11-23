@@ -23,7 +23,7 @@
             `custom_flag` BOOLEAN NOT NULL , 
             `custom_fields` TEXT NOT NULL,
             PRIMARY KEY (id), 
-            UNIQUE KEY `type_emitter_receiver` (`type`(255), `emitter_blog_id`, `emitter_id`, `receiver_blog_id`, `receiver_id`)
+            UNIQUE KEY `type_emitter_receiver` (`type`(191), `emitter_blog_id`, `emitter_id`, `receiver_blog_id`, `receiver_id`)
         );";
 
 		if ( ! function_exists( 'dbDelta' ) ) {
@@ -62,7 +62,7 @@
             `receiver_blog_id` BIGINT(20),
             `fields` TEXT NOT NULL,
             PRIMARY KEY (id),
-            UNIQUE KEY `unicity_key` (`hook_data`(255),`current_filter`(255),`receiver_blog_id`)
+            UNIQUE KEY `unicity_key` (`hook_data`(191),`current_filter`(191),`receiver_blog_id`)
         );";
 
 		/**
@@ -106,7 +106,7 @@
             `receiver_blog_id` BIGINT(20),
             `fields` TEXT NOT NULL,
             PRIMARY KEY (id),
-            UNIQUE KEY `unicity_key` (`hook_data`(255),`current_filter`(255),`receiver_blog_id`)
+            UNIQUE KEY `unicity_key` (`hook_data`(191),`current_filter`(191),`receiver_blog_id`)
         );";
 
 		/**
