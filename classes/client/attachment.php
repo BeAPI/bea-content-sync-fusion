@@ -37,66 +37,69 @@ class BEA_CSF_Client_Attachment {
 	 * @param array $data
 	 * @param array $sync_fields
 	 *
-	 * @return int
+	 * @return array[WP_Error
 	 */
 	public static function merge( array $data, array $sync_fields ) {
 		if ( empty( $data ) || ! is_array( $data ) ) {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
+		// Translate for current media ID
 		$current_media_id = BEA_CSF_Relations::get_object_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
 
-		// Parent media ?
-		$current_master_parent_id = BEA_CSF_Relations::get_object_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
-		$current_master_parent_id = ! empty( $current_master_parent_id ) && (int) $current_master_parent_id > 0 ? (int) $current_master_parent_id : 0;
+		// Find local parent ?
+		if ( isset( $data['post_parent'] ) ) {
+			$current_parent_id   = BEA_CSF_Relations::get_object_for_any( 'attachment', $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'], $data['post_parent'] );
+			$data['post_parent'] = ! empty( $current_parent_id ) && (int) $current_parent_id > 0 ? $current_parent_id : 0;
+		}
+
+		// Clone data for post insertion
+		$data_for_post = $data;
+		unset( $data_for_post['taxonomies'], $data_for_post['terms'], $data_for_post['post_custom'], $data_for_post['metadata'] );
 
 		// Merge or add ?
 		if ( ! empty( $current_media_id ) && (int) $current_media_id > 0 ) { // Edit, update only main fields
-			$updated_datas                   = array();
-			$updated_datas['ID']             = $current_media_id;
-			$updated_datas['post_title']     = $data['post_title'];
-			$updated_datas['post_content']   = $data['post_content'];
-			$updated_datas['post_excerpt']   = $data['post_excerpt'];
-			$updated_datas['post_mime_type'] = $data['post_mime_type'];
-			$updated_datas['post_parent']    = $current_master_parent_id;
 
-			wp_update_post( $updated_datas );
-
-			// update all meta
-			self::post_metas( $current_media_id, $data['post_custom'] );
-
-			BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $current_media_id );
-
-			do_action( 'bea_csf.client_attachment_after_update', $current_media_id, $data['attachment_dir'], $current_master_parent_id, $data );
-		} else { // Insert with WP media public static function
-
-			// Stock main fields from server
-			$updated_datas                   = array();
-			$updated_datas['post_title']     = $data['post_title'];
-			$updated_datas['post_content']   = $data['post_content'];
-			$updated_datas['post_excerpt']   = $data['post_excerpt'];
-			$updated_datas['post_type']      = 'attachment';
-			$updated_datas['post_mime_type'] = $data['post_mime_type'];
-			$new_media_id                    = wp_insert_post( $updated_datas );
-
-			if ( ! is_wp_error( $new_media_id ) && $new_media_id > 0 ) {
-
-				// update all meta
-				self::post_metas( $new_media_id, $data['post_custom'] );
-
-				BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $new_media_id );
-
-				// For return
-				$current_media_id = $new_media_id;
-
-				do_action( 'bea_csf.client_attachment_after_insert', $current_media_id, $data['attachment_dir'], $current_master_parent_id, $data );
+			$data_for_post['ID'] = $current_media_id;
+			$new_media_id       = wp_update_post( $data_for_post );
+			if ( is_wp_error( $new_media_id ) || $new_media_id === 0 ) {
+				return new WP_Error( 'invalid_datas', 'Error - An fatal error occurred during attachment insertion.' );
 			}
 
+			do_action( 'bea_csf.client_attachment_after_update', $current_media_id, $data['attachment_dir'], $data['post_parent'], $data );
+
+		} else { // Insert with WP media public static function
+
+			$data_for_post['import_id'] = $data_for_post['ID'];
+			unset( $data_for_post['ID'] );
+			$new_media_id = wp_insert_post( $data_for_post );
+			if ( is_wp_error( $new_media_id ) || $new_media_id === 0 ) {
+				return new WP_Error( 'invalid_datas', 'Error - An fatal error occurred during attachment insertion.' );
+			}
+
+			do_action( 'bea_csf.client_attachment_after_insert', $new_media_id, $data['attachment_dir'], $data['post_parent'], $data );
+
+		}
+
+
+		// Append to relations table
+		BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $new_media_id );
+
+		// Save all metas for new post
+		if ( isset( $data['meta_data'] ) && is_array( $data['meta_data'] ) && ! empty( $data['meta_data'] ) ) {
+			foreach ( $data['meta_data'] as $key => $values ) {
+				if ( count( $values ) > 1 || ! isset( $values[0] ) ) {
+					// TODO: Management exception, SO RARE in WP !
+					continue;
+				} else {
+					update_post_meta( $new_media_id, $key, $values[0] );
+				}
+			}
 		}
 
 		// Clean data for each taxonomy
 		if ( isset( $data['taxonomies'] ) ) {
-			wp_delete_object_term_relationships( $current_media_id, $data['taxonomies'] );
+			wp_delete_object_term_relationships( $new_media_id, $data['taxonomies'] );
 		}
 
 		// Association with terms
@@ -120,29 +123,15 @@ class BEA_CSF_Client_Attachment {
 			}
 
 			foreach ( $term_ids as $taxonomy => $local_term_ids ) {
-				wp_set_object_terms( $current_media_id, $local_term_ids, $taxonomy, false );
+				wp_set_object_terms( $new_media_id, $local_term_ids, $taxonomy, false );
 			}
 		}
 
-		return apply_filters( 'bea_csf.client.attachment.merge', $current_media_id );
-	}
-
-	/**
-	 * @param $media_id
-	 * @param $metas
-	 *
-	 * @return bool
-	 * @author Alexandre Sadowski
-	 */
-	public static function post_metas( $media_id, $metas ) {
-		if ( ! is_array( $metas ) ) {
-			return false;
+		$new_attachment = get_post( $new_media_id );
+		if ( ! empty( $new_attachment ) ) {
+			$new_attachment->is_edition = ( ! empty( $current_media_id ) && (int) $current_media_id > 0 ) ? true : false;
 		}
 
-		foreach ( $metas as $key_field => $value_field ) {
-			foreach ( $value_field as $key => $value ) {
-				update_post_meta( $media_id, $key_field, maybe_unserialize( $value ) );
-			}
-		}
+		return apply_filters( 'bea_csf.client.attachment.merge', $data, $sync_fields, $new_attachment );
 	}
 }

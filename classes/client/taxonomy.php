@@ -3,38 +3,43 @@
 class BEA_CSF_Client_Taxonomy {
 
 	/**
-	 * Add term on DB
+	 * Insert or merge term on client database
+	 *
+	 * @param array $data
+	 * @param array $sync_fields
+	 *
+	 * @return mixed|WP_Error
 	 */
-	public static function merge( array $term, array $sync_fields ) {
+	public static function merge( array $data, array $sync_fields ) {
 		global $_bea_origin_blog_id;
 
-		if ( empty( $term ) || ! is_array( $term ) ) {
+		if ( empty( $data ) || ! is_array( $data ) ) {
 			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );
 		}
 
 		// Define thius variable for skip infinite sync when emetter and receiver are reciprocal
-		$_bea_origin_blog_id = $term['blogid'];
+		$_bea_origin_blog_id = $data['blogid'];
 
-		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );
+		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['term_id'], $data['term_id'] );
 		if ( ! empty( $local_term_id ) && (int) $local_term_id > 0 ) {
-			$new_term_id = wp_update_term( $local_term_id, $term['taxonomy'], array(
-				'name'        => $term['name'],
-				'description' => $term['description'],
-				'slug'        => $term['slug'],
-				'parent'      => $term['parent'],
+			$new_term_id = wp_update_term( $local_term_id, $data['taxonomy'], array(
+				'name'        => $data['name'],
+				'description' => $data['description'],
+				'slug'        => $data['slug'],
+				'parent'      => $data['parent'],
 			) );
 		} else {
-			$new_term_id = wp_insert_term( $term['name'], $term['taxonomy'], array(
-				'description' => $term['description'],
-				'slug'        => $term['slug'],
-				'parent'      => $term['parent'],
+			$new_term_id = wp_insert_term( $data['name'], $data['taxonomy'], array(
+				'description' => $data['description'],
+				'slug'        => $data['slug'],
+				'parent'      => $data['parent'],
 			) );
 
 			// try to manage error when term already exist with the same name !
 			if ( is_wp_error( $new_term_id ) && $new_term_id->get_error_code() == 'term_exists' ) {
-				$term_exists_result = term_exists( $term['name'], $term['taxonomy'], $term['parent'] );
+				$term_exists_result = term_exists( $data['name'], $data['taxonomy'], $data['parent'] );
 				if ( false != $term_exists_result ) {
-					$local_term_id = BEA_CSF_Relations::get_object_id_for_receiver( 'taxonomy', $sync_fields['_current_receiver_blog_id'], $term['blogid'], (int) $term_exists_result['term_id'] );
+					$local_term_id = BEA_CSF_Relations::get_object_id_for_receiver( 'taxonomy', $sync_fields['_current_receiver_blog_id'], $data['blogid'], (int) $term_exists_result['term_id'] );
 					if ( ! empty( $local_term_id ) && (int) $local_term_id->emitter_id > 0 ) { // No master ID? no sync item !
 						$new_term_id = $term_exists_result;
 						update_term_meta( $term_exists_result['term_id'], 'already_exists', 1 );
@@ -61,16 +66,16 @@ class BEA_CSF_Client_Taxonomy {
 		}
 
 		// Get term object
-		$new_term_obj = get_term( $new_term_id, $term['taxonomy'] );
+		$new_term_obj = get_term( $new_term_id, $data['taxonomy'] );
 		if ( is_wp_error( $new_term_obj ) ) {
 			return new WP_Error( 'term_valid', 'Error - Term seems invalid' );
 		}
 
-		BEA_CSF_Relations::merge( 'taxonomy', $term['blogid'], $term['term_id'], $GLOBALS['wpdb']->blogid, $new_term_obj->term_id );
+		BEA_CSF_Relations::merge( 'taxonomy', $data['blogid'], $data['term_id'], $GLOBALS['wpdb']->blogid, $new_term_obj->term_id );
 
 		// Save all metas for new post
-		if ( isset( $term['meta_data'] ) && is_array( $term['meta_data'] ) && ! empty( $term['meta_data'] ) ) {
-			foreach ( $term['meta_data'] as $key => $values ) {
+		if ( isset( $data['meta_data'] ) && is_array( $data['meta_data'] ) && ! empty( $data['meta_data'] ) ) {
+			foreach ( $data['meta_data'] as $key => $values ) {
 				if ( count( $values ) > 1 || ! isset( $values[0] ) ) {
 					// TODO: Management exception, SO RARE in WP !
 					continue;
@@ -80,7 +85,7 @@ class BEA_CSF_Client_Taxonomy {
 			}
 		}
 
-		return apply_filters( 'bea_csf.client.taxonomy.merge', (int) $new_term_id, $sync_fields );
+		return apply_filters( 'bea_csf.client.taxonomy.merge', $data, $sync_fields, $new_term_obj );
 	}
 
 	/**

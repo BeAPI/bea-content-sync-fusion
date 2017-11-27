@@ -68,9 +68,6 @@ class BEA_CSF_Client_PostType {
 			}
 		}
 
-		// Remove old thumb
-		delete_post_meta( $new_post_id, '_thumbnail_id' );
-
 		// Clean data for each taxonomy
 		if ( isset( $data['taxonomies'] ) ) {
 			wp_delete_object_term_relationships( $new_post_id, $data['taxonomies'] );
@@ -120,6 +117,9 @@ class BEA_CSF_Client_PostType {
 			}
 		}
 
+		// Remove old thumb
+		delete_post_meta( $new_post_id, '_thumbnail_id' );
+
 		// Restore post thumb
 		$thumbnail_id = (int) BEA_CSF_Relations::get_object_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_thumbnail_id'], $data['_thumbnail_id'] );
 		if ( empty( $thumbnail_id ) && (int) $thumbnail_id > 0 ) {
@@ -142,7 +142,7 @@ class BEA_CSF_Client_PostType {
 
 		$new_post = get_post( $new_post_id );
 		if ( ! empty( $new_post ) ) {
-			$new_post->is_edition = ( ! empty( $local_id ) && (int) $local_id ) ? true : false;
+			$new_post->is_edition = ( ! empty( $local_id ) && (int) $local_id > 0 ) ? true : false;
 		}
 
 		return apply_filters( 'bea_csf.client.posttype.merge', $data, $sync_fields, $new_post );
