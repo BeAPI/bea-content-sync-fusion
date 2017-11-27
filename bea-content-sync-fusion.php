@@ -49,6 +49,7 @@ require( BEA_CSF_DIR . 'classes/multisite.php' );
 
 // Plugins addons
 require( BEA_CSF_DIR . 'classes/addons/post-types-order.php' );
+require( BEA_CSF_DIR . 'classes/addons/advanced-custom-fields.php' );
 
 // Functions various
 require( BEA_CSF_DIR . 'functions/api.php' );
@@ -102,6 +103,7 @@ function init_bea_content_sync_fusion() {
 
 	// Addons
 	new BEA_CSF_Addon_Post_Types_Order();
+	new BEA_CSF_Addon_ACF();
 
 	// Admin
 	if ( is_admin() ) {
