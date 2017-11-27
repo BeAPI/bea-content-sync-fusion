@@ -41,7 +41,7 @@ class BEA_CSF_Admin_Restrictions {
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
 		if ( isset( $hook_suffix ) && ( 'edit.php' === $hook_suffix || 'edit-tags.php' === $hook_suffix ) ) {
 			wp_enqueue_script( 'bea-csf-admin-client', BEA_CSF_URL . 'assets/js/bea-csf-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
-			wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array(), BEA_CSF_VERSION, 'all' );
+			//wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array(), BEA_CSF_VERSION, 'all' );
 		}
 	}
 
