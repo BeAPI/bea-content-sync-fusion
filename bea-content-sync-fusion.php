@@ -98,6 +98,7 @@ function init_bea_content_sync_fusion() {
 	// Server
 	new BEA_CSF_Client();
 	new BEA_CSF_Multisite();
+	new BEA_CSF_Relations();
 
 	// Addons
 	new BEA_CSF_Addon_Post_Types_Order();

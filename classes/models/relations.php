@@ -2,6 +2,45 @@
 
 class BEA_CSF_Relations {
 	/**
+	 * BEA_CSF_Relations constructor.
+	 * Hook delete post, attachment, term, blog...
+	 *
+	 */
+	public function __construct() {
+		add_action( 'deleted_post', array(__CLASS__, 'deleted_post'), 10 );
+		add_action( 'delete_term', array(__CLASS__, 'delete_term'), 10 );
+		add_action( 'deleted_blog', array(__CLASS__, 'deleted_blog'), 10 );
+	}
+
+	/**
+	 * Delete data from relations table when post is deleted from DB
+	 *
+	 * @param integer $object_id
+	 */
+	public static function deleted_post( $object_id ) {
+		self::delete_by_object_id( 'attachment', $object_id );
+		self::delete_by_object_id( 'posttype', $object_id );
+	}
+
+	/**
+	 * Delete data from relations table when term is deleted from DB
+	 *
+	 * @param integer $term_id
+	 */
+	public static function delete_term( $term_id ) {
+		self::delete_by_object_id( 'taxonomy', $term_id );
+	}
+
+	/**
+	 * Delete data from relations table when blog is deleted from DB
+	 *
+	 * @param integer $blog_id
+	 */
+	public static function deleted_blog( $blog_id ) {
+		self::delete_by_blog_id( $blog_id );
+	}
+
+	/**
 	 * @param $type
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
@@ -57,6 +96,8 @@ class BEA_CSF_Relations {
 	}
 
 	/**
+	 * Delete a row with this primary ID.
+	 *
 	 * @param $id
 	 *
 	 * @return mixed
@@ -67,6 +108,55 @@ class BEA_CSF_Relations {
 		/** @var WPDB $wpdb */
 
 		return $wpdb->delete( $wpdb->bea_csf_relations, array( 'id' => $id ), array( '%d' ) );
+	}
+
+	/**
+	 * Delete relation for an object_id for emitter and receiver context
+	 *
+	 * @param string $type
+	 * @param integer $object_id
+	 *
+	 * @return true
+	 */
+	public static function delete_by_object_id( $type, $object_id ) {
+		global $wpdb;
+
+		/** @var WPDB $wpdb */
+
+		$wpdb->delete( $wpdb->bea_csf_relations, array(
+			'type'            => $type,
+			'emitter_id'      => $object_id
+		), array( '%s', '%d' ) );
+
+		$wpdb->delete( $wpdb->bea_csf_relations, array(
+			'type'            => $type,
+			'receiver_id'      => $object_id
+		), array( '%s', '%d' ) );
+
+		return true;
+	}
+
+	/**
+	 * Delete data relation for a blog
+	 *
+	 * @param integer $blog_id
+	 *
+	 * @return true
+	 */
+	public static function delete_by_blog_id( $blog_id ) {
+		global $wpdb;
+
+		/** @var WPDB $wpdb */
+
+		$wpdb->delete( $wpdb->bea_csf_relations, array(
+			'emitter_blog_id'      => $blog_id
+		), array( '%d' ) );
+
+		$wpdb->delete( $wpdb->bea_csf_relations, array(
+			'receiver_blog_id'      => $blog_id
+		), array( '%d' ) );
+
+		return true;
 	}
 
 	/**
