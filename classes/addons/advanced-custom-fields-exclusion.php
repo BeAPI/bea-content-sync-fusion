@@ -3,6 +3,9 @@
 class BEA_CSF_Addon_ACF_Exclusion {
 	static $meta_data = array();
 
+	/**
+	 * BEA_CSF_Addon_ACF_Exclusion constructor.
+	 */
 	public function __construct() {
 		add_action( 'save_post', array(__CLASS__, 'save_post'), 10, 1 );
 		add_action('acf/include_field_types', array(__CLASS__, 'acf_include_field_types'), 9999999 );
@@ -44,7 +47,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 */
 	public static function acf_render_field_before( $field ) {
 		if ( in_array($field['type'], array('flexible_content', 'repeater') ) ) {
-			self::build_html_checkbox( $field );
+			self::build_html_checkbox( $field, __('Exclude this group from future synchro', 'bea-content-sync-fusion') );
 		}
 	}
 
@@ -55,11 +58,11 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 */
 	public static function acf_render_field_after( $field ) {
 		if ( !in_array($field['type'], array('flexible_content', 'repeater') ) ) {
-			self::build_html_checkbox( $field );
+			self::build_html_checkbox( $field, __('Exclude this field from future synchro', 'bea-content-sync-fusion') );
 		}
 	}
 
-	public static function build_html_checkbox( $field ) {
+	public static function build_html_checkbox( $field, $label ) {
 		//$output = ob_get_clean();
 		global $post, $wpdb;
 
@@ -72,7 +75,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		// Get current checked items
 		$current_excluded_items = get_post_meta( $post->ID, 'bea_csf_exclude', true );
 
-		echo '<label><input type="checkbox" '.checked(in_array($field['name'], (array) $current_excluded_items), true, false).' name="bea_csf_exclude[]" value="'.esc_attr($field['name']).'" />'.__('Exclude from future synchro', 'bea-content-sync-fusion').'</label>';
+		echo '<label class="bea-csf-acf-exclusion"><input type="checkbox" '.checked(in_array($field['name'], (array) $current_excluded_items), true, false).' name="bea_csf_exclude[]" value="'.esc_attr($field['name']).'" />'.$label.'</label>';
 	}
 
 	/**
@@ -107,8 +110,19 @@ class BEA_CSF_Addon_ACF_Exclusion {
 				//var_dump(count($matches[1]), $matches[1][0] );
 				if ( isset( $matches[1] ) && count( $matches[1] ) == 1 && $matches[1][0] == $raw_meta_value[0] ) { // Classic field
 
-					// acf_maybe_get_field
-					// Delete metadata from flexible/repeater
+					// Delete all metadata from flexible/repeater
+					$acf_field = acf_maybe_get_field( $raw_meta_value[0] );
+					if ( $acf_field != false && in_array($acf_field['type'], array('flexible_content', 'repeater') ) ) {
+						foreach( (array) $data['meta_data'] as $sub_meta_key => $sub_meta_value ) {
+							if ( !preg_match('/'.preg_quote($acf_field['name']) . '[\_]\d*[\_]/', $sub_meta_key) !== false ) {
+								continue;
+							}
+
+							$sub_meta_key_parent_to_delete = substr( $sub_meta_key, 1 );
+							unset( $data['meta_data'][ $sub_meta_key ], $data['meta_data'][ $sub_meta_key_parent_to_delete ] );
+
+						}
+					}
 
 					$meta_key_parent_to_delete = substr( $meta_key, 1 );
 					unset( $data['meta_data'][ $meta_key ], $data['meta_data'][ $meta_key_parent_to_delete ] );
@@ -122,6 +136,20 @@ class BEA_CSF_Addon_ACF_Exclusion {
 					}
 
 					if ( $meta_key == $translated_acf_name ) {
+						// Delete all metadata from flexible/repeater
+						$acf_field = acf_maybe_get_field( $matches[1][0] );
+						if ( $acf_field != false && in_array($acf_field['type'], array('flexible_content', 'repeater') ) ) {
+							foreach( (array) $data['meta_data'] as $sub_meta_key => $sub_meta_value ) {
+								if ( !preg_match('/'.preg_quote($acf_field['name']) . '[\_]\d*[\_]/', $sub_meta_key) !== false ) {
+									continue;
+								}
+
+								$sub_meta_key_parent_to_delete = substr( $sub_meta_key, 1 );
+								unset( $data['meta_data'][ $sub_meta_key ], $data['meta_data'][ $sub_meta_key_parent_to_delete ] );
+
+							}
+						}
+
 						$meta_key_parent_to_delete = substr( $meta_key, 1 );
 						unset( $data['meta_data'][ $meta_key ], $data['meta_data'][ $meta_key_parent_to_delete ] );
 						break;
