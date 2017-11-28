@@ -1,6 +1,7 @@
 <?php
 
 class BEA_CSF_Addon_ACF_Exclusion {
+	static $acf_fields = array();
 	static $meta_data = array();
 
 	/**
@@ -8,11 +9,15 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 */
 	public function __construct() {
 		add_action( 'save_post', array(__CLASS__, 'save_post'), 10, 1 );
-		add_action('acf/include_field_types', array(__CLASS__, 'acf_include_field_types'), 9999999 );
+		add_action( 'acf/include_field_types', array(__CLASS__, 'acf_include_field_types'), 9999999 );
 
-		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'bea_csf_client_post_type_attachment_data_to_transfer'), 10, 3 );
-		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'bea_csf_client_post_type_attachment_data_to_transfer'), 10, 3 );
+		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_groups'), 10, 3 );
+		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_groups'), 10, 3 );
 
+		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_fields'), 11, 3 );
+		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_fields'), 11, 3 );
+
+		add_action( 'admin_head', array(__CLASS__, 'admin_head'), 9999999 );
 	}
 
 	/**
@@ -21,10 +26,18 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 * @param $post_id
 	 */
 	public static function save_post( $post_id ) {
-		if ( isset($_POST['bea_csf_exclude']) ) {
-			$_POST['bea_csf_exclude'] = wp_unslash($_POST['bea_csf_exclude']);
+		if ( isset($_POST['bea_csf_exclude_acf_fields']) ) {
+			// TODO: Add nonce for delete metadata if required !
+			$_POST['bea_csf_exclude_acf_fields'] = wp_unslash($_POST['bea_csf_exclude_acf_fields']);
 
-			update_post_meta( $post_id, 'bea_csf_exclude', $_POST['bea_csf_exclude'] );
+			update_post_meta( $post_id, 'bea_csf_exclude_acf_fields', $_POST['bea_csf_exclude_acf_fields'] );
+		}
+
+		if ( isset($_POST['bea_csf_exclude_acf_group']) ) {
+			// TODO: Add nonce for delete metadata if required !
+			$_POST['bea_csf_exclude_acf_group'] = wp_unslash($_POST['bea_csf_exclude_acf_group']);
+
+			update_post_meta( $post_id, 'bea_csf_exclude_acf_group', $_POST['bea_csf_exclude_acf_group'] );
 		}
 	}
 
@@ -62,8 +75,15 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		}
 	}
 
+	/**
+	 * Helper for display the checkbox before or after ACF fields
+	 *
+	 * @param array $field
+	 * @param string $label
+	 *
+	 * @return bool
+	 */
 	public static function build_html_checkbox( $field, $label ) {
-		//$output = ob_get_clean();
 		global $post, $wpdb;
 
 		// Get emitter for current post
@@ -73,13 +93,14 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		}
 
 		// Get current checked items
-		$current_excluded_items = get_post_meta( $post->ID, 'bea_csf_exclude', true );
+		$current_excluded_items = get_post_meta( $post->ID, 'bea_csf_exclude_acf_fields', true );
 
-		echo '<label class="bea-csf-acf-exclusion"><input type="checkbox" '.checked(in_array($field['name'], (array) $current_excluded_items), true, false).' name="bea_csf_exclude[]" value="'.esc_attr($field['name']).'" />'.$label.'</label>';
+		echo '<label class="bea-csf-acf-exclusion"><input type="checkbox" '.checked(in_array($field['name'], (array) $current_excluded_items), true, false).' name="bea_csf_exclude_acf_fields[]" value="'.esc_attr($field['name']).'" />'.$label.'</label>';
+		return true;
 	}
 
 	/**
-	 * Delete metadata excluded form synchro
+	 * Delete metadata excluded with ACF fields exclusion form synchro
 	 *
 	 * @param $data
 	 * @param $sync_receiver_blog_id
@@ -87,13 +108,72 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 *
 	 * @return mixed
 	 */
-	public static function bea_csf_client_post_type_attachment_data_to_transfer( $data, $sync_receiver_blog_id, $sync_fields ) {
+	public static function filter_acf_groups( $data, $sync_receiver_blog_id, $sync_fields ) {
 		$local_id = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
 		if ( $local_id === false ) {
 			return $data;
 		}
 
-		$current_excluded_items = (array) get_post_meta( $local_id, 'bea_csf_exclude', true );
+		$current_excluded_groups = (array) get_post_meta( $local_id, 'bea_csf_exclude_acf_group', true );
+		if ( $current_excluded_groups == false ) {
+			return $data;
+		}
+
+		$fields = array();
+		foreach ( $current_excluded_groups as $group_id ) {
+			$fields += acf_get_fields( $group_id );
+		}
+
+		// Get only fields
+		self::$acf_fields = array();
+		self::prepare_acf_fields( $fields );
+
+		// Loop on each meta
+		foreach( (array) $data['meta_data'] as $meta_key => $raw_meta_value ) {
+			if ( isset(self::$acf_fields[$raw_meta_value[0]]) ) {
+				$meta_key_parent_to_delete = substr( $meta_key, 1 );
+				unset( $data['meta_data'][ $meta_key ], $data['meta_data'][ $meta_key_parent_to_delete ] );
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Extract from group fields only ACF field with ID database reference (recursive !)
+	 *
+	 * @param array $fields
+	 */
+	public static function prepare_acf_fields( $fields ) {
+		foreach ( (array) $fields as $field ) {
+			self::$acf_fields[ $field['key'] ] = $field;
+
+			if (in_array($field['type'], array('flexible_content') ) ) { // Flexible is recursive structure with layouts
+				foreach( $field['layouts'] as $layout_field ) {
+					self::prepare_acf_fields( $layout_field['sub_fields'] );
+				}
+			} elseif (in_array($field['type'], array('repeater') ) ) { // Repeater is recursive structure
+				self::prepare_acf_fields( $field['sub_fields'] );
+			}
+		}
+	}
+
+	/**
+	 * Delete metadata excluded with ACF fields exclusion form synchro
+	 *
+	 * @param $data
+	 * @param $sync_receiver_blog_id
+	 * @param $sync_fields
+	 *
+	 * @return mixed
+	 */
+	public static function filter_acf_fields( $data, $sync_receiver_blog_id, $sync_fields ) {
+		$local_id = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		if ( $local_id === false ) {
+			return $data;
+		}
+
+		$current_excluded_items = (array) get_post_meta( $local_id, 'bea_csf_exclude_acf_fields', true );
 		if ( $current_excluded_items == false ) {
 			return $data;
 		}
@@ -107,7 +187,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			// Loop on each exclusion
 			foreach( $current_excluded_items as $current_excluded_item ) {
 				preg_match_all( '/\[(\w+)\]/is', $current_excluded_item, $matches );
-				//var_dump(count($matches[1]), $matches[1][0] );
+
 				if ( isset( $matches[1] ) && count( $matches[1] ) == 1 && $matches[1][0] == $raw_meta_value[0] ) { // Classic field
 
 					// Delete all metadata from flexible/repeater
@@ -186,4 +266,54 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		return '';
 	}
 
+	/**
+	 * Hook on admin_head "as ACF" for get all metaboxes declared by this plugin and append a small checkbox
+	 */
+	public static function admin_head() {
+		global $wp_meta_boxes;
+
+		if ( !isset($wp_meta_boxes) ) {
+			return false;
+		}
+
+		foreach( $wp_meta_boxes as &$_wp_meta_boxes ) { // Page
+			foreach( $_wp_meta_boxes as &$_0_wp_meta_boxes ) { // Context
+				foreach ($_0_wp_meta_boxes as &$_1_wp_meta_boxes ) { // Priority
+					foreach( $_1_wp_meta_boxes as $key => &$meta_box ) { // Metaboxes
+						if ( substr($key, 0, 9) == 'acf-group' && isset($meta_box['title']) ) {
+							$meta_box['title'] .= ' ' . self::get_html_checkbox_for_metabox( $meta_box, __('Exclude this group from sync', 'bea-content-sync-fusion') );
+						}
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Helper for build HTML checkbox for metabox acf field group exclusion
+	 *
+	 * @param $meta_box
+	 * @param $label
+	 *
+	 * @return bool
+	 */
+	public static function get_html_checkbox_for_metabox( $meta_box, $label ) {
+		global $post, $wpdb;
+
+		// Get emitter for current post
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( 'posttype', $wpdb->blogid, $post->ID );
+		if ( empty( $emitter_relation ) ) {
+			return false;
+		}
+
+		// Get ID from metabox arguments
+		$acf_group_id = $meta_box['args']['field_group']['ID'];
+
+		// Get current checked items
+		$current_excluded_items = get_post_meta( $post->ID, 'bea_csf_exclude_acf_group', true );
+
+		return '<label class="bea-csf-acf-exclusion"><input type="checkbox" '.checked(in_array($acf_group_id, (array) $current_excluded_items), true, false).' name="bea_csf_exclude_acf_group[]" value="'.esc_attr($acf_group_id).'" />'.$label.'</label>';
+	}
 }
