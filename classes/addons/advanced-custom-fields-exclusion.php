@@ -8,6 +8,10 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 * BEA_CSF_Addon_ACF_Exclusion constructor.
 	 */
 	public function __construct() {
+		if ( !function_exists('acf_get_field_groups' ) ) {
+			return false;
+		}
+
 		add_action( 'save_post', array(__CLASS__, 'save_post'), 10, 1 );
 		add_action( 'acf/include_field_types', array(__CLASS__, 'acf_include_field_types'), 9999999 );
 
@@ -18,6 +22,8 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_fields'), 11, 3 );
 
 		add_action( 'admin_head', array(__CLASS__, 'admin_head'), 9999999 );
+
+		return true;
 	}
 
 	/**
