@@ -68,6 +68,7 @@ class BEA_CSF_Async {
 			BEA_CSF_Client::unregister_hooks();
 
 			// Allow plugin to hook
+			$data_to_transfer = apply_filters( 'bea_csf_client_data_to_transfer', $data_to_transfer, $sync->receiver_blog_id, $sync->fields, $object, $method );
 			$data_to_transfer = apply_filters( 'bea_csf_client_' . $object . '_' . $method . '_data_to_transfer', $data_to_transfer, $sync->receiver_blog_id, $sync->fields );
 
 			// Flush POST variables
@@ -151,7 +152,7 @@ class BEA_CSF_Async {
 	 */
 	public static function delete( $id ) {
 		global $wpdb;
-
+		
 		/** @var WPDB $wpdb */
 
 		return $wpdb->delete( $wpdb->bea_csf_queue, array( 'id' => $id ), array( '%d' ) );

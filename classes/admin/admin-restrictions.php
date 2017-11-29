@@ -10,13 +10,13 @@ class BEA_CSF_Admin_Restrictions {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
+		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
+
 		// Get current setting
 		$current_settings = get_site_option( 'csf_adv_settings' );
 		if ( isset( $current_settings['unlock-mode'] ) && '1' === $current_settings['unlock-mode'] ) {
 			return false;
 		}
-
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
 
 		// Post row
 		add_filter( 'page_row_actions', array( __CLASS__, 'post_row_actions' ), 10, 2 );
@@ -39,9 +39,9 @@ class BEA_CSF_Admin_Restrictions {
 	 * @param string $hook_suffix
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
-		if ( isset( $hook_suffix ) && ( 'edit.php' === $hook_suffix || 'edit-tags.php' === $hook_suffix ) ) {
+		if ( isset( $hook_suffix ) && in_array($hook_suffix, array('edit.php', 'edit-tags.php', 'post.php')) ) {
 			wp_enqueue_script( 'bea-csf-admin-client', BEA_CSF_URL . 'assets/js/bea-csf-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
-			//wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array(), BEA_CSF_VERSION, 'all' );
+			wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array(), BEA_CSF_VERSION, 'all' );
 		}
 	}
 
