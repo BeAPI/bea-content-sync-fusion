@@ -125,13 +125,15 @@ class BEA_CSF_Relations {
 
 		$wpdb->delete( $wpdb->bea_csf_relations, array(
 			'type'            => $type,
+			'emitter_blog_id' => $wpdb->blogid,
 			'emitter_id'      => $object_id
-		), array( '%s', '%d' ) );
+		), array( '%s', '%d', '%d' ) );
 
 		$wpdb->delete( $wpdb->bea_csf_relations, array(
 			'type'            => $type,
+			'receiver_blog_id' => $wpdb->blogid,
 			'receiver_id'      => $object_id
-		), array( '%s', '%d' ) );
+		), array( '%s', '%d', '%d' ) );
 
 		return true;
 	}

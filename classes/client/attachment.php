@@ -70,7 +70,7 @@ class BEA_CSF_Client_Attachment {
 
 		} else { // Insert with WP media public static function
 
-			$data_for_post['import_id'] = $data_for_post['ID'];
+			//$data_for_post['import_id'] = $data_for_post['ID'];
 			unset( $data_for_post['ID'] );
 			$new_media_id = wp_insert_post( $data_for_post );
 			if ( is_wp_error( $new_media_id ) || $new_media_id === 0 ) {
