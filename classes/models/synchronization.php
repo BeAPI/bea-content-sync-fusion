@@ -185,9 +185,14 @@ class BEA_CSF_Synchronization {
 	 *
 	 * @param string $field_name
 	 *
-	 * @return boolean[mixed
+	 * @return boolean|array
 	 */
 	public function get_field( $field_name ) {
+		// Call this specific getter function for support "all except..." value context
+		if ( $field_name == 'receivers' ) {
+			return $this->get_receivers();
+		}
+
 		if ( in_array( $field_name, $this->_fields ) ) {
 			return $this->{$field_name};
 		} else {
