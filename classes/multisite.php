@@ -13,6 +13,7 @@ class BEA_CSF_Multisite {
 	/**
 	 *
 	 * Add synchronization taxonomies / attachments / posts when create a new blog
+     * Caution: This function is also used by "admin-blog.php" resync-content feature !
 	 *
 	 * @param $blog_id
 	 */
@@ -28,6 +29,7 @@ class BEA_CSF_Multisite {
 		remove_filter( 'bea_csf.pre_pre_send_data', array( __CLASS__, 'bea_csf_pre_pre_send_data' ), 10, 2 );
 
 		// TODO: Resend content from any blog ? Not only the First/MAIN (with the network admin)
+
 	}
 
 	/**

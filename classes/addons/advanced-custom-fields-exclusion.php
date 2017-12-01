@@ -127,7 +127,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 
 		$fields = array();
 		foreach ( $current_excluded_groups as $group_id ) {
-			$fields += acf_get_fields( $group_id );
+			$fields += (array) acf_get_fields( $group_id );
 		}
 
 		// Get only fields

@@ -3,11 +3,11 @@
 
 	<?php
 	global $wpdb;
-	$results = $wpdb->get_results( 'SELECT COUNT(id) as nbqueue FROM ' . $GLOBALS['wpdb']->bea_csf_queue, OBJECT );
+	$nbqueue = BEA_CSF_Async::get_counter();
 
 	echo '<p>' . sprintf( __( 'Cron process %d items by %d items', 'bea-content-sync-fusion' ), BEA_CSF_CRON_QTY, BEA_CSF_CRON_QTY) . '</p>';
 
-	echo __( 'Number of items in the queue : ', 'bea-content-sync-fusion' ) . reset( $results )->nbqueue;
+	echo __( 'Number of items in the queue : ', 'bea-content-sync-fusion' ) . $nbqueue;
 
 	$lock_file = sys_get_temp_dir() . '/bea-content-sync-fusion.lock';
 	if ( file_exists( $lock_file ) ) {
@@ -27,8 +27,7 @@
 	}
 
 	// Maintenance
-	$results_maintenance = $wpdb->get_results( 'SELECT COUNT(id) as nbqueue FROM ' . $GLOBALS['wpdb']->bea_csf_queue_maintenance, OBJECT );
-	$nb_queue_maintenance = reset( $results_maintenance )->nbqueue;
+	$nb_queue_maintenance = $wpdb->get_var( 'SELECT COUNT(id) as nbqueue FROM ' . $GLOBALS['wpdb']->bea_csf_queue_maintenance );
 	if ( '0' != $nb_queue_maintenance ) {
 		echo '<p>' . __( 'Number of items in the queue of maintenance : ', 'bea-content-sync-fusion' ) . $nb_queue_maintenance . '</p>';
 	}
@@ -36,10 +35,5 @@
 	?>
 
 	<h3><?php _e( 'For debug only (30 items only)', 'bea-content-sync-fusion' ); ?></h3>
-	<form method="post">
-		<p class="submit">
-			<?php wp_nonce_field( 'bea-csf-force-cron' ); ?>
-			<input class="button-primary" type="submit" name="bea_csv_force_cron" value="<?php _e( 'Exec synchronization CRON now', 'bea-content-sync-fusion' ); ?>" />
-		</p>
-	</form>
+	<p><?php _e( 'You can now debug the queue of each site one by one from their dashboard or the list of sites view.', 'bea-content-sync-fusion' ); ?></p>
 </div>
