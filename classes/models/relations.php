@@ -18,8 +18,8 @@ class BEA_CSF_Relations {
 	 * @param integer $object_id
 	 */
 	public static function deleted_post( $object_id ) {
-		self::delete_by_object_id( 'attachment', $object_id );
-		self::delete_by_object_id( 'posttype', $object_id );
+		self::delete_by_receiver( 'attachment', get_current_blog_id(), $object_id );
+		self::delete_by_receiver( 'posttype', get_current_blog_id(), $object_id );
 	}
 
 	/**
@@ -28,7 +28,7 @@ class BEA_CSF_Relations {
 	 * @param integer $term_id
 	 */
 	public static function delete_term( $term_id ) {
-		self::delete_by_object_id( 'taxonomy', $term_id );
+		self::delete_by_receiver( 'taxonomy', get_current_blog_id(), $term_id );
 	}
 
 	/**
@@ -114,26 +114,14 @@ class BEA_CSF_Relations {
 	 * Delete relation for an object_id for emitter and receiver context
 	 *
 	 * @param string $type
+     * @param integer $blog_id
 	 * @param integer $object_id
 	 *
 	 * @return true
 	 */
-	public static function delete_by_object_id( $type, $object_id ) {
-		global $wpdb;
-
-		/** @var WPDB $wpdb */
-
-		$wpdb->delete( $wpdb->bea_csf_relations, array(
-			'type'            => $type,
-			'emitter_blog_id' => $wpdb->blogid,
-			'emitter_id'      => $object_id
-		), array( '%s', '%d', '%d' ) );
-
-		$wpdb->delete( $wpdb->bea_csf_relations, array(
-			'type'            => $type,
-			'receiver_blog_id' => $wpdb->blogid,
-			'receiver_id'      => $object_id
-		), array( '%s', '%d', '%d' ) );
+	public static function delete_by_object_id( $type, $blog_id, $object_id ) {
+        self::delete_by_emitter( $type, $blog_id, $object_id );
+        self::delete_by_receiver( $type, $blog_id, $object_id );
 
 		return true;
 	}
