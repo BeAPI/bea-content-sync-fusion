@@ -7,9 +7,6 @@ class BEA_CSF_Multisite {
 	 * Register hooks
 	 */
 	public function __construct() {
-		// Deactive media folder structure with sites/blog_id/
-		add_filter( 'site_option_' . 'ms_files_rewriting', '__return_true' );
-
 		add_action( 'wpmu_new_blog', array( __CLASS__, 'wpmu_new_blog' ) );
 	}
 

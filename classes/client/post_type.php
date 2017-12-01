@@ -63,7 +63,7 @@ class BEA_CSF_Client_PostType {
 					// TODO: Management exception, SO RARE in WP !
 					continue;
 				} else {
-					update_post_meta( $new_post_id, $key, $values[0] );
+					update_post_meta( $new_post_id, $key, maybe_unserialize($values[0]) );
 				}
 			}
 		}

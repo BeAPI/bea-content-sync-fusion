@@ -92,7 +92,7 @@ class BEA_CSF_Client_Attachment {
 					// TODO: Management exception, SO RARE in WP !
 					continue;
 				} else {
-					update_post_meta( $new_media_id, $key, $values[0] );
+					update_post_meta( $new_media_id, $key, maybe_unserialize($values[0]) );
 				}
 			}
 		}

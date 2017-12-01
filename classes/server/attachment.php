@@ -37,7 +37,7 @@ class BEA_CSF_Server_Attachment {
 			return false;
 		}
 
-		$attachment['meta_data']    = get_post_custom( $attachment['ID'] );
+		$attachment['meta_data']       = get_post_custom( $attachment['ID'] );
 		$attachment['attachment_url'] = get_permalink( $attachment['ID'] );
 		$attachment['attachment_dir'] = get_attached_file( $attachment['ID'] );
 		//$attachment['metadata']       = wp_get_attachment_metadata( $attachment['ID'] );
