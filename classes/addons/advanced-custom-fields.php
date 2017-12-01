@@ -52,7 +52,7 @@ class BEA_CSF_Addon_ACF {
 
 		$fields = array();
 		foreach ( $groups as $group ) {
-			$fields += acf_get_fields( $group );
+			$fields += (array) acf_get_fields( $group );
 		}
 
 		// Get only fields
@@ -93,7 +93,7 @@ class BEA_CSF_Addon_ACF {
 
 		$fields = array();
 		foreach ( $groups as $group ) {
-			$fields += acf_get_fields( $group );
+			$fields += (array) acf_get_fields( $group );
 		}
 
 		// Get only fields
