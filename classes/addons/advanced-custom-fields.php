@@ -19,7 +19,6 @@ class BEA_CSF_Addon_ACF {
 		add_action( 'bea_csf.client.attachment.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
 
 		add_action( 'bea_csf.client.taxonomy.merge', array( __CLASS__, 'bea_csf_client_taxonomy_merge' ), 10, 3 );
-		// TODO: Manage terms and attachment
 
 		return true;
 	}
