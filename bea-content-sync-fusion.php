@@ -46,6 +46,7 @@ define( 'BEA_CSF_DIR', plugin_dir_path( __FILE__ ) );
 require( BEA_CSF_DIR . 'classes/plugin.php' );
 require( BEA_CSF_DIR . 'classes/client.php' );
 require( BEA_CSF_DIR . 'classes/multisite.php' );
+require( BEA_CSF_DIR . 'classes/media.php' );
 
 // Plugins addons
 require( BEA_CSF_DIR . 'classes/addons/post-types-order.php' );
@@ -101,6 +102,7 @@ function init_bea_content_sync_fusion() {
 	new BEA_CSF_Client();
 	new BEA_CSF_Multisite();
 	new BEA_CSF_Relations();
+	new BEA_CSF_Media();
 
 	// Addons
 	new BEA_CSF_Addon_Post_Types_Order();
