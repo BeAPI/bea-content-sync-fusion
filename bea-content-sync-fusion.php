@@ -48,6 +48,9 @@ require( BEA_CSF_DIR . 'classes/client.php' );
 require( BEA_CSF_DIR . 'classes/multisite.php' );
 require( BEA_CSF_DIR . 'classes/media.php' );
 
+// CLI
+require( BEA_CSF_DIR . 'classes/cli/queue.php' );
+
 // Plugins addons
 require( BEA_CSF_DIR . 'classes/addons/post-types-order.php' );
 require( BEA_CSF_DIR . 'classes/addons/advanced-custom-fields.php' );

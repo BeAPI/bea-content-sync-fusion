@@ -215,4 +215,31 @@ class BEA_CSF_Async {
 
 		return (int) $wpdb->get_var( "SELECT COUNT(id) FROM $wpdb->bea_csf_queue" );
 	}
+
+    /**
+     * Get blogs ids with content to sync
+     *
+     * @return array
+     */
+	public static function get_blog_ids_from_queue() {
+        global $wpdb;
+
+        /** @var WPDB $wpdb */
+
+        return $wpdb->get_col( "SELECT receiver_blog_id FROM $wpdb->bea_csf_queue GROUP BY receiver_blog_id" );
+    }
+
+    /**
+     * Change on real time the variable with tablename for maintenance queue
+     */
+    public static function switch_to_maintenance_queue() {
+        $GLOBALS['wpdb']->bea_csf_queue = $GLOBALS['wpdb']->bea_csf_queue_maintenance;
+    }
+
+    /**
+     * Restore original tablename for queue
+     */
+    public static function restore_main_queue() {
+        $GLOBALS['wpdb']->bea_csf_queue = $GLOBALS['wpdb']->base_prefix . 'bea_csf_queue';
+    }
 }
