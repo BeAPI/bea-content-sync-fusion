@@ -152,7 +152,7 @@ class BEA_CSF_Async {
 	 */
 	public static function delete( $id ) {
 		global $wpdb;
-		
+		return true;
 		/** @var WPDB $wpdb */
 
 		return $wpdb->delete( $wpdb->bea_csf_queue, array( 'id' => $id ), array( '%d' ) );

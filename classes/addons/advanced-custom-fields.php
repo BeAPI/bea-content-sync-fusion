@@ -35,7 +35,7 @@ class BEA_CSF_Addon_ACF {
 	public static function bea_csf_client_posttype_merge( $data, $sync_fields, $new_post ) {
 		// Post have metadata ?
 		if ( ! isset( $data['meta_data'] ) || ! is_array( $data['meta_data'] ) || empty( $data['meta_data'] ) ) {
-			return false;
+			return $data;
 		}
 
 		if ( 'attachment' === $new_post->post_type ) {
@@ -47,7 +47,7 @@ class BEA_CSF_Addon_ACF {
 
 
 		if ( empty( $groups ) ) {
-			return false;
+			return $data;
 		}
 
 		$fields = array();
@@ -67,7 +67,7 @@ class BEA_CSF_Addon_ACF {
 			}
 		}
 
-		return true;
+		return $data;
 	}
 
 	/**
@@ -82,13 +82,13 @@ class BEA_CSF_Addon_ACF {
 	public static function bea_csf_client_taxonomy_merge( $data, $sync_fields, $new_term ) {
 		// Post have metadata ?
 		if ( ! isset( $data['meta_data'] ) || ! is_array( $data['meta_data'] ) || empty( $data['meta_data'] ) ) {
-			return false;
+			return $data;
 		}
 
 		// get field groups
 		$groups = acf_get_field_groups(array('taxonomy' => $new_term->taxonomy));
 		if ( empty( $groups ) ) {
-			return false;
+			return $data;
 		}
 
 		$fields = array();
@@ -108,7 +108,7 @@ class BEA_CSF_Addon_ACF {
 			}
 		}
 
-		return true;
+		return $data;
 	}
 
 	/**

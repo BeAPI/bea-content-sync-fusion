@@ -15,6 +15,10 @@ class BEA_CSF_Client_PostType {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
+		if ( !isset($data['blogid']) ) {
+			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
+		}
+
 		$local_id = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
 
 		// Find local parent ?
@@ -163,7 +167,6 @@ class BEA_CSF_Client_PostType {
 		}
 
 		$local_id = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
-
 		if ( ! empty( $local_id ) && (int) $local_id > 0 ) {
 			wp_delete_post( $local_id, true );
 
