@@ -15,6 +15,13 @@ class BEA_CSF_Client_P2P {
 	 * Add connection on DB
 	 */
 	public static function merge( array $data, array $sync_fields ) {
+		if ( empty( $data ) || ! is_array( $data ) ) {
+			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
+		}
+
+		if ( !isset($data['blogid']) ) {
+			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
+		}
 
 		// P2P Type must be sync ?
 		if ( ! in_array( $data['p2p_type'], $sync_fields['p2p_connections'] ) ) {
