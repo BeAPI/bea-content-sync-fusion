@@ -17,6 +17,10 @@ class BEA_CSF_Client_Taxonomy {
 			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );
 		}
 
+		if ( !isset($data['blogid']) ) {
+			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
+		}
+
 		// Define thius variable for skip infinite sync when emetter and receiver are reciprocal
 		$_bea_origin_blog_id = $data['blogid'];
 

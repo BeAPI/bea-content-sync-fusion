@@ -52,6 +52,7 @@ require( BEA_CSF_DIR . 'classes/media.php' );
 require( BEA_CSF_DIR . 'classes/addons/post-types-order.php' );
 require( BEA_CSF_DIR . 'classes/addons/advanced-custom-fields.php' );
 require( BEA_CSF_DIR . 'classes/addons/advanced-custom-fields-exclusion.php' );
+require( BEA_CSF_DIR . 'classes/addons/events-calendar-series.php' );
 
 // Functions various
 require( BEA_CSF_DIR . 'functions/api.php' );
@@ -108,6 +109,7 @@ function init_bea_content_sync_fusion() {
 	new BEA_CSF_Addon_Post_Types_Order();
 	new BEA_CSF_Addon_ACF();
 	new BEA_CSF_Addon_ACF_Exclusion();
+	new BEA_CSF_Addon_Events_Calendar_Series();
 
 	// Admin
 	if ( is_admin() ) {

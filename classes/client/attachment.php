@@ -44,6 +44,10 @@ class BEA_CSF_Client_Attachment {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
+		if ( !isset($data['blogid']) ) {
+			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
+		}
+
 		// Translate for current media ID
 		$current_media_id = BEA_CSF_Relations::get_object_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
 
