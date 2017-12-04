@@ -50,6 +50,8 @@ require( BEA_CSF_DIR . 'classes/media.php' );
 
 // CLI
 require( BEA_CSF_DIR . 'classes/cli/queue.php' );
+require( BEA_CSF_DIR . 'classes/cli/flush.php' );
+require( BEA_CSF_DIR . 'classes/cli/resync.php' );
 
 // Plugins addons
 require( BEA_CSF_DIR . 'classes/addons/post-types-order.php' );
@@ -78,15 +80,13 @@ require( BEA_CSF_DIR . 'classes/client/taxonomy.php' );
 require( BEA_CSF_DIR . 'classes/client/p2p.php' );
 
 // Call admin classes
-if ( is_admin() ) {
-	require( BEA_CSF_DIR . 'classes/admin/admin-blog.php' );
-	require( BEA_CSF_DIR . 'classes/admin/admin-synchronizations-network.php' );
-	require( BEA_CSF_DIR . 'classes/admin/admin-metaboxes.php' );
-	require( BEA_CSF_DIR . 'classes/admin/admin-client-metaboxes.php' );
-	require( BEA_CSF_DIR . 'classes/admin/admin-restrictions.php' );
-	require( BEA_CSF_DIR . 'classes/admin/admin-terms.php' );
-	require( BEA_CSF_DIR . 'classes/admin/admin-terms-metaboxes.php' );
-}
+require( BEA_CSF_DIR . 'classes/admin/admin-blog.php' );
+require( BEA_CSF_DIR . 'classes/admin/admin-synchronizations-network.php' );
+require( BEA_CSF_DIR . 'classes/admin/admin-metaboxes.php' );
+require( BEA_CSF_DIR . 'classes/admin/admin-client-metaboxes.php' );
+require( BEA_CSF_DIR . 'classes/admin/admin-restrictions.php' );
+require( BEA_CSF_DIR . 'classes/admin/admin-terms.php' );
+require( BEA_CSF_DIR . 'classes/admin/admin-terms-metaboxes.php' );
 
 // Plugin activate/desactive hooks
 register_activation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'activate' ) );

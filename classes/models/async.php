@@ -4,7 +4,7 @@ class BEA_CSF_Async {
 	 * Generic method to get data from emitter and sent theses to receivers
 	 *
 	 * @param  boolean $quantity
-	 * @param  boolean
+	 * @param  boolean|integer $receiver_blog_id
 	 * @return boolean
 	 */
 	public static function process_queue( $quantity = false, $receiver_blog_id = false ) {
@@ -22,75 +22,88 @@ class BEA_CSF_Async {
 
 		// Process for row of the queue
 		foreach ( $data_to_sync as $sync ) {
-			// Unserialize complex fields
-			$sync->hook_data = maybe_unserialize( $sync->hook_data );
-			$sync->fields    = maybe_unserialize( $sync->fields );
-
-			// Complete field with current receiver blog id
-			$sync->fields['_current_receiver_blog_id'] = $sync->receiver_blog_id;
-
-			// Explode filter for get object and method
-			$current_filter_data = explode( '/', $sync->current_filter );
-
-			// Set data into variable for improve lisibility
-			$object  = $current_filter_data[1];
-			$method  = $current_filter_data[2];
-			$blog_id = $current_filter_data[4];
-
-			// Switch to emitter blog
-			switch_to_blog( $blog_id );
-
-			// Get data from SERVER class
-			$data_to_transfer = call_user_func( array( 'BEA_CSF_Server_' . $object, $method, ), $sync->hook_data, $sync->fields );
-			if ( false === $data_to_transfer ) {
-				// Remove from queue
-				self::delete( $sync->id );
-
-				continue;
-			}
-
-			// Append origin blog id to data to transfer
-			$data_to_transfer['blogid'] = (int) $blog_id;
-
-			// Receiver blog exist always ?
-			$blog_data = get_blog_details( $sync->receiver_blog_id, false );
-			if ( false === $blog_data ) {
-				// Remove from queue
-				self::delete( $sync->id );
-				
-				continue;
-			}
-
-			// Switch to receiver blog
-			switch_to_blog( $sync->receiver_blog_id );
-
-			// Deactive hooks plugin
-			BEA_CSF_Client::unregister_hooks();
-
-			// Allow plugin to hook
-			$data_to_transfer = apply_filters( 'bea_csf_client_data_to_transfer', $data_to_transfer, $sync->receiver_blog_id, $sync->fields, $object, $method );
-			$data_to_transfer = apply_filters( 'bea_csf_client_' . $object . '_' . $method . '_data_to_transfer', $data_to_transfer, $sync->receiver_blog_id, $sync->fields );
-
-			// Flush POST variables
-			$_backup_POST = $_POST;
-			$_POST        = array();
-
-			// Send data to CLIENT classes
-			$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_transfer, $sync->fields );
-
-			// Restore POST variables
-			$_POST = $_backup_POST;
-
-			// Reactive hooks plugin
-			BEA_CSF_Client::register_hooks();
-
-			// Remove from queue
-			self::delete( $sync->id );
+			self::process( $sync );
 		}
 
 		do_action( 'bea-csf-after-async-queue' );
 
 		return true;
+	}
+
+	/**
+	 * Exec one item from queue table for sync process
+	 *
+	 * @param $sync
+	 *
+	 * @return false|array
+	 */
+	public static function process( $sync ) {
+		// Unserialize complex fields
+		$sync->hook_data = maybe_unserialize( $sync->hook_data );
+		$sync->fields    = maybe_unserialize( $sync->fields );
+
+		// Complete field with current receiver blog id
+		$sync->fields['_current_receiver_blog_id'] = $sync->receiver_blog_id;
+
+		// Explode filter for get object and method
+		$current_filter_data = explode( '/', $sync->current_filter );
+
+		// Set data into variable for improve lisibility
+		$object  = $current_filter_data[1];
+		$method  = $current_filter_data[2];
+		$blog_id = $current_filter_data[4];
+
+		// Switch to emitter blog
+		switch_to_blog( $blog_id );
+
+		// Get data from SERVER class
+		$data_to_transfer = call_user_func( array( 'BEA_CSF_Server_' . $object, $method, ), $sync->hook_data, $sync->fields );
+		if ( false === $data_to_transfer ) {
+			// Remove from queue
+			self::delete( $sync->id );
+
+			return false;
+		}
+
+		// Append origin blog id to data to transfer
+		$data_to_transfer['blogid'] = (int) $blog_id;
+
+		// Receiver blog exist always ?
+		$blog_data = get_blog_details( $sync->receiver_blog_id, false );
+		if ( false === $blog_data ) {
+			// Remove from queue
+			self::delete( $sync->id );
+
+			return false;
+		}
+
+		// Switch to receiver blog
+		switch_to_blog( $sync->receiver_blog_id );
+
+		// Deactive hooks plugin
+		BEA_CSF_Client::unregister_hooks();
+
+		// Allow plugin to hook
+		$data_to_transfer = apply_filters( 'bea_csf_client_data_to_transfer', $data_to_transfer, $sync->receiver_blog_id, $sync->fields, $object, $method );
+		$data_to_transfer = apply_filters( 'bea_csf_client_' . $object . '_' . $method . '_data_to_transfer', $data_to_transfer, $sync->receiver_blog_id, $sync->fields );
+
+		// Flush POST variables
+		$_backup_POST = $_POST;
+		$_POST        = array();
+
+		// Send data to CLIENT classes
+		$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_transfer, $sync->fields );
+
+		// Restore POST variables
+		$_POST = $_backup_POST;
+
+		// Reactive hooks plugin
+		BEA_CSF_Client::register_hooks();
+
+		// Remove from queue
+		self::delete( $sync->id );
+
+		return $result;
 	}
 
 	/**
@@ -175,6 +188,19 @@ class BEA_CSF_Async {
 		}
 
 		return $wpdb->get_results( "SELECT * FROM $wpdb->bea_csf_queue" );
+	}
+
+	/**
+	 * Flush table
+	 *
+	 * @return false|int
+	 */
+	public static function truncate() {
+		global $wpdb;
+
+		/** @var WPDB $wpdb */
+
+		return $wpdb->query( "TRUNCATE $wpdb->bea_csf_queue" );
 	}
 
 	/**
