@@ -8,6 +8,11 @@
 </label>
 
 <p>
+    <h4><?php _e( 'An internal note for diffusion:', 'bea-content-sync-fusion' ); ?></h4>
+    <textarea class="widefat" readonly="readonly"><?php echo esc_textarea($current_receivers_note); ?></textarea>
+</p>
+
+<p>
 	<?php 
 	printf( __( 'This content comes from the site <strong>%s</strong>, and from the original article: <strong>%s</strong>', 'bea-content-sync-fusion' ), $emitter_data['blog_name'], $emitter_data['post_title'] ); ?>
 </p>

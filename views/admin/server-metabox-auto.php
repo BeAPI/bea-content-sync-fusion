@@ -9,5 +9,10 @@
 </label>
 
 <p>
+    <label for="post_receivers_note"><?php _e( 'An internal note for diffusion.', 'bea-content-sync-fusion' ); ?></label>
+    <textarea class="widefat" id="post_receivers_note" name="post_receivers_note"><?php echo esc_textarea($current_receivers_note); ?></textarea>
+</p>
+
+<p>
 	<?php printf( __( 'This content is concerned with these following synchronizations: <strong>%s</strong>', 'bea-content-sync-fusion' ), implode( ', ', $sync_names ) ); ?>
 </p>

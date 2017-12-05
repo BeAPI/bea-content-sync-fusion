@@ -13,6 +13,13 @@ class BEA_CSF_Admin_Metaboxes {
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ), 10, 2 );
 	}
 
+	/**
+	 * @param $new_status
+	 * @param $old_status
+	 * @param $post
+	 *
+	 * @return bool
+	 */
 	public static function transition_post_status( $new_status, $old_status, $post ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return false;
@@ -25,17 +32,26 @@ class BEA_CSF_Admin_Metaboxes {
 
 		self::check_changes_auto_metabox( $post );
 		self::check_changes_manual_metabox( $post );
+		self::check_changes_manual_metabox_status( $post );
 
 		return true;
 	}
 
+	/**
+	 * @param $post
+	 *
+	 * @return bool
+	 */
 	public static function check_changes_auto_metabox( $post ) {
-		global $wpdb;
-
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
 		if ( ! isset( $_POST[ BEA_CSF_OPTION . '-nonce-auto' ] ) || ! wp_verify_nonce( $_POST[ BEA_CSF_OPTION . '-nonce-auto' ], plugin_basename( __FILE__ ) ) ) {
 			return false;
+		}
+
+		// Update receivers note
+		if ( isset($_POST['post_receivers_note']) ) {
+			update_post_meta( $post->ID, '_post_receivers_note', wp_unslash($_POST['post_receivers_note']) );
 		}
 
 		$previous_value = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
@@ -43,7 +59,7 @@ class BEA_CSF_Admin_Metaboxes {
 			update_post_meta( $post->ID, '_exclude_from_sync', 1 );
 			if ( 0 == $previous_value ) {
 				// This value have just changed, delete content for clients !
-				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false, false, false );
+				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false );
 			}
 		} else {
 			delete_post_meta( $post->ID, '_exclude_from_sync' );
@@ -52,37 +68,67 @@ class BEA_CSF_Admin_Metaboxes {
 		return true;
 	}
 
+	/**
+	 * @param $post
+	 *
+	 * @return bool
+	 */
 	public static function check_changes_manual_metabox( $post ) {
-		global $wpdb;
-
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
 		if ( ! isset( $_POST[ BEA_CSF_OPTION . '-nonce-manual' ] ) || ! wp_verify_nonce( $_POST[ BEA_CSF_OPTION . '-nonce-manual' ], plugin_basename( __FILE__ ) ) ) {
 			return false;
 		}
 
-		// Set default value
-		$new_post_receivers = array();
+		// Update receivers note
+		if ( isset($_POST['post_receivers_note']) ) {
+			update_post_meta( $post->ID, '_post_receivers_note', wp_unslash($_POST['post_receivers_note']) );
+		}
 
-		// Get _POST data if form is filled
+		// Update receivers features (checkbox)
+		$new_post_receivers = array();
 		if ( isset( $_POST['post_receivers'] ) && ! empty( $_POST['post_receivers'] ) ) {
 			$new_post_receivers = array_map( 'intval', $_POST['post_receivers'] );
 		}
 
 		// Get previous values
-		$old_post_receivers = (array) get_post_meta( $post->ID, '_post_receivers', true );
+		$old_post_receivers = (array) get_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers', true );
 		$old_post_receivers = array_filter( $old_post_receivers, 'trim' );
 
 		// Set new value
-		update_post_meta( $post->ID, '_post_receivers', $new_post_receivers );
+		update_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers', $new_post_receivers );
 
 		// Calcul difference for send delete notification for uncheck action
 		$receivers_to_delete = array_diff( $old_post_receivers, $new_post_receivers );
 
 		if ( ! empty( $receivers_to_delete ) && ! empty( $old_post_receivers ) ) {
 			// Theses values have just deleted, delete content for clients !
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . $wpdb->blogid, $post, false, $receivers_to_delete, true );
+			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, $receivers_to_delete, true );
 		}
+
+		return true;
+	}
+
+	/**
+	 * Update receivers status (select)
+	 *
+	 * @param $post
+	 *
+	 * @return bool
+	 */
+	public static function check_changes_manual_metabox_status( $post ) {
+		// verify this came from the our screen and with proper authorization,
+		// because save_post can be triggered at other times
+		if ( ! isset( $_POST[ BEA_CSF_OPTION . '-nonce-manual-status' ] ) || ! wp_verify_nonce( $_POST[ BEA_CSF_OPTION . '-nonce-manual-status' ], plugin_basename( __FILE__ ) ) ) {
+			return false;
+		}
+
+		$post_receivers_status = array();
+		if ( isset( $_POST['post_receivers_status'] ) && ! empty( $_POST['post_receivers_status'] ) ) {
+			$post_receivers_status = array_map( 'trim', $_POST['post_receivers_status'] );
+		}
+
+		update_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers_status', $post_receivers_status );
 
 		return true;
 	}
@@ -90,17 +136,18 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Adds the meta box container in edit post / page
 	 *
+	 * @param $post_type
+	 * @param $post
+	 *
 	 * @return boolean
 	 * @author Amaury Balmer
 	 */
 	public static function add_meta_boxes( $post_type, $post ) {
-		global $wpdb;
-
 		// Get syncs for current post_type and mode set to "auto"
 		$syncs_with_auto_state = BEA_CSF_Synchronizations::get( array(
 			'post_type' => $post_type,
 			'mode'      => 'auto',
-			'emitters'  => $wpdb->blogid,
+			'emitters'  => get_current_blog_id(),
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_auto_state ) ) {
 			add_meta_box( BEA_CSF_OPTION . 'metabox-auto', __( 'Synchronization (auto)', 'bea-content-sync-fusion' ), array(
@@ -113,7 +160,7 @@ class BEA_CSF_Admin_Metaboxes {
 		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array(
 			'post_type' => $post_type,
 			'mode'      => 'manual',
-			'emitters'  => $wpdb->blogid,
+			'emitters'  => get_current_blog_id(),
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_manual_state ) ) {
 			add_meta_box( BEA_CSF_OPTION . 'metabox-manual', __( 'Synchronization (manual)', 'bea-content-sync-fusion' ), array(
@@ -128,6 +175,9 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Form for allow exclusion for synchronization !
 	 *
+	 * @param $post
+	 * @param $metabox
+	 *
 	 * @return void
 	 * @author Amaury Balmer
 	 */
@@ -135,7 +185,7 @@ class BEA_CSF_Admin_Metaboxes {
 		// Use nonce for verification
 		wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION . '-nonce-auto' );
 
-		// Get values for current post
+		$current_receivers_note = get_post_meta( $post->ID, '_post_receivers_note', true );
 		$current_value = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
 
 		// Get names from syncs
@@ -151,6 +201,9 @@ class BEA_CSF_Admin_Metaboxes {
 	/**
 	 * Form for custom sync, choose receivers !
 	 *
+	 * @param $post
+	 * @param $metabox
+	 *
 	 * @return void
 	 * @author Amaury Balmer
 	 */
@@ -158,8 +211,11 @@ class BEA_CSF_Admin_Metaboxes {
 		// Use nonce for verification
 		wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION . '-nonce-manual' );
 
+		$current_receivers_note = get_post_meta( $post->ID, '_post_receivers_note', true );
+
 		// Get values for current post
-		$current_values = (array) get_post_meta( $post->ID, '_post_receivers', true );
+		$current_post_receivers = (array) get_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers', true );
+		$current_post_receivers_status = (array) get_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers_status', true );
 
 		// Get sites destination from syncs
 		$sync_receivers = array();
@@ -168,16 +224,31 @@ class BEA_CSF_Admin_Metaboxes {
 		}
 		$sync_receivers = BEA_CSF_Admin_Synchronizations_Network::get_sites( $sync_receivers );
 
-		// Get names from syncs
+		// Get names from syncs, and also enable a flag for user_selection status
+		$show_blog_status = false;
 		$sync_names = array();
 		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
 			$sync_names[] = $sync_obj->get_field( 'label' );
+
+			if ( $sync_obj->get_field( 'status' ) === 'user_selection' ) {
+				$show_blog_status = true;
+			}
+		}
+
+		if ( $show_blog_status == true ) {
+			wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION . '-nonce-manual-status' );
 		}
 
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/server-metabox-manual.php' );
 	}
 
+	/**
+	 * @param int $post_id
+	 * @param int $blog_id
+	 *
+	 * @return array|bool|null|WP_Post
+	 */
 	public static function is_valid_post_id( $post_id = 0, $blog_id = 0 ) {
 		if ( self::is_valid_blog_id( $blog_id ) ) {
 			switch_to_blog( $blog_id );
@@ -191,9 +262,14 @@ class BEA_CSF_Admin_Metaboxes {
 		return false;
 	}
 
+	/**
+	 * @param int $blog_id
+	 *
+	 * @return bool
+	 */
 	public static function is_valid_blog_id( $blog_id = 0 ) {
-		$blogs_id = BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network();
-		foreach ( BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network() as $site ) {
+		$sites_id = BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network();
+		foreach ( $sites_id as $site ) {
 			if ( $site['blog_id'] == $blog_id ) {
 				return true;
 			}

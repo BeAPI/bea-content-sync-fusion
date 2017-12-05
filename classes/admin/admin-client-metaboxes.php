@@ -87,6 +87,8 @@ class BEA_CSF_Admin_Client_Metaboxes {
 		);
 		restore_current_blog();
 
+		$current_receivers_note = get_post_meta( $post->ID, '_post_receivers_note', true );
+
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/client-metabox.php' );
 	}

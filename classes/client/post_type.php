@@ -46,6 +46,12 @@ class BEA_CSF_Client_PostType {
 			// Sync settings, allow change post status. Apply only for POST creation
 			if ( 'pending' === $sync_fields['status'] ) {
 				$data_for_post['post_status'] = 'pending';
+			} elseif ( 'user_selection' === $sync_fields['status'] && isset( $data['meta_data']['_b'.$data['blogid'].'_post_receivers_status'] ) ) {
+				$_post_receivers_status = maybe_unserialize($data['meta_data']['_b'.$data['blogid'].'_post_receivers_status'][0]);
+				$_current_blog_id = (int) $GLOBALS['wpdb']->blogid;
+				if ( isset($_post_receivers_status[$_current_blog_id]) && $_post_receivers_status[$_current_blog_id] == 'pending' ) {
+					$data_for_post['post_status'] = 'pending';
+				}
 			}
 
 			$data_for_post['import_id'] = $data_for_post['ID'];
