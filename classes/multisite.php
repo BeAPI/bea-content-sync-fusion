@@ -7,7 +7,7 @@ class BEA_CSF_Multisite {
 	 * Register hooks
 	 */
 	public function __construct() {
-		add_action( 'wpmu_new_blog', array( __CLASS__, 'wpmu_new_blog' ) );
+		//add_action( 'wpmu_new_blog', array( __CLASS__, 'wpmu_new_blog' ) );
 	}
 
 	/**
@@ -21,7 +21,7 @@ class BEA_CSF_Multisite {
 		self::$sync_blog_id = $blog_id;
 
 		add_filter( 'bea_csf.pre_pre_send_data', array( __CLASS__, 'bea_csf_pre_pre_send_data' ), 10, 2 );
-
+		// TODO: Need to rebuild into an async item
 		self::sync_all_terms();
 		self::sync_all_attachments();
 		self::sync_all_posts();
@@ -50,181 +50,4 @@ class BEA_CSF_Multisite {
 
 		return false;
 	}
-
-	/**
-	 *
-	 * Synchronization all terms from any taxinomies
-	 *
-	 * @return bool
-	 */
-	public static function sync_all_terms( $args = array(), $terms_args = array(), $verbose = false ) {
-		$args = wp_parse_args( $args, array() );
-
-		// Get taxonomies names only
-		$taxonomies = get_taxonomies( $args, 'names' );
-		if ( empty( $taxonomies ) ) {
-			if ( true === $verbose ) {
-				printf( "No taxinomies found\n" );
-			}
-
-			return false;
-		}
-
-		// Get terms objects
-		$terms_args = wp_parse_args( $terms_args, array( 'hide_empty' => false ) );
-		$results    = get_terms( array_keys( $taxonomies ), $terms_args );
-		if ( is_wp_error( $results ) || empty( $results ) ) {
-			if ( true === $verbose ) {
-				printf( "No terms found for taxonomies : %s\n", implode( ',', array_keys( $taxonomies ) ) );
-			}
-
-			return false;
-		}
-
-		if ( true === $verbose ) {
-			printf( "Found %s term(s)\n", count( $results ) );
-		}
-
-		foreach ( (array) $results as $result ) {
-			if ( true === $verbose ) {
-				printf( "Synchronizing term %s\n", $result->ID );
-			}
-
-			do_action( 'edited_term', $result->term_id, $result->term_taxonomy_id, $result->taxonomy );
-		}
-
-		return true;
-	}
-
-	/**
-	 *
-	 * Synchronization all attachments
-	 *
-	 * @return bool
-	 */
-	public static function sync_all_attachments( $args = array(), $verbose = false ) {
-		$default_args = array(
-			'post_type'              => 'attachment',
-			'post_status'            => 'any',
-			'nopaging'               => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-			'no_found_rows'          => true,
-			'cache_results'          => false
-		);
-
-		$args    = wp_parse_args( $args, $default_args );
-		$results = get_posts( $args );
-		if ( empty( $results ) ) {
-			if ( true === $verbose ) {
-				printf( "No attachment found\n" );
-			}
-
-			return false;
-		}
-
-		if ( true === $verbose ) {
-			printf( "Found %s attachment(s)\n", count( $results ) );
-		}
-
-		foreach ( (array) $results as $result ) {
-			if ( ! is_a( $result, 'WP_Post' ) ) {
-				continue;
-			}
-
-			if ( true === $verbose ) {
-				printf( "Synchronizing attachment %s\n", $result->ID );
-			}
-
-			do_action( 'edit_attachment', $result->ID );
-		}
-
-		return true;
-	}
-
-	/**
-	 *
-	 * Synchronization all posts from any post types
-	 *
-	 * @return bool
-	 */
-	public static function sync_all_posts( $args = array(), $verbose = false ) {
-		global $wp_post_types;
-
-		$default_args = array(
-			'post_type'              => array_keys( $wp_post_types ),
-			'post_status'            => 'any',
-			'nopaging'               => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-			'no_found_rows'          => true,
-			'cache_results'          => false
-		);
-
-		$args    = wp_parse_args( $args, $default_args );
-		$results = get_posts( $args );
-		if ( empty( $results ) ) {
-			if ( true === $verbose ) {
-				printf( "No posts found for post_type %s\n", $args['post_type'] );
-			}
-
-			return false;
-		}
-
-		if ( true === $verbose ) {
-			printf( "Found %s post(s)\n", count( $results ) );
-		}
-
-		foreach ( $results as $result ) {
-			if ( ! is_a( $result, 'WP_Post' ) ) {
-				continue;
-			}
-
-			if ( true === $verbose ) {
-				printf( "Synchronizing post %s\n", $result->ID );
-			}
-
-			do_action( 'transition_post_status', $result->post_status, $result->post_status, $result );
-			do_action( 'save_post', $result->ID, $result );
-		}
-
-		return true;
-	}
-
-	/**
-	 *
-	 * Synchronization all P2P connections
-	 *
-	 * @return bool
-	 */
-	public static function sync_all_p2p_connections( $args = array(), $verbose = false ) {
-		global $wpdb;
-
-		$args = wp_parse_args( $args, array() );
-
-		$results = (array) $wpdb->get_col( "SELECT p2p_id FROM $wpdb->p2p" );
-		if ( empty( $results ) ) {
-			if ( true === $verbose ) {
-				printf( "No P2P connection found" );
-			}
-
-			return false;
-		}
-
-		if ( true === $verbose ) {
-			printf( "Found %s P2P connection(s)\n", count( $results ) );
-		}
-
-		foreach ( $results as $result_id ) {
-			if ( true === $verbose ) {
-				printf( "Synchronizing P2P connection %s\n", $result_id );
-			}
-
-			do_action( 'p2p_created_connection', $result_id );
-		}
-
-		return true;
-	}
-
-
 }

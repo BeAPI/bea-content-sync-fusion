@@ -316,6 +316,28 @@ class BEA_CSF_Relations {
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public static function get_all_receiver_blog_ids() {
+		global $wpdb;
+
+		/** @var WPDB $wpdb */
+
+		return $wpdb->get_col( "SELECT receiver_blog_id FROM $wpdb->bea_csf_relations GROUP BY receiver_blog_id" );
+	}
+
+	/**
+	 * @return mixed
+	 */
+	public static function get_results_by_receiver_blog_id( $blog_id ) {
+		global $wpdb;
+
+		/** @var WPDB $wpdb */
+
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE receiver_blog_id = %d", $blog_id ) );
+	}
+
+	/**
 	 * @param int $quantity
 	 *
 	 * @return mixed
