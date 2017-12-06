@@ -71,8 +71,8 @@ class BEA_CSF_Server_PostType {
 		$post['meta_data'] = get_post_custom( $post['ID'] );
 
 		// Remove some internal meta
-		if ( isset( $post['meta_data']['_post_receivers'] ) ) {
-			unset( $post['meta_data']['_post_receivers'] );
+		if ( isset( $post['meta_data']['_b'.get_current_blog_id().'_post_receivers'] ) ) {
+			unset( $post['meta_data']['_b'.get_current_blog_id().'_post_receivers'] );
 		}
 		if ( isset( $post['meta_data']['_exclude_from_sync'] ) ) {
 			unset( $post['meta_data']['_exclude_from_sync'] );
