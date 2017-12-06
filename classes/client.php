@@ -24,6 +24,7 @@ class BEA_CSF_Client {
 
 		// Post types
 		add_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX, 3 );
+		//add_action( 'save_post', array( __CLASS__, 'save_post' ), PHP_INT_MAX, 3 );
 		add_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX, 1 );
 
 		// Terms
@@ -190,13 +191,7 @@ class BEA_CSF_Client {
 		}
 
 		$post = get_post( $post );
-
 		if ( false == $post || is_wp_error( $post ) ) {
-			return false;
-		}
-
-		// Go out if post is revision
-		if ( 'revision' == $post->post_type ) {
 			return false;
 		}
 
@@ -207,21 +202,29 @@ class BEA_CSF_Client {
 		$_post_receivers = get_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers', true );
 
 		// Except schedule post
-		if ( 'future' == $old_status ) {
+		/*if ( 'future' == $old_status ) {
 			return false;
-		}
+		}*/
+
+		// Allow 3rd plugin manipulation for post_status
+		$allowed_new_status = apply_filters( 'bea/csf/client/allowed_new_status', [ 'publish', 'future', 'offline' ], $new_status, $old_status, $post );
+		$allowed_old_status = apply_filters( 'bea/csf/client/allowed_old_status', [ 'publish' ], $new_status, $old_status, $post );
 
 		// Check for new publication
-		if ( 'publish' == $new_status || 'future' == $new_status || 'offline' == $new_status ) {
+		if ( in_array( $new_status, $allowed_new_status ) ) {
 			if ( class_exists( 'acf' ) ) {
 				do_action( 'acf/save_post', $post->ID );
 			}
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
-		} elseif ( $new_status != $old_status && 'publish' == $old_status ) { // Check for unpublish
+		} elseif ( $new_status != $old_status && in_array( $new_status, $allowed_new_status )  ) { // Check for unpublish
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
 		}
 
 		return true;
+	}
+
+	public static function save_post( $post_ID, $post, $update ) {
+		var_dump($post_ID, $post);die();
 	}
 
 	/**
@@ -232,11 +235,6 @@ class BEA_CSF_Client {
 	public static function delete_post( $post_id = 0 ) {
 		$post = get_post( $post_id );
 		if ( false === $post || is_wp_error( $post ) ) {
-			return false;
-		}
-
-		// Go out if post is revision
-		if ( 'revision' == $post->post_type ) {
 			return false;
 		}
 
