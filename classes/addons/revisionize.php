@@ -5,8 +5,14 @@ class BEA_CSF_Addon_Revisionize {
 	 * BEA_CSF_Addon_Revisionize constructor.
 	 */
 	public function __construct() {
+		if ( !defined('REVISIONIZE_VERSION') ) {
+			return false;
+		}
+
 		add_action( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
 		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'maybe_transform_data_for_draft'), 10, 3 );
+
+		return true;
 	}
 
 	/**
@@ -47,7 +53,7 @@ class BEA_CSF_Addon_Revisionize {
 	}
 
 	/**
-	 * Insert/update metadata from plugin
+	 * Fixed post_parent when it's a draft revisionize
 	 *
 	 * @param array $data
 	 * @param array $sync_fields
