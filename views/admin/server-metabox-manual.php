@@ -20,8 +20,10 @@
                 <?php if ( $show_blog_status == true ) : ?>
 
                     <select name="post_receivers_status[<?php echo $blog['blog_id']; ?>]" style="float:right;">
-                        <option value="publish" <?php selected( $current_post_receivers_status[$blog['blog_id']], 'publish', true ); ?>><?php _e( 'Publish', 'bea-content-sync-fusion' ); ?></option>
-                        <option value="pending" <?php selected( $current_post_receivers_status[$blog['blog_id']], 'pending', true ); ?>><?php _e( 'Pending', 'bea-content-sync-fusion' ); ?></option>
+                        <option value="publish" <?php selected( $current_post_receivers_status[$blog['blog_id']], 'publish', true ); ?>><?php _e( 'Publish always', 'bea-content-sync-fusion' ); ?></option>
+                        <option value="publish-draft" <?php selected( $current_post_receivers_status[$blog['blog_id']], 'publish-draft', true ); ?>><?php _e( 'Publish + Draft future', 'bea-content-sync-fusion' ); ?></option>
+                        <option value="pending" <?php selected( $current_post_receivers_status[$blog['blog_id']], 'pending', true ); ?>><?php _e( 'Pending + Leave as', 'bea-content-sync-fusion' ); ?></option>
+                        <option value="pending-draft" <?php selected( $current_post_receivers_status[$blog['blog_id']], 'pending-draft', true ); ?>><?php _e( 'Pending + Draft future', 'bea-content-sync-fusion' ); ?></option>
                     </select>
                 <?php endif; ?>
 			</li>

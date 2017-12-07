@@ -224,7 +224,7 @@ class BEA_CSF_Client {
 	}
 
 	public static function save_post( $post_ID, $post, $update ) {
-		var_dump($post_ID, $post);die();
+		//var_dump($post_ID, $post);die();
 	}
 
 	/**
