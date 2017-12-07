@@ -24,7 +24,6 @@ class BEA_CSF_Client {
 
 		// Post types
 		add_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX, 3 );
-		//add_action( 'save_post', array( __CLASS__, 'save_post' ), PHP_INT_MAX, 3 );
 		add_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX, 1 );
 
 		// Terms
@@ -195,6 +194,11 @@ class BEA_CSF_Client {
 			return false;
 		}
 
+		// Go out if post is revision
+		if ( 'revision' == $post->post_type ) {
+			return false;
+		}
+
 		// Auto Sync - Exclude meta ?
 		$is_excluded_from_sync = (boolean) get_post_meta( $post->ID, '_exclude_from_sync', true );
 
@@ -223,10 +227,6 @@ class BEA_CSF_Client {
 		return true;
 	}
 
-	public static function save_post( $post_ID, $post, $update ) {
-		//var_dump($post_ID, $post);die();
-	}
-
 	/**
 	 * @param int $post_id
 	 *
@@ -235,6 +235,11 @@ class BEA_CSF_Client {
 	public static function delete_post( $post_id = 0 ) {
 		$post = get_post( $post_id );
 		if ( false === $post || is_wp_error( $post ) ) {
+			return false;
+		}
+
+		// Go out if post is revision
+		if ( 'revision' == $post->post_type ) {
 			return false;
 		}
 
