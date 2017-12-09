@@ -19,6 +19,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			add_action( 'acf/include_field_types', array(__CLASS__, 'acf_include_field_types'), 9999999 );
 			add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_fields'), 11, 3 );
 			add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_fields'), 11, 3 );
+
 		}
 
 		// Groups
@@ -94,9 +95,15 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 * @param $field
 	 */
 	public static function acf_render_field_before( $field ) {
+		if ( apply_filters( 'bea/csf/acf-addon-exclusion/allow-types-fieds-exclusion', false, $field ) === false ) {
+			return false;
+		}
+
 		if ( in_array($field['type'], array('flexible_content', 'repeater') ) ) {
 			self::build_html_checkbox( $field, __('Exclude this group from future synchro', 'bea-content-sync-fusion') );
 		}
+
+		return true;
 	}
 
 	/**
@@ -105,9 +112,15 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 * @param $field
 	 */
 	public static function acf_render_field_after( $field ) {
+		if ( apply_filters( 'bea/csf/acf-addon-exclusion/allow-types-fieds-exclusion', false, $field ) === false ) {
+			return false;
+		}
+
 		if ( !in_array($field['type'], array('flexible_content', 'repeater') ) ) {
 			self::build_html_checkbox( $field, __('Exclude this field from future synchro', 'bea-content-sync-fusion') );
 		}
+
+		return true;
 	}
 
 	/**
