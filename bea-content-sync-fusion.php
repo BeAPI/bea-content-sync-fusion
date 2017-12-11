@@ -90,6 +90,8 @@ require( BEA_CSF_DIR . 'classes/admin/admin-client-metaboxes.php' );
 require( BEA_CSF_DIR . 'classes/admin/admin-restrictions.php' );
 require( BEA_CSF_DIR . 'classes/admin/admin-terms.php' );
 require( BEA_CSF_DIR . 'classes/admin/admin-terms-metaboxes.php' );
+require( BEA_CSF_DIR . 'classes/admin/admin-list.php' );
+require( BEA_CSF_DIR . 'classes/admin/admin-dashboard-widgets.php' );
 
 // Plugin activate/desactive hooks
 register_activation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'activate' ) );
@@ -127,5 +129,7 @@ function init_bea_content_sync_fusion() {
 		new BEA_CSF_Admin_Terms();
 		new BEA_CSF_Admin_Terms_Metaboxes();
 		new BEA_CSF_Admin_Blog();
+		new BEA_CSF_Admin_Dashboard_Widgets();
+		new BEA_CSF_Admin_List();
 	}
 }
