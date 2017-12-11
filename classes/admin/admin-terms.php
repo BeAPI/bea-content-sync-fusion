@@ -76,8 +76,7 @@ class BEA_CSF_Admin_Terms {
 	}
 
 	public static function is_valid_blog_id( $blog_id = 0 ) {
-		$blogs_id = BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network();
-		foreach ( BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network() as $site ) {
+		foreach ( BEA_CSF_Synchronizations::get_sites_from_network() as $site ) {
 			if ( $site['blog_id'] == $blog_id ) {
 				return true;
 			}

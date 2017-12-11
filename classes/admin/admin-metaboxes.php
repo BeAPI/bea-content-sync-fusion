@@ -268,7 +268,7 @@ class BEA_CSF_Admin_Metaboxes {
 	 * @return bool
 	 */
 	public static function is_valid_blog_id( $blog_id = 0 ) {
-		$sites_id = BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network();
+		$sites_id = BEA_CSF_Synchronizations::get_sites_from_network();
 		foreach ( $sites_id as $site ) {
 			if ( $site['blog_id'] == $blog_id ) {
 				return true;

@@ -5,7 +5,7 @@
 		<?php if ( self::is_valid_blog_id( $_origin_blog_id ) ) : ?>
 			<?php _e( 'Blog:', 'bea-content-sync-fusion' ); ?>
 			<select id="emitter-blog" name="term_emitter[blog_id]">
-				<?php foreach ( BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network() as $site ) : ?>
+				<?php foreach ( BEA_CSF_Synchronizations::get_sites_from_network() as $site ) : ?>
 					<option
 						value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( $site['blog_id'], $_origin_blog_id, true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
 				<?php endforeach; ?>

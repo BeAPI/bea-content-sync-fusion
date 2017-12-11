@@ -230,7 +230,7 @@ class BEA_CSF_Synchronization {
 		foreach ( $this->receivers as $key => $receiver_blog_id ) {
 			if ( 'all' === $receiver_blog_id ) {
 				// Get all sites
-				$blogs = BEA_CSF_Admin_Synchronizations_Network::get_sites_from_network( 0 );
+				$blogs = BEA_CSF_Synchronizations::get_sites_from_network( 0 );
 				foreach ( $blogs as $blog ) {
 					// Exclude emitters
 					if ( ! in_array( $blog['blog_id'], $this->emitters ) ) {
