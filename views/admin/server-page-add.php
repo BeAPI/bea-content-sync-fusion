@@ -1,5 +1,4 @@
 <div class="wrap">
-	<?php screen_icon( 'options-general' ); ?>
 	<?php if ( $edit == true ) : ?>
 		<h2><?php _e( "Content Sync: Edit", 'bea-content-sync-fusion' ); ?></h2>
 	<?php else: ?>

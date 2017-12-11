@@ -1,5 +1,4 @@
 <div class="wrap">
-	<?php screen_icon( 'options-general' ); ?>
 	<h2><?php _e( "Content Sync: Settings", 'bea-content-sync-fusion' ); ?></h2>
 
 	<p><?php _e( 'This plugin gives you the ability to sync content published on a website network to one or more websites network of your choice.', 'bea-content-sync-fusion' ); ?></p>
@@ -103,7 +102,6 @@
 
 
 	<h3><?php _e( "Content Sync: Advanced settings", 'bea-content-sync-fusion' ); ?></h3>
-
 	<div id="col-container">
 		<form action="" method="post">
 			<table class="form-table">
