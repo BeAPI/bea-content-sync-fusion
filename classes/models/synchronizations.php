@@ -10,9 +10,41 @@ class BEA_CSF_Synchronizations {
 	 * @return boolean
 	 */
 	public static function init_from_db() {
-		$current_options = get_site_option( BEA_CSF_OPTION );
-		if ( $current_options == false ) {
-			return false;
+		$network_query_args = array(
+			'fields' => 'ids',
+			'network__in' => get_current_network_id()
+		);
+
+		/**
+		 * Filter the query args for getting sites from network.
+		 *
+		 * @since 3.0.2
+		 *
+		 * @author Maxime CULEA
+		 *
+		 * @var array $site_query_args : the query args
+		 * @var int|null $network_id : the network id working on
+		 */
+		$site_query_args = apply_filters( 'bea_csf.admin.admin_synchronization_network.query_args', $network_query_args, get_current_network_id() );
+
+		// Get networks
+		$network_query = new WP_Network_Query( $site_query_args );
+
+		// Get option for each network need...
+		$current_options = array();
+		if ( ! empty( $network_query->networks ) ) {
+			foreach ( $network_query->networks as $network_id ) {
+				$network_current_options = get_network_option( $network_id, BEA_CSF_OPTION );
+				if ( $network_current_options == false ) {
+					continue;
+				}
+
+				if ( ! empty( $network_current_options ) ) {
+					foreach ( $network_current_options as $network_current_option ) {
+						$current_options[] = $network_current_option;
+					}
+				}
+			}
 		}
 
 		foreach ( $current_options as $key => $sync_obj ) {
@@ -120,7 +152,7 @@ class BEA_CSF_Synchronizations {
 
 			$new_id = 1;
 		} else {
-			// Get current max 
+			// Get current max
 			$max = max( array_keys( $current_options ) );
 
 			// New key
