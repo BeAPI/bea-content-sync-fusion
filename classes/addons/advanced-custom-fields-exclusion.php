@@ -1,5 +1,11 @@
 <?php
-
+/**
+ * Class BEA_CSF_Addon_ACF_Exclusion
+ *
+ * First draft for ACF exclusion (fields, flexible, groups)
+ * @TODO : Taxonomy supports ? Flexible (drag/drop)
+ *
+ */
 class BEA_CSF_Addon_ACF_Exclusion {
 	static $acf_fields = array();
 	static $meta_data = array();
@@ -27,6 +33,11 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_groups'), 10, 3 );
 		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_groups'), 10, 3 );
 		add_action( 'admin_head', array(__CLASS__, 'admin_head'), 9999999 );
+
+		// Flexible
+		add_action( 'save_post', array(__CLASS__, 'save_post_flexibles'), 10, 1 );
+		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_flexibles'), 10, 3 );
+		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_flexibles'), 10, 3 );
 
 		return true;
 	}
@@ -76,6 +87,31 @@ class BEA_CSF_Addon_ACF_Exclusion {
 
 		return true;
 	}
+
+	/**
+	 * Save groups to exclude into a post meta
+	 *
+	 * @param $post_id
+	 */
+	public static function save_post_flexibles( $post_id ) {
+		// verify this came from the our screen and with proper authorization,
+		// because save_post can be triggered at other times
+		if ( ! isset( $_POST[ 'bea_csf_exclude_acf_fields_flexible_nonce' ] ) || ! wp_verify_nonce( $_POST[ 'bea_csf_exclude_acf_fields_flexible_nonce' ], plugin_basename( __FILE__ ) ) ) {
+			return false;
+		}
+
+		if ( isset($_POST['bea_csf_exclude_acf_fields_flexible']) ) {
+			$_POST['bea_csf_exclude_acf_fields_flexible'] = wp_unslash($_POST['bea_csf_exclude_acf_fields_flexible']);
+
+			update_post_meta( $post_id, 'bea_csf_exclude_acf_fields_flexible', $_POST['bea_csf_exclude_acf_fields_flexible'] );
+		} else {
+			delete_post_meta( $post_id, 'bea_csf_exclude_acf_fields_flexible' );
+		}
+
+		return true;
+	}
+
+
 
 	/**
 	 * Hook all ACF fields registered
@@ -168,7 +204,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		}
 
 		$current_excluded_groups = (array) get_post_meta( $local_id, 'bea_csf_exclude_acf_group', true );
-		if ( $current_excluded_groups == false ) {
+		if ( empty($current_excluded_groups) ) {
 			return $data;
 		}
 
@@ -186,6 +222,53 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			if ( isset(self::$acf_fields[$raw_meta_value[0]]) ) {
 				$meta_key_parent_to_delete = substr( $meta_key, 1 );
 				unset( $data['meta_data'][ $meta_key ], $data['meta_data'][ $meta_key_parent_to_delete ] );
+			}
+		}
+
+		return $data;
+	}
+
+	/**
+	 * Delete metadata excluded with ACF fields exclusion form synchro
+	 *
+	 * @param $data
+	 * @param $sync_receiver_blog_id
+	 * @param $sync_fields
+	 *
+	 * @return mixed
+	 */
+	public static function filter_acf_flexibles( $data, $sync_receiver_blog_id, $sync_fields ) {
+		$local_id = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		if ( $local_id === false ) {
+			return $data;
+		}
+
+		$current_excluded_items = (array) get_post_meta( $local_id, 'bea_csf_exclude_acf_fields_flexible', true );
+		if ( empty($current_excluded_items) ) {
+			return $data;
+		}
+
+		// Set meta_data into static variable
+		self::$meta_data = $data['meta_data'];
+
+		// Loop on each exclusion
+		foreach ( $current_excluded_items as $current_excluded_item ) {
+			preg_match_all( '/\[(\w+)\]/is', $current_excluded_item, $matches );
+
+			$translated_acf_name = '';
+			foreach ( $matches[1] as $fragment_match ) {
+				$translated_acf_name .= self::get_acf_field_name( $fragment_match, $translated_acf_name );
+			}
+
+			// Invalid key name, skip
+			if ( empty($translated_acf_name) ) continue;
+
+			// Delete key that with the right prefix
+			foreach ( (array) $data['meta_data'] as $meta_key => $meta_value ) {
+				if ( substr( $meta_key, 0, strlen( $translated_acf_name ) ) == $translated_acf_name ) {
+					$meta_key_parent_to_delete = substr( $meta_key, 1 );
+					unset( $data['meta_data'][ $meta_key ], $data['meta_data'][ $meta_key_parent_to_delete ] );
+				}
 			}
 		}
 
@@ -227,7 +310,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		}
 
 		$current_excluded_items = (array) get_post_meta( $local_id, 'bea_csf_exclude_acf_fields', true );
-		if ( $current_excluded_items == false ) {
+		if ( empty($current_excluded_items) ) {
 			return $data;
 		}
 
@@ -371,5 +454,50 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		$output .= wp_nonce_field( plugin_basename( __FILE__ ), 'bea_csf_exclude_acf_group_nonce', true, false  );
 
 		return $output;
+	}
+
+	/**
+	 * Helper for display the checkbox before or after ACF fields
+	 *
+	 * @param array $field
+	 * @param string $label
+	 * @param $layout
+	 * @param $i
+	 * @param $value
+	 *
+	 * @return bool
+	 */
+	public static function build_html_checkbox_flexible( $field, $label, $layout, $i, $value ) {
+		global $post, $wpdb, $counter_flexible;
+
+		if ( 'acfcloneindex' === $i ) {
+			return false;
+		}
+
+		// Get emitter for current post
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( 'posttype', $wpdb->blogid, $post->ID );
+		if ( empty( $emitter_relation ) ) {
+			return false;
+		}
+
+		// Get current checked items
+		$current_excluded_items = get_post_meta( $post->ID, 'bea_csf_exclude_acf_fields_flexible', true );
+
+		// Increment counter
+		if ( !isset($counter_flexible[$field['name']]) ) {
+			$counter_flexible[$field['name']] = -1;
+		}
+		$counter_flexible[$field['name']]++;
+
+		// Build value with name + counter
+		$input_value = $field['name'].'['.$counter_flexible[$field['name']].']';
+
+		// Show checkbox
+		echo '<label class="bea-csf-acf-exclusion"><input type="checkbox" '.checked(in_array($input_value, (array) $current_excluded_items), true, false).' name="bea_csf_exclude_acf_fields_flexible[]" value="'.esc_attr($input_value).'" />'.$label.'</label>';
+
+		// Call once time
+		wp_nonce_field( plugin_basename( __FILE__ ), 'bea_csf_exclude_acf_fields_flexible_nonce' );
+
+		return true;
 	}
 }

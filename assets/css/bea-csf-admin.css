@@ -1,4 +1,5 @@
 .bea-csf-acf-exclusion {
     display: block;
     text-align: right;
+    float: right;
 }
