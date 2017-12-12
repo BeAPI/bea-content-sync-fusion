@@ -208,12 +208,24 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			return $data;
 		}
 
+		// Get all groups
+		$groups = acf_get_field_groups();
+		if ( empty( $groups ) ) {
+			return $data;
+		}
+
 		$fields = array();
-		foreach ( $current_excluded_groups as $group_id ) {
-			$_fields = (array) acf_get_fields( $group_id );
+		foreach ( $groups as $group ) {
+			if ( !in_array($group['key'], $current_excluded_groups) ) continue;
+
+			$_fields = (array) acf_get_fields( $group );
 			foreach ($_fields as $_field ) {
 				$fields[] = $_field;
 			}
+		}
+
+		if ( empty( $fields ) ) {
+			return $data;
 		}
 
 		// Get only fields
@@ -448,7 +460,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		}
 
 		// Get ID from metabox arguments
-		$acf_group_id = $meta_box['args']['field_group']['ID'];
+		$acf_group_id = $meta_box['args']['field_group']['key'];
 
 		// Get current checked items
 		$current_excluded_items = get_post_meta( $post->ID, 'bea_csf_exclude_acf_group', true );
