@@ -12,7 +12,17 @@ class BEA_CSF_Addon_Revisionize {
 		add_action( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
 		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'maybe_transform_data_for_draft'), 10, 3 );
 
+		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ), 11, 2 );
+		// TODO: Remove BEA CSF from META DELETE
+
 		return true;
+	}
+
+	public static function add_meta_boxes( $post_type, $post ) {
+		if ( \Revisionize\is_revision_post($post) ) {
+			remove_meta_box( BEA_CSF_OPTION . 'metabox-auto', get_current_screen(), 'side' );
+			remove_meta_box( BEA_CSF_OPTION . 'metabox-manual', get_current_screen(), 'side' );
+		}
 	}
 
 	/**
