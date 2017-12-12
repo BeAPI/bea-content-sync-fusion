@@ -18,6 +18,11 @@ Compatible up to WordPress 4.9.x
 
 ## Changelog
 
+
+### 3.1-beta - Novembre-December 2017
+
+ * Soon :)
+
 ### 3.0.8 - 30 Oct 2017
  * Feature: Allow to exclude a content for future updates, useful when restriction is deactivated
 
