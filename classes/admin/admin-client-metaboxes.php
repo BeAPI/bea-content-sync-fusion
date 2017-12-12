@@ -54,7 +54,7 @@ class BEA_CSF_Admin_Client_Metaboxes {
 		// Get emitter for current post
 		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( 'posttype', $wpdb->blogid, $post->ID );
 		if ( ! empty( $emitter_relation ) ) {
-			add_meta_box( BEA_CSF_OPTION . 'metabox-auto', __( 'Synchronization', 'bea-content-sync-fusion' ), array(
+			add_meta_box( BEA_CSF_OPTION . 'metabox-client', __( 'Synchronization', 'bea-content-sync-fusion' ), array(
 				__CLASS__,
 				'metabox_content',
 			), $post_type, 'side', 'low', array( 'relation' => $emitter_relation ) );
