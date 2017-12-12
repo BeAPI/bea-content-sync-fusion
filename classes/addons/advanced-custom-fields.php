@@ -11,7 +11,7 @@ class BEA_CSF_Addon_ACF {
 	 * BEA_CSF_Addon_ACF constructor.
 	 */
 	public function __construct() {
-		if ( !function_exists('acf_get_field_groups' ) ) {
+		if ( ! class_exists('acf') ) {
 			return false;
 		}
 
@@ -30,7 +30,7 @@ class BEA_CSF_Addon_ACF {
 	 * @param array $sync_fields
 	 * @param WP_Post $new_post
 	 *
-	 * @return bool
+	 * @return array
 	 */
 	public static function bea_csf_client_posttype_merge( $data, $sync_fields, $new_post ) {
 		// Post have metadata ?
@@ -38,21 +38,22 @@ class BEA_CSF_Addon_ACF {
 			return $data;
 		}
 
-		if ( 'attachment' === $new_post->post_type ) {
-			// get field groups
-			$groups = acf_get_field_groups( array( 'attachment' => $new_post->ID ) );
-		} else {
-			$groups = acf_get_field_groups( array( 'post_type' => $new_post->post_type ) );
-		}
-
-
+		// Get all groups
+		$groups = acf_get_field_groups();
 		if ( empty( $groups ) ) {
 			return $data;
 		}
 
 		$fields = array();
 		foreach ( $groups as $group ) {
-			$fields += (array) acf_get_fields( $group );
+			$_fields = (array) acf_get_fields( $group );
+			foreach ($_fields as $_field ) {
+				$fields[] = $_field;
+			}
+		}
+
+		if ( empty( $fields ) ) {
+			return $data;
 		}
 
 		// Get only fields
@@ -77,7 +78,7 @@ class BEA_CSF_Addon_ACF {
 	 * @param array $sync_fields
 	 * @param WP_Term $new_term
 	 *
-	 * @return bool
+	 * @return array
 	 */
 	public static function bea_csf_client_taxonomy_merge( $data, $sync_fields, $new_term ) {
 		// Post have metadata ?
@@ -85,15 +86,22 @@ class BEA_CSF_Addon_ACF {
 			return $data;
 		}
 
-		// get field groups
-		$groups = acf_get_field_groups(array('taxonomy' => $new_term->taxonomy));
+		// Get all groups
+		$groups = acf_get_field_groups();
 		if ( empty( $groups ) ) {
 			return $data;
 		}
 
 		$fields = array();
 		foreach ( $groups as $group ) {
-			$fields += (array) acf_get_fields( $group );
+			$_fields = (array) acf_get_fields( $group );
+			foreach ($_fields as $_field ) {
+				$fields[] = $_field;
+			}
+		}
+
+		if ( empty( $fields ) ) {
+			return $data;
 		}
 
 		// Get only fields
@@ -155,6 +163,14 @@ class BEA_CSF_Addon_ACF {
 			if ( is_array($meta_value_to_translate) ) {
 				foreach( $meta_value_to_translate as $_key => $_value ) {
 					$object_id = BEA_CSF_Relations::get_object_for_any( $types, $data['blogid'], $sync_fields['_current_receiver_blog_id'], $_value, $_value );
+					// If relation not exist, try to check if the parent relation is an synchronized content for get an indirect relation
+					if ( empty( $object_id ) || (int) $object_id == 0 ) {
+						$parent_relation = BEA_CSF_Relations::current_object_is_synchronized($types, $data['blogid'], $meta_value_to_translate);
+						if ( $parent_relation != false ) {
+							$object_id = BEA_CSF_Relations::get_object_for_any( $types, $parent_relation->emitter_blog_id, $sync_fields['_current_receiver_blog_id'], $parent_relation->emitter_id, $parent_relation->emitter_id );
+						}
+					}
+
 					if ( ! empty( $object_id ) && (int) $object_id > 0 ) {
 						$meta_value_to_translate[$_key] = $object_id;
 					}
@@ -163,11 +179,19 @@ class BEA_CSF_Addon_ACF {
 				$meta_data_to_update[$meta_key_to_translate] = $meta_value_to_translate;
 			} else {
 				$object_id = BEA_CSF_Relations::get_object_for_any( $types, $data['blogid'], $sync_fields['_current_receiver_blog_id'], $meta_value_to_translate, $meta_value_to_translate );
+				// If relation not exist, try to check if the parent relation is an synchronized content for get an indirect relation
+				if ( empty( $object_id ) || (int) $object_id == 0 ) {
+					$parent_relation = BEA_CSF_Relations::current_object_is_synchronized($types, $data['blogid'], $meta_value_to_translate);
+					if ( $parent_relation != false ) {
+						$object_id = BEA_CSF_Relations::get_object_for_any( $types, $parent_relation->emitter_blog_id, $sync_fields['_current_receiver_blog_id'], $parent_relation->emitter_id, $parent_relation->emitter_id );
+
+					}
+				}
+
 				if ( ! empty( $object_id ) && (int) $object_id > 0 ) {
 					$meta_data_to_update[$meta_key_to_translate] = $object_id;
 				}
 			}
-
 		}
 
 		return $meta_data_to_update;

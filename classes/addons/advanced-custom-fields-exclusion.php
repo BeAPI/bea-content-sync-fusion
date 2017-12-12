@@ -14,7 +14,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 * BEA_CSF_Addon_ACF_Exclusion constructor.
 	 */
 	public function __construct() {
-		if ( !function_exists('acf_get_field_groups' ) ) {
+		if ( ! class_exists('acf') ) {
 			return false;
 		}
 
@@ -210,7 +210,10 @@ class BEA_CSF_Addon_ACF_Exclusion {
 
 		$fields = array();
 		foreach ( $current_excluded_groups as $group_id ) {
-			$fields += (array) acf_get_fields( $group_id );
+			$_fields = (array) acf_get_fields( $group_id );
+			foreach ($_fields as $_field ) {
+				$fields[] = $_field;
+			}
 		}
 
 		// Get only fields
