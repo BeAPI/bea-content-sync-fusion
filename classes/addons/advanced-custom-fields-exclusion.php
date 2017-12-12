@@ -32,7 +32,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		add_action( 'save_post', array(__CLASS__, 'save_post_groups'), 10, 1 );
 		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_groups'), 10, 3 );
 		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_groups'), 10, 3 );
-		add_action( 'admin_head', array(__CLASS__, 'admin_head'), 9999999 );
+		add_action( 'post_edit_form_tag', array(__CLASS__, 'post_edit_form_tag'), 1 );
 
 		// Flexible
 		add_action( 'save_post', array(__CLASS__, 'save_post_flexibles'), 10, 1 );
@@ -405,7 +405,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	/**
 	 * Hook on admin_head "as ACF" for get all metaboxes declared by this plugin and append a small checkbox
 	 */
-	public static function admin_head() {
+	public static function post_edit_form_tag() {
 		global $wp_meta_boxes;
 
 		if ( !isset($wp_meta_boxes) ) {
