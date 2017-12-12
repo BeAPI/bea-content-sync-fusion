@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: O&O - Content Synchronization - Fusion\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-09 11:54+0100\n"
+"POT-Creation-Date: 2017-12-12 14:22+0100\n"
 "POT-Revision-Date: Sun May 29 2016 01:42:23 GMT+0200 (Paris, Madrid (heure "
 "d’été))\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.5\n"
 "X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;__:1;"
 "_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;_x:1,2c;"
 "_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;esc_attr__:1;"
@@ -24,60 +24,64 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../classes/addons/advanced-custom-fields-exclusion.php:103
+#: ../classes/addons/advanced-custom-fields-exclusion.php:139
 msgid "Exclude this group from future synchro"
 msgstr ""
 
-#: ../classes/addons/advanced-custom-fields-exclusion.php:120
+#: ../classes/addons/advanced-custom-fields-exclusion.php:156
 msgid "Exclude this field from future synchro"
 msgstr ""
 
-#: ../classes/addons/advanced-custom-fields-exclusion.php:337
+#: ../classes/addons/advanced-custom-fields-exclusion.php:435
 msgid "Exclude this group from sync"
 msgstr ""
 
-#: ../classes/admin/admin-blog.php:51
-msgid "Show all media"
+#: ../classes/addons/revisionize.php:60
+msgid "Remote revision"
 msgstr ""
 
-#: ../classes/admin/admin-blog.php:53
-msgid "Show all content"
-msgstr ""
-
-#: ../classes/admin/admin-blog.php:54
-msgid "Show only local content"
-msgstr ""
-
-#: ../classes/admin/admin-blog.php:55
-msgid "Show only remote content"
-msgstr ""
-
-#: ../classes/admin/admin-blog.php:137
+#: ../classes/admin/admin-blog.php:27
 msgid "Resync content"
 msgstr ""
 
-#: ../classes/admin/admin-blog.php:138
+#: ../classes/admin/admin-blog.php:28
 msgid "Sync content"
 msgstr ""
 
-#: ../classes/admin/admin-blog.php:174
+#: ../classes/admin/admin-blog.php:64
 msgid "Resync website OK."
 msgstr ""
 
-#: ../classes/admin/admin-blog.php:176
+#: ../classes/admin/admin-blog.php:66
 msgid "Sync website OK."
-msgstr ""
-
-#: ../classes/admin/admin-blog.php:189
-msgid "Content synchronization status"
-msgstr ""
-
-#: ../classes/admin/admin-blog.php:195
-msgid "Synchronized contents awaiting validation"
 msgstr ""
 
 #: ../classes/admin/admin-client-metaboxes.php:57
 msgid "Synchronization"
+msgstr ""
+
+#: ../classes/admin/admin-dashboard-widgets.php:22
+msgid "Content synchronization status"
+msgstr ""
+
+#: ../classes/admin/admin-dashboard-widgets.php:28
+msgid "Synchronized contents awaiting validation"
+msgstr ""
+
+#: ../classes/admin/admin-list.php:43
+msgid "Show all media"
+msgstr ""
+
+#: ../classes/admin/admin-list.php:45
+msgid "Show all content"
+msgstr ""
+
+#: ../classes/admin/admin-list.php:46
+msgid "Show only local content"
+msgstr ""
+
+#: ../classes/admin/admin-list.php:47
+msgid "Show only remote content"
 msgstr ""
 
 #: ../classes/admin/admin-metaboxes.php:153
@@ -133,12 +137,12 @@ msgstr ""
 
 #: ../classes/admin/admin-synchronizations-network.php:55
 #: ../views/admin/blog-widget-list.php:13
-#: ../views/admin/server-page-settings.php:71
+#: ../views/admin/server-page-settings.php:70
 msgid "Edit"
 msgstr ""
 
 #: ../classes/admin/admin-synchronizations-network.php:59
-#: ../views/admin/server-page-add.php:129
+#: ../views/admin/server-page-add.php:128
 msgid "Add"
 msgstr ""
 
@@ -292,17 +296,17 @@ msgid ""
 "article: <strong>%s</strong>"
 msgstr ""
 
-#: ../views/admin/client-page-settings-notification.php:3
+#: ../views/admin/client-page-settings-notification.php:2
 msgid "Content Sync: Notifications"
 msgstr ""
 
-#: ../views/admin/client-page-settings-notification.php:6
+#: ../views/admin/client-page-settings-notification.php:5
 msgid ""
 "This page allows you to choose what user must be notified when adding new "
 "content with sync feature. If no user is selected, no notification will be sent."
 msgstr ""
 
-#: ../views/admin/client-page-settings-notification.php:25
+#: ../views/admin/client-page-settings-notification.php:24
 msgid "Save settings"
 msgstr ""
 
@@ -369,87 +373,87 @@ msgstr ""
 msgid "Pending + Draft future"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:4
+#: ../views/admin/server-page-add.php:3
 msgid "Content Sync: Edit"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:6
+#: ../views/admin/server-page-add.php:5
 msgid "Content Sync: Add"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:12
+#: ../views/admin/server-page-add.php:11
 msgid "Label"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:16
+#: ../views/admin/server-page-add.php:15
 msgid ""
 "The label of the synchronization is mainly used for the administration console."
 msgstr ""
 
-#: ../views/admin/server-page-add.php:20 ../views/admin/server-page-settings.php:13
+#: ../views/admin/server-page-add.php:19 ../views/admin/server-page-settings.php:12
 msgid "Post type"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:22
+#: ../views/admin/server-page-add.php:21
 msgid "No post type, sync only taxo !"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:29
+#: ../views/admin/server-page-add.php:28
 msgid "You must select the type of content that you want to sync"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:33 ../views/admin/server-page-settings.php:14
+#: ../views/admin/server-page-add.php:32 ../views/admin/server-page-settings.php:13
 msgid "Taxonomies"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:41
+#: ../views/admin/server-page-add.php:40
 msgid "You must select taxonomies related to content that you want to sync"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:46
+#: ../views/admin/server-page-add.php:45
 msgid "P2P connections"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:54
+#: ../views/admin/server-page-add.php:53
 msgid "You must select P2P connection that you want to sync"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:59 ../views/admin/server-page-settings.php:18
+#: ../views/admin/server-page-add.php:58 ../views/admin/server-page-settings.php:17
 msgid "Mode"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:63
+#: ../views/admin/server-page-add.php:62
 msgid "Manual"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:64
+#: ../views/admin/server-page-add.php:63
 msgid "Automatic"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:72 ../views/admin/server-page-add.php:102
-#: ../views/admin/server-page-add.php:116
+#: ../views/admin/server-page-add.php:71 ../views/admin/server-page-add.php:101
+#: ../views/admin/server-page-add.php:115
 msgid ""
 "Mode automatically is completely transparent to the user, whereas the manual "
 "mode adds a meta box in the writing page."
 msgstr ""
 
-#: ../views/admin/server-page-add.php:76 ../views/admin/server-page-settings.php:19
+#: ../views/admin/server-page-add.php:75 ../views/admin/server-page-settings.php:18
 msgid "Default status"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:80
+#: ../views/admin/server-page-add.php:79
 msgid "Publish"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:81
+#: ../views/admin/server-page-add.php:80
 msgid "Pending"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:82
+#: ../views/admin/server-page-add.php:81
 msgid "User selection's, only for manual mode"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:90
+#: ../views/admin/server-page-add.php:89
 msgid ""
 "When content is published and it is sent to other sites, it is automatically set "
 "to the status \"published\", you can also set the \"pending\" status and provide "
@@ -457,17 +461,17 @@ msgid ""
 "type)"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:94 ../views/admin/server-page-settings.php:20
+#: ../views/admin/server-page-add.php:93 ../views/admin/server-page-settings.php:19
 msgid "Emitters"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:106
-#: ../views/admin/server-page-settings.php:21
+#: ../views/admin/server-page-add.php:105
+#: ../views/admin/server-page-settings.php:20
 msgid "Receivers"
 msgstr ""
 
-#: ../views/admin/server-page-add.php:126
-#: ../views/admin/server-page-settings.php:130
+#: ../views/admin/server-page-add.php:125
+#: ../views/admin/server-page-settings.php:128
 msgid "Save"
 msgstr ""
 
@@ -512,57 +516,57 @@ msgid ""
 "list of sites view."
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:3
+#: ../views/admin/server-page-settings.php:2
 msgid "Content Sync: Settings"
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:5
+#: ../views/admin/server-page-settings.php:4
 msgid ""
 "This plugin gives you the ability to sync content published on a website network "
 "to one or more websites network of your choice."
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:11
+#: ../views/admin/server-page-settings.php:10
 msgid "Name"
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:12
+#: ../views/admin/server-page-settings.php:11
 msgid "Enable ?"
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:16
+#: ../views/admin/server-page-settings.php:15
 msgid "P2P"
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:27
+#: ../views/admin/server-page-settings.php:26
 #, php-format
 msgid "No synchronization exists. Want to <a href=\"%s\">create one</a>?"
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:77
+#: ../views/admin/server-page-settings.php:76
 #, php-format
 msgid ""
 "You are about to delete this sync '%s'\n"
 "  'Cancel' to stop, 'OK' to delete."
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:77
+#: ../views/admin/server-page-settings.php:76
 msgid "Delete"
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:79
+#: ../views/admin/server-page-settings.php:78
 msgid "This item is locked because registered since the developer API."
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:105
+#: ../views/admin/server-page-settings.php:104
 msgid "Content Sync: Advanced settings"
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:112
+#: ../views/admin/server-page-settings.php:110
 msgid "Special mode"
 msgstr ""
 
-#: ../views/admin/server-page-settings.php:119
+#: ../views/admin/server-page-settings.php:117
 msgid "Remove all content edition restrictions"
 msgstr ""
 

@@ -136,6 +136,9 @@ class BEA_CSF_Client_Attachment {
 			$new_attachment->is_edition = ( ! empty( $current_media_id ) && (int) $current_media_id > 0 ) ? true : false;
 		}
 
+		// App new new media for 3rd party plugins
+		$data['new_media_id'] = $new_media_id;
+
 		return apply_filters( 'bea_csf.client.attachment.merge', $data, $sync_fields, $new_attachment );
 	}
 }
