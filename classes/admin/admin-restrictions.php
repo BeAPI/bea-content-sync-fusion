@@ -13,7 +13,7 @@ class BEA_CSF_Admin_Restrictions {
 		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
 
 		// Get current setting
-		$current_settings = get_site_option( 'csf_adv_settings' );
+		$current_settings = get_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'csf_adv_settings' );
 		if ( isset( $current_settings['unlock-mode'] ) && '1' === $current_settings['unlock-mode'] ) {
 			return false;
 		}

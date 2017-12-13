@@ -10,42 +10,7 @@ class BEA_CSF_Synchronizations {
 	 * @return boolean
 	 */
 	public static function init_from_db() {
-		$network_query_args = array(
-			'fields' => 'ids',
-			'network__in' => get_current_network_id()
-		);
-
-		/**
-		 * Filter the query args for getting sites from network.
-		 *
-		 * @since 3.0.2
-		 *
-		 * @author Maxime CULEA
-		 *
-		 * @var array $site_query_args : the query args
-		 * @var int|null $network_id : the network id working on
-		 */
-		$site_query_args = apply_filters( 'bea_csf.admin.admin_synchronization_network.query_args', $network_query_args, get_current_network_id() );
-
-		// Get networks
-		$network_query = new WP_Network_Query( $site_query_args );
-
-		// Get option for each network need...
-		$current_options = array();
-		if ( ! empty( $network_query->networks ) ) {
-			foreach ( $network_query->networks as $network_id ) {
-				$network_current_options = get_network_option( $network_id, BEA_CSF_OPTION );
-				if ( $network_current_options == false ) {
-					continue;
-				}
-
-				if ( ! empty( $network_current_options ) ) {
-					foreach ( $network_current_options as $network_current_option ) {
-						$current_options[] = $network_current_option;
-					}
-				}
-			}
-		}
+		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION, array() );
 
 		foreach ( $current_options as $key => $sync_obj ) {
 			/** @var BEA_CSF_Synchronization $sync_obj */
@@ -146,7 +111,7 @@ class BEA_CSF_Synchronizations {
 	}
 
 	public static function add( BEA_CSF_Synchronization $sync_obj ) {
-		$current_options = get_site_option( BEA_CSF_OPTION );
+		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION );
 		if ( $current_options == false ) {
 			$current_options = array();
 
@@ -163,13 +128,13 @@ class BEA_CSF_Synchronizations {
 		$current_options[ $new_id ] = $sync_obj;
 
 		// Save options
-		update_site_option( BEA_CSF_OPTION, $current_options );
+		update_network_option( self::get_option_network_id(), BEA_CSF_OPTION, $current_options );
 
 		return $new_id;
 	}
 
 	public static function update( BEA_CSF_Synchronization $sync_obj, $insert_fallback = false ) {
-		$current_options = get_site_option( BEA_CSF_OPTION );
+		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION );
 		if ( $current_options == false ) {
 			$current_options = array();
 		}
@@ -190,13 +155,19 @@ class BEA_CSF_Synchronizations {
 		$current_options[ $current_sync_id ] = $sync_obj;
 
 		// Save options
-		update_site_option( BEA_CSF_OPTION, $current_options );
+		update_network_option( self::get_option_network_id(), BEA_CSF_OPTION, $current_options );
 
 		return $current_sync_id;
 	}
 
+	/**
+	 *
+	 * @param BEA_CSF_Synchronization $sync_obj
+	 *
+	 * @return bool
+	 */
 	public static function delete( BEA_CSF_Synchronization $sync_obj ) {
-		$current_options = get_site_option( BEA_CSF_OPTION );
+		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION );
 		if ( $current_options == false ) {
 			$current_options = array();
 		}
@@ -213,9 +184,18 @@ class BEA_CSF_Synchronizations {
 		unset( $current_options[ $current_sync_id ] );
 
 		// Save options
-		update_site_option( BEA_CSF_OPTION, $current_options );
+		update_network_option( self::get_option_network_id(), BEA_CSF_OPTION, $current_options );
 
 		return true;
+	}
+
+	/**
+	 * Return the filtered network id
+	 *
+	 * @return mixed|void
+	 */
+	public static function get_option_network_id() {
+		return apply_filters( 'bea_csf.admin.admin_synchronization_network.network_id', get_current_network_id() );
 	}
 
 

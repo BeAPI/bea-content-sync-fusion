@@ -16,7 +16,7 @@
  */
 
 // Plugin constants
-define( 'BEA_CSF_VERSION', '3.1-beta' );
+define( 'BEA_CSF_VERSION', '3.2-beta' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
 

@@ -85,7 +85,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		settings_errors( 'bea-content-sync-fusion' );
 
 		// Get current setting
-		$current_settings = get_site_option( 'csf_adv_settings' );
+		$current_settings = get_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'csf_adv_settings' );
 
 		// Get P2P registered connection
 		$p2p_registered_connections = array();
@@ -164,7 +164,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 			check_admin_referer( 'update-bea-csf-adv-settings' );
 
 			$option_value = isset( $_POST['csf_adv_settings'] ) ? stripslashes_deep( $_POST['csf_adv_settings'] ) : 0;
-			update_site_option( 'csf_adv_settings', $option_value );
+			update_network_option( BEA_CSF_Synchronizations::get_option_network_id(),'csf_adv_settings', $option_value );
 			add_settings_error( 'bea-content-sync-fusion', 'settings_updated', __( 'Advanced settings updated with success !', 'bea-content-sync-fusion' ), 'updated' );
 		}
 
