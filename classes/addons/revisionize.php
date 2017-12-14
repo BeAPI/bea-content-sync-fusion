@@ -108,7 +108,6 @@ class BEA_CSF_Addon_Revisionize {
 		return $data;
 	}
 
-
 	/**
 	 * Allow to override local_id and local_parent_id
 	 *
@@ -118,8 +117,10 @@ class BEA_CSF_Addon_Revisionize {
 	 * @return array mixed
 	 */
 	public static function bea_csf_client_posttype_before_merge( $data, $sync_fields ) {
-		$data['local_id']    = $data['new_revision_id'];
-		$data['post_parent'] = $data['protected_post_parent'];
+		if ( isset($data['new_revision_id']) ) {
+			$data['local_id']    = $data['new_revision_id'];
+			$data['post_parent'] = $data['protected_post_parent'];
+		}
 
 		return $data;
 	}
