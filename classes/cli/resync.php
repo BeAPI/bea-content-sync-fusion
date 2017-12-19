@@ -125,7 +125,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 		}
 
 		// Make a mega-count
-		$total = count( $data_to_sync['terms'] ) + count( $data_to_sync['attachments'] ) + count( $data_to_sync['posts'] + count( $data_to_sync['p2p'] ) );
+		$total = count( $data_to_sync['terms'] ) + count( $data_to_sync['attachments'] ) + count( $data_to_sync['posts'] ) + count( $data_to_sync['p2p'] );
 
 		// No item ?
 		if ( $total == false ) {
