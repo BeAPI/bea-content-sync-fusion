@@ -9,7 +9,7 @@ class BEA_CSF_Admin_List {
 	 */
 	public function __construct() {
 		// Allow filter content view by origin
-		add_filter( 'restrict_manage_posts', array(__CLASS__, 'restrict_manage_posts'), 10, 2 );
+		add_filter( 'restrict_manage_posts', array(__CLASS__, 'restrict_manage_posts'), 10 );
 		add_action( 'query_vars', array(__CLASS__, 'query_vars'), 10 );
 		add_action( 'parse_query', array(__CLASS__, 'parse_query'), 10 );
 		add_filter( 'posts_join', array(__CLASS__, 'posts_join'), 10, 2 );
@@ -21,11 +21,10 @@ class BEA_CSF_Admin_List {
 	 * Add a selector for filter local or remote media
 	 *
 	 * @param $post_type
-	 * @param $which
 	 *
 	 * @return bool
 	 */
-	public static function restrict_manage_posts( $post_type, $which ) {
+	public static function restrict_manage_posts( $post_type ) {
 		global $wpdb;
 
 		// Get syncs model for current post_type, with any mode status (manual and auto)
@@ -34,7 +33,7 @@ class BEA_CSF_Admin_List {
 			'receivers'  => $wpdb->blogid,
 		), 'AND', false, true );
 
-		if ( empty($_has_syncs) ) { // || $which != 'bar'
+		if ( empty($_has_syncs) ) {
 			return false;
 		}
 
