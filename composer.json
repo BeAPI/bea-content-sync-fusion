@@ -1,15 +1,19 @@
 {
-  "name": "bea/bea-content-sync-fusion",
-  "description": "Manage content synchronisation across a WordPress Multisite.",
-  "license": "GPL-2.0",
-  "authors": [
-    {
-      "name": "Be API",
-      "email": "technical@beapi.fr"
-    }
-  ],
-  "type" : "wordpress-plugin",
-  "require" : {
-    "composer/installers" : "~1.0"
-  }
+	"name":"bea/bea-content-sync-fusion",
+	"description":"Synchronize contents across your Multisite.",
+	"keywords":[ "content", "synchronization", "multisite" ],
+	"homepage":"https://github.com/BeAPI/bea-content-sync-fusion",
+	"authors":[
+		{
+			"name":"Be API",
+			"email":"technique@beapi.fr",
+			"homepage":"https://beapi.fr/"
+		}
+	],
+	"type":"wordpress-plugin",
+	"minimum-stability":"stable",
+	"license":"GPL-3.0+",
+	"require":{
+		"composer/installers":"~1.0"
+	}
 }
