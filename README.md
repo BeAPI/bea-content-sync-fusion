@@ -1,78 +1,76 @@
-BEA Content Sync Fusion
-=======================
+<a href="https://beapi.fr">![Be API Github Banner](.wordpress.org/banner-github.png)</a>
 
-Manage content synchronisation across a WordPress multisite.
+# BEA - Content Sync Fusion
 
-## Requirements
+Synchronize contents across your Multisite.
 
-* WordPress should be installed as [multisite](https://codex.wordpress.org/Create_A_Network).
-* Require at least WordPress 4.6.x, in order to use the `WP_Site_Query`.
+# How ? 
 
-## Compatibility
+# Requirements
 
-Compatible up to WordPress 4.9.x
+- [WordPress](https://wordpress.org/) 4.6.x+ in order to use `WP_Site_Query`.
+- WordPress should be installed as [multisite](https://codex.wordpress.org/Create_A_Network).
+- Tested up to 4.9.x. 
 
-### Third plugins compatibility
+# Installation
 
- * [Post Types Order](https://fr.wordpress.org/plugins/post-types-order/)
+## WordPress
 
-## Changelog
+Installation should be managed from Network Area.
 
+- Download and install using the built-in WordPress plugin installer.
+- Network activate in the "Plugins" area of the network-admin of the main site of your installation (phew!)
+- Optionally drop the entire `bea-content-sync-fusion` directory into mu-plugins.
+- Configure you site's contents synchronizations.
 
-### 3.1-beta - Novembre-December 2017
+## [Composer](http://composer.rarst.net/)
 
- * Soon :)
+- Add repository source : `{ "type": "vcs", "url": "https://github.com/BeAPI/bea-content-sync-fusion" }`.
+- Include `"bea/bea-content-sync-fusion": "dev-master"` in your composer file for last master's commits or a tag released.
+- Configure you site's contents synchronizations.
 
-### 3.0.8 - 30 Oct 2017
- * Feature: Allow to exclude a content for future updates, useful when restriction is deactivated
+# What ?
 
+## Features
 
-### 3.0.7 - 20 Oct 2017
- * Fix P2P synchronisation
- * Fix resync all content tools for CPT excluded from search
+### Third Party Support
 
-### 3.0.6 - 15 Oct 2017
- * Add Post Type Order addon.
+This plugin has third party support with following plugins :
 
-### 3.0.5 - 07 Oct 2017
- * Allow content resync during blog/site creation
- * Refactoring code for all CLI tools
- * Add blog widget for counter info, and add button for force sync
- * Fix media sync, use a shared folder between blogs
- * Add link action for "resync content" into sites list
- * Add button on queue network page for exec CRON (for debug usage)
- * Fix restriction for attachment
- * Update POT/POT
- * Use string for i18n instead PHP constant
+* [BEA - Media Analytics](https://wordpress.org/plugins/bea-media-analytics/)
+* [Post Types Order](https://fr.wordpress.org/plugins/post-types-order/)
 
-### 3.0.4 - 27 Sept 2017
- * Fix display admin emitters / receivers column
- 
-### 3.0.3 - 27 Sept 2017
- * Fix infinite loop insertion for taxonomies
- 
-### 3.0.2 - 5 Sept 2017
- * Handle multiple networks for admin option
+## More features to come
 
-### 3.0.1 - 26 July 2017
- * Fix unserialised datas of media after synch
- * Fix conflict with polylang on sync terms
- 
-### 3.0.0 - 29 June 2017
- * Work only on relations table, do not use old meta _origin_key
- * Synchronisations are bidirectional
- * Remove old code from notifications
+## Next Roadmap
 
-### 2.0.2
- * Add filter bea_csf.client.post_type.allow_bidirectional_sync to allow bidirectional synchronisation
+## Contributing
 
-### 2.0.1
- * Fix P2P synchronisation
+Please refer to the [contributing guidelines](.github/CONTRIBUTING.md) to increase the chance of your pull request to be merged and/or receive the best support for your issue.
 
-### 2.0.0
- * Remove media synchronisation using symlink. Use shared uploads folder.
- * Remove old code for old term meta API.
- * Use term_id instead tt_id.
+### Issues & features request / proposal
 
-### 1.1
- * Stable version using WordPress metadata API for Taxonomy.
+If you identify any errors or have an idea for improving the plugin, feel free to open an [issue](../../issues/new). Please provide as much info as needed in order to help us resolving / approve your request.
+
+### Translation request / proposal
+
+If you want to translate BEA - Content Sync Fusion, the best way is to use the official way :
+[WordPress.org GlotPress](https://translate.wordpress.org/projects/wp-plugins/bea-content-sync-fusion).
+
+You can, of course, just [create a pull request](../../compare) to our repository if you already done the translation.
+
+## For developers
+
+### WP-Cli
+
+# Who ?
+
+Created by [Be API](https://beapi.fr), the French WordPress leader agency since 2009. Based in Paris, we are more than 30 people and always [hiring](https://beapi.workable.com) some fun and talented guys. So we will be pleased to work with you.
+
+This plugin is only maintained, which means we do not guarantee some free support. Consider reporting an [issue](#issues--features-request--proposal) and be patient. 
+
+If you really like what we do or want to thank us for our quick work, feel free to [donate](https://www.paypal.me/BeAPI) as much as you want / can, even 1€ is a great gift for buying cofee :)
+
+## License
+
+BEA - Media Analytics is licensed under the [GPLv3 or later](LICENSE.md).
