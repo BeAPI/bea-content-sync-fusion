@@ -1,19 +1,36 @@
 <?php
-/*
-  Plugin Name: BEA - Content Synchronization - Fusion
-  Plugin URI: https://beapi.fr
-  Description: Manage content synchronization across a WordPress multisite.
-  Version: 3.1-beta
-  Author: Be API
-  Author URI: http://beapi.fr
-  Network: true
-  Required WP : 4.6
 
-  Copyright 2013-2017 - Be API Team (technique@beapi.fr)
-  
-  TODO :
-	AJAX Taxo for Sync edition
+/*
+ Plugin Name: BEA - Content Sync Fusion
+ Version: 3.1-beta
+ Plugin URI: https://github.com/BeAPI/bea-content-sync-fusion
+ Description: Synchronize contents across your Multisite.
+ Author: Be API Technical team
+ Author URI: https://beapi.fr
+ Domain Path: languages
+ Text Domain: bea-content-sync-fusion
+ Contributors: Amaury Balmer, Alexandre Sadowski, Clément Boirie, Maxime Culea
+ Network: true
+
+ ----
+ Copyright 2018 Be API Technical team (human@beapi.fr)
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+// TODO : AJAX Taxo for Sync edition
 
 // Plugin constants
 define( 'BEA_CSF_VERSION', '3.2-beta' );
