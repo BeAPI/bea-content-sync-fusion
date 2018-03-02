@@ -1,0 +1,9 @@
+.distignore
+.github
+.git
+.gitignore
+.stickler.yml
+CHANGELOG.md
+composer.json
+LICENSE.md
+README.md
