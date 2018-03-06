@@ -243,7 +243,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 */
 	public static function get_sites( $blogs_id = array(), $field = false ) {
 		if ( empty( $blogs_id ) ) {
-			return '';
+			return array();
 		}
 
 		// Get all sites
