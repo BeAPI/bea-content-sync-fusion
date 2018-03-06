@@ -19,7 +19,7 @@ Compatible up to WordPress 4.9.x
 ## Changelog
 
 
-### 3.1-beta - Novembre-December 2017
+### 3.2-beta - Novembre-December 2017
 
  * Soon :)
 
