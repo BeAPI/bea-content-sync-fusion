@@ -48,6 +48,7 @@ require( BEA_CSF_DIR . 'classes/client.php' );
 require( BEA_CSF_DIR . 'classes/multisite.php' );
 require( BEA_CSF_DIR . 'classes/media.php' );
 require( BEA_CSF_DIR . 'classes/seo.php' );
+require( BEA_CSF_DIR . 'classes/query.php' );
 
 // CLI
 require( BEA_CSF_DIR . 'classes/cli/queue.php' );
@@ -60,6 +61,7 @@ require( BEA_CSF_DIR . 'classes/addons/advanced-custom-fields.php' );
 require( BEA_CSF_DIR . 'classes/addons/advanced-custom-fields-exclusion.php' );
 require( BEA_CSF_DIR . 'classes/addons/events-calendar-series.php' );
 require( BEA_CSF_DIR . 'classes/addons/revisionize.php' );
+require( BEA_CSF_DIR . 'classes/addons/multisite-clone-duplicator.php' );
 
 // Functions various
 require( BEA_CSF_DIR . 'functions/api.php' );
@@ -112,6 +114,7 @@ function init_bea_content_sync_fusion() {
 	new BEA_CSF_Relations();
 	new BEA_CSF_Media();
 	new BEA_CSF_SEO();
+	new BEA_CSF_Query();
 
 	// Addons
 	new BEA_CSF_Addon_Post_Types_Order();
@@ -119,6 +122,7 @@ function init_bea_content_sync_fusion() {
 	new BEA_CSF_Addon_ACF_Exclusion();
 	new BEA_CSF_Addon_Events_Calendar_Series();
 	new BEA_CSF_Addon_Revisionize();
+	new BEA_CSF_Addon_Multisite_Clone_Duplicator();
 
 	// Admin
 	if ( is_admin() ) {

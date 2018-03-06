@@ -1,4 +1,5 @@
-<?php class BEA_CSF_Plugin {
+<?php
+class BEA_CSF_Plugin {
 
 	public static function activate() {
 		self::create_relations_table();
