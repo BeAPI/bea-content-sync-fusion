@@ -240,7 +240,9 @@ class BEA_CSF_Synchronization {
 			}
 		}
 
+		$results = array_map('intval', $results);
 		$results = array_unique($results);
+		$results = array_filter($results);
 		return $results;
 	}
 
