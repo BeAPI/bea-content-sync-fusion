@@ -75,11 +75,11 @@ class BEA_CSF_Synchronization {
 		$this->_register_hooks = array();
 
 		// No emitters ? Go out !
-		if ( empty( $this->emitters ) ) {
+		if ( empty( $this->get_emitters() ) ) {
 			return false;
 		}
 
-		foreach ( $this->emitters as $emitter_blog_id ) {
+		foreach ( $this->get_emitters() as $emitter_blog_id ) {
 			// Register this hook only for post type attachment for evite doublon sync item
 			if ( 'attachment' === $this->post_type ) { // Specific CPT : Attachments
 
@@ -189,12 +189,11 @@ class BEA_CSF_Synchronization {
 	 * @return boolean|array
 	 */
 	public function get_field( $field_name, $raw_value = false ) {
-		// Call this specific getter function for support "all except..." value context
-		if ( 'receivers' == $field_name && false === $raw_value ) {
+		if ( 'receivers' == $field_name && false === $raw_value ) { // Add support "all except..." value context
 			return $this->get_receivers();
-		}
-
-		if ( in_array( $field_name, $this->_fields ) ) {
+		} elseif ( 'emitters' == $field_name && false === $raw_value ) { // Add support "all" value context
+			return $this->get_emitters();
+		} elseif ( in_array( $field_name, $this->_fields ) ) {
 			return $this->{$field_name};
 		} else {
 			return false;
@@ -224,25 +223,48 @@ class BEA_CSF_Synchronization {
 	}
 
 	/**
+	 * Translate "all" value by array with blogs_id
+	 *
 	 * @return array
 	 */
 	public function get_receivers() {
 		$results = array();
 		foreach ( $this->receivers as $key => $receiver_blog_id ) {
 			if ( 'all' === $receiver_blog_id ) {
-				// Get all sites
-				$blogs = BEA_CSF_Synchronizations::get_sites_from_network( 0 );
-				foreach ( $blogs as $blog ) {
-					// Exclude emitters
-					if ( ! in_array( $blog['blog_id'], $this->emitters ) ) {
-						$results[] = $blog['blog_id'];
-					}
-				}
+				$blogs = BEA_CSF_Synchronizations::get_sites_from_network();
+				$blog_ids = wp_list_pluck( $blogs, 'blog_id' );
+
+				$results = array_merge($results, $blog_ids);
 			} else {
 				$results[] = $receiver_blog_id;
 			}
 		}
 
+		$results = array_unique($results);
+		return $results;
+	}
+
+	/**
+	 * Translate "all" value by array with blogs_id
+	 *
+	 * @return array
+	 */
+	public function get_emitters() {
+		$results = array();
+		foreach ( $this->emitters as $key => $emitter_blog_id ) {
+			if ( 'all' === $emitter_blog_id ) {
+				$blogs = BEA_CSF_Synchronizations::get_sites_from_network();
+				$blog_ids = wp_list_pluck( $blogs, 'blog_id' );
+
+				$results = array_merge($results, $blog_ids);
+			} else {
+				$results[] = $emitter_blog_id;
+			}
+		}
+
+		$results = array_map('intval', $results);
+		$results = array_unique($results);
+		$results = array_filter($results);
 		return $results;
 	}
 
@@ -289,6 +311,11 @@ class BEA_CSF_Synchronization {
 		foreach ( $this->get_receivers() as $receiver_blog_id ) {
 			// Skip infinite sync when emetter and receiver are reciprocal
 			if ( isset( $_bea_origin_blog_id ) && $_bea_origin_blog_id == $receiver_blog_id ) {
+				continue;
+			}
+
+			// Skip sync when emetter and receiver are egal
+			if ( get_current_blog_id() == $receiver_blog_id ) {
 				continue;
 			}
 

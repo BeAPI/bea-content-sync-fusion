@@ -243,7 +243,7 @@ class BEA_CSF_Relations {
 		}, (array) $types);
 
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( ".implode(', ', $types)." ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %s", $emitter_blog_id, $receiver_blog_id, $emitter_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( ".implode(', ', $types)." ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d", $emitter_blog_id, $receiver_blog_id, $emitter_id ) );
 	}
 
 	/**
@@ -263,7 +263,7 @@ class BEA_CSF_Relations {
 		}, (array) $types);
 
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type IN ( ".implode(', ', $types)." ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %s", $emitter_blog_id, $receiver_blog_id, $receiver_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type IN ( ".implode(', ', $types)." ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %d", $emitter_blog_id, $receiver_blog_id, $receiver_id ) );
 	}
 
 	/**
@@ -282,7 +282,7 @@ class BEA_CSF_Relations {
 		}, (array) $types);
 		
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( ".implode(', ', $types)." ) AND receiver_blog_id = %d AND receiver_id = %s", $receiver_blog_id, $receiver_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( ".implode(', ', $types)." ) AND receiver_blog_id = %d AND receiver_id = %d", $receiver_blog_id, $receiver_id ) );
 	}
 
 	/**

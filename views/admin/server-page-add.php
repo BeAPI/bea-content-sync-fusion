@@ -92,9 +92,11 @@
 		<p>
 			<label><?php _e( 'Emitters', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat multiple-helper" name="sync[emitters][]" multiple="true">
+                <option
+                        value="all" <?php selected( in_array( 'all', $current_sync->get_field( 'emitters', true ) ), true ); ?>><?php echo esc_html( 'All' ); ?></option>
 				<?php foreach ( BEA_CSF_Synchronizations::get_sites_from_network() as $site ) : ?>
 					<option
-						value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'emitters' ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
+						value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'emitters', true ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span
@@ -105,10 +107,10 @@
 			<label><?php _e( 'Receivers', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat multiple-helper" name="sync[receivers][]" multiple="true">
 				<option
-					value="all" <?php selected( in_array( 'all', $current_sync->get_field( 'receivers' ) ), true ); ?>><?php echo esc_html( 'All, except emitters' ); ?></option>
+					value="all" <?php selected( in_array( 'all', $current_sync->get_field( 'receivers', true ) ), true ); ?>><?php echo esc_html( 'All, except emitters' ); ?></option>
 				<?php foreach ( BEA_CSF_Synchronizations::get_sites_from_network() as $site ) : ?>
 					<option
-						value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'receivers' ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
+						value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'receivers', true ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span

@@ -84,6 +84,12 @@ class BEA_CSF_Client {
 			return false;
 		}
 
+		// Is synchronized content ?
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), get_current_blog_id(), $attachment->ID );
+		if ( ! empty( $emitter_relation ) ) {
+			return false;
+		}
+
 		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false );
 
 		return true;
@@ -103,6 +109,12 @@ class BEA_CSF_Client {
 
 		// Is attachment ?
 		if ( 'attachment' !== $attachment->post_type ) {
+			return false;
+		}
+
+		// Is synchronized content ?
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), get_current_blog_id(), $attachment->ID );
+		if ( ! empty( $emitter_relation ) ) {
 			return false;
 		}
 

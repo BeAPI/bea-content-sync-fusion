@@ -143,6 +143,12 @@ class BEA_CSF_Admin_Metaboxes {
 	 * @author Amaury Balmer
 	 */
 	public static function add_meta_boxes( $post_type, $post ) {
+		// Is synchronized content and media ? => not display metabox
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), get_current_blog_id(), $post->ID );
+		if ( ! empty( $emitter_relation ) && 'attachment' === $post_type ) {
+			return false;
+		}
+
 		// Get syncs for current post_type and mode set to "auto"
 		$syncs_with_auto_state = BEA_CSF_Synchronizations::get( array(
 			'post_type' => $post_type,

@@ -56,7 +56,7 @@ class BEA_CSF_Admin_Restrictions {
 	public static function post_row_actions( array $actions, WP_Post $post ) {
 		global $wpdb;
 
-		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'posttype', $wpdb->blogid, $post->ID );
+		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), $wpdb->blogid, $post->ID );
 
 		// Get syncs model for current post_type, with any mode status (manual and auto)
 		$_has_syncs = BEA_CSF_Synchronizations::get( array(

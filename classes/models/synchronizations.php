@@ -65,7 +65,7 @@ class BEA_CSF_Synchronizations {
 
 			foreach ( $args as $m_key => $m_value ) {
 				$obj_value = $obj->get_field( $m_key );
-				if ( $obj_value == $m_value || ( $in_array == true && is_array( $obj_value ) && in_array( $m_value, $obj_value ) ) ) {
+				if ( $obj_value == $m_value || ( $in_array == true && is_array( $obj_value ) && in_array( $m_value, (array) $obj_value ) ) ) {
 					$matched ++;
 				}
 			}
@@ -82,6 +82,13 @@ class BEA_CSF_Synchronizations {
 		return $filtered;
 	}
 
+	/**
+	 * Register an new synchronization
+	 *
+	 * @param array $args
+	 *
+	 * @return bool
+	 */
 	public static function register( array $args ) {
 		// Default settings
 		$default_args = array(
@@ -211,7 +218,7 @@ class BEA_CSF_Synchronizations {
 	 *
 	 * @author Amaury Balmer | Maxime CULEA
 	 *
-	 * @return array|boolean
+	 * @return array
 	 */
 	public static function get_sites_from_network( $network_id = null ) {
 		$site_query_args = array(
@@ -242,7 +249,7 @@ class BEA_CSF_Synchronizations {
 		$site_query = new WP_Site_Query( $site_query_args );
 		$sites      = $site_query->get_sites();
 		if ( empty( $sites ) ) {
-			return false;
+			return array();
 		}
 
 		$return_sites = array();
