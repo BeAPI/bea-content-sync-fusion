@@ -89,7 +89,7 @@
 						<td><?php echo esc_html( $sync->get_field( 'mode' ) ); ?></td>
 						<td><?php echo esc_html( $sync->get_field( 'status' ) ); ?></td>
 						<td><?php echo implode( '<br />', self::get_sites( $sync->get_field( 'emitters' ), 'blogname' ) ); ?></td>
-						<td><?php echo implode( '<br />', self::get_sites( $sync->get_field( 'receivers' ), 'blogname' ) ); ?></td>
+						<td><?php echo implode( '<br />', self::get_sites( $sync->get_field( 'receivers', true ), 'blogname' ) ); ?></td>
 					</tr>
 					<?php
 				endforeach;
