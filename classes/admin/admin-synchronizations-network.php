@@ -51,7 +51,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 * @author Amaury Balmer
 	 */
 	public static function network_admin_menu() {
-		add_menu_page( __( 'Content Sync', 'bea-content-sync-fusion' ), __( 'Content Sync', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csf-edit', '', BEA_CSF_URL . '/assets/images/arrow-continue.png' );
+		add_menu_page( __( 'Content Sync', 'bea-content-sync-fusion' ), __( 'Content Sync', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csf-edit', '', 'dashicons-randomize' );
 		add_submenu_page( 'bea-csf-edit', __( 'Edit', 'bea-content-sync-fusion' ), __( 'Edit', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csf-edit', array(
 			__CLASS__,
 			'render_page_edit',
