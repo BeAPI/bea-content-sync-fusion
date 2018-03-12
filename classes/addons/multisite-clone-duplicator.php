@@ -7,6 +7,9 @@
  * @see : https://fr.wordpress.org/plugins/multisite-clone-duplicator/
  */
 class BEA_CSF_Addon_Multisite_Clone_Duplicator {
+	/**
+	 * Register hooks
+	 */
 	public function __construct() {
 		// Force deactive files duplication on FS
 		add_filter( 'mucd_copy_dirs', '__return_empty_array' );
