@@ -101,6 +101,7 @@ class BEA_CSF_Client {
 	 * @return bool
 	 */
 	public static function merge_attachment( $attachment_id = 0 ) {
+
 		// Get post
 		$attachment = get_post( $attachment_id );
 		if ( false == $attachment || is_wp_error( $attachment ) ) {

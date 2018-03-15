@@ -108,8 +108,7 @@ class BEA_CSF_Synchronizations {
 		}
 
 		// Instanciate object
-		$new_obj = new BEA_CSF_Synchronization();
-		$new_obj->set_fields( $args );
+		$new_obj = new BEA_CSF_Synchronization( $args );
 
 		// Append objet in register synchronizations
 		self::$_bea_csf_synchronizations[] = $new_obj;
