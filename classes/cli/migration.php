@@ -20,6 +20,12 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 		$selects = array();
 		foreach ( get_sites( array( 'network_id' => $current_network->id, 'number' => 99999999 ) ) as $blog ) {
 			switch_to_blog( $blog->blog_id );
+			
+			// Table exists ?
+			if( $wpdb->get_var("SHOW TABLES LIKE '$wpdb->postmeta'") != $wpdb->postmeta ) {
+				restore_current_blog();
+				continue;
+			}
 
 			$selects[] = "(
 				SELECT pm.post_id AS post_id, pm.meta_value AS meta_value, {$blog->blog_id} AS blog_id 
