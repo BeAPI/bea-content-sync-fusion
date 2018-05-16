@@ -14,18 +14,35 @@ Compatible up to WordPress 4.9.x
 
 ### Third plugins compatibility
 
- * [Post Types Order](https://fr.wordpress.org/plugins/post-types-order/)
-
+ * [Post Types Order](https://wordpress.org/plugins/post-types-order/)
+ * [Advanced Custom Fields](https://www.advancedcustomfields.com/)
+ * [The Events Calendar Family](https://theeventscalendar.com/)
+ * [Revisionize](https://wordpress.org/plugins/revisionize/)
+ * [Multisite Clone Duplicator](https://wordpress.org/plugins/multisite-clone-duplicator/)
+ 
 ## Changelog
 
-
-### 3.2-beta - Novembre-December 2017
-
- * Soon :)
+### 3.2 - Novembre-December 2017 => April 2018
+ * Feature: BREAKING, remove old bootstrap script for CRON, now use WP-CLI commands
+ * Feature: SEO, add a canonical for synchronized contents to original content
+ * Feature: Allow media library shared without files duplication or symlinks
+ * Feature: add support for ACF plugin and support complex fields
+ * Feature: add support for Revisionize plugin
+ * Feature: add support for Multisite Clone Duplicator plugin
+ * Feature: add support for The Events Calendar plugins (event/tickets/locations)
+ * Feature: add a selector on admin for filter local or remote contents
+ * Feature: add a "internal admin notes" into metabox
+ * Feature: add a WP-CLI command for allow migration from old plugin version
+ * Feature: add an "all" option for emitters and receivers
+ * Feature: allow to exclude some ACF fields or ACF group fields or ACF repeater/flexible fields from future updates
+ * Bugfix : fix index length for utf8mb4
+ * Bugfix : delete relation from custom table when a post is deleted
+ * Bugfix : deenqueue non-existent css on admin
+ * Bugfix : Fix compat with old WP version <4.6
+ * Bugfix : Fix code register synchros
 
 ### 3.0.8 - 30 Oct 2017
  * Feature: Allow to exclude a content for future updates, useful when restriction is deactivated
-
 
 ### 3.0.7 - 20 Oct 2017
  * Fix P2P synchronisation
