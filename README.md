@@ -22,6 +22,10 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.2.1 - June 2018
+
+ * Feature: Add a constant for allow deactivate media synchro
+
 ### 3.2 - Novembre-December 2017 => April 2018
  * Feature: BREAKING, remove old bootstrap script for CRON, now use WP-CLI commands
  * Feature: SEO, add a canonical for synchronized contents to original content

@@ -3,22 +3,23 @@
   Plugin Name: BEA - Content Synchronization - Fusion
   Plugin URI: https://beapi.fr
   Description: Manage content synchronization across a WordPress multisite.
-  Version: 3.2
+  Version: 3.2.1
   Author: Be API
   Author URI: http://beapi.fr
   Network: true
   Required WP : 4.6
 
-  Copyright 2013-2017 - Be API Team (technique@beapi.fr)
-  
-  TODO :
-	AJAX Taxo for Sync edition
+  Copyright 2013-2018 - Be API Team (technique@beapi.fr)
  */
 
 // Plugin constants
-define( 'BEA_CSF_VERSION', '3.2' );
+define( 'BEA_CSF_VERSION', '3.2.1' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
+
+if ( ! defined( 'BEA_CSF_MEDIA_FEATURE' ) ) {
+	define( 'BEA_CSF_MEDIA_FEATURE', true );
+}
 
 // Define the table relation variables
 if ( empty( $GLOBALS['wpdb']->bea_csf_relations ) ) {
@@ -34,8 +35,8 @@ if ( empty( $GLOBALS['wpdb']->bea_csf_queue ) ) {
 }
 
 if ( empty( $GLOBALS['wpdb']->bea_csf_queue_maintenance ) ) {
-	$GLOBALS['wpdb']->bea_csf_queue_maintenance      = $GLOBALS['wpdb']->base_prefix . 'bea_csf_queue_maintenance';
-	$GLOBALS['wpdb']->ms_global_tables[] = 'bea_csf_queue_maintenance';
+	$GLOBALS['wpdb']->bea_csf_queue_maintenance = $GLOBALS['wpdb']->base_prefix . 'bea_csf_queue_maintenance';
+	$GLOBALS['wpdb']->ms_global_tables[]        = 'bea_csf_queue_maintenance';
 }
 
 // Plugin URL and PATH
@@ -113,9 +114,13 @@ function init_bea_content_sync_fusion() {
 	new BEA_CSF_Client();
 	new BEA_CSF_Multisite();
 	new BEA_CSF_Relations();
-	new BEA_CSF_Media();
 	new BEA_CSF_SEO();
 	new BEA_CSF_Query();
+
+	// Server optional - MEDIA
+	if ( true === constant( 'BEA_CSF_MEDIA_FEATURE' ) ) {
+		new BEA_CSF_Media();
+	}
 
 	// Addons
 	new BEA_CSF_Addon_Post_Types_Order();
