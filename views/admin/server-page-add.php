@@ -31,7 +31,7 @@
 		<p id="bea-csf-taxonomies-block">
 			<label><?php _e( 'Taxonomies', 'bea-content-sync-fusion' ); ?></label>
 			<select multiple="multiple" class="widefat multiple-helper" name="sync[taxonomies][]">
-				<?php foreach ( get_taxonomies( array( 'public' => true ), 'objects' ) as $taxonomy ) : ?>
+				<?php foreach ( get_taxonomies( array(), 'objects' ) as $taxonomy ) : ?>
 					<option
 						value="<?php echo esc_attr( $taxonomy->name ); ?>" <?php selected( true, in_array( $taxonomy->name, (array) $current_sync->get_field( 'taxonomies' ) ) ); ?>><?php echo esc_html( $taxonomy->labels->name . ' (' . $taxonomy->rewrite['slug'] . ')' ); ?></option>
 				<?php endforeach; ?>
