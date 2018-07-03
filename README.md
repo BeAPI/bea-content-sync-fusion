@@ -22,6 +22,10 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.2.2 - June 2018
+
+ * Feature: Allow use hidden (not public) taxonomy
+
 ### 3.2.1 - June 2018
 
  * Feature: Add a constant for allow deactivate media synchro
