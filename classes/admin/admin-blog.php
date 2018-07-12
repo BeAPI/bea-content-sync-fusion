@@ -9,7 +9,7 @@ class BEA_CSF_Admin_Blog {
 	 */
 	public function __construct() {
 		// Add actions link into sites list
-		// add_filter( 'manage_sites_action_links', array(__CLASS__, 'manage_sites_action_links'), 10, 3 );
+		add_filter( 'manage_sites_action_links', array(__CLASS__, 'manage_sites_action_links'), 10, 3 );
 		add_action( 'wpmuadminedit', array(__CLASS__, 'wpmuadminedit') );
 		add_action( 'network_sites_updated_message_'.'resync_bea_csf_content', array(__CLASS__, 'network_sites_updated_message') );
         add_action( 'network_sites_updated_message_'.'sync_bea_csf_content', array(__CLASS__, 'network_sites_updated_message') );

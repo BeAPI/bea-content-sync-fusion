@@ -7,20 +7,26 @@ class BEA_CSF_Multisite {
 	 * Register hooks
 	 */
 	public function __construct() {
-		//add_action( 'wpmu_new_blog', array( __CLASS__, 'wpmu_new_blog' ) );
+		add_action( 'wpmu_new_blog', array( __CLASS__, 'wpmu_new_blog' ) );
 	}
 
 	/**
 	 *
-	 * Add synchronization taxonomies / attachments / posts when create a new blog
-     * Caution: This function is also used by "admin-blog.php" resync-content feature !
+	 * Add blog_id into a site option when create a new blog for async process
+	 *
+	 * Caution: This function is also used by "admin-blog.php" resync-content feature !
 	 *
 	 * @param $blog_id
 	 */
 	public static function wpmu_new_blog( $blog_id ) {
-		self::$sync_blog_id = $blog_id;
+		$current_values = get_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'bea-csf-multisite-resync-blogs' );
+		if ( false === $current_values || ! is_array( $current_values ) ) {
+			$current_values = array();
+		}
 
-		// TODO: Need to rebuild into an async item
-		// TODO: Resend content from any blog ? Not only the First/MAIN (with the network admin)
+		$current_values[] = (int) $blog_id;
+		$current_values   = array_unique( $current_values );
+
+		update_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'bea-csf-multisite-resync-blogs', $current_values );
 	}
 }

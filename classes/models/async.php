@@ -57,7 +57,7 @@ class BEA_CSF_Async {
 		switch_to_blog( $blog_id );
 
 		// Get data from SERVER class
-		$data_to_transfer = call_user_func( array( 'BEA_CSF_Server_' . $object, $method, ), $sync->hook_data, $sync->fields );
+		$data_to_transfer = call_user_func( array( 'BEA_CSF_Server_' . $object, $method ), $sync->hook_data, $sync->fields );
 		if ( false === $data_to_transfer ) {
 			// Remove from queue
 			self::delete( $sync->id );
@@ -108,7 +108,7 @@ class BEA_CSF_Async {
 
 	/**
 	 * Add an item into queue
-	 * 
+	 *
 	 * @param $hook_data
 	 * @param $current_filter
 	 * @param $receiver_blog_id
@@ -135,8 +135,7 @@ class BEA_CSF_Async {
 				'receiver_blog_id' => $receiver_blog_id,
 				'fields'           => maybe_serialize( $fields ),
 			),
-			array( '%s', '%s', '%d', '%s' ),
-			'INSERT'
+			array( '%s', '%s', '%d', '%s' )
 		);
 
 		remove_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
@@ -205,17 +204,16 @@ class BEA_CSF_Async {
 
 	/**
 	 * Get items
-	 * 
+	 *
 	 * @param integer $quantity
 	 * @param integer $blog_id
 	 *
 	 * @return array
 	 */
-	public static function get_results( $quantity = 100, $blog_id = 0  ) {
+	public static function get_results( $quantity = 100, $blog_id = 0 ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
-		
 		if ( 0 < $blog_id ) {
 			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d LIMIT %d", $blog_id, $quantity ) );
 		}
@@ -234,7 +232,6 @@ class BEA_CSF_Async {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
-
 		if ( 0 < $blog_id ) {
 			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d", $blog_id ) );
 		}
@@ -242,30 +239,30 @@ class BEA_CSF_Async {
 		return (int) $wpdb->get_var( "SELECT COUNT(id) FROM $wpdb->bea_csf_queue" );
 	}
 
-    /**
-     * Get blogs ids with content to sync
-     *
-     * @return array
-     */
+	/**
+	 * Get blogs ids with content to sync
+	 *
+	 * @return array
+	 */
 	public static function get_blog_ids_from_queue() {
-        global $wpdb;
+		global $wpdb;
 
-        /** @var WPDB $wpdb */
+		/** @var WPDB $wpdb */
 
-        return $wpdb->get_col( "SELECT receiver_blog_id FROM $wpdb->bea_csf_queue GROUP BY receiver_blog_id" );
-    }
+		return $wpdb->get_col( "SELECT receiver_blog_id FROM $wpdb->bea_csf_queue GROUP BY receiver_blog_id" );
+	}
 
-    /**
-     * Change on real time the variable with tablename for maintenance queue
-     */
-    public static function switch_to_maintenance_queue() {
-        $GLOBALS['wpdb']->bea_csf_queue = $GLOBALS['wpdb']->bea_csf_queue_maintenance;
-    }
+	/**
+	 * Change on real time the variable with tablename for maintenance queue
+	 */
+	public static function switch_to_maintenance_queue() {
+		$GLOBALS['wpdb']->bea_csf_queue = $GLOBALS['wpdb']->bea_csf_queue_maintenance;
+	}
 
-    /**
-     * Restore original tablename for queue
-     */
-    public static function restore_main_queue() {
-        $GLOBALS['wpdb']->bea_csf_queue = $GLOBALS['wpdb']->base_prefix . 'bea_csf_queue';
-    }
+	/**
+	 * Restore original tablename for queue
+	 */
+	public static function restore_main_queue() {
+		$GLOBALS['wpdb']->bea_csf_queue = $GLOBALS['wpdb']->base_prefix . 'bea_csf_queue';
+	}
 }
