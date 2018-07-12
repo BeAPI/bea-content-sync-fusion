@@ -22,6 +22,11 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.3 - July 2018
+
+ * Feature: Add param for allow resync for specific receivers on WP-CLI commands
+ * Feature: Allow initial sync content during site creation (async process)
+
 ### 3.2.2 - June 2018
 
  * Feature: Allow use hidden (not public) taxonomy
