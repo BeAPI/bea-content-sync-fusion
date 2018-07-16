@@ -47,7 +47,24 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 	}
 
 	public function status( $args, $params ) {
+		// Use maintenance queue ?
+		if ( isset( $params['alternativeq'] ) && 'true' === $params['alternativeq'] ) {
+			BEA_CSF_Async::switch_to_maintenance_queue();
+		}
 
+		// Get all blogs with content
+		$blog_ids = BEA_CSF_Async::get_blog_ids_from_queue();
+
+		$results = array();
+		foreach ( $blog_ids as $blog_id ) {
+			$results[] = array(
+				'blog_id' => $blog_id,
+				'counter' => BEA_CSF_Async::get_counter( $blog_id ),
+			);
+		}
+		WP_CLI\Utils\format_items( 'table', $results, array( 'blog_id', 'counter' ) );
+
+		WP_CLI::success( sprintf( __( '%d items waiting on the queue', 'bea-content-sync-fusion' ), BEA_CSF_Async::get_counter() ) );
 	}
 
 	public function flush( $args, $params ) {
