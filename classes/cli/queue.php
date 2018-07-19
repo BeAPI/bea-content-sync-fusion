@@ -11,10 +11,12 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 	 *
 	 * @param $args
 	 * @param $params
+	 *
+	 * @throws \WP_CLI\ExitException
 	 */
 	public function process( $args, $params ) {
 		// Use maintenance queue ?
-		if ( isset( $params['alternativeq'] ) && $params['alternativeq'] === 'true' ) {
+		if ( isset( $params['alternativeq'] ) && 'true' === $params['alternativeq'] ) {
 			BEA_CSF_Async::switch_to_maintenance_queue();
 		} else {
 			$params['alternativeq'] = 'false';
@@ -35,7 +37,7 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 				array(),
 				array(
 					'alternativeq' => $params['alternativeq'],
-					'url'          => get_home_url( $blog_id, '/' )
+					'url'          => get_home_url( $blog_id, '/' ),
 				),
 				false,
 				false // Allow debug with this value to true
@@ -69,7 +71,7 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 
 	public function flush( $args, $params ) {
 		// Use maintenance queue ?
-		if ( isset( $params['alternativeq'] ) && $params['alternativeq'] === 'true' ) {
+		if ( isset( $params['alternativeq'] ) && 'true' === $params['alternativeq'] ) {
 			BEA_CSF_Async::switch_to_maintenance_queue();
 		}
 
@@ -79,7 +81,7 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 
 	public function pull( $args, $params ) {
 		// Use maintenance queue ?
-		if ( isset( $params['alternativeq'] ) && $params['alternativeq'] === 'true' ) {
+		if ( isset( $params['alternativeq'] ) && 'true' === $params['alternativeq'] ) {
 			BEA_CSF_Async::switch_to_maintenance_queue();
 		}
 
@@ -106,6 +108,30 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 		WP_CLI::run_command( array( 'cache', 'flush' ) );
 	}
 
+	/**
+	 * Get all blogs "url" with content to synchronized
+	 *
+	 * @param $args
+	 * @param $params
+	 */
+	public function get_sites( $args, $params ) {
+		// Use maintenance queue ?
+		if ( isset( $params['alternativeq'] ) && 'true' === $params['alternativeq'] ) {
+			BEA_CSF_Async::switch_to_maintenance_queue();
+		} else {
+			$params['alternativeq'] = 'false';
+		}
+
+		// Get blogs ID with content to sync
+		$blog_ids = BEA_CSF_Async::get_blog_ids_from_queue();
+		if ( empty( $blog_ids ) ) {
+			return;
+		}
+
+		foreach ( $blog_ids as $blog_id ) {
+			WP_CLI::line( get_home_url( $blog_id, '/' ) );
+		}
+	}
 }
 
 WP_CLI::add_command( 'content-sync-fusion queue', 'BEA_CSF_Cli_Queue', array(
