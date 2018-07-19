@@ -22,6 +22,11 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.3.1 - July 2018
+
+* Feature: add WP-CLI command get queue status, stats
+* Feature: add WP-CLI command for get URL of sites with contents need sync (better performance)
+
 ### 3.3 - July 2018
 
  * Feature: Add param for allow resync for specific receivers on WP-CLI commands
