@@ -64,6 +64,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 			'orderby' => 'id',
 			'count'   => false,
 			'fields'  => 'ids',
+			'no_found_rows' => false,
 		);
 
 		// Restrict to some emitters ?
