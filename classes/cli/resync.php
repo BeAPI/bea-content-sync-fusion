@@ -59,11 +59,12 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 
 		// Default WP_Site_Query arguments
 		$site_args = array(
-			'number'  => PHP_INT_MAX,
-			'order'   => 'ASC',
-			'orderby' => 'id',
-			'count'   => false,
-			'fields'  => 'ids',
+			'number'        => PHP_INT_MAX,
+			'order'         => 'ASC',
+			'orderby'       => 'id',
+			'count'         => false,
+			'fields'        => 'ids',
+			'no_found_rows' => false,
 		);
 
 		// Restrict to some emitters ?
