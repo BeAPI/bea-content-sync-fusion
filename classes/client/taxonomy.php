@@ -30,13 +30,14 @@ class BEA_CSF_Client_Taxonomy {
 				'name'        => $data['name'],
 				'description' => $data['description'],
 				'slug'        => $data['slug'],
-				'parent'      => $data['parent'],
+				'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
 			) );
 		} else {
 			$new_term_id = wp_insert_term( $data['name'], $data['taxonomy'], array(
 				'description' => $data['description'],
 				'slug'        => $data['slug'],
-				'parent'      => $data['parent'],
+				'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+
 			) );
 
 			// try to manage error when term already exist with the same name !
