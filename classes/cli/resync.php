@@ -115,6 +115,14 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 	 * @param $params
 	 */
 	public function site( $args, $params ) {
+		// Get syncs for current site
+		$has_syncs = BEA_CSF_Synchronizations::get( array(
+			'emitters' => get_current_blog_id(),
+		), 'AND', false, true );
+		if ( empty( $has_syncs ) ) {
+			WP_CLI::error( __( 'No sync data emission for this website', 'bea-content-sync-fusion' ) );
+		}
+
 		// Use maintenance queue ?
 		if ( isset( $params['alternativeq'] ) && 'true' === $params['alternativeq'] ) {
 			BEA_CSF_Async::switch_to_maintenance_queue();
