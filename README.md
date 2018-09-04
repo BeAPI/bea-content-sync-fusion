@@ -22,6 +22,11 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.3.2 - September 2018
+
+* Bugfix: Allow progressbar to be accurate for the resync command
+* Bugfix: Make the synchronisation of terms with parents using the parent receiver id
+
 ### 3.3.1 - July 2018
 
 * Feature: add WP-CLI command get queue status, stats
