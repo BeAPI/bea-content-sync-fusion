@@ -76,9 +76,7 @@ $WP_CLI_BIN content-sync-fusion queue get_sites --url="$WP_NETWORK_URL" $WP_PATH
 # Check for resync content (new site/blog)
 $WP_CLI_BIN content-sync-fusion resync new_sites --attachments=true --post_type=true --taxonomies=true --url="$WP_NETWORK_URL" $WP_PATH 
 
-# Alternative queue
-$WP_CLI_BIN content-sync-fusion queue get_sites --alternativeq="true" --url="$WP_NETWORK_URL" $WP_PATH  | xargs -I {} $WP_CLI_BIN content-sync-fusion queue pull --url={}  --alternativeq="true" $WP_PATH 
-
 # Remove lock PIDFILE
 rm $PIDFILE
+
 exit 0

@@ -23,7 +23,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 		}
 
 		$params['receivers']    = implode( ',', $current_values );
-		$params['alternativeq'] = 'true';
+		//$params['alternativeq'] = 'true';
 
 		$this->all( $args, $params );
 
