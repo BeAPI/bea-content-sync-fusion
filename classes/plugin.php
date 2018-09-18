@@ -1,4 +1,5 @@
 <?php
+
 class BEA_CSF_Plugin {
 
 	public static function activate() {
@@ -28,17 +29,13 @@ class BEA_CSF_Plugin {
         );";
 
 		if ( ! function_exists( 'dbDelta' ) ) {
-			if ( ! is_admin() ) {
-				return false;
-			}
-
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 
 		// Ensure we always try to create this, regardless of whether we're on the
 		// main site or not. dbDelta will skip creation of global tables on
 		// non-main sites.
-		$offset = array_search( 'bea_csf_relations', $wpdb->ms_global_tables );
+		$offset = array_search( 'bea_csf_relations', $wpdb->ms_global_tables, true );
 		if ( ! empty( $offset ) ) {
 			unset( $wpdb->ms_global_tables[ $offset ] );
 		}
@@ -69,24 +66,19 @@ class BEA_CSF_Plugin {
 		/**
 		 * Indexes for table `wp_bea_csf_queue`
 		 * ALTER TABLE `wp_bea_csf_queue` ADD UNIQUE KEY `unicity_key` (`hook_data`(255),`current_filter`(255),`receiver_blog_id`,`fields`(255));
-		  **/
-		
+		 **/
 		if ( ! function_exists( 'dbDelta' ) ) {
-			if ( ! is_admin() ) {
-				return false;
-			}
-
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 
 		// Ensure we always try to create this, regardless of whether we're on the
 		// main site or not. dbDelta will skip creation of global tables on
 		// non-main sites.
-		$offset = array_search( 'bea_csf_queue', $wpdb->ms_global_tables );
+		$offset = array_search( 'bea_csf_queue', $wpdb->ms_global_tables, true );
 		if ( ! empty( $offset ) ) {
 			unset( $wpdb->ms_global_tables[ $offset ] );
 		}
-		$result                   = @dbDelta( $schema );
+		$result                   = dbDelta( $schema );
 		$wpdb->ms_global_tables[] = 'bea_csf_queue';
 
 		if ( empty( $result ) ) {
@@ -116,21 +108,17 @@ class BEA_CSF_Plugin {
 		 **/
 
 		if ( ! function_exists( 'dbDelta' ) ) {
-			if ( ! is_admin() ) {
-				return false;
-			}
-
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 
 		// Ensure we always try to create this, regardless of whether we're on the
 		// main site or not. dbDelta will skip creation of global tables on
 		// non-main sites.
-		$offset = array_search( 'bea_csf_queue_maintenance', $wpdb->ms_global_tables );
+		$offset = array_search( 'bea_csf_queue_maintenance', $wpdb->ms_global_tables, true );
 		if ( ! empty( $offset ) ) {
 			unset( $wpdb->ms_global_tables[ $offset ] );
 		}
-		$result                   = @dbDelta( $schema );
+		$result                   = dbDelta( $schema );
 		$wpdb->ms_global_tables[] = 'bea_csf_queue_maintenance';
 
 		if ( empty( $result ) ) {
@@ -141,15 +129,20 @@ class BEA_CSF_Plugin {
 		return 'created';
 	}
 
-	public static function deactivate() {}
+	public static function deactivate() {
+	}
 
 	/**
 	 * Get post ID from post meta with meta_key and meta_value
+	 *
+	 * @param string $key
+	 * @param string $value
+	 *
+	 * @return int
 	 */
 	public static function get_post_id_from_meta( $key, $value ) {
 		global $wpdb;
 
 		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s", $key, $value ) );
 	}
-
 }

@@ -3,7 +3,7 @@
 Plugin Name: BEA - Content Synchronization - Fusion
 Plugin URI: https://beapi.fr
 Description: Manage content synchronization across a WordPress multisite.
-Version: 3.3.2
+Version: 3.4.0
 Author: Be API
 Author URI: http://beapi.fr
 Network: true
@@ -13,7 +13,7 @@ Copyright 2013-2018 - Be API Team (technique@beapi.fr)
 */
 
 // Plugin constants
-define( 'BEA_CSF_VERSION', '3.3.2' );
+define( 'BEA_CSF_VERSION', '3.4.0' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
 
