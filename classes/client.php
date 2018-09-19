@@ -32,6 +32,9 @@ class BEA_CSF_Client {
 		add_action( 'edited_term', array( __CLASS__, 'merge_term' ), 990, 3 );
 		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), 990, 3 );
 
+		// Terms/Post_type association
+		add_action( 'set_object_terms', array( __CLASS__, 'set_object_terms' ), PHP_INT_MAX, 6 );
+
 		// P2P
 		add_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
 		add_action( 'p2p_delete_connections', array( __CLASS__, 'p2p_delete_connections' ), PHP_INT_MAX, 1 );
@@ -49,8 +52,8 @@ class BEA_CSF_Client {
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			remove_action( 'updated_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
-			remove_action( 'deleted_' . 'post' . '_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
+			remove_action( 'updated_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
+			remove_action( 'deleted_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
 		}
 
 		// Post types
@@ -61,6 +64,9 @@ class BEA_CSF_Client {
 		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX );
 		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX );
 		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX );
+
+		// Terms/Post_type association
+		remove_action( 'set_object_terms', array( __CLASS__, 'set_object_terms' ), PHP_INT_MAX, 6 );
 
 		// P2P
 		remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX );
@@ -75,7 +81,7 @@ class BEA_CSF_Client {
 	public static function delete_attachment( $attachment_id = 0 ) {
 		// Get post
 		$attachment = get_post( $attachment_id );
-		if ( false == $attachment || is_wp_error( $attachment ) ) {
+		if ( false === $attachment || is_wp_error( $attachment ) ) {
 			return false;
 		}
 
@@ -101,10 +107,9 @@ class BEA_CSF_Client {
 	 * @return bool
 	 */
 	public static function merge_attachment( $attachment_id = 0 ) {
-
 		// Get post
 		$attachment = get_post( $attachment_id );
-		if ( false == $attachment || is_wp_error( $attachment ) ) {
+		if ( false === $attachment || is_wp_error( $attachment ) ) {
 			return false;
 		}
 
@@ -157,7 +162,7 @@ class BEA_CSF_Client {
 	 */
 	public static function wp_update_attachment_metadata( $data, $post_id ) {
 		$post = get_post( $post_id );
-		if ( false == $post || is_wp_error( $post ) ) {
+		if ( false === $post || is_wp_error( $post ) ) {
 			return $data;
 		}
 
@@ -252,7 +257,7 @@ class BEA_CSF_Client {
 		}
 
 		// Go out if post is revision
-		if ( 'revision' == $post->post_type ) {
+		if ( 'revision' === $post->post_type ) {
 			return false;
 		}
 
@@ -332,9 +337,45 @@ class BEA_CSF_Client {
 		// Manual sync - Selected receivers
 		$_term_receivers = (array) get_term_meta( $term->term_id, '_term_receivers', true );
 		$_term_receivers = array_filter($_term_receivers);
-		
+
 		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . get_current_blog_id(), $term, false, $_term_receivers, false );
 
 		return true;
+	}
+
+	/**
+	 * Hook call when a post/attachment is linked with term for any taxonomy
+	 *
+	 * @param $object_id
+	 * @param array $terms
+	 * @param array $tt_ids
+	 * @param $taxonomy
+	 * @param $append
+	 * @param array $old_tt_ids
+	 *
+	 * @return bool
+	 */
+	public static function set_object_terms( $object_id, array $terms, array $tt_ids, $taxonomy, $append, array $old_tt_ids ) {
+		// Resend terms to queue
+		if ( ! empty( $terms ) ) {
+			foreach ( $terms as $term ) {
+				self::merge_term( $term->term_id, $term->term_taxonomy_id, $taxonomy );
+			}
+		}
+
+		// Resend post/attachment to queue
+		$post = get_post( $object_id );
+		if ( false === $post || is_wp_error( $post ) ) {
+			return false;
+		}
+
+		if ( 'attachment' === $post->post_type ) {
+			self::merge_attachment( $post->ID );
+		} else {
+			self::transition_post_status( $post->post_status, $post->post_status, $post );
+		}
+
+		return true;
+
 	}
 }
