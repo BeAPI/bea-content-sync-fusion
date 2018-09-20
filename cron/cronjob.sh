@@ -13,7 +13,7 @@
 ## TODO
 # Allow to customize path for PID file
 
-set -o errexit
+set -e # same AS set -o errexit
 set -o pipefail
 set -o nounset
 
@@ -24,7 +24,7 @@ __file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
 __base="$(basename ${__file} .sh)"
 
 # The first argument is mandatory
-if [ -z "${1}" ]
+if [ -z "${1:-}" ]
 then
       echo "You must pass at least one argument, the WordPress network URL..."
       exit 1
@@ -47,7 +47,9 @@ PIDFILE="$__dir/wp-bea-csf.pid"
 if [ -f $PIDFILE ]
 then
   PID=$(cat $PIDFILE)
+  set +e
   ps -p $PID > /dev/null 2>&1
+  set -e
   if [ $? -eq 0 ]
   then
     echo "Process already running"
