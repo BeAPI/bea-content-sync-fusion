@@ -27,7 +27,9 @@ Compatible up to WordPress 4.9.x
 * Feature: A full refactoring for the bash script to be use with cronjob
 * **MAJOR Bugfix**: stop to delete emitter file when media is deleted from a receiver
 * Bugfix: allow DB schema change with WP-CLI
+* Bugfix: priorize the synchro in this order: Terms, Attachments and after post type
 * Improvement: some code styling
+
 
 ### 3.3.2 - September 2018
 
