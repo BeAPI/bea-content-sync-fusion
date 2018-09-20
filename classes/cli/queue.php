@@ -87,6 +87,7 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 
 		// Get data to sync
 		$items_to_sync = BEA_CSF_Async::get_results( BEA_CSF_CRON_QTY, get_current_blog_id() );
+
 		if ( empty( $items_to_sync ) ) {
 			WP_CLI::error( __( 'No content to synchronize', 'bea-content-sync-fusion' ) );
 		}

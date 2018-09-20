@@ -345,7 +345,7 @@ class BEA_CSF_Synchronization {
 				continue;
 			}
 
-			BEA_CSF_Async::insert( $this->_current_object_id, $this->_current_filter, $this->_current_receiver_blog_id, $this->get_fields() );
+			BEA_CSF_Async::insert( $this->_current_object, $this->_current_object_id, $this->_current_filter, $this->_current_receiver_blog_id, $this->get_fields() );
 		}
 
 		do_action( 'bea-csf-after-send_to_receivers', $this );

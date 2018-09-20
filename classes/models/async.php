@@ -1,10 +1,12 @@
 <?php
+
 class BEA_CSF_Async {
 	/**
 	 * Generic method to get data from emitter and sent theses to receivers
 	 *
 	 * @param  boolean $quantity
 	 * @param  boolean|integer $receiver_blog_id
+	 *
 	 * @return boolean
 	 */
 	public static function process_queue( $quantity = false, $receiver_blog_id = false ) {
@@ -57,7 +59,11 @@ class BEA_CSF_Async {
 		switch_to_blog( $blog_id );
 
 		// Get data from SERVER class
-		$data_to_transfer = call_user_func( array( 'BEA_CSF_Server_' . $object, $method ), $sync->hook_data, $sync->fields );
+		$data_to_transfer = call_user_func( array(
+			'BEA_CSF_Server_' . $object,
+			$method
+		), $sync->hook_data, $sync->fields );
+
 		if ( false === $data_to_transfer ) {
 			// Remove from queue
 			self::delete( $sync->id );
@@ -109,6 +115,7 @@ class BEA_CSF_Async {
 	/**
 	 * Add an item into queue
 	 *
+	 * @param $type
 	 * @param $hook_data
 	 * @param $current_filter
 	 * @param $receiver_blog_id
@@ -116,10 +123,10 @@ class BEA_CSF_Async {
 	 *
 	 * @return mixed
 	 */
-	public static function insert( $hook_data, $current_filter, $receiver_blog_id, $fields ) {
+	public static function insert( $type, $hook_data, $current_filter, $receiver_blog_id, $fields ) {
 		global $wpdb;
 
-		$pre = apply_filters( 'bea-csf-async-insert', false, $hook_data, $current_filter, $receiver_blog_id, $fields );
+		$pre = apply_filters( 'bea-csf-async-insert', false, $hook_data, $current_filter, $receiver_blog_id, $fields, $type );
 		if ( false !== $pre ) {
 			return $pre;
 		}
@@ -130,12 +137,13 @@ class BEA_CSF_Async {
 		$wpdb->insert(
 			$wpdb->bea_csf_queue,
 			array(
+				'type'             => $type,
 				'hook_data'        => maybe_serialize( $hook_data ),
 				'current_filter'   => $current_filter,
 				'receiver_blog_id' => $receiver_blog_id,
 				'fields'           => maybe_serialize( $fields ),
 			),
-			array( '%s', '%s', '%d', '%s' )
+			array( '%s', '%s', '%s', '%d', '%s' )
 		);
 
 		remove_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
@@ -147,6 +155,7 @@ class BEA_CSF_Async {
 	 * Update on fly request on MySQL
 	 *
 	 * @param  string $query
+	 *
 	 * @return string
 	 */
 	public static function alter_query_ignore_insert( $query ) {
@@ -157,7 +166,7 @@ class BEA_CSF_Async {
 
 	/**
 	 * Delte an item from queue
-	 * 
+	 *
 	 * @param $id
 	 *
 	 * @return int|false
@@ -215,15 +224,15 @@ class BEA_CSF_Async {
 
 		/** @var WPDB $wpdb */
 		if ( 0 < $blog_id ) {
-			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d LIMIT %d", $blog_id, $quantity ) );
+			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d ORDER BY FIELD(type, 'Taxonomy', 'Attachment', 'PostType') ASC LIMIT %d", $blog_id, $quantity ) );
 		}
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue LIMIT %d", $quantity ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue  ORDER BY FIELD(type, 'Taxonomy', 'Attachment', 'PostType') ASC  LIMIT %d", $quantity ) );
 	}
 
 	/**
 	 * Get counter items for a blog
-	 * 
+	 *
 	 * @param integer $blog_id
 	 *
 	 * @return integer

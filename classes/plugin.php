@@ -2,6 +2,20 @@
 
 class BEA_CSF_Plugin {
 
+	/**
+	 * Check if DB version has changed...
+	 */
+	public static function check_for_db_update() {
+		if ( 1 == 1 || get_network_option( 0, 'bea_csf_db_version' ) !== constant( 'BEA_CSF_DB_VERSION' ) ) {
+			self::activate();
+
+		}
+	}
+
+	/**
+	 * Some actions when plugin is activated...
+	 *
+	 */
 	public static function activate() {
 		self::create_relations_table();
 
@@ -10,6 +24,9 @@ class BEA_CSF_Plugin {
 
 		// Create table for queue maintenance
 		self::create_queue_table_maintenance();
+
+		// Site option for ALL network
+		update_network_option( 0, 'bea_csf_db_version', BEA_CSF_DB_VERSION );
 	}
 
 	public static function create_relations_table() {
@@ -55,6 +72,7 @@ class BEA_CSF_Plugin {
 
 		$schema = "CREATE TABLE {$wpdb->bea_csf_queue} (
             `id` BIGINT(20) NOT NULL auto_increment,
+            `type` VARCHAR(255) NOT NULL,
             `hook_data` TEXT NOT NULL,
             `current_filter` TEXT NOT NULL,
             `receiver_blog_id` BIGINT(20),
@@ -94,6 +112,7 @@ class BEA_CSF_Plugin {
 
 		$schema = "CREATE TABLE {$wpdb->bea_csf_queue_maintenance} (
             `id` BIGINT(20) NOT NULL auto_increment,
+            `type` VARCHAR(255) NOT NULL,
             `hook_data` TEXT NOT NULL,
             `current_filter` TEXT NOT NULL,
             `receiver_blog_id` BIGINT(20),
@@ -129,6 +148,9 @@ class BEA_CSF_Plugin {
 		return 'created';
 	}
 
+	/**
+	 * Do nothing :)
+	 */
 	public static function deactivate() {
 	}
 

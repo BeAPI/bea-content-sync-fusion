@@ -14,6 +14,7 @@ Copyright 2013-2018 - Be API Team (technique@beapi.fr)
 
 // Plugin constants
 define( 'BEA_CSF_VERSION', '3.4.0' );
+define( 'BEA_CSF_DB_VERSION', '1537418075' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
 
@@ -104,6 +105,8 @@ register_deactivation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'deactivate' ) );
 // Init !
 add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );
 function init_bea_content_sync_fusion() {
+	BEA_CSF_Plugin::check_for_db_update();
+
 	// Load translations
 	load_plugin_textdomain( 'bea-content-sync-fusion', false, basename( BEA_CSF_DIR ) . '/languages' );
 
