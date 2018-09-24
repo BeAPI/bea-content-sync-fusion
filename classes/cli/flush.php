@@ -7,6 +7,24 @@ if ( ! defined( 'WP_CLI' ) ) {
 class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 
 	/**
+	 * Get all blogs "url" with content synchronized
+	 *
+	 * @param $args
+	 * @param $params
+	 */
+	public function get_sites( $args, $params ) {
+		// Get blogs ID with content to flush
+		$blog_ids = BEA_CSF_Relations::get_all_receiver_blog_ids();
+		if ( empty( $blog_ids ) ) {
+			return;
+		}
+
+		foreach ( $blog_ids as $blog_id ) {
+			WP_CLI::line( get_home_url( $blog_id, '/' ) );
+		}
+	}
+
+	/**
 	 * Flush all contents synchronized
 	 *
 	 * @param $args
