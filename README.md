@@ -22,14 +22,17 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
-### 3.4.0 - End september 2018
+### 3.4.1 - 24 september 2018
+
+* Feature: add WP-CLI command for get URL of sites with contents synchronized (flush part)
+
+### 3.4.0 - 20 september 2018
 
 * Feature: A full refactoring for the bash script to be use with cronjob
 * **MAJOR Bugfix**: stop to delete emitter file when media is deleted from a receiver
 * Bugfix: allow DB schema change with WP-CLI
 * Bugfix: priorize the synchro in this order: Terms, Attachments and after post type
 * Improvement: some code styling
-
 
 ### 3.3.2 - September 2018
 
