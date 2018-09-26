@@ -91,7 +91,7 @@ class BEA_CSF_Client {
 		}
 
 		// Is synchronized content ?
-		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), get_current_blog_id(), $attachment->ID );
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array( 'posttype', 'attachment' ), get_current_blog_id(), $attachment->ID );
 		if ( ! empty( $emitter_relation ) ) {
 			return false;
 		}
@@ -119,7 +119,7 @@ class BEA_CSF_Client {
 		}
 
 		// Is synchronized content ?
-		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), get_current_blog_id(), $attachment->ID );
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array( 'posttype', 'attachment' ), get_current_blog_id(), $attachment->ID );
 		if ( ! empty( $emitter_relation ) ) {
 			return false;
 		}
@@ -142,7 +142,7 @@ class BEA_CSF_Client {
 	 */
 	public static function wp_save_image_editor_file( $bool, $filename, $image, $mime_type, $post_id ) {
 		$post = get_post( $post_id );
-		if ( false == $post || is_wp_error( $post ) ) {
+		if ( false === $post || is_wp_error( $post ) ) {
 			return $bool;
 		}
 
@@ -182,7 +182,7 @@ class BEA_CSF_Client {
 	public static function merge_post_meta( $meta_id = 0, $post_id = 0, $meta_key = '' ) {
 		if ( '_thumbnail_id' == $meta_key ) {
 			$post = get_post( $post_id );
-			if ( false == $post || is_wp_error( $post ) ) {
+			if ( false === $post || is_wp_error( $post ) ) {
 				return false;
 			}
 
@@ -208,12 +208,12 @@ class BEA_CSF_Client {
 		}
 
 		$post = get_post( $post );
-		if ( false == $post || is_wp_error( $post ) ) {
+		if ( false === $post || is_wp_error( $post ) ) {
 			return false;
 		}
 
 		// Go out if post is revision
-		if ( 'revision' == $post->post_type ) {
+		if ( 'revision' === $post->post_type ) {
 			return false;
 		}
 
@@ -221,24 +221,22 @@ class BEA_CSF_Client {
 		$is_excluded_from_sync = (boolean) get_post_meta( $post->ID, '_exclude_from_sync', true );
 
 		// Manual sync - Selected receivers
-		$_post_receivers = get_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers', true );
-
-		// Except schedule post
-		/*if ( 'future' == $old_status ) {
-			return false;
-		}*/
+		$_post_receivers = get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
 
 		// Allow 3rd plugin manipulation for post_status
-		$allowed_new_status = apply_filters( 'bea/csf/client/allowed_new_status', [ 'publish', 'future', 'offline' ], $new_status, $old_status, $post );
-		$allowed_old_status = apply_filters( 'bea/csf/client/allowed_old_status', [ 'publish' ], $new_status, $old_status, $post );
+		$allowed_new_status = apply_filters( 'bea/csf/client/allowed_new_status', [ 'publish', 'future', 'offline', 'private' ], $new_status, $old_status, $post );
+		$allowed_old_status = apply_filters( 'bea/csf/client/allowed_old_status', [ 'draft', 'trash', 'pending' ], $old_status, $new_status, $post );
+
+		// Ignore post status:  auto-draft, inherit
+		// See: https://codex.wordpress.org/Post_Status
 
 		// Check for new publication
-		if ( in_array( $new_status, $allowed_new_status ) ) {
+		if ( in_array( $new_status, $allowed_new_status, true ) ) {
 			if ( class_exists( 'acf' ) ) {
 				do_action( 'acf/save_post', $post->ID );
 			}
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
-		} elseif ( $new_status != $old_status && in_array( $new_status, $allowed_new_status )  ) { // Check for unpublish
+		} elseif ( $new_status !== $old_status && in_array( $new_status, $allowed_old_status, true )  ) { // Check for unpublish
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
 		}
 
@@ -336,7 +334,7 @@ class BEA_CSF_Client {
 
 		// Manual sync - Selected receivers
 		$_term_receivers = (array) get_term_meta( $term->term_id, '_term_receivers', true );
-		$_term_receivers = array_filter($_term_receivers);
+		$_term_receivers = array_filter( $_term_receivers );
 
 		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . get_current_blog_id(), $term, false, $_term_receivers, false );
 

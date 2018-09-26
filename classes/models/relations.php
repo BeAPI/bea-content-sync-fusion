@@ -238,12 +238,12 @@ class BEA_CSF_Relations {
 	public static function get_object_id_for_receiver( $types, $emitter_blog_id, $receiver_blog_id, $emitter_id ) {
 		global $wpdb;
 
-		$types = array_map(function($v) {
-			return "'" . esc_sql($v) . "'";
-		}, (array) $types);
+		$types = array_map( function ( $v ) {
+			return "'" . esc_sql( $v ) . "'";
+		}, (array) $types );
 
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( ".implode(', ', $types)." ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d", $emitter_blog_id, $receiver_blog_id, $emitter_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d", $emitter_blog_id, $receiver_blog_id, $emitter_id ) );
 	}
 
 	/**
@@ -267,7 +267,7 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param string $types
+	 * @param string|array $types
 	 * @param int $receiver_blog_id
 	 * @param int $receiver_id
 	 *
@@ -277,12 +277,12 @@ class BEA_CSF_Relations {
 	public static function current_object_is_synchronized( $types, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
-		$types = array_map(function($v) {
-			return "'" . esc_sql($v) . "'";
-		}, (array) $types);
-		
+		$types = array_map( function ( $v ) {
+			return "'" . esc_sql( $v ) . "'";
+		}, (array) $types );
+
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( ".implode(', ', $types)." ) AND receiver_blog_id = %d AND receiver_id = %d", $receiver_blog_id, $receiver_id ) );
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND receiver_blog_id = %d AND receiver_id = %d", $receiver_blog_id, $receiver_id ) );
 	}
 
 	/**
