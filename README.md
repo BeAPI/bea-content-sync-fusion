@@ -22,6 +22,10 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.4.2.1 - 26 september 2018
+
+* Bugfix - Stop to kill CRON process when an error is occurred
+
 ### 3.4.2 - 26 september 2018
 
 * Bugfix: trash post is now functionnal (item is deleted from synchro)
