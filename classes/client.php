@@ -54,7 +54,7 @@ class BEA_CSF_Client {
 		remove_filter( 'wp_update_attachment_metadata', array(
 			__CLASS__,
 			'wp_update_attachment_metadata'
-		), PHP_INT_MAX );
+		), PHP_INT_MAX, 2 );
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {

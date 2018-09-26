@@ -13,7 +13,7 @@
 ## TODO
 # Allow to customize path for PID file
 
-set -e # same AS set -o errexit
+# set -e # same AS set -o errexit
 set -o pipefail
 set -o nounset
 
@@ -47,9 +47,7 @@ PIDFILE="$__dir/wp-bea-csf.pid"
 if [ -f $PIDFILE ]
 then
   PID=$(cat $PIDFILE)
-  set +e
   ps -p $PID > /dev/null 2>&1
-  set -e
   if [ $? -eq 0 ]
   then
     echo "Process already running"
