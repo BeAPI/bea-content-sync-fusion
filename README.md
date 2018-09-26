@@ -22,6 +22,10 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.4.2 - 26 september 2018
+
+* Bugfix: trash post is now functionnal (item is deleted from synchro)
+
 ### 3.4.1 - 24 september 2018
 
 * Feature: add WP-CLI command for get URL of sites with contents synchronized (flush part)
