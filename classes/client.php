@@ -14,7 +14,10 @@ class BEA_CSF_Client {
 
 		// Attachments crop
 		add_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX, 5 );
-		add_filter( 'wp_update_attachment_metadata', array( __CLASS__, 'wp_update_attachment_metadata' ), PHP_INT_MAX, 2 );
+		add_filter( 'wp_update_attachment_metadata', array(
+			__CLASS__,
+			'wp_update_attachment_metadata'
+		), PHP_INT_MAX, 2 );
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
@@ -48,7 +51,10 @@ class BEA_CSF_Client {
 
 		// Attachments crop
 		remove_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX );
-		remove_filter( 'wp_update_attachment_metadata', array( __CLASS__, 'wp_update_attachment_metadata' ), PHP_INT_MAX );
+		remove_filter( 'wp_update_attachment_metadata', array(
+			__CLASS__,
+			'wp_update_attachment_metadata'
+		), PHP_INT_MAX );
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
@@ -91,7 +97,10 @@ class BEA_CSF_Client {
 		}
 
 		// Is synchronized content ?
-		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array( 'posttype', 'attachment' ), get_current_blog_id(), $attachment->ID );
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array(
+			'posttype',
+			'attachment'
+		), get_current_blog_id(), $attachment->ID );
 		if ( ! empty( $emitter_relation ) ) {
 			return false;
 		}
@@ -119,7 +128,10 @@ class BEA_CSF_Client {
 		}
 
 		// Is synchronized content ?
-		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array( 'posttype', 'attachment' ), get_current_blog_id(), $attachment->ID );
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array(
+			'posttype',
+			'attachment'
+		), get_current_blog_id(), $attachment->ID );
 		if ( ! empty( $emitter_relation ) ) {
 			return false;
 		}
@@ -224,8 +236,17 @@ class BEA_CSF_Client {
 		$_post_receivers = get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
 
 		// Allow 3rd plugin manipulation for post_status
-		$allowed_new_status = apply_filters( 'bea/csf/client/allowed_new_status', [ 'publish', 'future', 'offline', 'private' ], $new_status, $old_status, $post );
-		$allowed_old_status = apply_filters( 'bea/csf/client/allowed_old_status', [ 'draft', 'trash', 'pending' ], $old_status, $new_status, $post );
+		$allowed_new_status = apply_filters( 'bea/csf/client/allowed_new_status', [
+			'publish',
+			'future',
+			'offline',
+			'private'
+		], $new_status, $old_status, $post );
+		$allowed_old_status = apply_filters( 'bea/csf/client/allowed_old_status', [
+			'draft',
+			'trash',
+			'pending'
+		], $old_status, $new_status, $post );
 
 		// Ignore post status:  auto-draft, inherit
 		// See: https://codex.wordpress.org/Post_Status
@@ -236,7 +257,7 @@ class BEA_CSF_Client {
 				do_action( 'acf/save_post', $post->ID );
 			}
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
-		} elseif ( $new_status !== $old_status && in_array( $new_status, $allowed_old_status, true )  ) { // Check for unpublish
+		} elseif ( $new_status !== $old_status && in_array( $new_status, $allowed_old_status, true ) ) { // Check for unpublish
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
 		}
 
@@ -355,8 +376,12 @@ class BEA_CSF_Client {
 	 */
 	public static function set_object_terms( $object_id, array $terms, array $tt_ids, $taxonomy, $append, array $old_tt_ids ) {
 		// Resend terms to queue
-		if ( ! empty( $terms ) ) {
+		if ( ! empty( $terms ) && is_array( $terms ) ) {
 			foreach ( $terms as $term ) {
+				if ( ! isset( $term->term_id ) ) { // Keep only WP_Term object
+					continue;
+				}
+
 				self::merge_term( $term->term_id, $term->term_taxonomy_id, $taxonomy );
 			}
 		}
