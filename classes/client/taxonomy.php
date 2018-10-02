@@ -115,10 +115,12 @@ class BEA_CSF_Client_Taxonomy {
 			}
 
 			wp_delete_term( $local_term_id, $term['taxonomy'] );
-			BEA_CSF_Relations::delete_by_emitter( 'taxonomy', (int) $GLOBALS['wpdb']->blogid, (int) $local_term_id );
-		}
 
-		BEA_CSF_Relations::delete_by_emitter( 'taxonomy', (int) $term['blogid'], (int) $term['term_id'] );
+			BEA_CSF_Relations::delete_by_receiver( 'taxonomy', (int) $GLOBALS['wpdb']->blogid, (int) $local_term_id );
+
+			// Delete additional if reciprocal synchro
+			BEA_CSF_Relations::delete_by_emitter_and_receiver( 'taxonomy', (int) $GLOBALS['wpdb']->blogid, (int) $local_term_id, (int) $term['blogid'], (int) $term['term_id'] );
+		}
 
 		return apply_filters( 'bea_csf.client.taxonomy.delete', true, $sync_fields );
 	}

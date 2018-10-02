@@ -20,12 +20,14 @@ class BEA_CSF_Client_Attachment {
 			do_action( 'bea_csf.before_delete_attachment', $attachment_id, $data );
 
 			wp_delete_attachment( $attachment_id, true );
-			BEA_CSF_Relations::delete_by_emitter( 'attachment', (int) $GLOBALS['wpdb']->blogid, (int) $attachment_id );
+
+			BEA_CSF_Relations::delete_by_receiver( 'attachment', (int) $GLOBALS['wpdb']->blogid, (int) $attachment_id );
+
+			// Delete additional if reciprocal synchro
+			BEA_CSF_Relations::delete_by_emitter_and_receiver( 'attachment', (int) $GLOBALS['wpdb']->blogid, (int) $attachment_id, (int) $data['blogid'], (int) $data['ID'] );
 
 			do_action( 'bea_csf.after_delete_attachment', $attachment_id, $data );
 		}
-
-		BEA_CSF_Relations::delete_by_emitter( 'attachment', (int) $data['blogid'], (int) $data['ID'] );
 
 		return apply_filters( 'bea_csf.client.attachment.delete', true, $sync_fields );
 	}
@@ -44,7 +46,7 @@ class BEA_CSF_Client_Attachment {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
-		if ( !isset($data['blogid']) ) {
+		if ( ! isset( $data['blogid'] ) ) {
 			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
 		}
 
@@ -65,7 +67,7 @@ class BEA_CSF_Client_Attachment {
 		if ( ! empty( $current_media_id ) && (int) $current_media_id > 0 ) { // Edit, update only main fields
 
 			$data_for_post['ID'] = $current_media_id;
-			$new_media_id       = wp_update_post( $data_for_post );
+			$new_media_id        = wp_update_post( $data_for_post );
 			if ( is_wp_error( $new_media_id ) || $new_media_id === 0 ) {
 				return new WP_Error( 'invalid_datas', 'Error - An fatal error occurred during attachment insertion.' );
 			}
@@ -96,7 +98,7 @@ class BEA_CSF_Client_Attachment {
 					// TODO: Management exception, SO RARE in WP !
 					continue;
 				} else {
-					update_post_meta( $new_media_id, $key, maybe_unserialize($values[0]) );
+					update_post_meta( $new_media_id, $key, maybe_unserialize( $values[0] ) );
 				}
 			}
 		}

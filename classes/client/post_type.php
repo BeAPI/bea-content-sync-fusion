@@ -15,7 +15,7 @@ class BEA_CSF_Client_PostType {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
-		if ( !isset($data['blogid']) ) {
+		if ( ! isset( $data['blogid'] ) ) {
 			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
 		}
 
@@ -27,7 +27,7 @@ class BEA_CSF_Client_PostType {
 			$data['post_parent'] = ! empty( $local_parent_id ) && (int) $local_parent_id > 0 ? $local_parent_id : 0;
 		}
 
-		$data =  apply_filters( 'bea_csf/client/posttype/before_merge', $data, $sync_fields );
+		$data = apply_filters( 'bea_csf/client/posttype/before_merge', $data, $sync_fields );
 
 		// Clone datas for post insertion
 		$data_for_post = $data;
@@ -76,7 +76,7 @@ class BEA_CSF_Client_PostType {
 					// TODO: Management exception, SO RARE in WP !
 					continue;
 				} else {
-					update_post_meta( $new_post_id, $key, maybe_unserialize($values[0]) );
+					update_post_meta( $new_post_id, $key, maybe_unserialize( $values[0] ) );
 				}
 			}
 		}
@@ -139,8 +139,8 @@ class BEA_CSF_Client_PostType {
 			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id->receiver_id );
 		} elseif ( false != $data['_thumbnail'] ) {
 			$data['_thumbnail']['blogid'] = $data['blogid'];
-			$new_media                     = BEA_CSF_Client_Attachment::merge( $data['_thumbnail'], $sync_fields );
-			if ( isset($new_media['new_media_id']) ) {
+			$new_media                    = BEA_CSF_Client_Attachment::merge( $data['_thumbnail'], $sync_fields );
+			if ( isset( $new_media['new_media_id'] ) ) {
 				update_post_meta( $new_post_id, '_thumbnail_id', $new_media['new_media_id'] );
 			}
 		}
@@ -179,10 +179,11 @@ class BEA_CSF_Client_PostType {
 		if ( ! empty( $local_id ) && (int) $local_id > 0 ) {
 			wp_delete_post( $local_id, true );
 
-			BEA_CSF_Relations::delete_by_emitter( 'posttype', (int) $GLOBALS['wpdb']->blogid, (int) $local_id );
-		}
+			BEA_CSF_Relations::delete_by_receiver( 'posttype', (int) $GLOBALS['wpdb']->blogid, (int) $local_id );
 
-		BEA_CSF_Relations::delete_by_emitter( 'posttype', (int) $data['blogid'], (int) $data['ID'] );
+			// Delete additional if reciprocal synchro
+			BEA_CSF_Relations::delete_by_emitter_and_receiver( 'posttype', (int) $GLOBALS['wpdb']->blogid, (int) $local_id, (int) $data['blogid'], (int) $data['ID'] );
+		}
 
 		return apply_filters( 'bea_csf.client.posttype.delete', $data, $sync_fields );
 	}
