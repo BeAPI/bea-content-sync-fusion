@@ -34,7 +34,8 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 		// Get blogs ID with contents
 		$blog_ids = BEA_CSF_Relations::get_all_receiver_blog_ids();
 		if ( empty( $blog_ids ) ) {
-			WP_CLI::error( __( 'No content to flush', 'bea-content-sync-fusion' ) );
+			WP_CLI::warning( __( 'No content to flush', 'bea-content-sync-fusion' ) );
+			return;
 		}
 
 		$total = count( $blog_ids );
@@ -66,7 +67,8 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 		// Get data to delete
 		$items_to_delete = BEA_CSF_Relations::get_results_by_receiver_blog_id( get_current_blog_id() );
 		if ( empty( $items_to_delete ) ) {
-			WP_CLI::error( __( 'No content to flush', 'bea-content-sync-fusion' ) );
+			WP_CLI::warning( __( 'No content to flush', 'bea-content-sync-fusion' ) );
+			return;
 		}
 
 		$total = count( $items_to_delete );

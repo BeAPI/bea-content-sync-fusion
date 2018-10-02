@@ -55,7 +55,8 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 		// Get metadata content to sync
 		$meta_blog_ids = $this->get_blog_ids_with_meta_key();
 		if ( empty( $meta_blog_ids ) ) {
-			WP_CLI::error( __( 'No meta to migrate', 'bea-content-sync-fusion' ) );
+			WP_CLI::warning( __( 'No meta to migrate', 'bea-content-sync-fusion' ) );
+			return;
 		}
 
 		$total = count( $meta_blog_ids );

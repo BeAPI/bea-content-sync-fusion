@@ -19,7 +19,8 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 	public function new_sites( $args, $params ) {
 		$current_values = get_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'bea-csf-multisite-resync-blogs' );
 		if ( false === $current_values || ! is_array( $current_values ) ) {
-			WP_CLI::error( __( 'No new site to resync', 'bea-content-sync-fusion' ) );
+			WP_CLI::warning( __( 'No new site to resync', 'bea-content-sync-fusion' ) );
+			return;
 		}
 
 		$params['receivers']    = implode( ',', $current_values );
@@ -80,7 +81,8 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 		// Get blogs ID to resync
 		$site_query = new WP_Site_Query( $site_args );
 		if ( empty( $site_query->sites ) ) {
-			WP_CLI::error( __( 'No site to resync', 'bea-content-sync-fusion' ) );
+			WP_CLI::warning( __( 'No site to resync', 'bea-content-sync-fusion' ) );
+			return;
 		}
 
 		$progress = \WP_CLI\Utils\make_progress_bar( 'Loop on site with content to resync', $site_query->found_sites );
@@ -120,7 +122,8 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 			'emitters' => get_current_blog_id(),
 		), 'AND', false, true );
 		if ( empty( $has_syncs ) ) {
-			WP_CLI::error( __( 'No sync data emission for this website', 'bea-content-sync-fusion' ) );
+			WP_CLI::warning( __( 'No sync data emission for this website', 'bea-content-sync-fusion' ) );
+			return;
 		}
 
 		// Use maintenance queue ?
@@ -176,7 +179,8 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 
 		// No item ?
 		if ( false === $total ) {
-			WP_CLI::error( __( 'No content to resync', 'bea-content-sync-fusion' ) );
+			WP_CLI::warning( __( 'No content to resync', 'bea-content-sync-fusion' ) );
+			return;
 		}
 
 		WP_CLI::success( __( 'Start of content resyncing', 'bea-content-sync-fusion' ) );
