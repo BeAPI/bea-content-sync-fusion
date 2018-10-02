@@ -22,9 +22,15 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.4.3 - 2 october 2018
+
+* Bugfix: A bug occurred when post is delete, only the first blog work, an orphan is generated for others blogs (introduced on 3.0.1)
+* Improvement: replace error message by warning message on WP-CLI commands
+* Improvement: some code styling / strict tests
+
 ### 3.4.2.1 - 26 september 2018
 
-* Bugfix - Stop to kill CRON process when an error is occurred
+* Bugfix: Stop to kill CRON process when an error is occurred
 
 ### 3.4.2 - 26 september 2018
 
