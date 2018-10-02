@@ -15,7 +15,7 @@ class BEA_CSF_Admin_Restrictions {
 		// Get current setting
 		$current_settings = get_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'csf_adv_settings' );
 		if ( isset( $current_settings['unlock-mode'] ) && '1' === $current_settings['unlock-mode'] ) {
-			return false;
+			return;
 		}
 
 		// Post row
@@ -29,8 +29,6 @@ class BEA_CSF_Admin_Restrictions {
 
 		// Play with capabilities
 		add_filter( 'map_meta_cap', array( __CLASS__, 'map_meta_cap' ), 10, 4 );
-
-		return true;
 	}
 
 	/**
@@ -39,7 +37,11 @@ class BEA_CSF_Admin_Restrictions {
 	 * @param string $hook_suffix
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
-		if ( isset( $hook_suffix ) && in_array($hook_suffix, array('edit.php', 'edit-tags.php', 'post.php')) ) {
+		if ( isset( $hook_suffix ) && in_array( $hook_suffix, array(
+				'edit.php',
+				'edit-tags.php',
+				'post.php'
+			), true ) ) {
 			wp_enqueue_script( 'bea-csf-admin-client', BEA_CSF_URL . 'assets/js/bea-csf-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
 			wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array(), BEA_CSF_VERSION, 'all' );
 		}
@@ -48,7 +50,7 @@ class BEA_CSF_Admin_Restrictions {
 	/**
 	 * Remove some actions on post list when a post have an original key
 	 *
-	 * @param array $post
+	 * @param array $actions
 	 * @param WP_Post $post
 	 *
 	 * @return array
@@ -56,7 +58,10 @@ class BEA_CSF_Admin_Restrictions {
 	public static function post_row_actions( array $actions, WP_Post $post ) {
 		global $wpdb;
 
-		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), $wpdb->blogid, $post->ID );
+		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( array(
+			'posttype',
+			'attachment',
+		), $wpdb->blogid, $post->ID );
 
 		// Get syncs model for current post_type, with any mode status (manual and auto)
 		$_has_syncs = BEA_CSF_Synchronizations::get( array(
@@ -64,14 +69,14 @@ class BEA_CSF_Admin_Restrictions {
 			'emitters'  => $wpdb->blogid,
 		), 'AND', false, true );
 
-		if ( false != $_origin_key && false == $_has_syncs ) {
-			if ( 'pending' == $post->post_status ) {
+		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
+			if ( 'pending' === $post->post_status ) {
 				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ) ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
 
 				if ( current_user_can( 'publish_post', $post->ID ) ) {
 					$actions['publish'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
 							'action' => 'bea-csf-publish',
-							'ID'     => $post->ID
+							'ID'     => $post->ID,
 						) ), 'bea-csf-publish' ) ) . '">Publish</a>';
 				}
 			}
@@ -80,8 +85,11 @@ class BEA_CSF_Admin_Restrictions {
 		return $actions;
 	}
 
+	/**
+	 * Check admin GET action for allow publishing from our custom link
+	 */
 	public static function admin_init_check_post_publishing() {
-		if ( isset( $_GET['action'] ) && $_GET['action'] == 'bea-csf-publish' && isset( $_GET['ID'] ) && (int) $_GET['ID'] > 0 ) {
+		if ( isset( $_GET['action'] ) && 'bea-csf-publish' === $_GET['action'] && isset( $_GET['ID'] ) && (int) $_GET['ID'] > 0 ) {
 			check_admin_referer( 'bea-csf-publish' );
 
 			wp_publish_post( (int) $_GET['ID'] );
@@ -110,7 +118,7 @@ class BEA_CSF_Admin_Restrictions {
 		// Get syncs model for current post_type, with any mode status (manual and auto)
 		$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $term->taxonomy );
 
-		if ( $_origin_key != false && $_has_syncs == false ) {
+		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 			unset( $actions['edit'], $actions['inline hide-if-no-js'], $actions['delete'] );
 			$actions['view'] .= '<span class="locked-term-parent"></span>';
 		}
@@ -128,12 +136,12 @@ class BEA_CSF_Admin_Restrictions {
 		global $pagenow, $wpdb;
 
 		// Not an edit page ?
-		if ( $pagenow != 'edit-tags.php' ) {
+		if ( 'edit-tags.php' !== $pagenow ) {
 			return false;
 		}
 
 		// No action on edit page ?
-		if ( ! isset( $_GET['taxonomy'] ) || ! isset( $_GET['tag_ID'] ) || $_GET['action'] != 'edit' ) {
+		if ( ! isset( $_GET['taxonomy'] ) || ! isset( $_GET['tag_ID'] ) || 'edit' !== $_GET['action'] ) {
 			return false;
 		}
 
@@ -150,7 +158,7 @@ class BEA_CSF_Admin_Restrictions {
 		// Get syncs model for current post_type, with any mode status (manual and auto)
 		$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
 
-		if ( $_origin_key != false && $_has_syncs == false ) {
+		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
 		}
 
@@ -168,16 +176,20 @@ class BEA_CSF_Admin_Restrictions {
 	 * @return array
 	 */
 	public static function map_meta_cap( $caps, $cap, $user_id, $args ) {
-		global $tag, $wpdb;
+		global $wpdb;
 
 		$capabilities = apply_filters( 'bea_csf_capabilities', self::$capabilities_to_check );
 		if ( ! is_array( $capabilities ) ) {
 			return $caps;
 		}
-		if ( in_array( $cap, $capabilities ) ) {
-			$post = get_post($args[0]);
 
-			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), $wpdb->blogid, $post->ID );
+		if ( in_array( $cap, $capabilities ) ) {
+			$post = get_post( $args[0] );
+
+			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( array(
+				'posttype',
+				'attachment',
+			), $wpdb->blogid, $post->ID );
 
 			// Get syncs model for current post_type, with any mode status (manual and auto)
 			$_has_syncs = BEA_CSF_Synchronizations::get( array(
@@ -185,7 +197,7 @@ class BEA_CSF_Admin_Restrictions {
 				'emitters'  => $wpdb->blogid,
 			), 'AND', false, true );
 
-			if ( $_origin_key != false && $_has_syncs == false ) {
+			if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 				$caps[] = 'do_not_allow';
 			}
 		}
