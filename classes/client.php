@@ -236,13 +236,13 @@ class BEA_CSF_Client {
 		$_post_receivers = get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
 
 		// Allow 3rd plugin manipulation for post_status
-		$allowed_new_status = apply_filters( 'bea/csf/client/allowed_new_status', [
+		$allowed_publish_status = apply_filters( 'bea/csf/client/allowed_publish_status', [
 			'publish',
 			'future',
 			'offline',
 			'private'
 		], $new_status, $old_status, $post );
-		$allowed_old_status = apply_filters( 'bea/csf/client/allowed_old_status', [
+		$allowed_delete_status = apply_filters( 'bea/csf/client/allowed_delete_status', [
 			'draft',
 			'trash',
 			'pending'
@@ -252,12 +252,12 @@ class BEA_CSF_Client {
 		// See: https://codex.wordpress.org/Post_Status
 
 		// Check for new publication
-		if ( in_array( $new_status, $allowed_new_status, true ) ) {
+		if ( in_array( $new_status, $allowed_publish_status, true ) ) {
 			if ( class_exists( 'acf' ) ) {
 				do_action( 'acf/save_post', $post->ID );
 			}
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
-		} elseif ( $new_status !== $old_status && in_array( $new_status, $allowed_old_status, true ) ) { // Check for unpublish
+		} elseif ( $new_status !== $old_status && in_array( $new_status, $allowed_delete_status, true ) ) { // Check for unpublish
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
 		}
 

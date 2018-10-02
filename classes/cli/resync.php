@@ -9,7 +9,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 	private $_receivers_blog_ids = [];
 
 	/**
-	 * Flush all contents for new site on network
+	 * Resync all contents for new site on network
 	 *
 	 * @param $args
 	 * @param $params
@@ -20,10 +20,11 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 		$current_values = get_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'bea-csf-multisite-resync-blogs' );
 		if ( false === $current_values || ! is_array( $current_values ) ) {
 			WP_CLI::warning( __( 'No new site to resync', 'bea-content-sync-fusion' ) );
+
 			return;
 		}
 
-		$params['receivers']    = implode( ',', $current_values );
+		$params['receivers'] = implode( ',', $current_values );
 		//$params['alternativeq'] = 'true';
 
 		$this->all( $args, $params );
@@ -32,7 +33,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 	}
 
 	/**
-	 * Flush all contents synchronized
+	 * Loop on all blogs for resync contents to synchronized
 	 *
 	 * @param $args
 	 * @param $params
@@ -68,6 +69,11 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 			'no_found_rows' => false,
 		);
 
+		// Get emitters blogs list from plugin settings
+		if ( isset( $params['smart'] ) && 'true' === $params['smart'] ) {
+			$site_args['site__in'] = BEA_CSF_Synchronizations::get_emitters_blogs_ids();
+		}
+
 		// Restrict to some emitters ?
 		if ( isset( $params['emitters'] ) ) {
 			$site_args['site__in'] = explode( ',', $params['emitters'] );
@@ -82,6 +88,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 		$site_query = new WP_Site_Query( $site_args );
 		if ( empty( $site_query->sites ) ) {
 			WP_CLI::warning( __( 'No site to resync', 'bea-content-sync-fusion' ) );
+
 			return;
 		}
 
@@ -123,6 +130,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 		), 'AND', false, true );
 		if ( empty( $has_syncs ) ) {
 			WP_CLI::warning( __( 'No sync data emission for this website', 'bea-content-sync-fusion' ) );
+
 			return;
 		}
 
@@ -180,6 +188,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 		// No item ?
 		if ( false === $total ) {
 			WP_CLI::warning( __( 'No content to resync', 'bea-content-sync-fusion' ) );
+
 			return;
 		}
 

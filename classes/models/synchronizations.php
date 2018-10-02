@@ -60,7 +60,7 @@ class BEA_CSF_Synchronizations {
 
 		$filtered = array();
 		/** @var BEA_CSF_Synchronization $obj */
-		foreach ( self::get_all() as $key => $obj ) {
+		foreach ( $list as $key => $obj ) {
 			$matched = 0;
 
 			foreach ( $args as $m_key => $m_value ) {
@@ -83,6 +83,34 @@ class BEA_CSF_Synchronizations {
 	}
 
 	/**
+	 * Get all emitters blog ids from synchro registered
+	 *
+	 * @return array
+	 */
+	public static function get_emitters_blogs_ids() {
+		$list = self::get_all();
+		if ( empty( $list ) ) {
+			return array();
+		}
+
+		$blogs_ids = array();
+
+		/** @var BEA_CSF_Synchronization $obj */
+		foreach ( $list as $key => $obj ) {
+			$obj_value = $obj->get_field( 'emitters' );
+			if ( is_array( $obj_value ) && ! empty( $obj_value ) ) {
+				foreach ( $obj_value as $blog_id ) {
+					$blogs_ids[] = $blog_id;
+				}
+			}
+		}
+
+		$blogs_ids = array_unique( $blogs_ids );
+
+		return $blogs_ids;
+	}
+
+	/**
 	 * Register an new synchronization
 	 *
 	 * @param array $args
@@ -92,13 +120,13 @@ class BEA_CSF_Synchronizations {
 	public static function register( array $args ) {
 		// Default settings
 		$default_args = array(
-			'active'        => true,
-			'label'         => '',
-			'post_type'     => 'post',
-			'mode'          => 'auto', // manual OR auto
-			'status'        => 'publish', // publish OR pending
-			'emitters'      => array(),
-			'receivers'     => array()
+			'active'    => true,
+			'label'     => '',
+			'post_type' => 'post',
+			'mode'      => 'auto', // manual OR auto
+			'status'    => 'publish', // publish OR pending
+			'emitters'  => array(),
+			'receivers' => array()
 		);
 		$args         = wp_parse_args( $args, $default_args );
 
@@ -226,6 +254,7 @@ class BEA_CSF_Synchronizations {
 			'mature'   => 0,
 			'spam'     => 0,
 			'deleted'  => 0,
+			'number'   => 200,
 		);
 		if ( is_null( $network_id ) ) {
 			$site_query_args['network__in'] = get_current_network_id();

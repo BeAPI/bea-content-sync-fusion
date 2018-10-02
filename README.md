@@ -22,7 +22,13 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
-### 3.4.3 - 2 october 2018
+### 3.4.4 - 2 october 2018
+
+* Changes: rename 2 hooks name for extend post status for publish/delete
+* Improvement: improve performance for bash CRON with smart param
+* New: add --smart=true param for WP-CLI resync command for improve performance by loop on only emitters blogs from synchronization settings
+
+### 3.4.3 - 1 october 2018
 
 * Bugfix: A bug occurred when post is delete, only the first blog work, an orphan is generated for others blogs (introduced on 3.0.1)
 * Improvement: replace error message by warning message on WP-CLI commands
