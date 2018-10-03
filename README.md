@@ -22,6 +22,10 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.4.5 - 3 october 2018
+
+* Bugfix: Deleting a debug condition that checks the structure of the table all the time and therefore loss of performance ...
+
 ### 3.4.4 - 2 october 2018
 
 * Changes: rename 2 hooks name for extend post status for publish/delete
