@@ -6,9 +6,8 @@ class BEA_CSF_Plugin {
 	 * Check if DB version has changed...
 	 */
 	public static function check_for_db_update() {
-		if ( 1 == 1 || get_network_option( 0, 'bea_csf_db_version' ) !== constant( 'BEA_CSF_DB_VERSION' ) ) {
+		if ( get_network_option( 0, 'bea_csf_db_version' ) !== constant( 'BEA_CSF_DB_VERSION' ) ) {
 			self::activate();
-
 		}
 	}
 
