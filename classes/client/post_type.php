@@ -140,7 +140,7 @@ class BEA_CSF_Client_PostType {
 		} elseif ( false != $data['_thumbnail'] ) {
 			$data['_thumbnail']['blogid'] = $data['blogid'];
 			$new_media                    = BEA_CSF_Client_Attachment::merge( $data['_thumbnail'], $sync_fields );
-			if ( isset( $new_media['new_media_id'] ) ) {
+			if ( ! is_wp_error( $new_media ) && isset( $new_media['new_media_id'] ) ) {
 				update_post_meta( $new_post_id, '_thumbnail_id', $new_media['new_media_id'] );
 			}
 		}
