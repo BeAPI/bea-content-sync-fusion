@@ -185,6 +185,9 @@ class BEA_CSF_Admin_Restrictions {
 
 		if ( in_array( $cap, $capabilities ) ) {
 			$post = get_post( $args[0] );
+			if ( empty( $post ) || is_wp_error( $post ) ) {
+				return $caps;
+			}
 
 			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( array(
 				'posttype',
