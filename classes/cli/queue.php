@@ -26,6 +26,7 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 		$blog_ids = BEA_CSF_Async::get_blog_ids_from_queue();
 		if ( empty( $blog_ids ) ) {
 			WP_CLI::warning( __( 'No content to synchronize', 'bea-content-sync-fusion' ) );
+
 			return;
 		}
 
@@ -86,11 +87,18 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 			BEA_CSF_Async::switch_to_maintenance_queue();
 		}
 
+		// Allow override quantity with CLI param
+		$quantity = BEA_CSF_CRON_QTY;
+		if ( isset( $params['quantity'] ) && intval( $params['quantity'] ) > 0 ) {
+			$quantity = intval( $params['quantity'] );
+		}
+
 		// Get data to sync
-		$items_to_sync = BEA_CSF_Async::get_results( BEA_CSF_CRON_QTY, get_current_blog_id() );
+		$items_to_sync = BEA_CSF_Async::get_results( $quantity, get_current_blog_id() );
 
 		if ( empty( $items_to_sync ) ) {
 			WP_CLI::warning( __( 'No content to synchronize', 'bea-content-sync-fusion' ) );
+
 			return;
 		}
 
