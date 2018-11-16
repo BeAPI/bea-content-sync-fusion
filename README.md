@@ -22,6 +22,12 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.4.6 - 16 november 2018
+
+* New: add --quantity param for WP-CLI content-sync-fusion queue pull method
+* Bugfix: Manage fatal error for media sync on specific case
+* Bugfix: Fix notices/warning PHP with admin restriction feature
+
 ### 3.4.5 - 3 october 2018
 
 * Bugfix: Deleting a debug condition that checks the structure of the table all the time and therefore loss of performance ...
