@@ -22,6 +22,11 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+
+### 3.4.7 - 17 november 2018
+
+* Bugfix: Create relation when a term already exists with the same on target
+
 ### 3.4.6 - 16 november 2018
 
 * New: add --quantity param for WP-CLI content-sync-fusion queue pull method
