@@ -178,6 +178,9 @@ class BEA_CSF_Relations {
 	public static function delete_by_receiver( $type, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
+		$cache_key = 'current_object_is_synchronized' . $receiver_blog_id . $receiver_id . $type;
+		wp_cache_delete( $cache_key, 'content-sync-fusion' );
+
 		/** @var WPDB $wpdb */
 
 		return $wpdb->delete( $wpdb->bea_csf_relations, array(
@@ -198,6 +201,9 @@ class BEA_CSF_Relations {
 	 */
 	public static function delete_by_emitter_and_receiver( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
+
+		$cache_key = 'current_object_is_synchronized' . $receiver_blog_id . $receiver_id . $type;
+		wp_cache_delete( $cache_key, 'content-sync-fusion' );
 
 		/** @var WPDB $wpdb */
 
@@ -300,12 +306,23 @@ class BEA_CSF_Relations {
 	public static function current_object_is_synchronized( $types, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
-		$types = array_map( function ( $v ) {
-			return "'" . esc_sql( $v ) . "'";
-		}, (array) $types );
+		$types = (array) $types;
+		sort( $types );
+		$cache_key = 'current_object_is_synchronized' . $receiver_blog_id . $receiver_id . implode( '', $types );
 
-		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND receiver_blog_id = %d AND receiver_id = %d", $receiver_blog_id, $receiver_id ) );
+		$result = wp_cache_get( $cache_key, 'content-sync-fusion' );
+		if ( false === $result ) {
+			$types = array_map( function ( $v ) {
+				return "'" . esc_sql( $v ) . "'";
+			}, $types );
+
+			/** @var WPDB $wpdb */
+			$result = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND receiver_blog_id = %d AND receiver_id = %d", $receiver_blog_id, $receiver_id ) );
+
+			wp_cache_set( $cache_key, $result, 'content-sync-fusion' );
+		}
+
+		return $result;
 	}
 
 	/**
