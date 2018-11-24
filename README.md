@@ -22,6 +22,9 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### 3.4.8 - 24 november 2018
+
+* Performance: add index and implement object cache for relations data
 
 ### 3.4.7 - 17 november 2018
 
