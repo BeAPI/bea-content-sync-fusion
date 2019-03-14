@@ -41,7 +41,7 @@ class BEA_CSF_Client_PostType {
 			}
 
 			// Sync settings, if pending, never try to change the post status ?
-			if ( 'pending' === $sync_fields['status'] ) {
+			if ( 'pending' === $sync_fields['status'] || self::is_blog_post_pending_user_selection( $sync_fields, $data ) ) {
 				unset( $data_for_post['post_status'] );
 			}
 
@@ -50,15 +50,8 @@ class BEA_CSF_Client_PostType {
 
 		} else {
 			// Sync settings, allow change post status. Apply only for post creation
-			if ( 'pending' === $sync_fields['status'] ) {
+			if ( 'pending' === $sync_fields['status'] || self::is_blog_post_pending_user_selection( $sync_fields, $data ) ) {
 				$data_for_post['post_status'] = 'pending';
-			} elseif ( 'user_selection' === $sync_fields['status'] && isset( $data['meta_data'][ '_b' . $data['blogid'] . '_post_receivers_status' ] ) ) {
-				$_post_receivers_status = maybe_unserialize( $data['meta_data'][ '_b' . $data['blogid'] . '_post_receivers_status' ][0] );
-				$_current_blog_id       = (int) $GLOBALS['wpdb']->blogid;
-				if ( isset( $_post_receivers_status[ $_current_blog_id ] ) &&
-				     in_array( $_post_receivers_status[ $_current_blog_id ], [ 'pending', 'pending-draft' ], true ) ) {
-					$data_for_post['post_status'] = 'pending';
-				}
 			}
 
 			//$data_for_post['import_id'] = $data_for_post['ID'];
@@ -96,7 +89,7 @@ class BEA_CSF_Client_PostType {
 
 			foreach ( $data['terms'] as $term ) {
 				// Sync settings, check if term is in an allowed taxonomy
-				if ( ! empty( $sync_fields['taxonomies'] ) && ! in_array( $term['taxonomy'], (array) $sync_fields['taxonomies'] ) ) {
+				if ( ! empty( $sync_fields['taxonomies'] ) && ! in_array( $term['taxonomy'], (array) $sync_fields['taxonomies'], true ) ) {
 					continue;
 				}
 
@@ -140,7 +133,7 @@ class BEA_CSF_Client_PostType {
 		$thumbnail_id = (int) BEA_CSF_Relations::get_object_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_thumbnail_id'], $data['_thumbnail_id'] );
 		if ( empty( $thumbnail_id ) && (int) $thumbnail_id > 0 ) {
 			update_post_meta( $new_post_id, '_thumbnail_id', $thumbnail_id->receiver_id );
-		} elseif ( false != $data['_thumbnail'] ) {
+		} elseif ( ! empty( $data['_thumbnail'] ) ) {
 			$data['_thumbnail']['blogid'] = $data['blogid'];
 			$new_media                    = BEA_CSF_Client_Attachment::merge( $data['_thumbnail'], $sync_fields );
 			if ( ! is_wp_error( $new_media ) && isset( $new_media['new_media_id'] ) ) {
@@ -162,6 +155,55 @@ class BEA_CSF_Client_PostType {
 		}
 
 		return apply_filters( 'bea_csf.client.posttype.merge', $data, $sync_fields, $new_post );
+	}
+
+	/**
+	 * Check if the current blog have a user selection status
+	 *
+	 * @param $sync_fields
+	 * @param $data
+	 *
+	 * @return bool
+	 */
+	private static function is_user_selection_blog_post( $sync_fields, $data ) {
+		return ( 'user_selection' === $sync_fields['status'] && isset( $data['meta_data'][ '_b' . $data['blogid'] . '_post_receivers_status' ] ) );
+	}
+
+	/**
+	 * Get post status from post meta for the current blog
+	 *
+	 * @param $data
+	 *
+	 * @return string
+	 */
+	private static function get_user_selection_blog_post( $data ) {
+		$_post_receivers_status = maybe_unserialize( $data['meta_data'][ '_b' . $data['blogid'] . '_post_receivers_status' ][0] );
+		$_current_blog_id       = (int) $GLOBALS['wpdb']->blogid;
+		if ( isset( $_post_receivers_status[ $_current_blog_id ] ) ) {
+			return $_post_receivers_status[ $_current_blog_id ];
+		}
+
+		return '';
+	}
+
+	/**
+	 * Check if blog post have a pending value from user selection
+	 *
+	 * @param $sync_fields
+	 * @param $data
+	 *
+	 * @return bool
+	 */
+	private static function is_blog_post_pending_user_selection( $sync_fields, $data ) {
+		if ( ! self::is_user_selection_blog_post( $sync_fields, $data ) ) {
+			return false;
+		}
+
+		if ( ! in_array( self::get_user_selection_blog_post( $data ), [ 'pending', 'pending-draft' ], true ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
