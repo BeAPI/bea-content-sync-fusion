@@ -152,6 +152,32 @@ class BEA_CSF_Async {
 	}
 
 	/**
+	 * Keep only the last action
+	 *
+	 * @param $type
+	 * @param $hook_data
+	 * @param $current_filter
+	 * @param $receiver_blog_id
+	 *
+	 * @return bool|int
+	 */
+	public static function clean_rows_before_insert( $type, $hook_data, $current_filter, $receiver_blog_id ) {
+		global $wpdb;
+		/** @var WPDB $wpdb */
+
+		// Explode filter for get object and method
+		$current_filter_data    = explode( '/', $current_filter );
+		$current_filter_data[2] = '%'; // Wildcard SQL for remove all kind of action
+		$current_filter         = implode( '/', $current_filter_data );
+
+		return $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->bea_csf_queue
+			WHERE `type` = %s
+			AND `hook_data` = %s
+			AND `current_filter` LIKE %s
+			AND `receiver_blog_id` = %d", $type, $hook_data, $current_filter, $receiver_blog_id ) );
+	}
+
+	/**
 	 * Update on fly request on MySQL
 	 *
 	 * @param  string $query

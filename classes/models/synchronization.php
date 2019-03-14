@@ -347,6 +347,9 @@ class BEA_CSF_Synchronization {
 				continue;
 			}
 
+			// Remove previous registered queue items
+			BEA_CSF_Async::clean_rows_before_insert( $this->_current_object, $this->_current_object_id, $this->_current_filter, $this->_current_receiver_blog_id );
+
 			BEA_CSF_Async::insert( $this->_current_object, $this->_current_object_id, $this->_current_filter, $this->_current_receiver_blog_id, $this->get_fields() );
 		}
 
