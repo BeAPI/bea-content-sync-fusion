@@ -17,9 +17,15 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 		add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 1 );
 
 		add_action( 'bea_csf.server.posttype.merge', array( __CLASS__, 'bea_csf_server_posttype_merge' ), 10, 2 );
-		add_action( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge_tickets' ), 10, 3 );
+		add_action( 'bea_csf.client.posttype.merge', array(
+			__CLASS__,
+			'bea_csf_client_posttype_merge_tickets'
+		), 10, 3 );
 		add_action( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge_venue' ), 10, 3 );
-		add_action( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge_organizer' ), 10, 3 );
+		add_action( 'bea_csf.client.posttype.merge', array(
+			__CLASS__,
+			'bea_csf_client_posttype_merge_organizer'
+		), 10, 3 );
 
 		return true;
 	}
@@ -35,7 +41,7 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 		global $wpdb;
 
 		$post_type = get_post_type( $post_id );
-		if ( "tribe_rsvp_tickets" != $post_type ) {
+		if ( "tribe_rsvp_tickets" !== $post_type ) {
 			return false;
 		}
 
@@ -46,12 +52,12 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 		}
 
 		$event_id = get_post_meta( $post_id, '_tribe_rsvp_for_event', true );
-		if ( $event_id == false ) {
+		if ( empty( $event_id ) ) {
 			return false;
 		}
 
 		$event = get_post( $event_id );
-		if ( $event == false ) {
+		if ( empty( $event ) ) {
 			return false;
 		}
 

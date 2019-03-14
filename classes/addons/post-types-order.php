@@ -23,7 +23,7 @@ class BEA_CSF_Addon_Post_Types_Order {
 	 *
 	 * @author Maxime CULEA
 	 *
-	 * @return int
+	 * @return int|array
 	 */
 	public function wp_update_post_order( $data, $key, $post_id ) {
 		// Check $data constancy

@@ -66,7 +66,7 @@ class BEA_CSF_Addon_Multisite_Clone_Duplicator {
 			'nopaging'         => true,
 			'fields'           => 'ids',
 			'suppress_filters' => false,
-			'post_status'      => 'any'
+			'post_status'      => 'any',
 		) );
 
 		if ( $media_query->have_posts() ) {
@@ -79,6 +79,4 @@ class BEA_CSF_Addon_Multisite_Clone_Duplicator {
 
 		restore_current_blog();
 	}
-
-
 }
