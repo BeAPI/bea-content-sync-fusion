@@ -35,24 +35,28 @@ class BEA_CSF_Client_PostType {
 
 		// Merge post
 		if ( ! empty( $data['local_id'] ) && (int) $data['local_id'] > 0 ) {
-
 			$current_value = (int) get_post_meta( $data['local_id'], '_exclude_from_futur_sync', true );
 			if ( $current_value == 1 ) {
 				return new WP_Error( 'future_sync_exclusion', 'Error - This post is exclude from future sync.' );
+			}
+
+			// Sync settings, if pending, never try to change the post status ?
+			if ( 'pending' === $sync_fields['status'] ) {
+				unset( $data_for_post['post_status'] );
 			}
 
 			$data_for_post['ID'] = $data['local_id'];
 			$new_post_id         = wp_update_post( $data_for_post, true );
 
 		} else {
-			// Sync settings, allow change post status. Apply only for POST creation
+			// Sync settings, allow change post status. Apply only for post creation
 			if ( 'pending' === $sync_fields['status'] ) {
 				$data_for_post['post_status'] = 'pending';
 			} elseif ( 'user_selection' === $sync_fields['status'] && isset( $data['meta_data'][ '_b' . $data['blogid'] . '_post_receivers_status' ] ) ) {
 				$_post_receivers_status = maybe_unserialize( $data['meta_data'][ '_b' . $data['blogid'] . '_post_receivers_status' ][0] );
 				$_current_blog_id       = (int) $GLOBALS['wpdb']->blogid;
 				if ( isset( $_post_receivers_status[ $_current_blog_id ] ) &&
-				     in_array( $_post_receivers_status[ $_current_blog_id ], [ 'pending', 'pending-draft' ] ) ) {
+				     in_array( $_post_receivers_status[ $_current_blog_id ], [ 'pending', 'pending-draft' ], true ) ) {
 					$data_for_post['post_status'] = 'pending';
 				}
 			}
@@ -104,7 +108,6 @@ class BEA_CSF_Client_PostType {
 
 					$term_ids[ $term['taxonomy'] ][] = (int) $local_term_id;
 				}
-
 			}
 
 			foreach ( $term_ids as $taxonomy => $local_term_ids ) {
