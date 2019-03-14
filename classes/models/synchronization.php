@@ -231,18 +231,19 @@ class BEA_CSF_Synchronization {
 		$results = array();
 		foreach ( $this->receivers as $key => $receiver_blog_id ) {
 			if ( 'all' === $receiver_blog_id ) {
-				$blogs = BEA_CSF_Synchronizations::get_sites_from_network();
+				$blogs    = BEA_CSF_Synchronizations::get_sites_from_network();
 				$blog_ids = wp_list_pluck( $blogs, 'blog_id' );
 
-				$results = array_merge($results, $blog_ids);
+				$results = array_merge( $results, $blog_ids );
 			} else {
 				$results[] = $receiver_blog_id;
 			}
 		}
 
-		$results = array_map('intval', $results);
-		$results = array_unique($results);
-		$results = array_filter($results);
+		$results = array_map( 'intval', $results );
+		$results = array_unique( $results );
+		$results = array_filter( $results );
+
 		return $results;
 	}
 
@@ -255,18 +256,19 @@ class BEA_CSF_Synchronization {
 		$results = array();
 		foreach ( $this->emitters as $key => $emitter_blog_id ) {
 			if ( 'all' === $emitter_blog_id ) {
-				$blogs = BEA_CSF_Synchronizations::get_sites_from_network();
+				$blogs    = BEA_CSF_Synchronizations::get_sites_from_network();
 				$blog_ids = wp_list_pluck( $blogs, 'blog_id' );
 
-				$results = array_merge($results, $blog_ids);
+				$results = array_merge( $results, $blog_ids );
 			} else {
 				$results[] = $emitter_blog_id;
 			}
 		}
 
-		$results = array_map('intval', $results);
-		$results = array_unique($results);
-		$results = array_filter($results);
+		$results = array_map( 'intval', $results );
+		$results = array_unique( $results );
+		$results = array_filter( $results );
+
 		return $results;
 	}
 

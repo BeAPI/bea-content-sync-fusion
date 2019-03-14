@@ -72,7 +72,7 @@ class BEA_CSF_Client {
 		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX );
 
 		// Terms/Post_type association
-		remove_action( 'set_object_terms', array( __CLASS__, 'set_object_terms' ), PHP_INT_MAX, 6 );
+		remove_action( 'set_object_terms', array( __CLASS__, 'set_object_terms' ), PHP_INT_MAX );
 
 		// P2P
 		remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX );
@@ -99,7 +99,7 @@ class BEA_CSF_Client {
 		// Is synchronized content ?
 		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array(
 			'posttype',
-			'attachment'
+			'attachment',
 		), get_current_blog_id(), $attachment->ID );
 		if ( ! empty( $emitter_relation ) ) {
 			return false;
@@ -130,7 +130,7 @@ class BEA_CSF_Client {
 		// Is synchronized content ?
 		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array(
 			'posttype',
-			'attachment'
+			'attachment',
 		), get_current_blog_id(), $attachment->ID );
 		if ( ! empty( $emitter_relation ) ) {
 			return false;
@@ -192,7 +192,7 @@ class BEA_CSF_Client {
 	 * @return bool
 	 */
 	public static function merge_post_meta( $meta_id = 0, $post_id = 0, $meta_key = '' ) {
-		if ( '_thumbnail_id' == $meta_key ) {
+		if ( '_thumbnail_id' === $meta_key ) {
 			$post = get_post( $post_id );
 			if ( false === $post || is_wp_error( $post ) ) {
 				return false;
@@ -233,19 +233,19 @@ class BEA_CSF_Client {
 		$is_excluded_from_sync = (boolean) get_post_meta( $post->ID, '_exclude_from_sync', true );
 
 		// Manual sync - Selected receivers
-		$_post_receivers = get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
+		$_post_receivers = (array) get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
 
 		// Allow 3rd plugin manipulation for post_status
 		$allowed_publish_status = apply_filters( 'bea/csf/client/allowed_publish_status', [
 			'publish',
 			'future',
 			'offline',
-			'private'
+			'private',
 		], $new_status, $old_status, $post );
-		$allowed_delete_status = apply_filters( 'bea/csf/client/allowed_delete_status', [
+		$allowed_delete_status  = apply_filters( 'bea/csf/client/allowed_delete_status', [
 			'draft',
 			'trash',
-			'pending'
+			'pending',
 		], $old_status, $new_status, $post );
 
 		// Ignore post status:  auto-draft, inherit
