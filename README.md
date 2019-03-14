@@ -1,4 +1,4 @@
-BEA Content Sync Fusion
+BEA - Content Sync Fusion
 =======================
 
 Manage content synchronisation across a WordPress multisite.
@@ -7,10 +7,11 @@ Manage content synchronisation across a WordPress multisite.
 
 * WordPress should be installed as [multisite](https://codex.wordpress.org/Create_A_Network).
 * Require at least WordPress 4.6.x, in order to use the `WP_Site_Query`.
+* Know and understand the implementation of CRON tasks on a Linux server
 
 ## Compatibility
 
-Compatible up to WordPress 4.9.x
+Compatible up to WordPress 5.x (Gutenberg is not completely covered at the moment)
 
 ### Third plugins compatibility
 
@@ -22,6 +23,11 @@ Compatible up to WordPress 4.9.x
  
 ## Changelog
 
+### master - in progress
+
+* Bugfix: fix unwanted publication with pending status
+* Bugfix: fix a bug with manual mode and gutenberg, with unwanted publication on all sites
+* Bugifx: fix a bug with publish/unpublish/publish sequences
 
 ### 3.4.7 - 17 november 2018
 

@@ -1,6 +1,6 @@
 <?php
 /*
-Plugin Name: BEA - Content Synchronization - Fusion
+Plugin Name: BEA - Content Sync Fusion
 Plugin URI: https://beapi.fr
 Description: Manage content synchronization across a WordPress multisite.
 Version: 3.4.7
