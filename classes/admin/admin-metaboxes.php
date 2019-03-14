@@ -50,8 +50,8 @@ class BEA_CSF_Admin_Metaboxes {
 		}
 
 		// Update receivers note
-		if ( isset($_POST['post_receivers_note']) ) {
-			update_post_meta( $post->ID, '_post_receivers_note', wp_unslash($_POST['post_receivers_note']) );
+		if ( isset( $_POST['post_receivers_note'] ) ) {
+			update_post_meta( $post->ID, '_post_receivers_note', wp_unslash( $_POST['post_receivers_note'] ) );
 		}
 
 		$previous_value = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
@@ -81,8 +81,8 @@ class BEA_CSF_Admin_Metaboxes {
 		}
 
 		// Update receivers note
-		if ( isset($_POST['post_receivers_note']) ) {
-			update_post_meta( $post->ID, '_post_receivers_note', wp_unslash($_POST['post_receivers_note']) );
+		if ( isset( $_POST['post_receivers_note'] ) ) {
+			update_post_meta( $post->ID, '_post_receivers_note', wp_unslash( $_POST['post_receivers_note'] ) );
 		}
 
 		// Update receivers features (checkbox)
@@ -92,11 +92,11 @@ class BEA_CSF_Admin_Metaboxes {
 		}
 
 		// Get previous values
-		$old_post_receivers = (array) get_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers', true );
+		$old_post_receivers = (array) get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
 		$old_post_receivers = array_filter( $old_post_receivers, 'trim' );
 
 		// Set new value
-		update_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers', $new_post_receivers );
+		update_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', $new_post_receivers );
 
 		// Calcul difference for send delete notification for uncheck action
 		$receivers_to_delete = array_diff( $old_post_receivers, $new_post_receivers );
@@ -128,7 +128,7 @@ class BEA_CSF_Admin_Metaboxes {
 			$post_receivers_status = array_map( 'trim', $_POST['post_receivers_status'] );
 		}
 
-		update_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers_status', $post_receivers_status );
+		update_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers_status', $post_receivers_status );
 
 		return true;
 	}
@@ -144,7 +144,10 @@ class BEA_CSF_Admin_Metaboxes {
 	 */
 	public static function add_meta_boxes( $post_type, $post ) {
 		// Is synchronized content and media ? => not display metabox
-		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), get_current_blog_id(), $post->ID );
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array(
+			'posttype',
+			'attachment'
+		), get_current_blog_id(), $post->ID );
 		if ( ! empty( $emitter_relation ) && 'attachment' === $post_type ) {
 			return false;
 		}
@@ -162,10 +165,10 @@ class BEA_CSF_Admin_Metaboxes {
 			), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_auto_state ) );
 		}
 
-		// Get syncs for current post_type and mode set to "manual"
+		// Get syncs for current post_type and mode set to "manual" or "user_selection"
 		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array(
 			'post_type' => $post_type,
-			'mode'      => 'manual',
+			'mode'      => [ 'manual', 'user_selection' ],
 			'emitters'  => get_current_blog_id(),
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_manual_state ) ) {
@@ -192,7 +195,7 @@ class BEA_CSF_Admin_Metaboxes {
 		wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION . '-nonce-auto' );
 
 		$current_receivers_note = get_post_meta( $post->ID, '_post_receivers_note', true );
-		$current_value = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
+		$current_value          = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
 
 		// Get names from syncs
 		$sync_names = array();
@@ -220,8 +223,8 @@ class BEA_CSF_Admin_Metaboxes {
 		$current_receivers_note = get_post_meta( $post->ID, '_post_receivers_note', true );
 
 		// Get values for current post
-		$current_post_receivers = (array) get_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers', true );
-		$current_post_receivers_status = (array) get_post_meta( $post->ID, '_b'.get_current_blog_id().'_post_receivers_status', true );
+		$current_post_receivers = (array) get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
+		$current_post_receivers_status = (array) get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers_status', true );
 
 		// Get sites destination from syncs
 		$sync_receivers = array();
@@ -232,7 +235,7 @@ class BEA_CSF_Admin_Metaboxes {
 
 		// Get names from syncs, and also enable a flag for user_selection status
 		$show_blog_status = false;
-		$sync_names = array();
+		$sync_names       = array();
 		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
 			$sync_names[] = $sync_obj->get_field( 'label' );
 

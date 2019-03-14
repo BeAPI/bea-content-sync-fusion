@@ -57,21 +57,26 @@ class BEA_CSF_Synchronizations {
 
 		$operator = strtoupper( $operator );
 		$count    = count( $args );
-
+		
 		$filtered = array();
 		/** @var BEA_CSF_Synchronization $obj */
 		foreach ( $list as $key => $obj ) {
 			$matched = 0;
 
 			foreach ( $args as $m_key => $m_value ) {
+
 				$obj_value = $obj->get_field( $m_key );
-				if ( $obj_value == $m_value || ( $in_array == true && is_array( $obj_value ) && in_array( $m_value, (array) $obj_value ) ) ) {
+				if ( $obj_value == $m_value
+				     || ( $in_array === true && is_array( $obj_value ) && in_array( $m_value, (array) $obj_value ) )
+				     || ( $in_array === true && is_array( $m_value ) && in_array( $obj_value, (array) $m_value ) )
+				     || ( $in_array === true && ( is_array( $m_value ) && is_array( $obj_value ) ) && array_intersect( $obj_value, $m_value ) )
+				) {
 					$matched ++;
 				}
 			}
 
-			if ( ( 'AND' == $operator && $matched == $count ) || ( 'OR' == $operator && $matched > 0 ) || ( 'NOT' == $operator && 0 == $matched ) ) {
-				if ( $field == false ) {
+			if ( ( 'AND' === $operator && $matched === $count ) || ( 'OR' === $operator && $matched > 0 ) || ( 'NOT' === $operator && 0 === $matched ) ) {
+				if ( false === $field ) {
 					$filtered[ $key ] = $obj;
 				} else {
 					$filtered[ $key ] = $obj->get_field( $field );
