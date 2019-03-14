@@ -55,9 +55,9 @@ class BEA_CSF_Admin_Metaboxes {
 		}
 
 		$previous_value = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
-		if ( isset( $_POST['exclude_from_sync'] ) && (int) $_POST['exclude_from_sync'] == 1 ) {
+		if ( isset( $_POST['exclude_from_sync'] ) && 1 === (int) $_POST['exclude_from_sync'] ) {
 			update_post_meta( $post->ID, '_exclude_from_sync', 1 );
-			if ( 0 == $previous_value ) {
+			if ( 0 === $previous_value ) {
 				// This value have just changed, delete content for clients !
 				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false );
 			}
@@ -146,7 +146,7 @@ class BEA_CSF_Admin_Metaboxes {
 		// Is synchronized content and media ? => not display metabox
 		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array(
 			'posttype',
-			'attachment'
+			'attachment',
 		), get_current_blog_id(), $post->ID );
 		if ( ! empty( $emitter_relation ) && 'attachment' === $post_type ) {
 			return false;
@@ -204,7 +204,7 @@ class BEA_CSF_Admin_Metaboxes {
 		}
 
 		// Include template
-		include( BEA_CSF_DIR . 'views/admin/server-metabox-auto.php' );
+		include BEA_CSF_DIR . 'views/admin/server-metabox-auto.php';
 	}
 
 	/**
@@ -223,7 +223,7 @@ class BEA_CSF_Admin_Metaboxes {
 		$current_receivers_note = get_post_meta( $post->ID, '_post_receivers_note', true );
 
 		// Get values for current post
-		$current_post_receivers = (array) get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
+		$current_post_receivers        = (array) get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
 		$current_post_receivers_status = (array) get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers_status', true );
 
 		// Get sites destination from syncs
@@ -244,12 +244,12 @@ class BEA_CSF_Admin_Metaboxes {
 			}
 		}
 
-		if ( $show_blog_status == true ) {
+		if ( true === $show_blog_status ) {
 			wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION . '-nonce-manual-status' );
 		}
 
 		// Include template
-		include( BEA_CSF_DIR . 'views/admin/server-metabox-manual.php' );
+		include BEA_CSF_DIR . 'views/admin/server-metabox-manual.php';
 	}
 
 	/**
@@ -279,7 +279,7 @@ class BEA_CSF_Admin_Metaboxes {
 	public static function is_valid_blog_id( $blog_id = 0 ) {
 		$sites_id = BEA_CSF_Synchronizations::get_sites_from_network();
 		foreach ( $sites_id as $site ) {
-			if ( $site['blog_id'] == $blog_id ) {
+			if ( (int) $site['blog_id'] === (int) $blog_id ) {
 				return true;
 			}
 		}
