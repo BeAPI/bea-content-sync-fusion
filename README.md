@@ -15,6 +15,7 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
 
 ### Third plugins compatibility
 
+ * **[WooCommerce](https://wordpress.org/plugins/woocommerce/)**
  * [Post Types Order](https://wordpress.org/plugins/post-types-order/)
  * [Advanced Custom Fields](https://www.advancedcustomfields.com/)
  * [The Events Calendar Family](https://theeventscalendar.com/)
@@ -23,11 +24,14 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
  
 ## Changelog
 
-### master - in progress
+### 3.5.0 - 07 august 2019
 
+* Feature: Add WooCommerce addon (support product, product variations)
+* Change: add a column on queue table (**you must desactive AND reactive plugin on network**)
+* Bugfix: fix a bug with post_parent sync 
 * Bugfix: fix unwanted publication with pending status
 * Bugfix: fix a bug with manual mode and gutenberg, with unwanted publication on all sites
-* Bugifx: fix a bug with publish/unpublish/publish sequences
+* Bugfix: fix a bug with publish/unpublish/publish sequences
 
 ### 3.4.7 - 17 november 2018
 
