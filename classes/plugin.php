@@ -72,6 +72,7 @@ class BEA_CSF_Plugin {
 		$schema = "CREATE TABLE {$wpdb->bea_csf_queue} (
             `id` BIGINT(20) NOT NULL auto_increment,
             `type` VARCHAR(255) NOT NULL,
+            `object_name` VARCHAR(255) NOT NULL,
             `hook_data` TEXT NOT NULL,
             `current_filter` TEXT NOT NULL,
             `receiver_blog_id` BIGINT(20),
@@ -112,6 +113,7 @@ class BEA_CSF_Plugin {
 		$schema = "CREATE TABLE {$wpdb->bea_csf_queue_maintenance} (
             `id` BIGINT(20) NOT NULL auto_increment,
             `type` VARCHAR(255) NOT NULL,
+            `object_name` VARCHAR(255) NOT NULL,
             `hook_data` TEXT NOT NULL,
             `current_filter` TEXT NOT NULL,
             `receiver_blog_id` BIGINT(20),

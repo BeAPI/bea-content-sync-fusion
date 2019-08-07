@@ -4,8 +4,8 @@ class BEA_CSF_Async {
 	/**
 	 * Generic method to get data from emitter and sent theses to receivers
 	 *
-	 * @param  boolean $quantity
-	 * @param  boolean|integer $receiver_blog_id
+	 * @param boolean $quantity
+	 * @param boolean|integer $receiver_blog_id
 	 *
 	 * @return boolean
 	 */
@@ -99,7 +99,6 @@ class BEA_CSF_Async {
 
 		// Send data to CLIENT classes
 		$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_transfer, $sync->fields );
-
 		// Restore POST variables
 		$_POST = $_backup_POST;
 
@@ -131,6 +130,9 @@ class BEA_CSF_Async {
 			return $pre;
 		}
 
+		// Explode filter for get object and method
+		$current_filter_data = explode( '/', $current_filter );
+
 		add_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
 
 		/** @var WPDB $wpdb */
@@ -138,12 +140,13 @@ class BEA_CSF_Async {
 			$wpdb->bea_csf_queue,
 			array(
 				'type'             => $type,
+				'object_name'      => $current_filter_data[3],
 				'hook_data'        => maybe_serialize( $hook_data ),
 				'current_filter'   => $current_filter,
 				'receiver_blog_id' => $receiver_blog_id,
 				'fields'           => maybe_serialize( $fields ),
 			),
-			array( '%s', '%s', '%s', '%d', '%s' )
+			array( '%s', '%s', '%s', '%s', '%d', '%s' )
 		);
 
 		remove_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
@@ -180,7 +183,7 @@ class BEA_CSF_Async {
 	/**
 	 * Update on fly request on MySQL
 	 *
-	 * @param  string $query
+	 * @param string $query
 	 *
 	 * @return string
 	 */
@@ -214,7 +217,6 @@ class BEA_CSF_Async {
 	 */
 	public static function get_all( $blog_id = 0 ) {
 		global $wpdb;
-
 		/** @var WPDB $wpdb */
 
 		if ( 0 < $blog_id ) {
@@ -248,12 +250,16 @@ class BEA_CSF_Async {
 	public static function get_results( $quantity = 100, $blog_id = 0 ) {
 		global $wpdb;
 
+		// Allow to customize order queue
+		$order_by = "FIELD(type, 'Taxonomy', 'Attachment', 'PostType') ASC";
+		$order_by = apply_filters( 'bea_csf_async_get_results_orderby', $order_by, $blog_id );
+
 		/** @var WPDB $wpdb */
 		if ( 0 < $blog_id ) {
-			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d ORDER BY FIELD(type, 'Taxonomy', 'Attachment', 'PostType') ASC LIMIT %d", $blog_id, $quantity ) );
+			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d ORDER BY $order_by LIMIT %d", $blog_id, $quantity ) );
 		}
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue  ORDER BY FIELD(type, 'Taxonomy', 'Attachment', 'PostType') ASC  LIMIT %d", $quantity ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue  ORDER BY $order_by LIMIT %d", $quantity ) );
 	}
 
 	/**
@@ -284,7 +290,7 @@ class BEA_CSF_Async {
 
 		/** @var WPDB $wpdb */
 
-		return $wpdb->get_col( "SELECT receiver_blog_id FROM $wpdb->bea_csf_queue GROUP BY receiver_blog_id" );
+		return $wpdb->get_col( "SELECT receiver_blog_id FROM $wpdb->bea_csf_queue GROUP BY receiver_blog_id ORDER BY receiver_blog_id ASC" );
 	}
 
 	/**
