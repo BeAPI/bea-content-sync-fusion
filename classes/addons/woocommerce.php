@@ -40,7 +40,7 @@ class BEA_CSF_Addon_WooCommerce {
 	}
 
 	/**
-	 * TODO
+	 * Try to sync product before variation
 	 *
 	 * @param string $orderby
 	 *
@@ -50,48 +50,6 @@ class BEA_CSF_Addon_WooCommerce {
 		$orderby .= " , FIELD(object_name, 'product', 'product_variation') ASC ";
 
 		return $orderby;
-	}
-
-	/**
-	 * Add variation into products variables
-	 *
-	 * @param $data
-	 * @param $sync_fields
-	 *
-	 * @return mixed
-	 */
-	public static function server_posttype_merge( $data, $sync_fields ) {
-		if ( ! isset( $data['post_type'] ) || 'product' !== $data['post_type'] ) {
-			return $data;
-		}
-
-		$type = WC_Product_Factory::get_product_type( $data['ID'] );
-		if ( empty( $type ) ) {
-			return $data;
-		}
-
-		$classname = WC_Product_Factory::get_classname_from_product_type( $type );
-		if ( ! class_exists( $classname ) ) {
-			$classname = 'WC_Product_Simple';
-		}
-
-		$product = new $classname( $data['ID'] );
-		/** @var WC_Product_Variable $product */
-
-		if ( empty( $product ) ) {
-			return $data;
-		}
-
-		// Get variations
-		$variations = $product->get_available_variations();
-		if ( false !== $variations && ! empty( $variations ) ) {
-			$data['variations'] = array();
-			foreach ( $variations as $variation ) {
-				$data['variations'][] = new WC_Product_Variation( $variation );
-			}
-		}
-
-		return $data;
 	}
 
 	/**
@@ -154,70 +112,6 @@ class BEA_CSF_Addon_WooCommerce {
 			}, $_crosssell_ids );
 
 			update_post_meta( $data['local_id'], '_crosssell_ids', $_crosssell_ids );
-		}
-
-		return $data;
-	}
-
-	/**
-	 * Manage variations with sync
-	 *
-	 * @param $data
-	 * @param $sync_fields
-	 *
-	 * @return mixed
-	 */
-	public static function client_posttype_merge_variations( $data, $sync_fields ) {
-		// No variations, no sync :)
-		if ( ! isset( $data['variations'] ) || empty( $data['variations'] ) ) {
-			return $data;
-		}
-
-		// Get local product
-		$local_product_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
-		if ( false === $local_product_id ) {
-			return $data;
-		}
-
-		$product = new WC_Product_Variable( $local_product_id );
-		if ( empty( $product ) ) {
-			return $data;
-		}
-
-		// Get variations
-		$local_variations    = $product->get_children();
-		$local_variations_id = wp_list_pluck( $local_variations, 'ID' );
-		var_dump( $local_variations, $local_variations_id );
-
-
-		// https://stackoverflow.com/questions/47518333/create-programmatically-a-variable-product-and-two-new-attributes-in-woocommerce/47844054#47844054
-		// https://stackoverflow.com/questions/52937409/create-programmatically-a-product-using-crud-methods-in-woocommerce-3/52941994#52941994
-		// https://stackoverflow.com/questions/47518280/create-programmatically-a-woocommerce-product-variation-with-new-attribute-value/47766413#47766413
-		die();
-		// Loop on each variations for insertion, and keep ID
-		$remote_variations_id = array();
-		foreach ( $data['variations'] as &$variation ) {
-			// Fix event ID with local value
-			if ( isset( $variation['meta_data']['_tribe_rsvp_for_event'] ) ) {
-				$variation['meta_data']['_tribe_rsvp_for_event'][0] = $local_product_id;
-			}
-
-			$variation['blogid'] = $data['blogid'];
-			BEA_CSF_Client_PostType::merge( $variation, $sync_fields );
-
-			// Translated remote variations with current ID
-			$local_variation_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $variation['ID'], $variation['ID'] );
-			if ( false !== $local_variation_id ) {
-				$remote_variations_id[] = (int) $local_variation_id;
-			}
-		}
-
-		// Calcul diff between local and remote for delete "old remote variations deleted"
-		$variations_id_to_delete = array_diff( $local_variations_id, $remote_variations_id );
-		if ( ! empty( $variations_id_to_delete ) ) {
-			foreach ( $variations_id_to_delete as $variation_id ) {
-				wp_delete_post( $variation_id, true );
-			}
 		}
 
 		return $data;
