@@ -71,8 +71,8 @@ class BEA_CSF_Server_PostType {
 		$post['meta_data'] = get_post_custom( $post['ID'] );
 
 		// Remove some internal meta
-		if ( isset( $post['meta_data']['_b'.get_current_blog_id().'_post_receivers'] ) ) {
-			unset( $post['meta_data']['_b'.get_current_blog_id().'_post_receivers'] );
+		if ( isset( $post['meta_data'][ '_b' . get_current_blog_id() . '_post_receivers' ] ) ) {
+			unset( $post['meta_data'][ '_b' . get_current_blog_id() . '_post_receivers' ] );
 		}
 		if ( isset( $post['meta_data']['_exclude_from_sync'] ) ) {
 			unset( $post['meta_data']['_exclude_from_sync'] );
@@ -105,11 +105,11 @@ class BEA_CSF_Server_PostType {
 		}
 
 		// Get P2P connections
-		if ( defined('P2P_PLUGIN_VERSION') ) {
-			$results = (array) $wpdb->get_results( $wpdb->prepare("SELECT * FROM $wpdb->p2p WHERE p2p_from = %d OR p2p_to = %d", $post['ID'], $post['ID']) );
+		if ( defined( 'P2P_PLUGIN_VERSION' ) ) {
+			$results = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->p2p WHERE p2p_from = %d OR p2p_to = %d", $post['ID'], $post['ID'] ) );
 
 			$post['connections'] = array();
-			foreach( $results as $result ) {
+			foreach ( $results as $result ) {
 				$post['connections'][] = BEA_CSF_Server_P2P::merge( $result, $sync_fields );
 			}
 		}
