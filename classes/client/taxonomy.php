@@ -21,7 +21,7 @@ class BEA_CSF_Client_Taxonomy {
 			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
 		}
 
-		// Define thius variable for skip infinite sync when emetter and receiver are reciprocal
+		// Define this variable for skip infinite sync when emetter and receiver are reciprocal
 		$_bea_origin_blog_id = $data['blogid'];
 
 		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['term_id'], $data['term_id'] );
