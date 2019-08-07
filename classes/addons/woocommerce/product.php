@@ -4,11 +4,7 @@
  * Class BEA_CSF_Addon_WooCommerce
  *
  * TODO :
- *  shipping class update
- *  product inherit attributes
- *  product inherit URL (slug)
- *  product inherit purchase note
- *  all product reviews
+ *  all product reviews ?
  *
  */
 class BEA_CSF_Addon_WooCommerce_Product {
