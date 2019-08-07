@@ -23,10 +23,10 @@ class BEA_CSF_Client_PostType {
 
 		// Find local parent ?
 		if ( isset( $data['post_parent'] ) ) {
-			$local_parent_id     = BEA_CSF_Relations::get_object_for_any( 'posttype', $sync_fields['_current_receiver_blog_id'], $data['blogid'], $data['post_parent'], $data['post_parent'] );
+			$local_parent_id     = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
 			$data['post_parent'] = ! empty( $local_parent_id ) && (int) $local_parent_id > 0 ? $local_parent_id : 0;
 		}
-
+		
 		$data = apply_filters( 'bea_csf/client/posttype/before_merge', $data, $sync_fields );
 
 		// Clone datas for post insertion
