@@ -24,6 +24,10 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
  
 ## Changelog
 
+### 3.5.1 - in progress
+
+* Feature: add new CLI command for mirror 2 sites on network, populate relations, useful after a site duplication
+
 ### 3.5.0 - 07 august 2019
 
 * Feature: Add WooCommerce addon (support product, product variations)
