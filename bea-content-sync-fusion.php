@@ -53,10 +53,12 @@ require BEA_CSF_DIR . 'classes/seo.php';
 require BEA_CSF_DIR . 'classes/query.php';
 
 // CLI
+require BEA_CSF_DIR . 'classes/cli/_helper.php';
 require BEA_CSF_DIR . 'classes/cli/migration.php';
 require BEA_CSF_DIR . 'classes/cli/queue.php';
 require BEA_CSF_DIR . 'classes/cli/flush.php';
 require BEA_CSF_DIR . 'classes/cli/resync.php';
+require BEA_CSF_DIR . 'classes/cli/relation.php';
 
 // Plugins addons
 require BEA_CSF_DIR . 'classes/addons/post-types-order.php';

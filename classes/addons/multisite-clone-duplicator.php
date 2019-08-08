@@ -3,7 +3,8 @@
 /**
  * Class BEA_CSF_Addon_Multisite_Clone_Duplicator
  *
- * Addon for Multisite Clone Duplicator
+ * Addon for Multisite Clone Duplicator - Very alpha version
+ *
  * @see : https://fr.wordpress.org/plugins/multisite-clone-duplicator/
  */
 class BEA_CSF_Addon_Multisite_Clone_Duplicator {

@@ -155,7 +155,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 			$data_to_sync['terms'] = array();
 		} else {
 			// TODO: Manage "any" and filtering
-			$data_to_sync['terms'] = $this->get_terms();
+			$data_to_sync['terms'] = BEA_CSF_Cli_Helper::get_all_terms();
 		}
 
 		// Get attachments with params argument
@@ -163,7 +163,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 			$data_to_sync['attachments'] = array();
 		} else {
 			// TODO: Manage "any" and filtering
-			$data_to_sync['attachments'] = $this->get_attachments();
+			$data_to_sync['attachments'] = BEA_CSF_Cli_Helper::get_attachments();
 		}
 
 		// Get posts with params argument
@@ -171,7 +171,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 			$data_to_sync['posts'] = array();
 		} else {
 			// TODO: Manage "any" and filtering
-			$data_to_sync['posts'] = $this->get_posts();
+			$data_to_sync['posts'] = BEA_CSF_Cli_Helper::get_posts();
 		}
 
 		// Get P2P with params argument
@@ -179,7 +179,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 			$data_to_sync['p2p'] = array();
 		} else {
 			// TODO: Manage "any" and filtering
-			$data_to_sync['p2p'] = $this->get_p2p_connections();
+			$data_to_sync['p2p'] = BEA_CSF_Cli_Helper::get_p2p_connections();
 		}
 
 		// Make a mega-count
@@ -256,128 +256,11 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 			return $receiver_blog_id;
 		}
 
-		if ( in_array( $receiver_blog_id, $this->receivers_blog_ids ) ) {
+		if ( in_array( $receiver_blog_id, $this->receivers_blog_ids, true ) ) {
 			return $receiver_blog_id;
 		}
 
 		return false;
-	}
-
-	/**
-	 *
-	 * Synchronization all terms from any taxinomies
-	 *
-	 * @param array $args
-	 * @param array $terms_args
-	 *
-	 * @return bool
-	 */
-	public function get_terms( $args = array(), $terms_args = array() ) {
-		$args = wp_parse_args( $args, array() );
-
-		// Get taxonomies names only
-		$taxonomies = get_taxonomies( $args, 'names' );
-		if ( empty( $taxonomies ) ) {
-			WP_CLI::debug( 'No taxinomies found' );
-
-			return false;
-		}
-
-		// Get terms objects
-		$terms_args = wp_parse_args( $terms_args, array( 'hide_empty' => false ) );
-		$results    = get_terms( array_keys( $taxonomies ), $terms_args );
-		if ( is_wp_error( $results ) || empty( $results ) ) {
-			WP_CLI::debug( 'No terms found for taxonomies : %s', implode( ',', array_keys( $taxonomies ) ) );
-
-			return false;
-		}
-
-		return $results;
-	}
-
-	/**
-	 *
-	 * Get all attachments
-	 *
-	 * @param array $args
-	 *
-	 * @return false|array
-	 */
-	public function get_attachments( $args = array() ) {
-		$default_args = array(
-			'post_type'              => 'attachment',
-			'post_status'            => 'any',
-			'nopaging'               => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-			'no_found_rows'          => true,
-			'cache_results'          => false,
-		);
-
-		$args    = wp_parse_args( $args, $default_args );
-		$results = get_posts( $args );
-		if ( empty( $results ) ) {
-			WP_CLI::debug( "No attachment found\n" );
-
-			return false;
-		}
-
-		return $results;
-	}
-
-	/**
-	 *
-	 * Synchronization all posts from any post types
-	 *
-	 * @param array $args
-	 *
-	 * @return false|array
-	 */
-	public function get_posts( $args = array() ) {
-		global $wp_post_types;
-
-		$default_args = array(
-			'post_type'              => array_keys( $wp_post_types ),
-			'post_status'            => 'any',
-			'nopaging'               => true,
-			'update_post_meta_cache' => false,
-			'update_post_term_cache' => false,
-			'no_found_rows'          => true,
-			'cache_results'          => false,
-		);
-
-		$args    = wp_parse_args( $args, $default_args );
-		$results = get_posts( $args );
-		if ( empty( $results ) ) {
-			WP_CLI::debug( "No posts found for post_type %s\n", $args['post_type'] );
-
-			return false;
-		}
-
-		return $results;
-	}
-
-	/**
-	 *
-	 * Synchronization all P2P connections
-	 *
-	 * @param array $args
-	 *
-	 * @return bool|array
-	 */
-	public function get_p2p_connections( $args = array() ) {
-		global $wpdb;
-
-		// $args = wp_parse_args( $args, array() ); // TODO: Implement P2P restriction query
-
-		$results = (array) $wpdb->get_col( "SELECT p2p_id FROM $wpdb->p2p" );
-		if ( empty( $results ) ) {
-			WP_CLI::debug( 'No P2P connection found' );
-
-			return false;
-		}
-
-		return $results;
 	}
 
 }
