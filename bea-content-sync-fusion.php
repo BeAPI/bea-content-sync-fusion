@@ -66,6 +66,7 @@ require BEA_CSF_DIR . 'classes/addons/advanced-custom-fields.php';
 require BEA_CSF_DIR . 'classes/addons/advanced-custom-fields-exclusion.php';
 require BEA_CSF_DIR . 'classes/addons/events-calendar-series.php';
 require BEA_CSF_DIR . 'classes/addons/revisionize.php';
+require BEA_CSF_DIR . 'classes/addons/polylang.php';
 require BEA_CSF_DIR . 'classes/addons/multisite-clone-duplicator.php';
 require BEA_CSF_DIR . 'classes/addons/woocommerce.php';
 
@@ -136,6 +137,7 @@ function init_bea_content_sync_fusion() {
 	new BEA_CSF_Addon_Revisionize();
 	new BEA_CSF_Addon_Multisite_Clone_Duplicator();
 	new BEA_CSF_Addon_WooCommerce();
+	new BEA_CSF_Addon_Polylang();
 
 	// Admin
 	if ( is_admin() ) {

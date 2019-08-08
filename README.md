@@ -16,6 +16,7 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
 ### Third plugins compatibility
 
  * **[WooCommerce](https://wordpress.org/plugins/woocommerce/)**
+ * [Polylang](https://wordpress.org/plugins/polylang/)
  * [Post Types Order](https://wordpress.org/plugins/post-types-order/)
  * [Advanced Custom Fields](https://www.advancedcustomfields.com/)
  * [The Events Calendar Family](https://theeventscalendar.com/)
@@ -27,6 +28,7 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
 ### 3.5.1 - in progress
 
 * Feature: add new CLI command for mirror 2 sites on network, populate relations, useful after a site duplication
+* Feature: add Polylang addon (thanks to @asadowski10)
 
 ### 3.5.0 - 07 august 2019
 
