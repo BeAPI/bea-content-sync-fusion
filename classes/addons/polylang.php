@@ -9,12 +9,31 @@ class BEA_CSF_Addon_Polylang {
 			return;
 		}
 
+		add_filter( 'pll_copy_post_metas', [ $this, 'pll_copy_post_metas' ] );
+
 		add_filter( 'bea_csf.client.posttype.merge', [ $this, 'bea_csf_client_posttype_merge' ], 20, 3 );
 		add_filter( 'bea_csf.client.taxonomy.merge', [ $this, 'bea_csf_client_taxo_merge' ], 20, 2 );
 		add_filter( 'bea_csf.server.posttype.delete', [ $this, 'bea_csf_server_posttype_no_sync_en' ], 10, 3 );
 		add_filter( 'bea_csf.server.posttype.merge', [ $this, 'bea_csf_server_posttype_no_sync_en' ], 10, 3 );
 		add_filter( 'bea_csf.server.taxonomy.delete', [ $this, 'bea_csf_server_term_no_sync_en' ], 10, 2 );
 		add_filter( 'bea_csf.server.taxonomy.merge', [ $this, 'bea_csf_server_term_no_sync_en' ], 10, 2 );
+	}
+
+	/**
+	 * Force copy meta values accross polylang translations
+	 *
+	 * @param array $metas
+	 *
+	 * @return array
+	 */
+	public function pll_copy_post_metas( $metas ) {
+		return array_merge(
+			$metas,
+			array(
+				'_b' . get_current_blog_id() . '_post_receivers',
+				'_b' . get_current_blog_id() . '_post_receivers_status',
+			)
+		);
 	}
 
 	/**
@@ -32,7 +51,7 @@ class BEA_CSF_Addon_Polylang {
 		if ( ! empty( $has_language ) ) {
 			return $data;
 		}
-		
+
 		$default_lang = pll_default_language( 'slug' );
 		pll_set_post_language( $new_post->ID, $default_lang );
 
@@ -53,6 +72,7 @@ class BEA_CSF_Addon_Polylang {
 		if ( ! empty( $has_language ) ) {
 			return $new_term_id;
 		}
+
 		$default_lang = pll_default_language( 'slug' );
 		pll_set_post_language( $new_term_id, $default_lang );
 
