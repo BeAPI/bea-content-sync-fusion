@@ -6,7 +6,7 @@ class BEA_CSF_Plugin {
 	 * Check if DB version has changed...
 	 */
 	public static function check_for_db_update() {
-		if ( get_network_option( 0, 'bea_csf_db_version' ) !== constant( 'BEA_CSF_DB_VERSION' ) ) {
+		if ( get_network_option( 1, 'bea_csf_db_version' ) !== constant( 'BEA_CSF_DB_VERSION' ) ) {
 			self::activate();
 		}
 	}
@@ -25,7 +25,7 @@ class BEA_CSF_Plugin {
 		self::create_queue_table_maintenance();
 
 		// Site option for ALL network
-		update_network_option( 0, 'bea_csf_db_version', BEA_CSF_DB_VERSION );
+		update_network_option( 1, 'bea_csf_db_version', BEA_CSF_DB_VERSION );
 	}
 
 	public static function create_relations_table() {
