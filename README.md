@@ -29,6 +29,7 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
 
 * Feature: add new CLI command for mirror 2 sites on network, populate relations, useful after a site duplication
 * Feature: add Polylang addon (thanks to @asadowski10)
+* Bugfix: save db version on network ID : 1, instead 0 (not exists)
 
 ### 3.5.0 - 07 august 2019
 
