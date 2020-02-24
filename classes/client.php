@@ -254,7 +254,9 @@ class BEA_CSF_Client {
 		// Check for new publication
 		if ( in_array( $new_status, $allowed_publish_status, true ) ) {
 			if ( class_exists( 'acf' ) ) {
+				self::unregister_hooks();
 				do_action( 'acf/save_post', $post->ID );
+				self::register_hooks();
 			}
 			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
 		} elseif ( $new_status !== $old_status && in_array( $new_status, $allowed_delete_status, true ) ) { // Check for unpublish
