@@ -21,6 +21,10 @@ class BEA_CSF_Client_Taxonomy {
 			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
 		}
 
+		if ( ! isset( $data['term_id'] ) ) {
+			return new WP_Error( 'missing_term_id', 'Error - Missing a term ID for allow insertion.' );
+		}
+
 		// Define this variable for skip infinite sync when emetter and receiver are reciprocal
 		$_bea_origin_blog_id = $data['blogid'];
 
