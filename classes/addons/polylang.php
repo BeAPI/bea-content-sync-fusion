@@ -10,13 +10,10 @@ class BEA_CSF_Addon_Polylang {
 		}
 
 		add_filter( 'pll_copy_post_metas', [ $this, 'pll_copy_post_metas' ] );
-
+		add_filter( 'bea_csf.server.posttype.merge', [ $this, 'bea_csf_server_posttype_merge' ], 20, 2 );
+		add_filter( 'bea_csf.server.taxonomy.merge', [ $this, 'bea_csf_server_taxonomy_merge' ], 20, 2 );
 		add_filter( 'bea_csf.client.posttype.merge', [ $this, 'bea_csf_client_posttype_merge' ], 20, 3 );
-		add_filter( 'bea_csf.client.taxonomy.merge', [ $this, 'bea_csf_client_taxo_merge' ], 20, 2 );
-		add_filter( 'bea_csf.server.posttype.delete', [ $this, 'bea_csf_server_posttype_no_sync_en' ], 10, 3 );
-		add_filter( 'bea_csf.server.posttype.merge', [ $this, 'bea_csf_server_posttype_no_sync_en' ], 10, 3 );
-		add_filter( 'bea_csf.server.taxonomy.delete', [ $this, 'bea_csf_server_term_no_sync_en' ], 10, 2 );
-		add_filter( 'bea_csf.server.taxonomy.merge', [ $this, 'bea_csf_server_term_no_sync_en' ], 10, 2 );
+		add_filter( 'bea_csf.client.taxonomy.merge', [ $this, 'bea_csf_client_taxo_merge' ], 20, 3 );
 	}
 
 	/**
@@ -37,91 +34,187 @@ class BEA_CSF_Addon_Polylang {
 	}
 
 	/**
-	 * Set default language on synched contents
+	 * Remove taxonomy of queue if receiver blog not contains lang
 	 *
-	 * @param $data
+	 * @param array $emitter_data
+	 * @param array $sync_fields
+	 *
+	 * @return array
+	 *
+	 * @author Léonard Phoumpakka
+	 *
+	 */
+	public function bea_csf_server_taxonomy_merge( array $emitter_data, array $sync_fields ) {
+
+		$emitter_term_language = pll_get_term_language( $emitter_data['term_id'] );
+
+		if ( empty( $emitter_term_language ) ) {
+			return $emitter_data;
+		}
+
+		// Check available languages
+		$receiver_blog_id = $sync_fields['_current_receiver_blog_id'];
+		switch_to_blog( $receiver_blog_id );
+		$receiver_list_lang = pll_languages_list();
+		restore_current_blog();
+
+		if ( ! in_array( $emitter_term_language, $receiver_list_lang ) ) {
+			return [];
+		}
+
+		return $emitter_data;
+
+	}
+
+	/**
+	 * Remove post of queue if receiver blog not contains lang
+	 *
+	 * @param array $emitter_data
+	 * @param array $sync_fields
+	 *
+	 * @return array|bool
+	 *
+	 * @author Léonard Phoumpakka
+	 *
+	 */
+	public function bea_csf_server_posttype_merge( array $emitter_data, array $sync_fields ) {
+
+		$emitter_post_language = pll_get_post_language( $emitter_data['ID'] );
+
+		if ( empty( $emitter_post_language ) ) {
+			return $emitter_data;
+		}
+
+		// Check available languages
+		$receiver_blog_id = $sync_fields['_current_receiver_blog_id'];
+		switch_to_blog( $receiver_blog_id );
+		$receiver_list_lang = pll_languages_list();
+		restore_current_blog();
+
+		// Un-sync if languages not exist
+		if ( ! in_array( $emitter_post_language, $receiver_list_lang ) ) {
+			return false;
+		}
+
+		return $emitter_data;
+	}
+
+	/**
+	 * Set language on synced content from emitter
+	 *
+	 * @param $emitter_data
 	 * @param $sync_fields
-	 * @param $new_post
+	 * @param $receiver_post
 	 *
 	 * @return mixed
 	 * @author Alexandre Sadowski
 	 */
-	public function bea_csf_client_posttype_merge( $data, $sync_fields, $new_post ) {
-		$has_language = pll_get_post_language( $new_post->ID );
-		if ( ! empty( $has_language ) ) {
-			return $data;
+	public function bea_csf_client_posttype_merge( array $emitter_data, $sync_fields, WP_Post $receiver_post ) {
+
+		switch_to_blog( $emitter_data['blogid'] );
+		$emitter_post_language     = pll_get_post_language( $emitter_data['ID'] );
+		$emitter_post_translations = pll_get_post_translations( $emitter_data['ID'] );
+		restore_current_blog();
+
+		if ( empty( $emitter_post_language ) ) {
+			return $emitter_data;
 		}
 
-		$default_lang = pll_default_language( 'slug' );
-		pll_set_post_language( $new_post->ID, $default_lang );
+		$receiver_list_lang = pll_languages_list();
 
-		return $data;
+		if ( in_array( $emitter_post_language, $receiver_list_lang ) ) {
+			pll_set_post_language( $receiver_post->ID, $emitter_post_language );
+		}
+
+		if ( ! empty( $emitter_post_translations ) ) {
+			$this->sync_relations( 'posttype', $emitter_data['blogid'], $sync_fields['_current_receiver_blog_id'], $emitter_post_translations, $receiver_list_lang );
+		}
+
+		return $emitter_data;
 	}
 
 	/**
-	 * Set default language on synched terms
+	 * Set language on synced terms from emitter
 	 *
-	 * @param $new_term_id
+	 * @param array $emitter_data
 	 * @param $sync_fields
+	 * @param WP_Term $new_term_obj
 	 *
-	 * @return mixed
-	 * @author Alexandre Sadowski
+	 * @return array
+	 *
+	 * @author Léonard Phoumpakka
+	 *
 	 */
-	public function bea_csf_client_taxo_merge( $new_term_id, $sync_fields ) {
-		$has_language = pll_get_term_language( $new_term_id );
-		if ( ! empty( $has_language ) ) {
-			return $new_term_id;
+	public function bea_csf_client_taxo_merge( array $emitter_data, $sync_fields, WP_Term $new_term_obj ) {
+
+		switch_to_blog( $emitter_data['blogid'] );
+		$emitter_term_language      = pll_get_term_language( $emitter_data['term_id'] );
+		$emitter_terms_translations = pll_get_term_translations( $emitter_data['term_id'] );
+		restore_current_blog();
+
+		if ( empty( $emitter_term_language ) ) {
+			return $emitter_data;
 		}
 
-		$default_lang = pll_default_language( 'slug' );
-		pll_set_post_language( $new_term_id, $default_lang );
+		$receiver_list_lang = pll_languages_list();
 
-		return $new_term_id;
+		if ( in_array( $emitter_term_language, $receiver_list_lang ) ) {
+			pll_set_term_language( $new_term_obj->term_id, $emitter_term_language );
+		}
+
+		if ( ! empty( $emitter_terms_translations ) ) {
+			$this->sync_relations( 'taxonomy', $emitter_data['blogid'], $sync_fields['_current_receiver_blog_id'], $emitter_terms_translations, $receiver_list_lang );
+		}
+
+		return $emitter_data;
 	}
 
 	/**
-	 * No sync contents who has not default language
+	 *  Sync relations
 	 *
-	 * @param $_post
-	 * @param $sync_fields
+	 * @param $type
+	 * @param $emitter_blog_id
+	 * @param $receiver_blog_id
+	 * @param $emitter_obj_translations
+	 * @param array $receiver_list_lang
 	 *
-	 * @return bool
-	 * @author Alexandre Sadowski
+	 * @author Léonard Phoumpakka
+	 *
 	 */
-	public function bea_csf_server_posttype_no_sync_en( $_post, $sync_fields ) {
-		$has_language = pll_get_post_language( $_post['ID'] );
-		if ( empty( $has_language ) ) {
-			return $_post;
+	private function sync_relations( $type, $emitter_blog_id, $receiver_blog_id, $emitter_obj_translations, array $receiver_list_lang ) {
+		$new_values = [];
+
+		if ( empty( $emitter_obj_translations ) || empty( $receiver_list_lang ) ) {
+			return;
 		}
 
-		$default_lang = pll_default_language( 'slug' );
-		if ( $default_lang === $has_language ) {
-			return $_post;
+		// Set relations for only exist languages
+		$emitter_obj_translations = array_intersect_key( $emitter_obj_translations, array_flip( $receiver_list_lang ) );
+
+		if ( empty( $emitter_obj_translations ) ) {
+			return;
 		}
 
-		return false;
-	}
-
-	/**
-	 * No sync contents who has not default language
-	 *
-	 * @param $term
-	 * @param $sync_fields
-	 *
-	 * @return bool
-	 * @author Alexandre Sadowski
-	 */
-	public function bea_csf_server_term_no_sync_en( $term, $sync_fields ) {
-		$has_language = pll_get_term_language( $term['term_id'] );
-		if ( empty( $has_language ) ) {
-			return $term;
+		foreach ( $emitter_obj_translations as $lang => $emitter_obj_translation_id ) {
+			$new_obj_id = BEA_CSF_Relations::get_object_for_any( [ $type ], $emitter_blog_id, $receiver_blog_id, $emitter_obj_translation_id, $emitter_obj_translation_id );
+			if ( false === $new_obj_id ) {
+				continue;
+			}
+			$new_values[ $lang ] = $new_obj_id;
 		}
 
-		$default_lang = pll_default_language( 'slug' );
-		if ( $default_lang === $has_language ) {
-			return $term;
+		if ( empty( $new_values ) ) {
+			return;
 		}
 
-		return false;
+		if ( 'posttype' === $type ) {
+			pll_save_post_translations( $new_values );
+		}
+
+		if ( 'taxonomy' === $type ) {
+			pll_save_term_translations( $new_values );
+		}
+
+		return;
 	}
 }
