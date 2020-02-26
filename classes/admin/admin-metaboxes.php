@@ -172,6 +172,9 @@ class BEA_CSF_Admin_Metaboxes {
 			'emitters'  => get_current_blog_id(),
 		), 'AND', false, true );
 		if ( ! empty( $syncs_with_manual_state ) ) {
+
+			$syncs_with_manual_state = apply_filters('bea_csf_syncs_with_manual_state', $syncs_with_manual_state);
+
 			add_meta_box( BEA_CSF_OPTION . 'metabox-manual', __( 'Synchronization (manual)', 'bea-content-sync-fusion' ), array(
 				__CLASS__,
 				'metabox_content_manual',
