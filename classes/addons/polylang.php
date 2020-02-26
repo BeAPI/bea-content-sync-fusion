@@ -9,28 +9,11 @@ class BEA_CSF_Addon_Polylang {
 			return;
 		}
 
-		add_filter( 'pll_copy_post_metas', [ $this, 'pll_copy_post_metas' ] );
+		add_filter( 'bea_csf/client/posttype/before_merge', [ $this, 'bea_csf_fix_remove_posts_translations' ], 10 );
 		add_filter( 'bea_csf.server.posttype.merge', [ $this, 'bea_csf_server_posttype_merge' ], 20, 2 );
 		add_filter( 'bea_csf.server.taxonomy.merge', [ $this, 'bea_csf_server_taxonomy_merge' ], 20, 2 );
 		add_filter( 'bea_csf.client.posttype.merge', [ $this, 'bea_csf_client_posttype_merge' ], 20, 3 );
 		add_filter( 'bea_csf.client.taxonomy.merge', [ $this, 'bea_csf_client_taxo_merge' ], 20, 3 );
-	}
-
-	/**
-	 * Force copy meta values accross polylang translations
-	 *
-	 * @param array $metas
-	 *
-	 * @return array
-	 */
-	public function pll_copy_post_metas( $metas ) {
-		return array_merge(
-			$metas,
-			array(
-				'_b' . get_current_blog_id() . '_post_receivers',
-				'_b' . get_current_blog_id() . '_post_receivers_status',
-			)
-		);
 	}
 
 	/**
@@ -216,5 +199,24 @@ class BEA_CSF_Addon_Polylang {
 		}
 
 		return;
+	}
+
+	/**
+	 * Fix duplicate 'post_translations' key on database by remove relation on client insert
+	 *
+	 * @param $data
+	 *
+	 * @return mixed
+	 *
+	 * @author Léonard Phoumpakka
+	 *
+	 */
+	public function bea_csf_fix_remove_posts_translations( $data ) {
+
+		if ( false !== $key = array_search( 'post_translations', $data['taxonomies'] ) ) {
+			unset( $data['taxonomies'][ $key ] );
+		}
+
+		return $data;
 	}
 }
