@@ -25,6 +25,18 @@ class BEA_CSF_Client_Taxonomy {
 			return new WP_Error( 'missing_term_id', 'Error - Missing a term ID for allow insertion.' );
 		}
 
+		$data = apply_filters( 'bea_csf/client/taxonomy/before_merge', $data, $sync_fields );
+
+		if ( false === $data || empty( $data ) ) {
+			return new WP_Error( 'empty_data', 'Error - exclude taxonomy to sync' );
+		}
+
+		$data = apply_filters( 'bea_csf/client/taxonomy/before_merge', $data, $sync_fields );
+
+		if ( false === $data || empty( $data ) ) {
+			return new WP_Error( 'empty_data', 'Error - exclude taxonomy to sync' );
+		}
+
 		// Define this variable for skip infinite sync when emetter and receiver are reciprocal
 		$_bea_origin_blog_id = $data['blogid'];
 

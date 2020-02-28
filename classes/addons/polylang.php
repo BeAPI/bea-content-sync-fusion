@@ -10,24 +10,24 @@ class BEA_CSF_Addon_Polylang {
 		}
 
 		add_filter( 'bea_csf/client/posttype/before_merge', [ $this, 'bea_csf_fix_remove_posts_translations' ], 10 );
-		add_filter( 'bea_csf.server.taxonomy.merge', [ $this, 'bea_csf_server_taxonomy_merge' ], 20, 2 );
-		add_filter( 'bea_csf.server.posttype.merge', [ $this, 'bea_csf_server_posttype_merge' ], 20, 2 );
+		add_filter( 'bea_csf/client/posttype/before_merge', [ $this, 'bea_csf_client_posttype_before_merge' ], 20, 2 );
+		add_filter( 'bea_csf/client/taxonomy/before_merge', [ $this, 'bea_csf_client_taxonomy_before_merge' ], 20, 2 );
 		add_filter( 'bea_csf.client.taxonomy.merge', [ $this, 'bea_csf_client_taxo_merge' ], 20, 3 );
 		add_filter( 'bea_csf.client.posttype.merge', [ $this, 'bea_csf_client_posttype_merge' ], 20, 3 );
 	}
 
 	/**
-	 * Remove taxonomy of queue if receiver blog not contains lang
+	 * Remove taxonomy of queue by receiver blog lang list
 	 *
 	 * @param array $emitter_data
 	 * @param array $sync_fields
 	 *
-	 * @return array
+	 * @return bool|array
 	 *
 	 * @author Léonard Phoumpakka
 	 *
 	 */
-	public function bea_csf_server_taxonomy_merge( array $emitter_data, array $sync_fields ) {
+	public function bea_csf_client_taxonomy_before_merge( array $emitter_data, array $sync_fields ) {
 
 		if ( false === pll_is_translated_taxonomy( $emitter_data['taxonomy'] ) ) {
 			return $emitter_data;
@@ -40,21 +40,18 @@ class BEA_CSF_Addon_Polylang {
 		}
 
 		// Check available languages
-		$receiver_blog_id = $sync_fields['_current_receiver_blog_id'];
-		switch_to_blog( $receiver_blog_id );
 		$receiver_list_lang = pll_languages_list();
-		restore_current_blog();
 
-		if ( ! in_array( $emitter_term_language, $receiver_list_lang ) ) {
-			return [];
+		if ( in_array( $emitter_term_language, $receiver_list_lang ) ) {
+			return $emitter_data;
 		}
 
-		return $emitter_data;
+		return false;
 
 	}
 
 	/**
-	 * Remove post of queue if receiver blog not contains lang
+	 * Remove post of queue by receiver blog lang list
 	 *
 	 * @param array $emitter_data
 	 * @param array $sync_fields
@@ -64,7 +61,7 @@ class BEA_CSF_Addon_Polylang {
 	 * @author Léonard Phoumpakka
 	 *
 	 */
-	public function bea_csf_server_posttype_merge( array $emitter_data, array $sync_fields ) {
+	public function bea_csf_client_posttype_before_merge( array $emitter_data, array $sync_fields ) {
 
 		if ( false === pll_is_translated_post_type( get_post_type( $emitter_data['ID'] ) ) ) {
 			return $emitter_data;
@@ -77,17 +74,14 @@ class BEA_CSF_Addon_Polylang {
 		}
 
 		// Check available languages
-		$receiver_blog_id = $sync_fields['_current_receiver_blog_id'];
-		switch_to_blog( $receiver_blog_id );
 		$receiver_list_lang = pll_languages_list();
-		restore_current_blog();
 
 		// Un-sync if languages not exist
-		if ( ! in_array( $emitter_post_language, $receiver_list_lang ) ) {
-			return false;
+		if ( in_array( $emitter_post_language, $receiver_list_lang ) ) {
+			return $emitter_data;
 		}
 
-		return $emitter_data;
+		return false;
 	}
 
 	/**
@@ -213,8 +207,6 @@ class BEA_CSF_Addon_Polylang {
 		if ( 'taxonomy' === $type ) {
 			pll_save_term_translations( $new_values );
 		}
-
-		return;
 	}
 
 	/**
@@ -229,7 +221,9 @@ class BEA_CSF_Addon_Polylang {
 	 */
 	public function bea_csf_fix_remove_posts_translations( $data ) {
 
-		if ( false !== $key = array_search( 'post_translations', $data['taxonomies'] ) ) {
+		$key = array_search( 'post_translations', $data['taxonomies'] );
+
+		if ( false !== $key ) {
 			unset( $data['taxonomies'][ $key ] );
 		}
 
