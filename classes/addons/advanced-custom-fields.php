@@ -208,7 +208,7 @@ class BEA_CSF_Addon_ACF {
 				foreach( $field['layouts'] as $layout_field ) {
 					self::prepare_acf_fields( $layout_field['sub_fields'] );
 				}
-			} elseif (in_array($field['type'], array('repeater') ) ) { // Repeater is recursive structure
+			} elseif (in_array($field['type'], array('repeater', 'group') ) ) { // Repeater is recursive structure
 				self::prepare_acf_fields( $field['sub_fields'] );
 			} elseif ( in_array($field['type'], array('image', 'gallery', 'post_object', 'relationship', 'file', 'page_link', 'taxonomy') ) ) {
 				self::$acf_fields[ $field['key'] ] = $field;
