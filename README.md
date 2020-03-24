@@ -25,12 +25,17 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
  
 ## Changelog
 
-### 3.5.1 - in progress
+### 3.5.2 - in progress
 
 * Feature: add new CLI command for mirror 2 sites on network, populate relations, useful after a site duplication
-* Feature: add Polylang addon (thanks to @asadowski10)
 * Bugfix: save db version on network ID : 1, instead 0 (not exists)
 * Bugfix: fix potential loop with ACF/save_post hook on rare case
+
+### 3.5.1 - 02 march 2020
+
+* Feature: add Polylang addon (thanks to @asadowski10)
+* Improvement: add filters to allow emitter posts lock on receiver blog
+* Improvement: add filter to admin metabox
 
 ### 3.5.0 - 07 august 2019
 

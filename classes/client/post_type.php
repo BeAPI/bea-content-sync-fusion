@@ -29,6 +29,10 @@ class BEA_CSF_Client_PostType {
 		
 		$data = apply_filters( 'bea_csf/client/posttype/before_merge', $data, $sync_fields );
 
+		if ( false === $data || empty( $data ) ) {
+			return new WP_Error( 'empty_data', 'Error - exclude post to sync' );
+		}
+		
 		// Clone datas for post insertion
 		$data_for_post = $data;
 		unset( $data_for_post['medias'], $data_for_post['terms'], $data_for_post['tags_input'], $data_for_post['post_category'] );

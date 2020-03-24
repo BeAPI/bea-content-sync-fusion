@@ -158,6 +158,8 @@ class BEA_CSF_Admin_Restrictions {
 		// Get syncs model for current post_type, with any mode status (manual and auto)
 		$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
 
+		$_has_syncs = apply_filters( 'bea_csf_taxonomy_caps', $_has_syncs );
+
 		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
 		}
@@ -199,6 +201,8 @@ class BEA_CSF_Admin_Restrictions {
 				'post_type' => $post->post_type,
 				'emitters'  => $wpdb->blogid,
 			), 'AND', false, true );
+
+			$_has_syncs = apply_filters( 'bea_csf_post_caps', $_has_syncs );
 
 			if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 				$caps[] = 'do_not_allow';

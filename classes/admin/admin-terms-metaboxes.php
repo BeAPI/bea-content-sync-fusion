@@ -51,6 +51,9 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 			return false;
 		}
 
+ 		// Can allow filter receivers site
+		$syncs_with_manual_state = apply_filters('bea_csf_syncs_with_manual_state_term', $syncs_with_manual_state);
+
 		foreach ( $syncs_with_manual_state as $sync ) {
 			if ( in_array( $taxonomy, $sync->taxonomies ) ) {
 				return $sync;
