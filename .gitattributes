@@ -1,0 +1,7 @@
+.github export-ignore
+.gitattributes export-ignore
+phpcs.xml export-ignore
+psalm.xml export-ignore
+grumphp.xml export-ignore
+.stickler.yml export-ignore
+.gitignore export-ignore
