@@ -25,9 +25,13 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
  
 ## Changelog
 
-### 3.5.2 - in progress
+### 3.6
 
 * Feature: add new CLI command for mirror 2 sites on network, populate relations, useful after a site duplication
+* Feature: full support of Polylang
+* Feature: add support of ACF group field
+* Feature: add some new filter for capibility check bea_csf_taxonomy_caps / bea_csf_post_caps
+* Bugfix: fix canonical feature for WPseo
 * Bugfix: save db version on network ID : 1, instead 0 (not exists)
 * Bugfix: fix potential loop with ACF/save_post hook on rare case
 
