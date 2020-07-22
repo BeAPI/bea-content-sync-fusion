@@ -129,28 +129,23 @@ class BEA_CSF_Admin_Restrictions {
 	/**
 	 * Block request for term edition
 	 *
-	 * @global string $pagenow
-	 * @return boolean
+	 * @return void
 	 */
 	public static function admin_init_check_term_edition() {
-		global $pagenow, $wpdb;
+		global $wpdb;
 
-		// Not an edit page ?
-		if ( 'edit-tags.php' !== $pagenow ) {
-			return false;
+		// Not an edit page / edit request
+		if ( empty( $_REQUEST['tag_ID'] ) && empty( $_REQUEST['tax_ID'] ) && empty( $_REQUEST['taxonomy'] ) ) {
+			return;
 		}
 
-		// No action on edit page ?
-		if ( ! isset( $_GET['taxonomy'] ) || ! isset( $_GET['tag_ID'] ) || 'edit' !== $_GET['action'] ) {
-			return false;
-		}
+		$tag_ID = ! empty( $_REQUEST['tag_ID'] ) ? $_REQUEST['tag_ID'] : $_REQUEST['tax_ID'];
 
-		// Get current term with tag ID
-		$current_term = get_term( (int) $_GET['tag_ID'], $_GET['taxonomy'] );
+		$current_term = get_term( (int) $tag_ID, $_GET['taxonomy'] );
 
 		// Term not exist ?
 		if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
-			return false;
+			return;
 		}
 
 		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'taxonomy', $wpdb->blogid, $current_term->term_id );
@@ -163,8 +158,6 @@ class BEA_CSF_Admin_Restrictions {
 		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
 		}
-
-		return true;
 	}
 
 	/**
