@@ -134,29 +134,37 @@ class BEA_CSF_Admin_Restrictions {
 	public static function admin_init_check_term_edition() {
 		global $wpdb;
 
-		// Not an edit page / edit request
-		if ( empty( $_REQUEST['tag_ID'] ) && empty( $_REQUEST['tax_ID'] ) && empty( $_REQUEST['taxonomy'] ) ) {
+		// Not an edit page / edit request / bulk delete
+		if ( empty( $_REQUEST['tag_ID'] ) && empty( $_REQUEST['tax_ID'] ) && empty( $_REQUEST['taxonomy'] ) && empty( $_REQUEST['delete_tags'] ) ) {
 			return;
 		}
-
-		$tag_ID = ! empty( $_REQUEST['tag_ID'] ) ? $_REQUEST['tag_ID'] : $_REQUEST['tax_ID'];
-
-		$current_term = get_term( (int) $tag_ID, $_GET['taxonomy'] );
-
-		// Term not exist ?
-		if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
-			return;
+		$tags = [];
+		if ( ! empty( $_REQUEST['tag_ID'] ) ) {
+			$tags[] = $_REQUEST['tag_ID'];
+		} elseif ( ! empty( $_REQUEST['tax_ID'] ) ) {
+			$tags[] = $_REQUEST['tax_ID'];
+		} else {
+			$tags = (array) $_REQUEST['delete_tags'];
 		}
 
-		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'taxonomy', $wpdb->blogid, $current_term->term_id );
+		foreach ( $tags as $tag ) {
+			$current_term = get_term( (int) $tag, $_GET['taxonomy'] );
 
-		// Get syncs model for current post_type, with any mode status (manual and auto)
-		$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
+			// Term not exist ?
+			if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
+				return;
+			}
 
-		$_has_syncs = apply_filters( 'bea_csf_taxonomy_caps', $_has_syncs );
+			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'taxonomy', $wpdb->blogid, $current_term->term_id );
 
-		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
-			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
+			// Get syncs model for current post_type, with any mode status (manual and auto)
+			$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
+
+			$_has_syncs = apply_filters( 'bea_csf_taxonomy_caps', $_has_syncs );
+
+			if ( null !== $_origin_key && empty( $_has_syncs ) ) {
+				wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
+			}
 		}
 	}
 
