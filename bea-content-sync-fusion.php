@@ -22,6 +22,10 @@ if ( ! defined( 'BEA_CSF_MEDIA_FEATURE' ) ) {
 	define( 'BEA_CSF_MEDIA_FEATURE', true );
 }
 
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require __DIR__ . '/vendor/autoload.php';
+}
+
 // Define the table relation variables
 if ( empty( $GLOBALS['wpdb']->bea_csf_relations ) ) {
 	$GLOBALS['wpdb']->bea_csf_relations  = $GLOBALS['wpdb']->base_prefix . 'bea_csf_relations';
