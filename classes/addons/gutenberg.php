@@ -92,17 +92,12 @@ class BEA_CSF_Addon_Gutenberg {
 			case 'core/image':
 			case 'core/video':
 				if ( ! empty( $attributes['id'] ) ) {
-					$local_id = BEA_CSF_Relations::get_object_for_any(
+					$attributes['id'] = $this->translate_attribute(
+						(int) $attributes['id'],
 						'attachment',
 						$emitter_blog_id,
-						$receiver_blog_id,
-						$attributes['id'],
-						$attributes['id']
+						$receiver_blog_id
 					);
-
-					if ( ! empty( $local_id ) ) {
-						$attributes['id'] = $local_id;
-					}
 				}
 				break;
 			case 'core/gallery':
@@ -124,32 +119,22 @@ class BEA_CSF_Addon_Gutenberg {
 				break;
 			case 'core/media-text':
 				if ( ! empty( $attributes['mediaId'] ) ) {
-					$local_id = BEA_CSF_Relations::get_object_for_any(
+					$attributes['mediaId'] = $this->translate_attribute(
+						(int) $attributes['mediaId'],
 						'attachment',
 						$emitter_blog_id,
-						$receiver_blog_id,
-						(int) $attributes['mediaId'],
-						(int) $attributes['mediaId']
+						$receiver_blog_id
 					);
-
-					if ( ! empty( $local_id ) ) {
-						$attributes['mediaId'] = $local_id;
-					}
 				}
 				break;
 			case 'core/block':
 				if ( ! empty( $attributes['ref'] ) ) {
-					$local_id = BEA_CSF_Relations::get_object_for_any(
+					$attributes['ref'] = $this->translate_attribute(
+						(int) $attributes['ref'],
 						'posttype',
 						$emitter_blog_id,
-						$receiver_blog_id,
-						$attributes['ref'],
-						$attributes['ref']
+						$receiver_blog_id
 					);
-
-					if ( ! empty( $local_id ) ) {
-						$attributes['ref'] = $local_id;
-					}
 				}
 				break;
 			default:
@@ -222,6 +207,29 @@ class BEA_CSF_Addon_Gutenberg {
 		}
 
 		return $html;
+	}
+
+	/**
+	 * Translate an ID from a block's attribut.
+	 *
+	 * @param int $value ID to translate.
+	 * @param string $type Type of relation.
+	 * @param int $emitter_blog_id ID of the emitter site.
+	 * @param int $receiver_blog_id ID of the receiver site.
+	 *
+	 * @return int translated ID or original ID if no relations was found.
+	 */
+	private function translate_attribute( int $value, string $type, int $emitter_blog_id, int $receiver_blog_id ): int {
+
+		$local_id = BEA_CSF_Relations::get_object_for_any(
+			$type,
+			$emitter_blog_id,
+			$receiver_blog_id,
+			$value,
+			$value
+		);
+
+		return ! empty( $local_id ) ? $local_id : $value;
 	}
 
 	/**
