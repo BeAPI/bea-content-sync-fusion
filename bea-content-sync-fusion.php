@@ -73,6 +73,7 @@ require BEA_CSF_DIR . 'classes/addons/revisionize.php';
 require BEA_CSF_DIR . 'classes/addons/polylang.php';
 require BEA_CSF_DIR . 'classes/addons/multisite-clone-duplicator.php';
 require BEA_CSF_DIR . 'classes/addons/woocommerce.php';
+require BEA_CSF_DIR . 'classes/addons/gutenberg.php';
 
 // Functions various
 require BEA_CSF_DIR . 'functions/api.php';
@@ -142,6 +143,7 @@ function init_bea_content_sync_fusion() {
 	new BEA_CSF_Addon_Multisite_Clone_Duplicator();
 	new BEA_CSF_Addon_WooCommerce();
 	new BEA_CSF_Addon_Polylang();
+	new BEA_CSF_Addon_Gutenberg();
 
 	// Admin
 	if ( is_admin() ) {
