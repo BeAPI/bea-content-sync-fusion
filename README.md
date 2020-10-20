@@ -19,7 +19,7 @@ Manage content synchronisation across a WordPress multisite.
 
 ## Compatibility
 
-Compatible up to WordPress 5.x (Gutenberg is not completely covered at the moment)
+Compatible up to WordPress 5.x
 
 ### Third plugins compatibility
 
