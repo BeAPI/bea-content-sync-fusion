@@ -129,42 +129,43 @@ class BEA_CSF_Admin_Restrictions {
 	/**
 	 * Block request for term edition
 	 *
-	 * @global string $pagenow
-	 * @return boolean
+	 * @return void
 	 */
 	public static function admin_init_check_term_edition() {
-		global $pagenow, $wpdb;
+		global $wpdb;
 
-		// Not an edit page ?
-		if ( 'edit-tags.php' !== $pagenow ) {
-			return false;
+		// Not an edit page / edit request / bulk delete
+		if ( empty( $_REQUEST['tag_ID'] ) && empty( $_REQUEST['tax_ID'] ) && empty( $_REQUEST['taxonomy'] ) && empty( $_REQUEST['delete_tags'] ) ) {
+			return;
+		}
+		$tags = [];
+		if ( ! empty( $_REQUEST['tag_ID'] ) ) {
+			$tags[] = $_REQUEST['tag_ID'];
+		} elseif ( ! empty( $_REQUEST['tax_ID'] ) ) {
+			$tags[] = $_REQUEST['tax_ID'];
+		} else {
+			$tags = (array) $_REQUEST['delete_tags'];
 		}
 
-		// No action on edit page ?
-		if ( ! isset( $_GET['taxonomy'] ) || ! isset( $_GET['tag_ID'] ) || 'edit' !== $_GET['action'] ) {
-			return false;
+		foreach ( $tags as $tag ) {
+			$current_term = get_term( (int) $tag, $_GET['taxonomy'] );
+
+			// Term not exist ?
+			if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
+				return;
+			}
+
+			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'taxonomy', $wpdb->blogid, $current_term->term_id );
+
+			// Get syncs model for current post_type, with any mode status (manual and auto)
+			$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
+
+			$_has_syncs = apply_filters( 'bea_csf_taxonomy_caps', $_has_syncs );
+
+			if ( null !== $_origin_key && empty( $_has_syncs ) ) {
+				wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
+			}
 		}
-
-		// Get current term with tag ID
-		$current_term = get_term( (int) $_GET['tag_ID'], $_GET['taxonomy'] );
-
-		// Term not exist ?
-		if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
-			return false;
-		}
-
-		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'taxonomy', $wpdb->blogid, $current_term->term_id );
-
-		// Get syncs model for current post_type, with any mode status (manual and auto)
-		$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
-
-		$_has_syncs = apply_filters( 'bea_csf_taxonomy_caps', $_has_syncs );
-
-		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
-			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
-		}
-
-		return true;
 	}
 
 	/**
