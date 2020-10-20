@@ -9,6 +9,14 @@ Manage content synchronisation across a WordPress multisite.
 * Require at least WordPress 4.6.x, in order to use the `WP_Site_Query`.
 * Know and understand the implementation of CRON tasks on a Linux server
 
+## Installation
+
+3 possibilities.
+
+ * Take the ZIP archive proposed in the Github releases
+ * Add "bea/bea-content-sync-fusion" on composer json project file
+ * Take this GIT repository and call "composer install" command
+
 ## Compatibility
 
 Compatible up to WordPress 5.x (Gutenberg is not completely covered at the moment)
@@ -24,6 +32,12 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
  * [Multisite Clone Duplicator](https://wordpress.org/plugins/multisite-clone-duplicator/)
  
 ## Changelog
+
+### 3.7
+
+* Feature: full support of Gutenberg
+* Improvement: Polylang addon (slug conflict)
+* Improvement: Restriction for terms
 
 ### 3.6
 
