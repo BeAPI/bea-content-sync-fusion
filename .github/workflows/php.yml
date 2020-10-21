@@ -1,4 +1,4 @@
-name: PHP Composer
+name: Quality
 
 on: [push, pull_request]
 
@@ -8,7 +8,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: "Checkout code"
     - uses: actions/checkout@v1
+
+    - name: "Check code quality"
+    - uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.1
 
     - name: Validate composer.json and composer.lock
       run: composer validate
