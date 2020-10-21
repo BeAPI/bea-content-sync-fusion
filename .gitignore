@@ -16,3 +16,4 @@ sftp-config.json
 .idea/
 .idea
 *.pid
+/bin/
