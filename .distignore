@@ -1,0 +1,11 @@
+.git
+.github
+.gitignore
+bin
+.idea
+.distignore
+.DS_Store
+.stickler.yml
+composer.json
+composer.lock
+README.md
