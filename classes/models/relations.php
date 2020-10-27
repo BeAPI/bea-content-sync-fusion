@@ -47,18 +47,13 @@ class BEA_CSF_Relations {
 	 * @param $emitter_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
-	 * @param bool $custom_flag
-	 * @param string $custom_fields
 	 *
 	 * @param $type
 	 */
-	public static function merge( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $custom_flag = false, $custom_fields = '', $strict_mode = false ) {
+	public static function merge( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $strict_mode = false ) {
 		// Test with right emitter/receiver direction
 		$relation_id = self::exists( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id );
 		if ( $relation_id != false ) {
-			self::update_custom_flag( $relation_id, $custom_flag );
-			self::update_custom_fields( $relation_id, $custom_fields );
-
 			return $relation_id;
 		}
 
@@ -66,14 +61,11 @@ class BEA_CSF_Relations {
 			// Test also on reverse direction emitter/receiver, allow to not create duplicate relations on 2 directions
 			$relation_id = self::exists( $type, $receiver_blog_id, $receiver_id, $emitter_blog_id, $emitter_id );
 			if ( $relation_id != false ) {
-				self::update_custom_flag( $relation_id, $custom_flag );
-				self::update_custom_fields( $relation_id, $custom_fields );
-
 				return $relation_id;
 			}
 		}
 
-		return self::insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $custom_flag, $custom_fields );
+		return self::insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id);
 	}
 
 	/**
@@ -83,12 +75,10 @@ class BEA_CSF_Relations {
 	 * @param $emitter_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
-	 * @param bool $custom_flag
-	 * @param string $custom_fields
 	 *
 	 * @param $type
 	 */
-	public static function insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $custom_flag = false, $custom_fields = '' ) {
+	public static function insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
@@ -99,11 +89,9 @@ class BEA_CSF_Relations {
 				'emitter_blog_id'  => $emitter_blog_id,
 				'emitter_id'       => $emitter_id,
 				'receiver_blog_id' => $receiver_blog_id,
-				'receiver_id'      => $receiver_id,
-				'custom_flag'      => $custom_flag,
-				'custom_fields'    => $custom_fields,
+				'receiver_id'      => $receiver_id
 			),
-			array( '%s', '%d', '%d', '%d', '%d', '%d', '%s' )
+			array( '%s', '%d', '%d', '%d', '%d' )
 		);
 
 		return $wpdb->insert_id;
@@ -475,48 +463,6 @@ class BEA_CSF_Relations {
 		/** @var WPDB $wpdb */
 
 		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations LIMIT %d", $quantity ) );
-	}
-
-	/**
-	 * @param $id
-	 * @param $flag
-	 */
-	public static function update_custom_flag( $id, $flag ) {
-		global $wpdb;
-
-		/** @var WPDB $wpdb */
-		$wpdb->update(
-			$wpdb->bea_csf_relations,
-			array(
-				'custom_flag' => (boolean) $flag
-			),
-			array(
-				'id' => $id
-			),
-			array( '%d' ),
-			array( '%d' )
-		);
-	}
-
-	/**
-	 * @param $id
-	 * @param $fields_value
-	 */
-	public static function update_custom_fields( $id, $fields_value ) {
-		global $wpdb;
-
-		/** @var WPDB $wpdb */
-		$wpdb->update(
-			$wpdb->bea_csf_relations,
-			array(
-				'custom_fields' => maybe_serialize( $fields_value )
-			),
-			array(
-				'id' => $id
-			),
-			array( '%s' ),
-			array( '%d' )
-		);
 	}
 
 	/**
