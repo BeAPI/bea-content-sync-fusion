@@ -67,9 +67,9 @@ class BEA_CSF_Client {
 		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX );
 
 		// Terms
-		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX );
-		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), PHP_INT_MAX );
-		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), PHP_INT_MAX );
+		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), 990 );
+		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), 990 );
+		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), 990 );
 
 		// Terms/Post_type association
 		remove_action( 'set_object_terms', array( __CLASS__, 'set_object_terms' ), PHP_INT_MAX );
