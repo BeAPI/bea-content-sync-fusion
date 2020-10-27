@@ -45,7 +45,7 @@ class BEA_CSF_Async {
 		$sync->fields    = maybe_unserialize( $sync->fields );
 
 		// Complete field with current receiver blog id
-		$sync->fields['_current_receiver_blog_id'] = $sync->receiver_blog_id;
+		$sync->fields['_current_receiver_blog_id'] = (int) $sync->receiver_blog_id;
 
 		// Explode filter for get object and method
 		$current_filter_data = explode( '/', $sync->current_filter );
