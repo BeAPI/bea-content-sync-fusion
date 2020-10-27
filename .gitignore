@@ -18,3 +18,4 @@ sftp-config.json
 *.pid
 vendor
 composer.lock
+/bin/

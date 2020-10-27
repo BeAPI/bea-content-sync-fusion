@@ -9,7 +9,13 @@
     }
   ],
   "type" : "wordpress-plugin",
+  "config": {
+    "optimize-autoloader": true,
+    "preferred-install": "dist",
+    "sort-packages": true
+  },
   "require" : {
+    "beapi/gutenberg-serializer": "^1.0",
     "composer/installers" : "~1.0"
   },
   "require-dev": {

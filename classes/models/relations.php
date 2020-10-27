@@ -55,7 +55,7 @@ class BEA_CSF_Relations {
 		$relation_id = self::exists( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id );
 		if ( $relation_id != false ) {
 			self::update_custom_flag( $relation_id, $custom_flag );
-			self::update_custom_flag( $relation_id, $custom_fields );
+			self::update_custom_fields( $relation_id, $custom_fields );
 
 			return $relation_id;
 		} else {

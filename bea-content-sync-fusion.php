@@ -3,7 +3,7 @@
 Plugin Name: BEA - Content Sync Fusion
 Plugin URI: https://beapi.fr
 Description: Manage content synchronization across a WordPress multisite.
-Version: 3.6
+Version: 3.7
 Author: Be API
 Author URI: http://beapi.fr
 Network: true
@@ -13,13 +13,17 @@ Copyright 2013-2020 - Be API Team (technique@beapi.fr)
 */
 
 // Plugin constants
-define( 'BEA_CSF_VERSION', '3.6' );
+define( 'BEA_CSF_VERSION', '3.7' );
 define( 'BEA_CSF_DB_VERSION', '1537418075' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
 
 if ( ! defined( 'BEA_CSF_MEDIA_FEATURE' ) ) {
 	define( 'BEA_CSF_MEDIA_FEATURE', true );
+}
+
+if ( file_exists( __DIR__ . '/vendor/autoload.php' ) ) {
+	require __DIR__ . '/vendor/autoload.php';
 }
 
 // Define the table relation variables
@@ -69,6 +73,7 @@ require BEA_CSF_DIR . 'classes/addons/revisionize.php';
 require BEA_CSF_DIR . 'classes/addons/polylang.php';
 require BEA_CSF_DIR . 'classes/addons/multisite-clone-duplicator.php';
 require BEA_CSF_DIR . 'classes/addons/woocommerce.php';
+require BEA_CSF_DIR . 'classes/addons/gutenberg.php';
 
 // Functions various
 require BEA_CSF_DIR . 'functions/api.php';
@@ -138,6 +143,7 @@ function init_bea_content_sync_fusion() {
 	new BEA_CSF_Addon_Multisite_Clone_Duplicator();
 	new BEA_CSF_Addon_WooCommerce();
 	new BEA_CSF_Addon_Polylang();
+	new BEA_CSF_Addon_Gutenberg();
 
 	// Admin
 	if ( is_admin() ) {
