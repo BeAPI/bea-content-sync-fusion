@@ -33,6 +33,15 @@ Compatible up to WordPress 5.x
  
 ## Changelog
 
+### 3.8
+
+* Fixed: fix terms synchronization, a bug introduced on 3.0.1
+* Added: Add tooling for quality (phpcs/cbf/psalm)
+* Added: New algorithm for reciprocal relations, or derivated relations
+* Changed: Update JavaScript libraries
+* Removed: old PHP libraries
+* Removed: custom flag & custom fields columns on relation object
+
 ### 3.7
 
 * Feature: full support of Gutenberg
