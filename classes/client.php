@@ -62,8 +62,7 @@ class BEA_CSF_Client {
 				__CLASS__,
 				'wp_update_attachment_metadata',
 			),
-			PHP_INT_MAX,
-			2
+			PHP_INT_MAX
 		);
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
