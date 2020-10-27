@@ -51,6 +51,7 @@ define( 'BEA_CSF_DIR', plugin_dir_path( __FILE__ ) );
 // Plugin various
 require BEA_CSF_DIR . 'classes/plugin.php';
 require BEA_CSF_DIR . 'classes/client.php';
+require BEA_CSF_DIR . 'classes/client-relations.php';
 require BEA_CSF_DIR . 'classes/multisite.php';
 require BEA_CSF_DIR . 'classes/media.php';
 require BEA_CSF_DIR . 'classes/seo.php';
@@ -124,8 +125,8 @@ function init_bea_content_sync_fusion() {
 
 	// Server
 	new BEA_CSF_Client();
+	new BEA_CSF_Client_Relations();
 	new BEA_CSF_Multisite();
-	new BEA_CSF_Relations();
 	new BEA_CSF_SEO();
 	new BEA_CSF_Query();
 
