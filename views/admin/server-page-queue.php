@@ -2,7 +2,6 @@
 	<h2><?php _e( 'Content Sync: Queue', 'bea-content-sync-fusion' ); ?></h2>
 
 	<?php
-	global $wpdb;
 	$nbqueue = BEA_CSF_Async::get_counter();
 
 	echo '<p>' . sprintf( __( 'Cron process %1$d items by %2$d items', 'bea-content-sync-fusion' ), BEA_CSF_CRON_QTY, BEA_CSF_CRON_QTY ) . '</p>';
@@ -22,16 +21,16 @@
 		</form>
 		<?php
 	}
-	if ( isset( $_GET['message'] ) && $_GET['message'] == 'deleted' ) {
+	if ( isset( $_GET['message'] ) && $_GET['message'] === 'deleted' ) {
 		echo '<p>' . sprintf( __( 'The file %s has been deleted', 'bea-content-sync-fusion' ), $lock_file ) . '</p>';
 	}
 
 	// Maintenance
-	$nb_queue_maintenance = $wpdb->get_var( 'SELECT COUNT(id) as nbqueue FROM ' . $GLOBALS['wpdb']->bea_csf_queue_maintenance );
-	if ( '0' != $nb_queue_maintenance ) {
+	global $wpdb;
+	$nb_queue_maintenance = (int) $wpdb->get_var( 'SELECT COUNT(id) as nbqueue FROM ' . $GLOBALS['wpdb']->bea_csf_queue_maintenance );
+	if ( $nb_queue_maintenance > 0 ) {
 		echo '<p>' . __( 'Number of items in the queue of maintenance : ', 'bea-content-sync-fusion' ) . $nb_queue_maintenance . '</p>';
 	}
-
 	?>
 
 	<h3><?php _e( 'For debug only (30 items only)', 'bea-content-sync-fusion' ); ?></h3>

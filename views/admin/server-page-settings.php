@@ -22,7 +22,7 @@
 			</thead>
 			<tbody id="the-list" class="list:clients">
 			<?php
-			if ( $registered_syncs == false || empty( $registered_syncs ) ) :
+			if ( $registered_syncs === false || empty( $registered_syncs ) ) :
 				echo '<tr><td colspan="9">' . sprintf( __( 'No synchronization exists. Want to <a href="%s">create one</a>?', 'bea-content-sync-fusion' ), network_admin_url( 'admin.php?page=' . 'bea-csf-add' ) ) . '</td></tr>';
 			else :
 				$class = 'alternate';

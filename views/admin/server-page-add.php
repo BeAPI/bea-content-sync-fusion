@@ -1,5 +1,5 @@
 <div class="wrap">
-	<?php if ( $edit == true ) : ?>
+	<?php if ( $edit === true ) : ?>
 		<h2><?php _e( 'Content Sync: Edit', 'bea-content-sync-fusion' ); ?></h2>
 	<?php else : ?>
 		<h2><?php _e( 'Content Sync: Add', 'bea-content-sync-fusion' ); ?></h2>
