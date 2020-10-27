@@ -1,7 +1,7 @@
 {
   "name": "bea/bea-content-sync-fusion",
   "description": "Manage content synchronisation across a WordPress Multisite.",
-  "license": "GPL-2.0",
+  "license": "GPL-2.0-or-later",
   "authors": [
     {
       "name": "Be API",
