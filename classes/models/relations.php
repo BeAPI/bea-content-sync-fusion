@@ -235,15 +235,14 @@ class BEA_CSF_Relations {
 	 * @author Alexandre Sadowski
 	 */
 	public static function get_object_for_any( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id, $receiver_id ) {
-		$local_id = self::get_object_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id );
+		$result_id = self::get_object_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id );
+		if ( $result_id > 0 ) {
+			return $result_id;
+		}
 
-		if ( ! empty( $local_id ) && (int) $local_id->receiver_id > 0 ) {
-			return (int) $local_id->receiver_id;
-		} else {
-			$local_id = self::get_object_id_for_emitter( $type, $receiver_blog_id, $emitter_blog_id, $receiver_id );
-			if ( ! empty( $local_id ) && (int) $local_id->emitter_id > 0 ) {
-				return (int) $local_id->emitter_id;
-			}
+		$result_id = self::get_object_id_for_emitter( $type, $receiver_blog_id, $emitter_blog_id, $receiver_id );
+		if ( $result_id > 0 ) {
+			return $result_id;
 		}
 
 		return false;
@@ -255,7 +254,7 @@ class BEA_CSF_Relations {
 	 * @param int $receiver_blog_id
 	 * @param int $emitter_id
 	 *
-	 * @return mixed
+	 * @return int
 	 * @author Alexandre Sadowski
 	 */
 	public static function get_object_id_for_receiver( $types, $emitter_blog_id, $receiver_blog_id, $emitter_id ) {
@@ -266,7 +265,7 @@ class BEA_CSF_Relations {
 		}, (array) $types );
 
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d", $emitter_blog_id, $receiver_blog_id, $emitter_id ) );
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d", $emitter_blog_id, $receiver_blog_id, $emitter_id ) );
 	}
 
 	/**
@@ -275,7 +274,7 @@ class BEA_CSF_Relations {
 	 * @param int $receiver_blog_id
 	 * @param int $receiver_id
 	 *
-	 * @return mixed
+	 * @return int
 	 * @author Alexandre Sadowski
 	 */
 	public static function get_object_id_for_emitter( $types, $emitter_blog_id, $receiver_blog_id, $receiver_id ) {
@@ -286,7 +285,7 @@ class BEA_CSF_Relations {
 		}, (array) $types );
 
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %d", $emitter_blog_id, $receiver_blog_id, $receiver_id ) );
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %d", $emitter_blog_id, $receiver_blog_id, $receiver_id ) );
 	}
 
 	/**
