@@ -144,41 +144,71 @@ class BEA_CSF_Admin_Metaboxes {
 	 */
 	public static function add_meta_boxes( $post_type, $post ) {
 		// Is synchronized content and media ? => not display metabox
-		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array(
-			'posttype',
-			'attachment',
-		), get_current_blog_id(), $post->ID );
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized(
+			array(
+				'posttype',
+				'attachment',
+			),
+			get_current_blog_id(),
+			$post->ID
+		);
 		if ( ! empty( $emitter_relation ) && 'attachment' === $post_type ) {
 			return false;
 		}
 
 		// Get syncs for current post_type and mode set to "auto"
-		$syncs_with_auto_state = BEA_CSF_Synchronizations::get( array(
-			'post_type' => $post_type,
-			'mode'      => 'auto',
-			'emitters'  => get_current_blog_id(),
-		), 'AND', false, true );
+		$syncs_with_auto_state = BEA_CSF_Synchronizations::get(
+			array(
+				'post_type' => $post_type,
+				'mode'      => 'auto',
+				'emitters'  => get_current_blog_id(),
+			),
+			'AND',
+			false,
+			true
+		);
 		if ( ! empty( $syncs_with_auto_state ) ) {
-			add_meta_box( BEA_CSF_OPTION . 'metabox-auto', __( 'Synchronization (auto)', 'bea-content-sync-fusion' ), array(
-				__CLASS__,
-				'metabox_content_auto',
-			), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_auto_state ) );
+			add_meta_box(
+				BEA_CSF_OPTION . 'metabox-auto',
+				__( 'Synchronization (auto)', 'bea-content-sync-fusion' ),
+				array(
+					__CLASS__,
+					'metabox_content_auto',
+				),
+				$post_type,
+				'side',
+				'low',
+				array( 'syncs' => $syncs_with_auto_state )
+			);
 		}
 
 		// Get syncs for current post_type and mode set to "manual"
-		$syncs_with_manual_state = BEA_CSF_Synchronizations::get( array(
-			'post_type' => $post_type,
-			'mode'      => 'manual',
-			'emitters'  => get_current_blog_id(),
-		), 'AND', false, true );
+		$syncs_with_manual_state = BEA_CSF_Synchronizations::get(
+			array(
+				'post_type' => $post_type,
+				'mode'      => 'manual',
+				'emitters'  => get_current_blog_id(),
+			),
+			'AND',
+			false,
+			true
+		);
 		if ( ! empty( $syncs_with_manual_state ) ) {
 			// Can allow filter receivers site
-			$syncs_with_manual_state = apply_filters('bea_csf_syncs_with_manual_state_post', $syncs_with_manual_state);
+			$syncs_with_manual_state = apply_filters( 'bea_csf_syncs_with_manual_state_post', $syncs_with_manual_state );
 
-			add_meta_box( BEA_CSF_OPTION . 'metabox-manual', __( 'Synchronization (manual)', 'bea-content-sync-fusion' ), array(
-				__CLASS__,
-				'metabox_content_manual',
-			), $post_type, 'side', 'low', array( 'syncs' => $syncs_with_manual_state ) );
+			add_meta_box(
+				BEA_CSF_OPTION . 'metabox-manual',
+				__( 'Synchronization (manual)', 'bea-content-sync-fusion' ),
+				array(
+					__CLASS__,
+					'metabox_content_manual',
+				),
+				$post_type,
+				'side',
+				'low',
+				array( 'syncs' => $syncs_with_manual_state )
+			);
 		}
 
 		return true;
@@ -241,7 +271,7 @@ class BEA_CSF_Admin_Metaboxes {
 		$sync_names       = array();
 		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
 			$sync_names[] = $sync_obj->get_field( 'label' );
-			
+
 			if ( $sync_obj->get_field( 'status' ) === 'user_selection' ) {
 				$show_blog_status = true;
 			}

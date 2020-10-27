@@ -18,11 +18,16 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 		$current_network = get_network();
 
 		$selects = array();
-		foreach ( get_sites( array( 'network_id' => $current_network->id, 'number' => 99999999 ) ) as $blog ) {
+		foreach ( get_sites(
+			array(
+				'network_id' => $current_network->id,
+				'number' => 99999999,
+			)
+		) as $blog ) {
 			switch_to_blog( $blog->blog_id );
-			
+
 			// Table exists ?
-			if( $wpdb->get_var("SHOW TABLES LIKE '$wpdb->postmeta'") != $wpdb->postmeta ) {
+			if ( $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->postmeta'" ) != $wpdb->postmeta ) {
 				restore_current_blog();
 				continue;
 			}
@@ -38,9 +43,9 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 		}
 
 		// Make an union, group doublons with concat
-		$query = " SELECT post_id, meta_value, blog_id FROM (  ";
-		$query .= implode( " UNION ALL ", $selects );
-		$query .= " ) AS wp ";
+		$query = ' SELECT post_id, meta_value, blog_id FROM (  ';
+		$query .= implode( ' UNION ALL ', $selects );
+		$query .= ' ) AS wp ';
 
 		return $wpdb->get_results( $query );
 	}
@@ -82,6 +87,10 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 	}
 }
 
-WP_CLI::add_command( 'content-sync-fusion migration', 'BEA_CSF_Cli_Migration', array(
-	'shortdesc' => __( 'Allow to migrate old relation structure (meta data) to relations tables for the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
-) );
+WP_CLI::add_command(
+	'content-sync-fusion migration',
+	'BEA_CSF_Cli_Migration',
+	array(
+		'shortdesc' => __( 'Allow to migrate old relation structure (meta data) to relations tables for the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
+	)
+);

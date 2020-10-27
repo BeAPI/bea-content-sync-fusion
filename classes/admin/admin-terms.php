@@ -53,8 +53,8 @@ class BEA_CSF_Admin_Terms {
 		}
 
 		if ( isset( $_POST['term_emitter'] ) &&
-		     isset( $_POST['term_emitter']['blog_id'] ) && intval( $_POST['term_emitter']['blog_id'] ) > 0 &&
-		     isset( $_POST['term_emitter']['term_id'] ) && intval( $_POST['term_emitter']['term_id'] ) > 0
+			 isset( $_POST['term_emitter']['blog_id'] ) && intval( $_POST['term_emitter']['blog_id'] ) > 0 &&
+			 isset( $_POST['term_emitter']['term_id'] ) && intval( $_POST['term_emitter']['term_id'] ) > 0
 		) {
 
 			update_term_meta( $term_id, '_origin_key', $_POST['term_emitter']['blog_id'] . ':' . $_POST['term_emitter']['term_id'] );

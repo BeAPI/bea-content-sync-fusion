@@ -14,10 +14,15 @@ class BEA_CSF_Client {
 
 		// Attachments crop
 		add_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX, 5 );
-		add_filter( 'wp_update_attachment_metadata', array(
-			__CLASS__,
-			'wp_update_attachment_metadata'
-		), PHP_INT_MAX, 2 );
+		add_filter(
+			'wp_update_attachment_metadata',
+			array(
+				__CLASS__,
+				'wp_update_attachment_metadata',
+			),
+			PHP_INT_MAX,
+			2
+		);
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
@@ -51,10 +56,15 @@ class BEA_CSF_Client {
 
 		// Attachments crop
 		remove_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX );
-		remove_filter( 'wp_update_attachment_metadata', array(
-			__CLASS__,
-			'wp_update_attachment_metadata'
-		), PHP_INT_MAX, 2 );
+		remove_filter(
+			'wp_update_attachment_metadata',
+			array(
+				__CLASS__,
+				'wp_update_attachment_metadata',
+			),
+			PHP_INT_MAX,
+			2
+		);
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
@@ -212,23 +222,35 @@ class BEA_CSF_Client {
 		}
 
 		// Auto Sync - Exclude meta ?
-		$is_excluded_from_sync = (boolean) get_post_meta( $post->ID, '_exclude_from_sync', true );
+		$is_excluded_from_sync = (bool) get_post_meta( $post->ID, '_exclude_from_sync', true );
 
 		// Manual sync - Selected receivers
 		$_post_receivers = (array) get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers', true );
 
 		// Allow 3rd plugin manipulation for post_status
-		$allowed_publish_status = apply_filters( 'bea/csf/client/allowed_publish_status', [
-			'publish',
-			'future',
-			'offline',
-			'private',
-		], $new_status, $old_status, $post );
-		$allowed_delete_status  = apply_filters( 'bea/csf/client/allowed_delete_status', [
-			'draft',
-			'trash',
-			'pending',
-		], $old_status, $new_status, $post );
+		$allowed_publish_status = apply_filters(
+			'bea/csf/client/allowed_publish_status',
+			[
+				'publish',
+				'future',
+				'offline',
+				'private',
+			],
+			$new_status,
+			$old_status,
+			$post
+		);
+		$allowed_delete_status  = apply_filters(
+			'bea/csf/client/allowed_delete_status',
+			[
+				'draft',
+				'trash',
+				'pending',
+			],
+			$old_status,
+			$new_status,
+			$post
+		);
 
 		// Ignore post status:  auto-draft, inherit
 		// See: https://codex.wordpress.org/Post_Status

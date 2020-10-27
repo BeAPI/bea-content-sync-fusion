@@ -10,7 +10,7 @@ class BEA_CSF_Addon_Gutenberg {
 	 */
 	public function __construct() {
 		if ( class_exists( 'WP_Block_Type' ) ) {
-			add_filter( 'bea_csf_client_PostType_merge_data_to_transfer', [ $this, 'bea_csf_client_data_to_transfer', ], 10, 2 );
+			add_filter( 'bea_csf_client_PostType_merge_data_to_transfer', [ $this, 'bea_csf_client_data_to_transfer' ], 10, 2 );
 		}
 	}
 
@@ -63,7 +63,7 @@ class BEA_CSF_Addon_Gutenberg {
 			$block['attrs']        = $this->translate_block_attributes( $block['attrs'], $block['blockName'], $emitter_blog_id, $receiver_blog_id );
 			$block['innerContent'] = $this->translate_block_content( $block['innerContent'], $block['blockName'], $emitter_blog_id, $receiver_blog_id );
 		}
-		unset($block);
+		unset( $block );
 
 		return $blocks;
 	}

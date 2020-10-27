@@ -26,7 +26,7 @@ class BEA_CSF_Relations {
 			}
 		}
 
-		return self::insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id);
+		return self::insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id );
 	}
 
 	/**
@@ -50,7 +50,7 @@ class BEA_CSF_Relations {
 				'emitter_blog_id'  => $emitter_blog_id,
 				'emitter_id'       => $emitter_id,
 				'receiver_blog_id' => $receiver_blog_id,
-				'receiver_id'      => $receiver_id
+				'receiver_id'      => $receiver_id,
 			),
 			array( '%s', '%d', '%d', '%d', '%d' )
 		);
@@ -104,16 +104,18 @@ class BEA_CSF_Relations {
 
 		/** @var WPDB $wpdb */
 
-		$wpdb->delete( $wpdb->bea_csf_relations,
-		               array(
-			               'emitter_blog_id' => $blog_id
-		               ),
-		               array( '%d' ) );
+		$wpdb->delete(
+			$wpdb->bea_csf_relations,
+			array(
+				'emitter_blog_id' => $blog_id,
+			),
+			array( '%d' )
+		);
 
 		$wpdb->delete(
 			$wpdb->bea_csf_relations,
 			array(
-				'receiver_blog_id' => $blog_id
+				'receiver_blog_id' => $blog_id,
 			),
 			array( '%d' )
 		);
@@ -139,7 +141,7 @@ class BEA_CSF_Relations {
 			array(
 				'type'            => $type,
 				'emitter_blog_id' => $emitter_blog_id,
-				'emitter_id'      => $emitter_id
+				'emitter_id'      => $emitter_id,
 			),
 			array( '%s', '%d', '%d' )
 		);
@@ -302,12 +304,14 @@ class BEA_CSF_Relations {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
-		return (int) $wpdb->get_var( $wpdb->prepare(
-			"SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . " ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d",
-			$emitter_blog_id,
-			$receiver_blog_id,
-			$emitter_id
-		) );
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . ' ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d',
+				$emitter_blog_id,
+				$receiver_blog_id,
+				$emitter_id
+			)
+		);
 	}
 
 	/**
@@ -325,11 +329,14 @@ class BEA_CSF_Relations {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
-		return (int) $wpdb->get_var( $wpdb->prepare(
-			"SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . " ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %d",
-			$emitter_blog_id,
-			$receiver_blog_id,
-			$receiver_id ) );
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . ' ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %d',
+				$emitter_blog_id,
+				$receiver_blog_id,
+				$receiver_id
+			)
+		);
 	}
 
 	/**
@@ -346,11 +353,13 @@ class BEA_CSF_Relations {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare(
-			"SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . " ) AND receiver_blog_id = %d AND receiver_id = %d",
-			$receiver_blog_id,
-			$receiver_id
-		) );
+		return $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . ' ) AND receiver_blog_id = %d AND receiver_id = %d',
+				$receiver_blog_id,
+				$receiver_id
+			)
+		);
 	}
 
 	/**
@@ -362,21 +371,22 @@ class BEA_CSF_Relations {
 
 		/** @var WPDB $wpdb */
 
-		return $wpdb->get_var( $wpdb->prepare(
-			"SELECT id
+		return $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT id
 			FROM $wpdb->bea_csf_relations
 			WHERE type = %s
 			AND emitter_blog_id = %d
 			AND emitter_id = %d
 			AND receiver_blog_id = %d
-			AND receiver_id = %d"
-			,
-			$type,
-			$emitter_blog_id,
-			$emitter_id,
-			$receiver_blog_id,
-			$receiver_id
-		) );
+			AND receiver_id = %d",
+				$type,
+				$emitter_blog_id,
+				$emitter_id,
+				$receiver_blog_id,
+				$receiver_id
+			)
+		);
 	}
 
 	/**

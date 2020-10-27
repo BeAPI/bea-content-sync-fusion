@@ -125,9 +125,14 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 	 */
 	public function site( $args, $params ) {
 		// Get syncs for current site
-		$has_syncs = BEA_CSF_Synchronizations::get( array(
-			'emitters' => get_current_blog_id(),
-		), 'AND', false, true );
+		$has_syncs = BEA_CSF_Synchronizations::get(
+			array(
+				'emitters' => get_current_blog_id(),
+			),
+			'AND',
+			false,
+			true
+		);
 		if ( empty( $has_syncs ) ) {
 			WP_CLI::warning( __( 'No sync data emission for this website', 'bea-content-sync-fusion' ) );
 
@@ -265,6 +270,10 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 
 }
 
-WP_CLI::add_command( 'content-sync-fusion resync', 'BEA_CSF_Cli_Resync', array(
-	'shortdesc' => __( 'All commands related "resync features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
-) );
+WP_CLI::add_command(
+	'content-sync-fusion resync',
+	'BEA_CSF_Cli_Resync',
+	array(
+		'shortdesc' => __( 'All commands related "resync features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
+	)
+);

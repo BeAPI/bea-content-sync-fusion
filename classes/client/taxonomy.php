@@ -36,31 +36,43 @@ class BEA_CSF_Client_Taxonomy {
 
 		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['term_id'], $data['term_id'] );
 		if ( ! empty( $local_term_id ) && (int) $local_term_id > 0 ) {
-			$new_term_id = wp_update_term( $local_term_id, $data['taxonomy'], array(
-				'name'        => $data['name'],
-				'description' => $data['description'],
-				'slug'        => $data['slug'],
-				'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
-			) );
+			$new_term_id = wp_update_term(
+				$local_term_id,
+				$data['taxonomy'],
+				array(
+					'name'        => $data['name'],
+					'description' => $data['description'],
+					'slug'        => $data['slug'],
+					'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+				)
+			);
 		} else {
-			$new_term_id = wp_insert_term( $data['name'], $data['taxonomy'], array(
-				'description' => $data['description'],
-				'slug'        => $data['slug'],
-				'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+			$new_term_id = wp_insert_term(
+				$data['name'],
+				$data['taxonomy'],
+				array(
+					'description' => $data['description'],
+					'slug'        => $data['slug'],
+					'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
 
-			) );
+				)
+			);
 
 			// try to manage error when term already exist with the same name !
 			if ( is_wp_error( $new_term_id ) && 'term_exists' === $new_term_id->get_error_code() ) {
 
 				$term_exists_result = term_exists( $data['name'], $data['taxonomy'], $data['parent'] );
 				if ( false !== $term_exists_result ) {
-					$new_term_id = wp_update_term( $term_exists_result['term_id'], $data['taxonomy'], array(
-						'name'        => $data['name'],
-						'description' => $data['description'],
-						'slug'        => $data['slug'],
-						'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
-					) );
+					$new_term_id = wp_update_term(
+						$term_exists_result['term_id'],
+						$data['taxonomy'],
+						array(
+							'name'        => $data['name'],
+							'description' => $data['description'],
+							'slug'        => $data['slug'],
+							'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+						)
+					);
 					update_term_meta( $term_exists_result['term_id'], 'already_exists', 1 );
 				}
 			}

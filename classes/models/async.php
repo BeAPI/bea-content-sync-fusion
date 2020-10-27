@@ -59,10 +59,14 @@ class BEA_CSF_Async {
 		switch_to_blog( $blog_id );
 
 		// Get data from SERVER class
-		$data_to_transfer = call_user_func( array(
-			'BEA_CSF_Server_' . $object,
-			$method
-		), $sync->hook_data, $sync->fields );
+		$data_to_transfer = call_user_func(
+			array(
+				'BEA_CSF_Server_' . $object,
+				$method,
+			),
+			$sync->hook_data,
+			$sync->fields
+		);
 
 		if ( false === $data_to_transfer ) {
 			// Remove from queue
@@ -173,11 +177,19 @@ class BEA_CSF_Async {
 		$current_filter_data[2] = '%'; // Wildcard SQL for remove all kind of action
 		$current_filter         = implode( '/', $current_filter_data );
 
-		return $wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->bea_csf_queue
+		return $wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM $wpdb->bea_csf_queue
 			WHERE `type` = %s
 			AND `hook_data` = %s
 			AND `current_filter` LIKE %s
-			AND `receiver_blog_id` = %d", $type, $hook_data, $current_filter, $receiver_blog_id ) );
+			AND `receiver_blog_id` = %d",
+				$type,
+				$hook_data,
+				$current_filter,
+				$receiver_blog_id
+			)
+		);
 	}
 
 	/**

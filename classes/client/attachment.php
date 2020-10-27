@@ -87,7 +87,6 @@ class BEA_CSF_Client_Attachment {
 
 		}
 
-
 		// Append to relations table
 		BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $new_media_id );
 

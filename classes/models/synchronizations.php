@@ -57,7 +57,7 @@ class BEA_CSF_Synchronizations {
 
 		$operator = strtoupper( $operator );
 		$count    = count( $args );
-		
+
 		$filtered = array();
 		/** @var BEA_CSF_Synchronization $obj */
 		foreach ( $list as $key => $obj ) {
@@ -67,9 +67,9 @@ class BEA_CSF_Synchronizations {
 
 				$obj_value = $obj->get_field( $m_key );
 				if ( $obj_value == $m_value
-				     || ( $in_array === true && is_array( $obj_value ) && in_array( $m_value, (array) $obj_value ) )
-				     || ( $in_array === true && is_array( $m_value ) && in_array( $obj_value, (array) $m_value ) )
-				     || ( $in_array === true && ( is_array( $m_value ) && is_array( $obj_value ) ) && array_intersect( $obj_value, $m_value ) )
+					 || ( $in_array === true && is_array( $obj_value ) && in_array( $m_value, (array) $obj_value ) )
+					 || ( $in_array === true && is_array( $m_value ) && in_array( $obj_value, (array) $m_value ) )
+					 || ( $in_array === true && ( is_array( $m_value ) && is_array( $obj_value ) ) && array_intersect( $obj_value, $m_value ) )
 				) {
 					$matched ++;
 				}
@@ -131,7 +131,7 @@ class BEA_CSF_Synchronizations {
 			'mode'      => 'auto', // manual OR auto
 			'status'    => 'publish', // publish OR pending
 			'emitters'  => array(),
-			'receivers' => array()
+			'receivers' => array(),
 		);
 		$args         = wp_parse_args( $args, $default_args );
 
@@ -307,13 +307,16 @@ class BEA_CSF_Synchronizations {
 		}
 
 		// Sort by network id then blog_id
-		uasort( $return_sites, function ( $a, $b ) {
-			if ( $a['network_id'] == $b ['network_id'] ) {
-				return ( $a['blog_id'] < $b ['blog_id'] ) ? - 1 : 1;
-			}
+		uasort(
+			$return_sites,
+			function ( $a, $b ) {
+				if ( $a['network_id'] == $b ['network_id'] ) {
+					return ( $a['blog_id'] < $b ['blog_id'] ) ? - 1 : 1;
+				}
 
-			return ( $a['network_id'] < $b ['network_id'] ) ? - 1 : 1;
-		} );
+				return ( $a['network_id'] < $b ['network_id'] ) ? - 1 : 1;
+			}
+		);
 
 		/**
 		 * Filter the returned formatted sites.
