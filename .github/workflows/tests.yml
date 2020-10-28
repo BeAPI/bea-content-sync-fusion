@@ -11,12 +11,20 @@ jobs:
     steps:
     - name: "Checkout code"
       uses: actions/checkout@v2
-      run :
-        - wget https://files.devwithlando.io/lando-stable.deb
-        - dpkg -i lando-stable.deb
-        - lando start
-        - lando setup
-        - lando test-unit
-        - lando test-wpunit
-        - lando test-acceptance
-        - lando test-functional
+
+    - name: "Install Lando"
+      run: |
+        wget https://files.devwithlando.io/lando-stable.deb
+        dpkg -i lando-stable.deb
+
+    - name: "Setup Env"
+      run: |
+        lando start
+        lando setup
+
+    - name: "Run tests"
+      run: |
+        lando test-unit
+        lando test-wpunit
+        lando test-acceptance
+        lando test-functional
