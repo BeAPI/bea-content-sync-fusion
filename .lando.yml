@@ -35,3 +35,19 @@ tooling:
       - wp site create --slug=site-3 --title="Site 3"
       - wp site create --slug=site-4 --title="Site 4"
       - cp /app/tests/bin/htaccess /app/wordpress/.htaccess
+  test-unit:
+      service: appserver
+      cmd: composer test-unit
+      description: Run our PHPunit tests
+  test-wpunit:
+      service: appserver
+      cmd: composer test-wpunit
+      description: Run our wpunit tests
+  test-acceptance:
+      service: appserver
+      cmd: composer test-acceptance
+      description: Run our acceptance tests
+  test-functional:
+      service: appserver
+      cmd: composer test-functional
+      description: Run our functional tests
