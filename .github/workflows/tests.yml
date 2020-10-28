@@ -13,17 +13,17 @@ jobs:
       uses: actions/checkout@v2
 
     - name: "Install Lando"
-      run: |
+    - run: |
         wget https://files.devwithlando.io/lando-stable.deb
         dpkg -i lando-stable.deb
 
     - name: "Setup Env"
-      run: |
+    - run: |
         lando start
         lando setup
 
     - name: "Run tests"
-      run: |
+    - run: |
         lando test-unit
         lando test-wpunit
         lando test-acceptance
