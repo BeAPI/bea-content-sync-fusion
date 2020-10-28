@@ -16,7 +16,7 @@ services:
       password: test
       database: test
 events:
-  # Runs composer install and a custom php script before app starts
+  # Runs composer install and a custom php script before your app starts
   pre-start:
   - appserver: cd $LANDO_MOUNT && composer install
 tooling:
@@ -24,8 +24,8 @@ tooling:
     service: appserver
     description: 'Setup env'
     cmd:
-      - if [ ! -f app/wordpress/wp-config.php ]; then wp db reset --yes; fi
-      - if [ ! -f app/wordpress/wp-config.php ]; then rm -f /app/wordpress/wp-config.php; fi
+      - if [ -f app/wordpress/wp-config.php ]; then wp db reset --yes; fi
+      - if [ -f app/wordpress/wp-config.php ]; then rm -f /app/wordpress/wp-config.php; fi
       - wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=database --path=/app/wordpress
       - wp core multisite-install --url=https://bea-content-sync-fusion.lndo.site --title="Content sync fusion" --admin_password=admin --admin_email=admin@admin.fr --path=wordpress --skip-email
       - wp plugin install --activate-network query-monitor
