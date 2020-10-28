@@ -10,7 +10,7 @@ class AdminMenuCest {
 
 		$I->loginAsAdmin();
 		$I->amOnPage( 'wp-admin/network/' );
-		$I->see( 'Content Synccc' );
+		$I->see( 'Content Sync' );
 
 	}
 }
