@@ -9,3 +9,4 @@ bin
 composer.json
 composer.lock
 README.md
+tests
