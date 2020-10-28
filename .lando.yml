@@ -16,8 +16,8 @@ services:
       password: test
       database: test
 events:
-  # Runs composer install and a custom php script after your app starts
-  post-start:
+  # Runs composer install and a custom php script before app starts
+  pre-start:
   - appserver: cd $LANDO_MOUNT && composer install
 tooling:
   setup:
