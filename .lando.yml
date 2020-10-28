@@ -1,0 +1,28 @@
+name: bea-content-sync-fusion
+recipe: wordpress
+config:
+  webroot: ./wordpress/
+services:
+  appserver:
+    run_as_root:
+      - ln -s /app/ /app/wordpress/wp-content/plugins/bea-content-sync-fusion
+events:
+  # Runs composer install and a custom php script after your app starts
+  post-start:
+  - appserver: cd $LANDO_MOUNT && composer install
+tooling:
+  setup:
+    service: appserver
+    description: 'Setup env'
+    cmd:
+      - wp db reset --yes
+      - rm -f /app/wordpress/wp-config.php
+      - wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=database --path=/app/wordpress
+      - wp core multisite-install --url=https://bea-content-sync-fusion.lndo.site --title="Content sync fusion" --admin_password=admin --admin_email=admin@admin.fr --path=wordpress --skip-email
+      - wp plugin install --activate-network query-monitor
+      - wp plugin activate --network bea-content-sync-fusion
+      - wp site create --slug=site-1 --title="Site 1"
+      - wp site create --slug=site-2 --title="Site 2"
+      - wp site create --slug=site-3 --title="Site 3"
+      - wp site create --slug=site-4 --title="Site 4"
+      - cp /app/tests/bin/htaccess /app/wordpress/.htaccess
