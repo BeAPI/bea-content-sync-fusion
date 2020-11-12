@@ -15,6 +15,19 @@ services:
       user: test
       password: test
       database: test
+  chromedriver:
+    type: compose
+    services:
+      image: robcherry/docker-chromedriver:latest
+      expose:
+        - "4444"
+      environment:
+        CHROMEDRIVER_WHITELISTED_IPS: ""
+        CHROMEDRIVER_URL_BASE: "/wd/hub"
+        CHROMEDRIVER_EXTRA_ARGS: "--ignore-certificate-errors --reduce-security-for-testing --enable-features=NetworkService"
+      security_opt:
+        - seccomp:unconfined
+      command: ["/usr/local/bin/supervisord", "-c", "/etc/supervisord.conf"]
 events:
   # Runs composer install and a custom php script before your app starts
   pre-start:
