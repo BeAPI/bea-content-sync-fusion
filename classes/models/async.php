@@ -87,8 +87,10 @@ class BEA_CSF_Async {
 			return false;
 		}
 
-		// Switch to receiver blog
-		switch_to_blog( $sync->receiver_blog_id );
+		// Restore to receiver blog
+		while ( ! empty( $GLOBALS['_wp_switched_stack'] ) ) {
+			restore_current_blog();
+		}
 
 		// Deactive hooks plugin
 		BEA_CSF_Client::unregister_hooks();
