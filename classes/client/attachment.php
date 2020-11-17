@@ -63,6 +63,9 @@ class BEA_CSF_Client_Attachment {
 		$data_for_post = $data;
 		unset( $data_for_post['taxonomies'], $data_for_post['terms'], $data_for_post['post_custom'], $data_for_post['metadata'] );
 
+		// Post data are expected to be escaped for wp_insert_post/wp_update_post
+		$data_for_post = wp_slash( $data_for_post );
+
 		// Merge or add ?
 		if ( ! empty( $current_media_id ) && (int) $current_media_id > 0 ) { // Edit, update only main fields
 
