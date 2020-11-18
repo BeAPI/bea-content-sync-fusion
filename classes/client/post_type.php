@@ -37,6 +37,9 @@ class BEA_CSF_Client_PostType {
 		$data_for_post = $data;
 		unset( $data_for_post['medias'], $data_for_post['terms'], $data_for_post['tags_input'], $data_for_post['post_category'] );
 
+		// Post data are expected to be escaped for wp_insert_post/wp_update_post
+		$data_for_post = wp_slash( $data_for_post );
+
 		// Merge post
 		if ( ! empty( $data['local_id'] ) && (int) $data['local_id'] > 0 ) {
 			$current_value = (int) get_post_meta( $data['local_id'], '_exclude_from_futur_sync', true );
