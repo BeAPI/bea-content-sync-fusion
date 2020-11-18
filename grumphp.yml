@@ -1,5 +1,5 @@
 # grumphp.yml
-parameters:
+grumphp:
   tasks:
     git_blacklist:
       keywords:

@@ -14,6 +14,8 @@
         <ignoreFiles>
             <directory name="vendor" />
             <directory name="assets" />
+            <directory name="tests" />
+            <directory name="wordpress" />
         </ignoreFiles>
     </projectFiles>
 
@@ -43,7 +45,6 @@
         <MissingReturnType errorLevel="info" />
         <MissingPropertyType errorLevel="info" />
         <InvalidDocblock errorLevel="info" />
-        <MisplacedRequiredParam errorLevel="info" />
 
         <PropertyNotSetInConstructor errorLevel="info" />
         <MissingConstructor errorLevel="info" />
