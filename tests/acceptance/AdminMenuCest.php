@@ -115,16 +115,15 @@ class AdminMenuCest {
 	 * @author Nicolas JUEN
 	 */
 	public function IsAdminRemoveWorking( AcceptanceTester $I ) {
-		$I->loginAsAdmin();
-
 		$I->wantToTest( 'Removing relation' );
 		$I->amOnPage( '/wp-admin/network/admin.php?page=bea-csf-edit' );
 
 		// Missing label
-		$I->click( '.row-actions .delete' );
-		$I->seeInPopup( "You are about to delete this sync 'Test' \n 'Cancel' to stop, 'OK' to delete." );
-		$I->acceptPopup();
+		$I->moveMouseOver( '#the-list tr' );
+		$href = $I->grabAttributeFrom( 'a.delete', 'href' );
 
+		$I->amOnUrl( $href );
+		$I->wait( 1 );
 		$I->see( 'No synchronization exists.' );
 	}
 }
