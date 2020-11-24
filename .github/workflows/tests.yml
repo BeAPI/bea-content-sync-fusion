@@ -37,7 +37,7 @@ jobs:
     - name: "Setup Env"
       run: |
         lando start
-        lando setup
+        lando setup-test-env
 
     - name: "Run tests"
       run: |
