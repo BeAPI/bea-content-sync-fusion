@@ -1,13 +1,26 @@
 name: bea-content-sync-fusion
 recipe: wordpress
+env_file:
+  - .env.testing
 config:
   webroot: ./wordpress/
-env:
-  - .env.testing
+proxy:
+  appserver:
+    - bea-content-sync-fusion.lndo.site
+  appserver_test:
+    - bea-content-sync-fusion-test.lndo.site
 services:
   appserver:
     run_as_root:
-      - ln -s /app/ /app/wordpress/wp-content/plugins/bea-content-sync-fusion
+      - rm -rf /app/wordpress/wp-content/plugins/bea-content-sync-fusion && ln -s /app/ /app/wordpress/wp-content/plugins/bea-content-sync-fusion
+  appserver_test:
+    type: php
+    via: apache
+    webroot: wordpress-test
+    ssl: true
+    sslExpose: true
+    run_as_root:
+       - rm -rf /app/wordpress-test/wp-content/plugins/bea-content-sync-fusion && ln -s /app/ /app/wordpress-test/wp-content/plugins/bea-content-sync-fusion
   test:
     type: mysql:5.7
     portforward: true
@@ -31,7 +44,13 @@ services:
 events:
   # Runs composer install and a custom php script before your app starts
   pre-start:
-  - appserver: cd $LANDO_MOUNT && composer install
+    - appserver: 
+      - cd $LANDO_MOUNT && composer install && cp -R wordpress wordpress-test
+  post-start:
+    - appserver:
+      - setup
+    - appserver_test:
+      - setup-test-env
 tooling:
   setup:
     service: appserver
@@ -44,7 +63,7 @@ tooling:
       - echo "➡️ Create config"
       - wp config create --dbname=wordpress --dbuser=wordpress --dbpass=wordpress --dbhost=database --path=/app/wordpress
       - echo "➡️ Install WP"
-      - wp core multisite-install --url=https://bea-content-sync-fusion.lndo.site --title="Content sync fusion" --admin_password=admin --admin_email=admin@admin.fr --path=wordpress --skip-email
+      - wp core multisite-install --url=https://bea-content-sync-fusion.lndo.site --title="Content sync fusion" --admin_password=admin --admin_email=admin@admin.fr --path=/app/wordpress --skip-email
       - echo "➡️ Install query monitor"
       - wp plugin install --activate-network query-monitor
       - echo "➡️ Activate plugin"
@@ -54,21 +73,34 @@ tooling:
       - wp site create --slug=site-2 --title="Site 2"
       - wp site create --slug=site-3 --title="Site 3"
       - wp site create --slug=site-4 --title="Site 4"
-      - echo "➡️ Copye .htaccess"
+      - echo "➡️ Copy .htaccess"
       - cp /app/tests/bin/htaccess /app/wordpress/.htaccess
+  setup-test-env:
+    service: appserver_test
+    description: 'Setup test env, only create the config file and .htaccess.'
+    cmd:
+      - echo "➡️ Reset DB ?"
+      - if [ -f /app/wordpress-test/wp-config.php ]; then echo "wp-config exists reset DB" && wp db reset --yes --path=/app/wordpress-test ; else echo "No wp-config.php, no reset" ; fi
+      - echo "➡️ Reset config"
+      - if [ -f /app/wordpress-test/wp-config.php ]; then echo "wp-config exists deleting it" && rm -f /app/wordpress-test/wp-config.php; else echo "No wp-config.php, no rm" ; fi
+      - echo "➡️ Create config"
+      - wp config create --dbname=test --dbuser=test --dbpass=test --dbhost=test --path=/app/wordpress-test
+      - wp core multisite-install --url=https://bea-content-sync-fusion-test.lndo.site --title="Content sync fusion TEST" --admin_password=admin --admin_email=admin@admin.fr --path=/app/wordpress-test --skip-email
+      - echo "➡️ Copy .htaccess"
+      - cp /app/tests/bin/htaccess /app/wordpress-test/.htaccess
   test-unit:
-      service: appserver
+      service: appserver_test
       cmd: composer test-unit
       description: Run our PHPunit tests
   test-wpunit:
-      service: appserver
+      service: appserver_test
       cmd: composer test-wpunit
       description: Run our wpunit tests
   test-acceptance:
-      service: appserver
+      service: appserver_test
       cmd: composer test-acceptance
       description: Run our acceptance tests
   test-functional:
-      service: appserver
+      service: appserver_test
       cmd: composer test-functional
       description: Run our functional tests
