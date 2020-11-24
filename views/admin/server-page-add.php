@@ -54,7 +54,7 @@
 			</p>
 		<?php endif; ?>
 
-		<p>
+		<p id="bea-csf-mode-block">
 			<label><?php _e( 'Mode', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat" name="sync[mode]">
 				<?php
@@ -73,7 +73,7 @@
 				class="description"><?php _e( 'Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
-		<p>
+		<p id="bea-csf-status-block">
 			<label><?php _e( 'Default status', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat" name="sync[status]">
 				<?php
@@ -93,7 +93,7 @@
 				class="description"><?php _e( 'When content is published and it is sent to other sites, it is automatically set to the status "published", you can also set the "pending" status and provide an opportunity for each admin to validate or not the content. (only for post type)', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
-		<p>
+		<p id="bea-csf-emitters-block">
 			<label><?php _e( 'Emitters', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat multiple-helper" name="sync[emitters][]" multiple="true">
 				<option
@@ -107,7 +107,7 @@
 				class="description"><?php _e( 'Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
-		<p>
+		<p id="bea-csf-receivers-block">
 			<label><?php _e( 'Receivers', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat multiple-helper" name="sync[receivers][]" multiple="true">
 				<option
