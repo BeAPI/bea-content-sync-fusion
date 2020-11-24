@@ -20,3 +20,5 @@ vendor
 composer.lock
 /bin/
 /wordpress/
+/wordpress-test/
+app
