@@ -46,11 +46,6 @@ events:
   pre-start:
     - appserver: 
       - cd $LANDO_MOUNT && composer install && cp -R wordpress wordpress-test
-  post-start:
-    - appserver:
-      - setup
-    - appserver_test:
-      - setup-test-env
 tooling:
   setup:
     service: appserver
