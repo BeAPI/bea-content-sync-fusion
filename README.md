@@ -33,6 +33,12 @@ Compatible up to WordPress 5.x
  
 ## Changelog
 
+### 3.8.1
+
+* Fixed: fix a possible bug with nested calls to switch_to_blog()
+* Fixed: fix a bug with escapging data & gurenberg (thanks @petitphp)
+* Added: Add tools for testing (thanks @Rahe)
+
 ### 3.8
 
 * Fixed: fix terms synchronization, a bug introduced on 3.0.1
