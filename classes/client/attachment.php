@@ -55,7 +55,7 @@ class BEA_CSF_Client_Attachment {
 
 		// Find local parent ?
 		if ( isset( $data['post_parent'] ) ) {
-			$current_parent_id   = BEA_CSF_Relations::get_object_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
+			$current_parent_id   = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
 			$data['post_parent'] = ! empty( $current_parent_id ) && (int) $current_parent_id > 0 ? $current_parent_id : 0;
 		}
 
