@@ -37,11 +37,15 @@ class BEA_CSF_Admin_Restrictions {
 	 * @param string $hook_suffix
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
-		if ( isset( $hook_suffix ) && in_array( $hook_suffix, array(
+		if ( isset( $hook_suffix ) && in_array(
+			$hook_suffix,
+			array(
 				'edit.php',
 				'edit-tags.php',
-				'post.php'
-			), true ) ) {
+				'post.php',
+			),
+			true
+		) ) {
 			wp_enqueue_script( 'bea-csf-admin-client', BEA_CSF_URL . 'assets/js/bea-csf-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
 			wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array(), BEA_CSF_VERSION, 'all' );
 		}
@@ -58,26 +62,42 @@ class BEA_CSF_Admin_Restrictions {
 	public static function post_row_actions( array $actions, WP_Post $post ) {
 		global $wpdb;
 
-		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( array(
-			'posttype',
-			'attachment',
-		), $wpdb->blogid, $post->ID );
+		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized(
+			array(
+				'posttype',
+				'attachment',
+			),
+			$wpdb->blogid,
+			$post->ID
+		);
 
 		// Get syncs model for current post_type, with any mode status (manual and auto)
-		$_has_syncs = BEA_CSF_Synchronizations::get( array(
-			'post_type' => $post->post_type,
-			'emitters'  => $wpdb->blogid,
-		), 'AND', false, true );
+		$_has_syncs = BEA_CSF_Synchronizations::get(
+			array(
+				'post_type' => $post->post_type,
+				'emitters'  => $wpdb->blogid,
+			),
+			'AND',
+			false,
+			true
+		);
 
 		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 			if ( 'pending' === $post->post_status ) {
 				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ) ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
 
 				if ( current_user_can( 'publish_post', $post->ID ) ) {
-					$actions['publish'] = '<a href="' . esc_url( wp_nonce_url( add_query_arg( array(
-							'action' => 'bea-csf-publish',
-							'ID'     => $post->ID,
-						) ), 'bea-csf-publish' ) ) . '">Publish</a>';
+					$actions['publish'] = '<a href="' . esc_url(
+						wp_nonce_url(
+							add_query_arg(
+								array(
+									'action' => 'bea-csf-publish',
+									'ID'     => $post->ID,
+								)
+							),
+							'bea-csf-publish'
+						)
+					) . '">Publish</a>';
 				}
 			}
 		}
@@ -129,40 +149,43 @@ class BEA_CSF_Admin_Restrictions {
 	/**
 	 * Block request for term edition
 	 *
-	 * @global string $pagenow
-	 * @return boolean
+	 * @return void
 	 */
 	public static function admin_init_check_term_edition() {
-		global $pagenow, $wpdb;
+		global $wpdb;
 
-		// Not an edit page ?
-		if ( 'edit-tags.php' !== $pagenow ) {
-			return false;
+		// Not an edit page / edit request / bulk delete
+		if ( empty( $_REQUEST['tag_ID'] ) && empty( $_REQUEST['tax_ID'] ) && empty( $_REQUEST['taxonomy'] ) && empty( $_REQUEST['delete_tags'] ) ) {
+			return;
+		}
+		$tags = [];
+		if ( ! empty( $_REQUEST['tag_ID'] ) ) {
+			$tags[] = $_REQUEST['tag_ID'];
+		} elseif ( ! empty( $_REQUEST['tax_ID'] ) ) {
+			$tags[] = $_REQUEST['tax_ID'];
+		} else {
+			$tags = (array) $_REQUEST['delete_tags'];
 		}
 
-		// No action on edit page ?
-		if ( ! isset( $_GET['taxonomy'] ) || ! isset( $_GET['tag_ID'] ) || 'edit' !== $_GET['action'] ) {
-			return false;
+		foreach ( $tags as $tag ) {
+			$current_term = get_term( (int) $tag, $_GET['taxonomy'] );
+
+			// Term not exist ?
+			if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
+				return;
+			}
+
+			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'taxonomy', $wpdb->blogid, $current_term->term_id );
+
+			// Get syncs model for current post_type, with any mode status (manual and auto)
+			$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
+
+			$_has_syncs = apply_filters( 'bea_csf_taxonomy_caps', $_has_syncs );
+
+			if ( null !== $_origin_key && empty( $_has_syncs ) ) {
+				wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
+			}
 		}
-
-		// Get current term with tag ID
-		$current_term = get_term( (int) $_GET['tag_ID'], $_GET['taxonomy'] );
-
-		// Term not exist ?
-		if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
-			return false;
-		}
-
-		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( 'taxonomy', $wpdb->blogid, $current_term->term_id );
-
-		// Get syncs model for current post_type, with any mode status (manual and auto)
-		$_has_syncs = BEA_CSF_Admin_Terms_Metaboxes::taxonomy_has_sync( $current_term->taxonomy );
-
-		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
-			wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
-		}
-
-		return true;
 	}
 
 	/**
@@ -189,16 +212,27 @@ class BEA_CSF_Admin_Restrictions {
 				return $caps;
 			}
 
-			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized( array(
-				'posttype',
-				'attachment',
-			), $wpdb->blogid, $post->ID );
+			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized(
+				array(
+					'posttype',
+					'attachment',
+				),
+				$wpdb->blogid,
+				$post->ID
+			);
 
 			// Get syncs model for current post_type, with any mode status (manual and auto)
-			$_has_syncs = BEA_CSF_Synchronizations::get( array(
-				'post_type' => $post->post_type,
-				'emitters'  => $wpdb->blogid,
-			), 'AND', false, true );
+			$_has_syncs = BEA_CSF_Synchronizations::get(
+				array(
+					'post_type' => $post->post_type,
+					'emitters'  => $wpdb->blogid,
+				),
+				'AND',
+				false,
+				true
+			);
+
+			$_has_syncs = apply_filters( 'bea_csf_post_caps', $_has_syncs );
 
 			if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 				$caps[] = 'do_not_allow';

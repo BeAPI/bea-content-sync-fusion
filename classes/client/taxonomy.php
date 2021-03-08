@@ -21,6 +21,16 @@ class BEA_CSF_Client_Taxonomy {
 			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
 		}
 
+		if ( ! isset( $data['term_id'] ) ) {
+			return new WP_Error( 'missing_term_id', 'Error - Missing a term ID for allow insertion.' );
+		}
+
+		$data = apply_filters( 'bea_csf/client/taxonomy/before_merge', $data, $sync_fields );
+
+		if ( false === $data || empty( $data ) ) {
+			return new WP_Error( 'empty_data', 'Error - exclude taxonomy to sync' );
+		}
+
 		// Define this variable for skip infinite sync when emetter and receiver are reciprocal
 		$_bea_origin_blog_id = $data['blogid'];
 
@@ -71,12 +81,16 @@ class BEA_CSF_Client_Taxonomy {
 				}
 
 				if ( false !== $term_exists_result ) {
-					$new_term_id = wp_update_term( $term_exists_result['term_id'], $data['taxonomy'], array(
-						'name'        => $data['name'],
-						'description' => $data['description'],
-						'slug'        => $data['slug'],
-						'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
-					) );
+					$new_term_id = wp_update_term(
+						$term_exists_result['term_id'],
+						$data['taxonomy'],
+						array(
+							'name'        => $data['name'],
+							'description' => $data['description'],
+							'slug'        => $data['slug'],
+							'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+						)
+					);
 					update_term_meta( $term_exists_result['term_id'], 'already_exists', 1 );
 				}
 			}

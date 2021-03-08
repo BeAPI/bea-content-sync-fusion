@@ -14,30 +14,30 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 * BEA_CSF_Addon_ACF_Exclusion constructor.
 	 */
 	public function __construct() {
-		if ( ! class_exists('acf') ) {
+		if ( ! class_exists( 'acf' ) ) {
 			return false;
 		}
 
 		// Fields
 		if ( apply_filters( 'bea/csf/acf-addon-exclusion/allow-fieds-exclusion', false ) !== false ) {
 
-			add_action( 'save_post', array(__CLASS__, 'save_post_fields'), 10, 1 );
-			add_action( 'acf/include_field_types', array(__CLASS__, 'acf_include_field_types'), 9999999 );
-			add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_fields'), 11, 3 );
-			add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_fields'), 11, 3 );
+			add_action( 'save_post', array( __CLASS__, 'save_post_fields' ), 10, 1 );
+			add_action( 'acf/include_field_types', array( __CLASS__, 'acf_include_field_types' ), 9999999 );
+			add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_fields' ), 11, 3 );
+			add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_fields' ), 11, 3 );
 
 		}
 
 		// Groups
-		add_action( 'save_post', array(__CLASS__, 'save_post_groups'), 10, 1 );
-		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_groups'), 10, 3 );
-		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_groups'), 10, 3 );
-		add_action( 'post_edit_form_tag', array(__CLASS__, 'post_edit_form_tag'), 1 );
+		add_action( 'save_post', array( __CLASS__, 'save_post_groups' ), 10, 1 );
+		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_groups' ), 10, 3 );
+		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_groups' ), 10, 3 );
+		add_action( 'post_edit_form_tag', array( __CLASS__, 'post_edit_form_tag' ), 1 );
 
 		// Flexible
-		add_action( 'save_post', array(__CLASS__, 'save_post_flexibles'), 10, 1 );
-		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_flexibles'), 10, 3 );
-		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(__CLASS__, 'filter_acf_flexibles'), 10, 3 );
+		add_action( 'save_post', array( __CLASS__, 'save_post_flexibles' ), 10, 1 );
+		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_flexibles' ), 10, 3 );
+		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_flexibles' ), 10, 3 );
 
 		return true;
 	}
@@ -50,12 +50,12 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	public static function save_post_fields( $post_id ) {
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
-		if ( ! isset( $_POST[ 'bea_csf_exclude_acf_fields_nonce' ] ) || ! wp_verify_nonce( $_POST[ 'bea_csf_exclude_acf_fields_nonce' ], plugin_basename( __FILE__ ) ) ) {
+		if ( ! isset( $_POST['bea_csf_exclude_acf_fields_nonce'] ) || ! wp_verify_nonce( $_POST['bea_csf_exclude_acf_fields_nonce'], plugin_basename( __FILE__ ) ) ) {
 			return false;
 		}
 
-		if ( isset($_POST['bea_csf_exclude_acf_fields']) ) {
-			$_POST['bea_csf_exclude_acf_fields'] = wp_unslash($_POST['bea_csf_exclude_acf_fields']);
+		if ( isset( $_POST['bea_csf_exclude_acf_fields'] ) ) {
+			$_POST['bea_csf_exclude_acf_fields'] = wp_unslash( $_POST['bea_csf_exclude_acf_fields'] );
 
 			update_post_meta( $post_id, 'bea_csf_exclude_acf_fields', $_POST['bea_csf_exclude_acf_fields'] );
 		} else {
@@ -73,12 +73,12 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	public static function save_post_groups( $post_id ) {
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
-		if ( ! isset( $_POST[ 'bea_csf_exclude_acf_group_nonce' ] ) || ! wp_verify_nonce( $_POST[ 'bea_csf_exclude_acf_group_nonce' ], plugin_basename( __FILE__ ) ) ) {
+		if ( ! isset( $_POST['bea_csf_exclude_acf_group_nonce'] ) || ! wp_verify_nonce( $_POST['bea_csf_exclude_acf_group_nonce'], plugin_basename( __FILE__ ) ) ) {
 			return false;
 		}
 
-		if ( isset($_POST['bea_csf_exclude_acf_group']) ) {
-			$_POST['bea_csf_exclude_acf_group'] = wp_unslash($_POST['bea_csf_exclude_acf_group']);
+		if ( isset( $_POST['bea_csf_exclude_acf_group'] ) ) {
+			$_POST['bea_csf_exclude_acf_group'] = wp_unslash( $_POST['bea_csf_exclude_acf_group'] );
 
 			update_post_meta( $post_id, 'bea_csf_exclude_acf_group', $_POST['bea_csf_exclude_acf_group'] );
 		} else {
@@ -96,12 +96,12 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	public static function save_post_flexibles( $post_id ) {
 		// verify this came from the our screen and with proper authorization,
 		// because save_post can be triggered at other times
-		if ( ! isset( $_POST[ 'bea_csf_exclude_acf_fields_flexible_nonce' ] ) || ! wp_verify_nonce( $_POST[ 'bea_csf_exclude_acf_fields_flexible_nonce' ], plugin_basename( __FILE__ ) ) ) {
+		if ( ! isset( $_POST['bea_csf_exclude_acf_fields_flexible_nonce'] ) || ! wp_verify_nonce( $_POST['bea_csf_exclude_acf_fields_flexible_nonce'], plugin_basename( __FILE__ ) ) ) {
 			return false;
 		}
 
-		if ( isset($_POST['bea_csf_exclude_acf_fields_flexible']) ) {
-			$_POST['bea_csf_exclude_acf_fields_flexible'] = wp_unslash($_POST['bea_csf_exclude_acf_fields_flexible']);
+		if ( isset( $_POST['bea_csf_exclude_acf_fields_flexible'] ) ) {
+			$_POST['bea_csf_exclude_acf_fields_flexible'] = wp_unslash( $_POST['bea_csf_exclude_acf_fields_flexible'] );
 
 			update_post_meta( $post_id, 'bea_csf_exclude_acf_fields_flexible', $_POST['bea_csf_exclude_acf_fields_flexible'] );
 		} else {
@@ -117,10 +117,10 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 * Hook all ACF fields registered
 	 */
 	public static function acf_include_field_types() {
-		foreach( acf_get_field_types() as $sections => $fields ) {
+		foreach ( acf_get_field_types() as $sections => $fields ) {
 			foreach ( $fields as $field_type => $field_label ) {
-				add_action('acf/render_field/type='.$field_type, array(__CLASS__, 'acf_render_field_before'), 8, 1 );
-				add_action('acf/render_field/type='.$field_type, array(__CLASS__, 'acf_render_field_after'), 10, 1 );
+				add_action( 'acf/render_field/type=' . $field_type, array( __CLASS__, 'acf_render_field_before' ), 8, 1 );
+				add_action( 'acf/render_field/type=' . $field_type, array( __CLASS__, 'acf_render_field_after' ), 10, 1 );
 			}
 		}
 	}
@@ -135,8 +135,8 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			return false;
 		}
 
-		if ( in_array($field['type'], array('flexible_content', 'repeater') ) ) {
-			self::build_html_checkbox( $field, __('Exclude this group from future synchro', 'bea-content-sync-fusion') );
+		if ( in_array( $field['type'], array( 'flexible_content', 'repeater' ) ) ) {
+			self::build_html_checkbox( $field, __( 'Exclude this group from future synchro', 'bea-content-sync-fusion' ) );
 		}
 
 		return true;
@@ -152,8 +152,8 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			return false;
 		}
 
-		if ( !in_array($field['type'], array('flexible_content', 'repeater') ) ) {
-			self::build_html_checkbox( $field, __('Exclude this field from future synchro', 'bea-content-sync-fusion') );
+		if ( ! in_array( $field['type'], array( 'flexible_content', 'repeater' ) ) ) {
+			self::build_html_checkbox( $field, __( 'Exclude this field from future synchro', 'bea-content-sync-fusion' ) );
 		}
 
 		return true;
@@ -180,7 +180,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		$current_excluded_items = get_post_meta( $post->ID, 'bea_csf_exclude_acf_fields', true );
 
 		// Show checkbox
-		echo '<label class="bea-csf-acf-exclusion"><input type="checkbox" '.checked(in_array($field['name'], (array) $current_excluded_items), true, false).' name="bea_csf_exclude_acf_fields[]" value="'.esc_attr($field['name']).'" />'.$label.'</label>';
+		echo '<label class="bea-csf-acf-exclusion"><input type="checkbox" ' . checked( in_array( $field['name'], (array) $current_excluded_items ), true, false ) . ' name="bea_csf_exclude_acf_fields[]" value="' . esc_attr( $field['name'] ) . '" />' . $label . '</label>';
 
 		// Call once time
 		wp_nonce_field( plugin_basename( __FILE__ ), 'bea_csf_exclude_acf_fields_nonce' );
@@ -204,7 +204,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		}
 
 		$current_excluded_groups = (array) get_post_meta( $local_id, 'bea_csf_exclude_acf_group', true );
-		if ( empty($current_excluded_groups) ) {
+		if ( empty( $current_excluded_groups ) ) {
 			return $data;
 		}
 
@@ -216,10 +216,12 @@ class BEA_CSF_Addon_ACF_Exclusion {
 
 		$fields = array();
 		foreach ( $groups as $group ) {
-			if ( !in_array($group['key'], $current_excluded_groups) ) continue;
+			if ( ! in_array( $group['key'], $current_excluded_groups ) ) {
+				continue;
+			}
 
 			$_fields = (array) acf_get_fields( $group );
-			foreach ($_fields as $_field ) {
+			foreach ( $_fields as $_field ) {
 				$fields[] = $_field;
 			}
 		}
@@ -233,8 +235,8 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		self::prepare_acf_fields( $fields );
 
 		// Loop on each meta
-		foreach( (array) $data['meta_data'] as $meta_key => $raw_meta_value ) {
-			if ( isset(self::$acf_fields[$raw_meta_value[0]]) ) {
+		foreach ( (array) $data['meta_data'] as $meta_key => $raw_meta_value ) {
+			if ( isset( self::$acf_fields[ $raw_meta_value[0] ] ) ) {
 				$meta_key_parent_to_delete = substr( $meta_key, 1 );
 				unset( $data['meta_data'][ $meta_key ], $data['meta_data'][ $meta_key_parent_to_delete ] );
 			}
@@ -259,7 +261,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		}
 
 		$current_excluded_items = (array) get_post_meta( $local_id, 'bea_csf_exclude_acf_fields_flexible', true );
-		if ( empty($current_excluded_items) ) {
+		if ( empty( $current_excluded_items ) ) {
 			return $data;
 		}
 
@@ -276,7 +278,9 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			}
 
 			// Invalid key name, skip
-			if ( empty($translated_acf_name) ) continue;
+			if ( empty( $translated_acf_name ) ) {
+				continue;
+			}
 
 			// Delete key that with the right prefix
 			foreach ( (array) $data['meta_data'] as $meta_key => $meta_value ) {
@@ -299,11 +303,11 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		foreach ( (array) $fields as $field ) {
 			self::$acf_fields[ $field['key'] ] = $field;
 
-			if (in_array($field['type'], array('flexible_content') ) ) { // Flexible is recursive structure with layouts
-				foreach( $field['layouts'] as $layout_field ) {
+			if ( in_array( $field['type'], array( 'flexible_content' ) ) ) { // Flexible is recursive structure with layouts
+				foreach ( $field['layouts'] as $layout_field ) {
 					self::prepare_acf_fields( $layout_field['sub_fields'] );
 				}
-			} elseif (in_array($field['type'], array('repeater') ) ) { // Repeater is recursive structure
+			} elseif ( in_array( $field['type'], array( 'repeater' ) ) ) { // Repeater is recursive structure
 				self::prepare_acf_fields( $field['sub_fields'] );
 			}
 		}
@@ -325,7 +329,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		}
 
 		$current_excluded_items = (array) get_post_meta( $local_id, 'bea_csf_exclude_acf_fields', true );
-		if ( empty($current_excluded_items) ) {
+		if ( empty( $current_excluded_items ) ) {
 			return $data;
 		}
 
@@ -333,19 +337,19 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		self::$meta_data = $data['meta_data'];
 
 		// Loop on each meta
-		foreach( (array) $data['meta_data'] as $meta_key => $raw_meta_value ) {
+		foreach ( (array) $data['meta_data'] as $meta_key => $raw_meta_value ) {
 
 			// Loop on each exclusion
-			foreach( $current_excluded_items as $current_excluded_item ) {
+			foreach ( $current_excluded_items as $current_excluded_item ) {
 				preg_match_all( '/\[(\w+)\]/is', $current_excluded_item, $matches );
 
 				if ( isset( $matches[1] ) && count( $matches[1] ) == 1 && $matches[1][0] == $raw_meta_value[0] ) { // Classic field
 
 					// Delete all metadata from flexible/repeater
 					$acf_field = acf_maybe_get_field( $raw_meta_value[0] );
-					if ( $acf_field != false && in_array($acf_field['type'], array('flexible_content', 'repeater') ) ) {
-						foreach( (array) $data['meta_data'] as $sub_meta_key => $sub_meta_value ) {
-							if ( !preg_match('/'.preg_quote($acf_field['name']) . '[\_]\d*[\_]/', $sub_meta_key) !== false ) {
+					if ( $acf_field != false && in_array( $acf_field['type'], array( 'flexible_content', 'repeater' ) ) ) {
+						foreach ( (array) $data['meta_data'] as $sub_meta_key => $sub_meta_value ) {
+							if ( ! preg_match( '/' . preg_quote( $acf_field['name'] ) . '[\_]\d*[\_]/', $sub_meta_key ) !== false ) {
 								continue;
 							}
 
@@ -369,9 +373,9 @@ class BEA_CSF_Addon_ACF_Exclusion {
 					if ( $meta_key == $translated_acf_name ) {
 						// Delete all metadata from flexible/repeater
 						$acf_field = acf_maybe_get_field( $matches[1][0] );
-						if ( $acf_field != false && in_array($acf_field['type'], array('flexible_content', 'repeater') ) ) {
-							foreach( (array) $data['meta_data'] as $sub_meta_key => $sub_meta_value ) {
-								if ( !preg_match('/'.preg_quote($acf_field['name']) . '[\_]\d*[\_]/', $sub_meta_key) !== false ) {
+						if ( $acf_field != false && in_array( $acf_field['type'], array( 'flexible_content', 'repeater' ) ) ) {
+							foreach ( (array) $data['meta_data'] as $sub_meta_key => $sub_meta_value ) {
+								if ( ! preg_match( '/' . preg_quote( $acf_field['name'] ) . '[\_]\d*[\_]/', $sub_meta_key ) !== false ) {
 									continue;
 								}
 
@@ -402,14 +406,14 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	 */
 	public static function get_acf_field_name( $acf_key, $translated_acf_name = '' ) {
 		// If not field_key, return as iteration into acf
-		if ( substr($acf_key, 0, 6) !== 'field_' ) {
+		if ( substr( $acf_key, 0, 6 ) !== 'field_' ) {
 			return '_' . $acf_key . '_';
 		}
 
-		foreach( self::$meta_data as $acf_name => $raw_meta_value ) {
-			if ( !empty($translated_acf_name) && $raw_meta_value[0] == $acf_key && strpos($acf_name, $translated_acf_name) !== false ) {
-				return str_replace($translated_acf_name, '', $acf_name);
-			} elseif ( empty($translated_acf_name) && $raw_meta_value[0] == $acf_key ) {
+		foreach ( self::$meta_data as $acf_name => $raw_meta_value ) {
+			if ( ! empty( $translated_acf_name ) && $raw_meta_value[0] == $acf_key && strpos( $acf_name, $translated_acf_name ) !== false ) {
+				return str_replace( $translated_acf_name, '', $acf_name );
+			} elseif ( empty( $translated_acf_name ) && $raw_meta_value[0] == $acf_key ) {
 				return $acf_name;
 			}
 		}
@@ -423,16 +427,16 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	public static function post_edit_form_tag() {
 		global $wp_meta_boxes;
 
-		if ( !isset($wp_meta_boxes) ) {
+		if ( ! isset( $wp_meta_boxes ) ) {
 			return false;
 		}
 
-		foreach( $wp_meta_boxes as &$_wp_meta_boxes ) { // Page
-			foreach( $_wp_meta_boxes as &$_0_wp_meta_boxes ) { // Context
-				foreach ($_0_wp_meta_boxes as &$_1_wp_meta_boxes ) { // Priority
-					foreach( $_1_wp_meta_boxes as $key => &$meta_box ) { // Metaboxes
-						if ( substr($key, 0, 9) == 'acf-group' && isset($meta_box['title']) ) {
-							$meta_box['title'] .= ' ' . self::get_html_checkbox_for_metabox( $meta_box, __('Exclude this group from sync', 'bea-content-sync-fusion') );
+		foreach ( $wp_meta_boxes as &$_wp_meta_boxes ) { // Page
+			foreach ( $_wp_meta_boxes as &$_0_wp_meta_boxes ) { // Context
+				foreach ( $_0_wp_meta_boxes as &$_1_wp_meta_boxes ) { // Priority
+					foreach ( $_1_wp_meta_boxes as $key => &$meta_box ) { // Metaboxes
+						if ( substr( $key, 0, 9 ) == 'acf-group' && isset( $meta_box['title'] ) ) {
+							$meta_box['title'] .= ' ' . self::get_html_checkbox_for_metabox( $meta_box, __( 'Exclude this group from sync', 'bea-content-sync-fusion' ) );
 						}
 					}
 				}
@@ -465,8 +469,8 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		// Get current checked items
 		$current_excluded_items = get_post_meta( $post->ID, 'bea_csf_exclude_acf_group', true );
 
-		$output = '<label class="bea-csf-acf-exclusion"><input type="checkbox" '.checked(in_array($acf_group_id, (array) $current_excluded_items), true, false).' name="bea_csf_exclude_acf_group[]" value="'.esc_attr($acf_group_id).'" />'.$label.'</label>';
-		$output .= wp_nonce_field( plugin_basename( __FILE__ ), 'bea_csf_exclude_acf_group_nonce', true, false  );
+		$output = '<label class="bea-csf-acf-exclusion"><input type="checkbox" ' . checked( in_array( $acf_group_id, (array) $current_excluded_items ), true, false ) . ' name="bea_csf_exclude_acf_group[]" value="' . esc_attr( $acf_group_id ) . '" />' . $label . '</label>';
+		$output .= wp_nonce_field( plugin_basename( __FILE__ ), 'bea_csf_exclude_acf_group_nonce', true, false );
 
 		return $output;
 	}
@@ -499,16 +503,16 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		$current_excluded_items = get_post_meta( $post->ID, 'bea_csf_exclude_acf_fields_flexible', true );
 
 		// Increment counter
-		if ( !isset($counter_flexible[$field['name']]) ) {
-			$counter_flexible[$field['name']] = -1;
+		if ( ! isset( $counter_flexible[ $field['name'] ] ) ) {
+			$counter_flexible[ $field['name'] ] = -1;
 		}
-		$counter_flexible[$field['name']]++;
+		$counter_flexible[ $field['name'] ]++;
 
 		// Build value with name + counter
-		$input_value = $field['name'].'['.$counter_flexible[$field['name']].']';
+		$input_value = $field['name'] . '[' . $counter_flexible[ $field['name'] ] . ']';
 
 		// Show checkbox
-		echo '<label class="bea-csf-acf-exclusion"><input type="checkbox" '.checked(in_array($input_value, (array) $current_excluded_items), true, false).' name="bea_csf_exclude_acf_fields_flexible[]" value="'.esc_attr($input_value).'" />'.$label.'</label>';
+		echo '<label class="bea-csf-acf-exclusion"><input type="checkbox" ' . checked( in_array( $input_value, (array) $current_excluded_items ), true, false ) . ' name="bea_csf_exclude_acf_fields_flexible[]" value="' . esc_attr( $input_value ) . '" />' . $label . '</label>';
 
 		// Call once time
 		wp_nonce_field( plugin_basename( __FILE__ ), 'bea_csf_exclude_acf_fields_flexible_nonce' );

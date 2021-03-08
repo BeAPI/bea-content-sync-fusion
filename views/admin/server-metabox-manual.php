@@ -18,7 +18,8 @@
 				</label>
 
 				<?php
-				if ( true === $show_blog_status ) : ?>
+				if ( true === $show_blog_status ) :
+					?>
 
 					<select name="post_receivers_status[<?php echo esc_attr( $blog['blog_id'] ); ?>]"
 							style="float:right;">

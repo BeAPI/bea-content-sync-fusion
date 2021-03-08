@@ -1,8 +1,8 @@
 <div class="wrap">
-	<?php if ( $edit == true ) : ?>
-		<h2><?php _e( "Content Sync: Edit", 'bea-content-sync-fusion' ); ?></h2>
-	<?php else: ?>
-		<h2><?php _e( "Content Sync: Add", 'bea-content-sync-fusion' ); ?></h2>
+	<?php if ( $edit === true ) : ?>
+		<h2><?php _e( 'Content Sync: Edit', 'bea-content-sync-fusion' ); ?></h2>
+	<?php else : ?>
+		<h2><?php _e( 'Content Sync: Add', 'bea-content-sync-fusion' ); ?></h2>
 	<?php endif; ?>
 
 
@@ -10,7 +10,7 @@
 		<p>
 			<label><?php _e( 'Label', 'bea-content-sync-fusion' ); ?></label>
 			<input type="text" name="sync[label]" class="widefat"
-			       value="<?php echo esc_attr( $current_sync->get_field( 'label' ) ); ?>"/>
+				   value="<?php echo esc_attr( $current_sync->get_field( 'label' ) ); ?>"/>
 			<span
 				class="description"><?php _e( 'The label of the synchronization is mainly used for the administration console.', 'bea-content-sync-fusion' ); ?></span>
 		</p>
@@ -57,12 +57,14 @@
 		<p>
 			<label><?php _e( 'Mode', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat" name="sync[mode]">
-				<?php foreach (
+				<?php
+				foreach (
 					array(
 						'manual' => __( 'Manual', 'bea-content-sync-fusion' ),
-						'auto'   => __( 'Automatic', 'bea-content-sync-fusion' )
+						'auto'   => __( 'Automatic', 'bea-content-sync-fusion' ),
 					) as $value => $label
-				) : ?>
+				) :
+					?>
 					<option
 						value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $current_sync->get_field( 'mode' ) ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
@@ -74,13 +76,15 @@
 		<p>
 			<label><?php _e( 'Default status', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat" name="sync[status]">
-				<?php foreach (
+				<?php
+				foreach (
 					array(
 						'publish' => __( 'Publish', 'bea-content-sync-fusion' ),
 						'pending' => __( 'Pending', 'bea-content-sync-fusion' ),
 						'user_selection'  => __( 'User selection\'s, only for manual mode', 'bea-content-sync-fusion' ),
 					) as $value => $label
-				) : ?>
+				) :
+					?>
 					<option
 						value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $current_sync->get_field( 'status' ) ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
@@ -92,8 +96,8 @@
 		<p>
 			<label><?php _e( 'Emitters', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat multiple-helper" name="sync[emitters][]" multiple="true">
-                <option
-                        value="all" <?php selected( in_array( 'all', $current_sync->get_field( 'emitters', true ) ), true ); ?>><?php echo esc_html( 'All' ); ?></option>
+				<option
+						value="all" <?php selected( in_array( 'all', $current_sync->get_field( 'emitters', true ) ), true ); ?>><?php echo esc_html( 'All' ); ?></option>
 				<?php foreach ( BEA_CSF_Synchronizations::get_sites_from_network() as $site ) : ?>
 					<option
 						value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'emitters', true ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
@@ -122,12 +126,12 @@
 
 			<?php if ( $edit == true ) : ?>
 				<input type="hidden" name="sync[id]"
-				       value="<?php echo esc_attr( $current_sync->get_field( 'id' ) ); ?>"/>
+					   value="<?php echo esc_attr( $current_sync->get_field( 'id' ) ); ?>"/>
 				<input type="submit" class="button-primary" name="update-bea-csf-settings"
-				       value="<?php esc_attr_e( 'Save', 'bea-content-sync-fusion' ); ?>"/>
-			<?php else: ?>
+					   value="<?php esc_attr_e( 'Save', 'bea-content-sync-fusion' ); ?>"/>
+			<?php else : ?>
 				<input type="submit" class="button-primary" name="update-bea-csf-settings"
-				       value="<?php esc_attr_e( 'Add', 'bea-content-sync-fusion' ); ?>"/>
+					   value="<?php esc_attr_e( 'Add', 'bea-content-sync-fusion' ); ?>"/>
 			<?php endif; ?>
 		</p>
 	</form>

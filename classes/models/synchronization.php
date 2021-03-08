@@ -92,7 +92,6 @@ class BEA_CSF_Synchronization {
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $this->post_type . '/' . $emitter_blog_id;
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $this->post_type . '/' . $emitter_blog_id;
 				}
-
 			}
 
 			// Terms for all kind of CPT

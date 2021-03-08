@@ -122,6 +122,10 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 
 }
 
-WP_CLI::add_command( 'content-sync-fusion flush', 'BEA_CSF_Cli_Flush', array(
-	'shortdesc' => __( 'All commands related "flush features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
-) );
+WP_CLI::add_command(
+	'content-sync-fusion flush',
+	'BEA_CSF_Cli_Flush',
+	array(
+		'shortdesc' => __( 'All commands related "flush features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
+	)
+);

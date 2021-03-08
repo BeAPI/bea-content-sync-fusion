@@ -9,9 +9,17 @@ Manage content synchronisation across a WordPress multisite.
 * Require at least WordPress 4.6.x, in order to use the `WP_Site_Query`.
 * Know and understand the implementation of CRON tasks on a Linux server
 
+## Installation
+
+3 possibilities.
+
+ * Take the ZIP archive proposed in the Github releases
+ * Add "bea/bea-content-sync-fusion" on composer json project file
+ * Take this GIT repository and call "composer install" command
+
 ## Compatibility
 
-Compatible up to WordPress 5.x (Gutenberg is not completely covered at the moment)
+Compatible up to WordPress 5.x
 
 ### Third plugins compatibility
 
@@ -25,11 +33,42 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
  
 ## Changelog
 
-### 3.5.1 - in progress
+### 3.8.1
+
+* Fixed: fix a possible bug with nested calls to switch_to_blog()
+* Fixed: fix a bug with escapging data & gurenberg (thanks @petitphp)
+* Added: Add tools for testing (thanks @Rahe)
+
+### 3.8
+
+* Fixed: fix terms synchronization, a bug introduced on 3.0.1
+* Added: Add tooling for quality (phpcs/cbf/psalm)
+* Added: New algorithm for reciprocal relations, or derivated relations
+* Changed: Update JavaScript libraries
+* Removed: old PHP libraries
+* Removed: custom flag & custom fields columns on relation object
+
+### 3.7
+
+* Feature: full support of Gutenberg
+* Improvement: Polylang addon (slug conflict)
+* Improvement: Restriction for terms
+
+### 3.6
 
 * Feature: add new CLI command for mirror 2 sites on network, populate relations, useful after a site duplication
-* Feature: add Polylang addon (thanks to @asadowski10)
+* Feature: full support of Polylang
+* Feature: add support of ACF group field
+* Feature: add some new filter for capibility check bea_csf_taxonomy_caps / bea_csf_post_caps
+* Bugfix: fix canonical feature for WPseo
 * Bugfix: save db version on network ID : 1, instead 0 (not exists)
+* Bugfix: fix potential loop with ACF/save_post hook on rare case
+
+### 3.5.1 - 02 march 2020
+
+* Feature: add Polylang addon (thanks to @asadowski10)
+* Improvement: add filters to allow emitter posts lock on receiver blog
+* Improvement: add filter to admin metabox
 
 ### 3.5.0 - 07 august 2019
 

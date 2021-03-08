@@ -4,15 +4,16 @@
 
 <input type="checkbox" id="exclude_from_futur_sync" name="exclude_from_futur_sync" value="1" <?php checked( $current_value, 1 ); ?> />
 <label for="exclude_from_futur_sync">
-	<?php _e( "Exclude this content from future synchronization", 'bea-content-sync-fusion' ); ?>
+	<?php _e( 'Exclude this content from future synchronization', 'bea-content-sync-fusion' ); ?>
 </label>
 
 <p>
-    <h4><?php _e( 'An internal note for diffusion:', 'bea-content-sync-fusion' ); ?></h4>
-    <textarea class="widefat" readonly="readonly"><?php echo esc_textarea($current_receivers_note); ?></textarea>
+	<h4><?php _e( 'An internal note for diffusion:', 'bea-content-sync-fusion' ); ?></h4>
+	<textarea class="widefat" readonly="readonly"><?php echo esc_textarea( $current_receivers_note ); ?></textarea>
 </p>
 
 <p>
-	<?php 
-	printf( __( 'This content comes from the site <strong>%s</strong>, and from the original article: <strong>%s</strong>', 'bea-content-sync-fusion' ), $emitter_data['blog_name'], $emitter_data['post_title'] ); ?>
+	<?php
+	printf( __( 'This content comes from the site <strong>%1$s</strong>, and from the original article: <strong>%2$s</strong>', 'bea-content-sync-fusion' ), $emitter_data['blog_name'], $emitter_data['post_title'] );
+	?>
 </p>

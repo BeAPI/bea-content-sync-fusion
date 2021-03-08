@@ -55,13 +55,16 @@ class BEA_CSF_Client_Attachment {
 
 		// Find local parent ?
 		if ( isset( $data['post_parent'] ) ) {
-			$current_parent_id   = BEA_CSF_Relations::get_object_for_any( 'attachment', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
+			$current_parent_id   = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
 			$data['post_parent'] = ! empty( $current_parent_id ) && (int) $current_parent_id > 0 ? $current_parent_id : 0;
 		}
 
 		// Clone data for post insertion
 		$data_for_post = $data;
 		unset( $data_for_post['taxonomies'], $data_for_post['terms'], $data_for_post['post_custom'], $data_for_post['metadata'] );
+
+		// Post data are expected to be escaped for wp_insert_post/wp_update_post
+		$data_for_post = wp_slash( $data_for_post );
 
 		// Merge or add ?
 		if ( ! empty( $current_media_id ) && (int) $current_media_id > 0 ) { // Edit, update only main fields
@@ -86,7 +89,6 @@ class BEA_CSF_Client_Attachment {
 			do_action( 'bea_csf.client_attachment_after_insert', $new_media_id, $data['attachment_dir'], $data['post_parent'], $data );
 
 		}
-
 
 		// Append to relations table
 		BEA_CSF_Relations::merge( 'attachment', $data['blogid'], $data['ID'], $GLOBALS['wpdb']->blogid, $new_media_id );

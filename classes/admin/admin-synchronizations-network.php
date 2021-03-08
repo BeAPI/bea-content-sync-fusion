@@ -8,7 +8,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		'mode'      => 'auto',
 		'status'    => 'publish',
 		'emitters'  => array(),
-		'receivers' => array()
+		'receivers' => array(),
 	);
 
 	/**
@@ -35,10 +35,14 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		} elseif ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . 'bea-csf-add' ) {
 			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/js/jquery.multi-select.js', array( 'jquery' ), '0.9.8', true );
 			wp_enqueue_script( 'bea-csf-admin-add', BEA_CSF_URL . 'assets/js/bea-csf-admin-add.js', array( 'lou-multi-select' ), BEA_CSF_VERSION, true );
-			wp_localize_script( 'bea-csf-admin-add', 'beaCsfAdminAdd', array(
-				'selectableHeader' => __( 'Selectable items', 'bea-content-sync-fusion' ),
-				'selectionHeader'  => __( 'Selection items', 'bea-content-sync-fusion' )
-			) );
+			wp_localize_script(
+				'bea-csf-admin-add',
+				'beaCsfAdminAdd',
+				array(
+					'selectableHeader' => __( 'Selectable items', 'bea-content-sync-fusion' ),
+					'selectionHeader'  => __( 'Selection items', 'bea-content-sync-fusion' ),
+				)
+			);
 			wp_enqueue_style( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/css/multi-select.css', array(), '0.9.8', 'screen' );
 			wp_enqueue_style( 'bea-csf-admin-add', BEA_CSF_URL . 'assets/css/bea-csf-admin-add.css', array(), BEA_CSF_VERSION );
 		}
@@ -52,18 +56,39 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 */
 	public static function network_admin_menu() {
 		add_menu_page( __( 'Content Sync', 'bea-content-sync-fusion' ), __( 'Content Sync', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csf-edit', '', 'dashicons-randomize' );
-		add_submenu_page( 'bea-csf-edit', __( 'Edit', 'bea-content-sync-fusion' ), __( 'Edit', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csf-edit', array(
-			__CLASS__,
-			'render_page_edit',
-		) );
-		add_submenu_page( 'bea-csf-edit', __( 'Add', 'bea-content-sync-fusion' ), __( 'Add', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csf-add', array(
-			__CLASS__,
-			'render_page_add',
-		) );
-		add_submenu_page( 'bea-csf-edit', __( 'Queue', 'bea-content-sync-fusion' ), __( 'Queue', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csf-queue', array(
-			__CLASS__,
-			'render_page_queue',
-		) );
+		add_submenu_page(
+			'bea-csf-edit',
+			__( 'Edit', 'bea-content-sync-fusion' ),
+			__( 'Edit', 'bea-content-sync-fusion' ),
+			'manage_options',
+			'bea-csf-edit',
+			array(
+				__CLASS__,
+				'render_page_edit',
+			)
+		);
+		add_submenu_page(
+			'bea-csf-edit',
+			__( 'Add', 'bea-content-sync-fusion' ),
+			__( 'Add', 'bea-content-sync-fusion' ),
+			'manage_options',
+			'bea-csf-add',
+			array(
+				__CLASS__,
+				'render_page_add',
+			)
+		);
+		add_submenu_page(
+			'bea-csf-edit',
+			__( 'Queue', 'bea-content-sync-fusion' ),
+			__( 'Queue', 'bea-content-sync-fusion' ),
+			'manage_options',
+			'bea-csf-queue',
+			array(
+				__CLASS__,
+				'render_page_queue',
+			)
+		);
 	}
 
 	/**
@@ -79,7 +104,10 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		$registered_syncs = BEA_CSF_Synchronizations::get_all();
 
 		// Translation, yes/no
-		$i18n_true_false = array( '1' => __( 'Yes', 'bea-content-sync-fusion' ), '0' => __( 'No', 'bea-content-sync-fusion' ) );
+		$i18n_true_false = array(
+			'1' => __( 'Yes', 'bea-content-sync-fusion' ),
+			'0' => __( 'No', 'bea-content-sync-fusion' ),
+		);
 
 		// Display message
 		settings_errors( 'bea-content-sync-fusion' );
@@ -164,7 +192,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 			check_admin_referer( 'update-bea-csf-adv-settings' );
 
 			$option_value = isset( $_POST['csf_adv_settings'] ) ? stripslashes_deep( $_POST['csf_adv_settings'] ) : 0;
-			update_network_option( BEA_CSF_Synchronizations::get_option_network_id(),'csf_adv_settings', $option_value );
+			update_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'csf_adv_settings', $option_value );
 			add_settings_error( 'bea-content-sync-fusion', 'settings_updated', __( 'Advanced settings updated with success !', 'bea-content-sync-fusion' ), 'updated' );
 		}
 

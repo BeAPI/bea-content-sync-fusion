@@ -52,12 +52,20 @@ class BEA_CSF_Admin_Client_Metaboxes {
 		global $wpdb;
 
 		// Get emitter for current post
-		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array('posttype', 'attachment'), $wpdb->blogid, $post->ID );
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array( 'posttype', 'attachment' ), $wpdb->blogid, $post->ID );
 		if ( ! empty( $emitter_relation ) ) {
-			add_meta_box( BEA_CSF_OPTION . 'metabox-client', __( 'Synchronization', 'bea-content-sync-fusion' ), array(
-				__CLASS__,
-				'metabox_content',
-			), $post_type, 'side', 'low', array( 'relation' => $emitter_relation ) );
+			add_meta_box(
+				BEA_CSF_OPTION . 'metabox-client',
+				__( 'Synchronization', 'bea-content-sync-fusion' ),
+				array(
+					__CLASS__,
+					'metabox_content',
+				),
+				$post_type,
+				'side',
+				'low',
+				array( 'relation' => $emitter_relation )
+			);
 		}
 
 		return true;
@@ -83,7 +91,7 @@ class BEA_CSF_Admin_Client_Metaboxes {
 		switch_to_blog( $metabox['args']['relation']->emitter_blog_id );
 		$emitter_data = array(
 			'blog_name'  => get_bloginfo( 'name' ),
-			'post_title' => get_the_title( $metabox['args']['relation']->emitter_id )
+			'post_title' => get_the_title( $metabox['args']['relation']->emitter_id ),
 		);
 		restore_current_blog();
 

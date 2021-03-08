@@ -1,0 +1,29 @@
+name: Quality
+
+on: [push, pull_request]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: "Checkout code"
+      uses: actions/checkout@v1
+
+    - name: "Check code quality"
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 7.3
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-suggest
+            
+    - name: Check coding standards
+      run: composer cs
+
+    - name: Check coding standards
+      run: composer psalm

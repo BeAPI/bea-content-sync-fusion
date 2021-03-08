@@ -106,10 +106,14 @@ class BEA_CSF_Media {
 		$receiver_wp_upload_dir = self::get_blog_wp_upload_dir( $receiver_blog_id );
 		$emitter_wp_upload_dir  = self::get_blog_wp_upload_dir( $emitter_blog_id );
 
-		return str_replace( [
-			$receiver_wp_upload_dir[ $wp_upload_dir_key ],
-			'/sites/1/',
-		], [ $emitter_wp_upload_dir[ $wp_upload_dir_key ], '/' ], $string );
+		return str_replace(
+			[
+				$receiver_wp_upload_dir[ $wp_upload_dir_key ],
+				'/sites/1/',
+			],
+			[ $emitter_wp_upload_dir[ $wp_upload_dir_key ], '/' ],
+			$string
+		);
 	}
 
 	/**

@@ -26,12 +26,19 @@ class BEA_CSF_Client_PostType {
 			$local_parent_id     = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['post_parent'], $data['post_parent'] );
 			$data['post_parent'] = ! empty( $local_parent_id ) && (int) $local_parent_id > 0 ? $local_parent_id : 0;
 		}
-		
+
 		$data = apply_filters( 'bea_csf/client/posttype/before_merge', $data, $sync_fields );
+
+		if ( false === $data || empty( $data ) ) {
+			return new WP_Error( 'empty_data', 'Error - exclude post to sync' );
+		}
 
 		// Clone datas for post insertion
 		$data_for_post = $data;
 		unset( $data_for_post['medias'], $data_for_post['terms'], $data_for_post['tags_input'], $data_for_post['post_category'] );
+
+		// Post data are expected to be escaped for wp_insert_post/wp_update_post
+		$data_for_post = wp_slash( $data_for_post );
 
 		// Merge post
 		if ( ! empty( $data['local_id'] ) && (int) $data['local_id'] > 0 ) {
@@ -118,7 +125,8 @@ class BEA_CSF_Client_PostType {
 					continue;
 				}
 
-				wp_update_post( array(
+				wp_update_post(
+					array(
 						'ID'          => $current_media_id,
 						'post_parent' => $new_post_id,
 					)

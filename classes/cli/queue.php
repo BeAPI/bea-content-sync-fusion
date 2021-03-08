@@ -145,6 +145,10 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 	}
 }
 
-WP_CLI::add_command( 'content-sync-fusion queue', 'BEA_CSF_Cli_Queue', array(
-	'shortdesc' => __( 'All commands related "queue features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
-) );
+WP_CLI::add_command(
+	'content-sync-fusion queue',
+	'BEA_CSF_Cli_Queue',
+	array(
+		'shortdesc' => __( 'All commands related "queue features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
+	)
+);

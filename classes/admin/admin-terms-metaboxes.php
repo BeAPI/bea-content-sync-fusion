@@ -24,7 +24,11 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		$syncs = BEA_CSF_Synchronizations::get(
 			array(
 				'emitters' => $wpdb->blogid,
-			), 'AND', false, true );
+			),
+			'AND',
+			false,
+			true
+		);
 		if ( empty( $syncs ) ) {
 			return false;
 		}
@@ -46,10 +50,17 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 			array(
 				'mode'     => 'manual',
 				'emitters' => $wpdb->blogid,
-			), 'AND', false, true );
+			),
+			'AND',
+			false,
+			true
+		);
 		if ( empty( $syncs_with_manual_state ) ) {
 			return false;
 		}
+
+		// Can allow filter receivers site
+		$syncs_with_manual_state = apply_filters( 'bea_csf_syncs_with_manual_state_term', $syncs_with_manual_state );
 
 		foreach ( $syncs_with_manual_state as $sync ) {
 			if ( in_array( $taxonomy, $sync->taxonomies ) ) {

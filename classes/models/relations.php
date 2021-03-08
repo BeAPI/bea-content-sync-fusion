@@ -2,79 +2,44 @@
 
 class BEA_CSF_Relations {
 	/**
-	 * BEA_CSF_Relations constructor.
-	 * Hook delete post, attachment, term, blog...
+	 * @return int|mixed
 	 *
-	 */
-	public function __construct() {
-		add_action( 'deleted_post', array( __CLASS__, 'deleted_post' ), 10 );
-		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), 10 );
-		add_action( 'deleted_blog', array( __CLASS__, 'deleted_blog' ), 10 );
-	}
-
-	/**
-	 * Delete data from relations table when post is deleted from DB
-	 *
-	 * @param integer $object_id
-	 */
-	public static function deleted_post( $object_id ) {
-		self::delete_by_receiver( 'attachment', get_current_blog_id(), $object_id );
-		self::delete_by_receiver( 'posttype', get_current_blog_id(), $object_id );
-	}
-
-	/**
-	 * Delete data from relations table when term is deleted from DB
-	 *
-	 * @param integer $term_id
-	 */
-	public static function delete_term( $term_id ) {
-		self::delete_by_receiver( 'taxonomy', get_current_blog_id(), $term_id );
-	}
-
-	/**
-	 * Delete data from relations table when blog is deleted from DB
-	 *
-	 * @param integer $blog_id
-	 */
-	public static function deleted_blog( $blog_id ) {
-		self::delete_by_blog_id( $blog_id );
-	}
-
-	/**
-	 * @param $type
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
-	 * @param bool $custom_flag
-	 * @param string $custom_fields
 	 *
-	 * @return int|mixed
+	 * @param $type
 	 */
-	public static function merge( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $custom_flag = false, $custom_fields = '' ) {
+	public static function merge( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $strict_mode = false ) {
+		// Test with right emitter/receiver direction
 		$relation_id = self::exists( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id );
 		if ( $relation_id != false ) {
-			self::update_custom_flag( $relation_id, $custom_flag );
-			self::update_custom_flag( $relation_id, $custom_fields );
-
 			return $relation_id;
-		} else {
-			return self::insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $custom_flag, $custom_fields );
 		}
+
+		if ( false === $strict_mode ) {
+			// Test also on reverse direction emitter/receiver, allow to not create duplicate relations on 2 directions
+			$relation_id = self::exists( $type, $receiver_blog_id, $receiver_id, $emitter_blog_id, $emitter_id );
+			if ( $relation_id != false ) {
+				return $relation_id;
+			}
+		}
+
+		return self::insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id );
 	}
 
 	/**
-	 * @param $type
+	 * @return int
+	 *
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
-	 * @param bool $custom_flag
-	 * @param string $custom_fields
 	 *
-	 * @return int
+	 * @param $type
 	 */
-	public static function insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $custom_flag = false, $custom_fields = '' ) {
+	public static function insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
@@ -86,10 +51,8 @@ class BEA_CSF_Relations {
 				'emitter_id'       => $emitter_id,
 				'receiver_blog_id' => $receiver_blog_id,
 				'receiver_id'      => $receiver_id,
-				'custom_flag'      => $custom_flag,
-				'custom_fields'    => $custom_fields,
 			),
-			array( '%s', '%d', '%d', '%d', '%d', '%d', '%s' )
+			array( '%s', '%d', '%d', '%d', '%d' )
 		);
 
 		return $wpdb->insert_id;
@@ -98,9 +61,10 @@ class BEA_CSF_Relations {
 	/**
 	 * Delete a row with this primary ID.
 	 *
+	 * @return mixed
+	 *
 	 * @param $id
 	 *
-	 * @return mixed
 	 */
 	public static function delete( $id ) {
 		global $wpdb;
@@ -113,11 +77,12 @@ class BEA_CSF_Relations {
 	/**
 	 * Delete relation for an object_id for emitter and receiver context
 	 *
-	 * @param string $type
+	 * @return true
+	 *
 	 * @param integer $blog_id
 	 * @param integer $object_id
 	 *
-	 * @return true
+	 * @param string $type
 	 */
 	public static function delete_by_object_id( $type, $blog_id, $object_id ) {
 		self::delete_by_emitter( $type, $blog_id, $object_id );
@@ -129,91 +94,116 @@ class BEA_CSF_Relations {
 	/**
 	 * Delete data relation for a blog
 	 *
+	 * @return true
+	 *
 	 * @param integer $blog_id
 	 *
-	 * @return true
 	 */
 	public static function delete_by_blog_id( $blog_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
 
-		$wpdb->delete( $wpdb->bea_csf_relations, array(
-			'emitter_blog_id' => $blog_id
-		), array( '%d' ) );
+		$wpdb->delete(
+			$wpdb->bea_csf_relations,
+			array(
+				'emitter_blog_id' => $blog_id,
+			),
+			array( '%d' )
+		);
 
-		$wpdb->delete( $wpdb->bea_csf_relations, array(
-			'receiver_blog_id' => $blog_id
-		), array( '%d' ) );
+		$wpdb->delete(
+			$wpdb->bea_csf_relations,
+			array(
+				'receiver_blog_id' => $blog_id,
+			),
+			array( '%d' )
+		);
 
 		return true;
 	}
 
 	/**
-	 * @param $type
+	 * @return false|int
+	 *
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
 	 *
-	 * @return false|int
+	 * @param $type
 	 */
 	public static function delete_by_emitter( $type, $emitter_blog_id, $emitter_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
 
-		return $wpdb->delete( $wpdb->bea_csf_relations, array(
-			'type'            => $type,
-			'emitter_blog_id' => $emitter_blog_id,
-			'emitter_id'      => $emitter_id
-		), array( '%s', '%d', '%d' ) );
+		return $wpdb->delete(
+			$wpdb->bea_csf_relations,
+			array(
+				'type'            => $type,
+				'emitter_blog_id' => $emitter_blog_id,
+				'emitter_id'      => $emitter_id,
+			),
+			array( '%s', '%d', '%d' )
+		);
 	}
 
 	/**
-	 * @param $type
+	 * @return false|int
+	 *
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
 	 *
-	 * @return false|int
+	 * @param $type
 	 */
 	public static function delete_by_receiver( $type, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
 
-		return $wpdb->delete( $wpdb->bea_csf_relations, array(
-			'type'             => $type,
-			'receiver_blog_id' => $receiver_blog_id,
-			'receiver_id'      => $receiver_id,
-		), array( '%s', '%d', '%d' ) );
+		return $wpdb->delete(
+			$wpdb->bea_csf_relations,
+			array(
+				'type'             => $type,
+				'receiver_blog_id' => $receiver_blog_id,
+				'receiver_id'      => $receiver_id,
+			),
+			array( '%s', '%d', '%d' )
+		);
 	}
 
 	/**
-	 * @param $type
+	 * @return false|int
+	 *
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
 	 *
-	 * @return false|int
+	 * @param $type
 	 */
 	public static function delete_by_emitter_and_receiver( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
 
-		return $wpdb->delete( $wpdb->bea_csf_relations, array(
-			'type'             => $type,
-			'emitter_blog_id'  => $emitter_blog_id,
-			'emitter_id'       => $emitter_id,
-			'receiver_blog_id' => $receiver_blog_id,
-			'receiver_id'      => $receiver_id,
-		), array( '%s', '%d', '%d', '%d', '%d' ) );
+		return $wpdb->delete(
+			$wpdb->bea_csf_relations,
+			array(
+				'type'             => $type,
+				'emitter_blog_id'  => $emitter_blog_id,
+				'emitter_id'       => $emitter_id,
+				'receiver_blog_id' => $receiver_blog_id,
+				'receiver_id'      => $receiver_id,
+			),
+			array( '%s', '%d', '%d', '%d', '%d' )
+		);
 	}
 
 	/**
+	 * @return mixed
+	 *
 	 * @param $id
 	 *
-	 * @return mixed
 	 */
 	public static function get( $id ) {
 		global $wpdb;
@@ -224,25 +214,45 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param string|array $type
+	 * @return integer|false
+	 *
 	 * @param int $emitter_blog_id
 	 * @param int $receiver_blog_id
 	 * @param int $emitter_id
 	 * @param int $receiver_id
 	 *
-	 * @return integer|false
+	 * @param string|array $type
 	 *
 	 * @author Alexandre Sadowski
 	 */
-	public static function get_object_for_any( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id, $receiver_id ) {
-		$local_id = self::get_object_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id );
+	public static function get_object_for_any( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id, $receiver_id, $direct = false ) {
+		$result_id = self::get_object_id_for_receiver( $type, $emitter_blog_id, $receiver_blog_id, $emitter_id );
+		if ( $result_id > 0 ) {
+			return $result_id;
+		}
 
-		if ( ! empty( $local_id ) && (int) $local_id->receiver_id > 0 ) {
-			return (int) $local_id->receiver_id;
-		} else {
-			$local_id = self::get_object_id_for_emitter( $type, $receiver_blog_id, $emitter_blog_id, $receiver_id );
-			if ( ! empty( $local_id ) && (int) $local_id->emitter_id > 0 ) {
-				return (int) $local_id->emitter_id;
+		$result_id = self::get_object_id_for_emitter( $type, $receiver_blog_id, $emitter_blog_id, $receiver_id );
+		if ( $result_id > 0 ) {
+			return $result_id;
+		}
+
+		if ( $direct === true ) {
+			return false;
+		}
+
+		$derivations = self::get_relations_hierarchy( $type, $emitter_blog_id, $emitter_id );
+		if ( ! empty( $derivations ) ) {
+			foreach ( $derivations as $derivation ) {
+				// Search for multiple heritage of post
+				if ( (int) $derivation->emitter_blog_id === $receiver_blog_id ) {
+					return (int) $derivation->emitter_id;
+				}
+
+				// Search an indirect relation
+				$result_id = self::get_object_for_any( $type, $derivation->emitter_blog_id, get_current_blog_id(), $derivation->emitter_id, $derivation->emitter_id, true );
+				if ( $result_id > 0 ) {
+					return $result_id;
+				}
 			}
 		}
 
@@ -250,62 +260,106 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param string|array $types
+	 * Get all hierachy of relation for a content
+	 *
+	 * @return array
+	 *
+	 * @param $emitter_blog_id
+	 * @param $emitter_id
+	 * @param $type
+	 */
+	public static function get_relations_hierarchy( $type, $emitter_blog_id, $emitter_id ) {
+		$hierarchy = [];
+		$i         = 0;
+		do {
+			$i ++;
+			$result = self::current_object_is_synchronized( $type, $emitter_blog_id, $emitter_id );
+			if ( ! empty( $result ) ) {
+				$hierarchy[] = $result;
+
+				$emitter_blog_id = $result->emitter_blog_id;
+				$emitter_id      = $result->emitter_id;
+			}
+
+			if ( $i === 50 ) {
+				break; // Skip infinite loop error, in theory, never called.
+			}
+		} while ( ! empty( $result ) );
+
+		return $hierarchy;
+	}
+
+	/**
+	 * @return int
+	 *
 	 * @param int $emitter_blog_id
 	 * @param int $receiver_blog_id
 	 * @param int $emitter_id
 	 *
-	 * @return mixed
+	 * @param string|array $types
+	 *
 	 * @author Alexandre Sadowski
 	 */
 	public static function get_object_id_for_receiver( $types, $emitter_blog_id, $receiver_blog_id, $emitter_id ) {
 		global $wpdb;
 
-		$types = array_map( function ( $v ) {
-			return "'" . esc_sql( $v ) . "'";
-		}, (array) $types );
-
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d", $emitter_blog_id, $receiver_blog_id, $emitter_id ) );
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . ' ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d',
+				$emitter_blog_id,
+				$receiver_blog_id,
+				$emitter_id
+			)
+		);
 	}
 
 	/**
-	 * @param string|array $types
+	 * @return int
+	 *
 	 * @param int $emitter_blog_id
 	 * @param int $receiver_blog_id
 	 * @param int $receiver_id
 	 *
-	 * @return mixed
+	 * @param string|array $types
+	 *
 	 * @author Alexandre Sadowski
 	 */
 	public static function get_object_id_for_emitter( $types, $emitter_blog_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
-		$types = array_map( function ( $v ) {
-			return "'" . esc_sql( $v ) . "'";
-		}, (array) $types );
-
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %d", $emitter_blog_id, $receiver_blog_id, $receiver_id ) );
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . ' ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %d',
+				$emitter_blog_id,
+				$receiver_blog_id,
+				$receiver_id
+			)
+		);
 	}
 
 	/**
-	 * @param string|array $types
+	 * @return mixed
+	 *
 	 * @param int $receiver_blog_id
 	 * @param int $receiver_id
 	 *
-	 * @return mixed
+	 * @param string|array $types
+	 *
 	 * @author Alexandre Sadowski
 	 */
 	public static function current_object_is_synchronized( $types, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
-		$types = array_map( function ( $v ) {
-			return "'" . esc_sql( $v ) . "'";
-		}, (array) $types );
-
 		/** @var WPDB $wpdb */
-		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . implode( ', ', $types ) . " ) AND receiver_blog_id = %d AND receiver_id = %d", $receiver_blog_id, $receiver_id ) );
+		return $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . ' ) AND receiver_blog_id = %d AND receiver_id = %d',
+				$receiver_blog_id,
+				$receiver_id
+			)
+		);
 	}
 
 	/**
@@ -317,14 +371,22 @@ class BEA_CSF_Relations {
 
 		/** @var WPDB $wpdb */
 
-		return $wpdb->get_var( $wpdb->prepare( "SELECT id
+		return $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT id
 			FROM $wpdb->bea_csf_relations
 			WHERE type = %s
 			AND emitter_blog_id = %d
 			AND emitter_id = %d
 			AND receiver_blog_id = %d
-			AND receiver_id = %d"
-			, $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id ) );
+			AND receiver_id = %d",
+				$type,
+				$emitter_blog_id,
+				$emitter_id,
+				$receiver_blog_id,
+				$receiver_id
+			)
+		);
 	}
 
 	/**
@@ -361,9 +423,10 @@ class BEA_CSF_Relations {
 	}
 
 	/**
+	 * @return mixed
+	 *
 	 * @param int $quantity
 	 *
-	 * @return mixed
 	 */
 	public static function get_results( $quantity = 100 ) {
 		global $wpdb;
@@ -374,44 +437,20 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @param $id
-	 * @param $flag
+	 * Helper for clean SQL "types" IN clause, and create string for query
+	 *
+	 * @return string
+	 *
+	 * @param $types
 	 */
-	public static function update_custom_flag( $id, $flag ) {
-		global $wpdb;
-
-		/** @var WPDB $wpdb */
-		$wpdb->update(
-			$wpdb->bea_csf_relations,
-			array(
-				'custom_flag' => (boolean) $flag
-			),
-			array(
-				'id' => $id
-			),
-			array( '%d' ),
-			array( '%d' )
+	private static function get_sql_in_types( $types ) {
+		$types = array_map(
+			function ( $v ) {
+				return "'" . esc_sql( $v ) . "'";
+			},
+			(array) $types
 		);
-	}
 
-	/**
-	 * @param $id
-	 * @param $fields_value
-	 */
-	public static function update_custom_fields( $id, $fields_value ) {
-		global $wpdb;
-
-		/** @var WPDB $wpdb */
-		$wpdb->update(
-			$wpdb->bea_csf_relations,
-			array(
-				'custom_fields' => maybe_serialize( $fields_value )
-			),
-			array(
-				'id' => $id
-			),
-			array( '%s' ),
-			array( '%d' )
-		);
+		return implode( ', ', $types );
 	}
 }

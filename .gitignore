@@ -16,3 +16,7 @@ sftp-config.json
 .idea/
 .idea
 *.pid
+vendor
+composer.lock
+/bin/
+/wordpress/

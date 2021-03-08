@@ -11,7 +11,7 @@ class BEA_CSF_Addon_ACF {
 	 * BEA_CSF_Addon_ACF constructor.
 	 */
 	public function __construct() {
-		if ( ! class_exists('acf') ) {
+		if ( ! class_exists( 'acf' ) ) {
 			return false;
 		}
 
@@ -47,7 +47,7 @@ class BEA_CSF_Addon_ACF {
 		$fields = array();
 		foreach ( $groups as $group ) {
 			$_fields = (array) acf_get_fields( $group );
-			foreach ($_fields as $_field ) {
+			foreach ( $_fields as $_field ) {
 				$fields[] = $_field;
 			}
 		}
@@ -62,7 +62,7 @@ class BEA_CSF_Addon_ACF {
 
 		// Translate
 		$meta_data_to_update = self::translate_dynamic_acf_fields( $data['meta_data'], $data, $sync_fields );
-		if ( is_array($meta_data_to_update) && !empty($meta_data_to_update) ) {
+		if ( is_array( $meta_data_to_update ) && ! empty( $meta_data_to_update ) ) {
 			foreach ( $meta_data_to_update as $meta_data_to_update_key => $meta_data_to_update_value ) {
 				update_post_meta( $new_post->ID, $meta_data_to_update_key, $meta_data_to_update_value );
 			}
@@ -95,7 +95,7 @@ class BEA_CSF_Addon_ACF {
 		$fields = array();
 		foreach ( $groups as $group ) {
 			$_fields = (array) acf_get_fields( $group );
-			foreach ($_fields as $_field ) {
+			foreach ( $_fields as $_field ) {
 				$fields[] = $_field;
 			}
 		}
@@ -110,7 +110,7 @@ class BEA_CSF_Addon_ACF {
 
 		// Translate
 		$meta_data_to_update = self::translate_dynamic_acf_fields( $data['meta_data'], $data, $sync_fields );
-		if ( is_array($meta_data_to_update) && !empty($meta_data_to_update) ) {
+		if ( is_array( $meta_data_to_update ) && ! empty( $meta_data_to_update ) ) {
 			foreach ( $meta_data_to_update as $meta_data_to_update_key => $meta_data_to_update_value ) {
 				update_term_meta( $new_term->term_id, $meta_data_to_update_key, $meta_data_to_update_value );
 			}
@@ -139,49 +139,49 @@ class BEA_CSF_Addon_ACF {
 			}
 
 			// Keep only metadata with ID database reference
-			if ( !isset(self::$acf_fields[$values[0]]) ) {
+			if ( ! isset( self::$acf_fields[ $values[0] ] ) ) {
 				continue;
 			}
 
 			// Get ACF field data
-			$acf_field = self::$acf_fields[$values[0]];
+			$acf_field = self::$acf_fields[ $values[0] ];
 
 			// Build meta_key to metadata to translate
-			$meta_key_to_translate = substr($key, 1) ;
+			$meta_key_to_translate = substr( $key, 1 );
 
 			// Get data to translate
-			$meta_value_to_translate = maybe_unserialize($meta_data[$meta_key_to_translate][0]);
+			$meta_value_to_translate = maybe_unserialize( $meta_data[ $meta_key_to_translate ][0] );
 
 			$types = false;
-			if ( in_array($acf_field['type'], array('image', 'post_object', 'file', 'page_link', 'gallery', 'relationship')) ) {
-				$types = array('attachment', 'posttype');
-			} elseif ( in_array($acf_field['type'], array('taxonomy')) ) {
-				$types = array('taxonomy');
+			if ( in_array( $acf_field['type'], array( 'image', 'post_object', 'file', 'page_link', 'gallery', 'relationship' ) ) ) {
+				$types = array( 'attachment', 'posttype' );
+			} elseif ( in_array( $acf_field['type'], array( 'taxonomy' ) ) ) {
+				$types = array( 'taxonomy' );
 			}
 
 			// Array or singular value ?
-			if ( is_array($meta_value_to_translate) ) {
-				foreach( $meta_value_to_translate as $_key => $_value ) {
+			if ( is_array( $meta_value_to_translate ) ) {
+				foreach ( $meta_value_to_translate as $_key => $_value ) {
 					$object_id = BEA_CSF_Relations::get_object_for_any( $types, $data['blogid'], $sync_fields['_current_receiver_blog_id'], $_value, $_value );
 					// If relation not exist, try to check if the parent relation is an synchronized content for get an indirect relation
 					if ( empty( $object_id ) || (int) $object_id == 0 ) {
-						$parent_relation = BEA_CSF_Relations::current_object_is_synchronized($types, $data['blogid'], $meta_value_to_translate);
+						$parent_relation = BEA_CSF_Relations::current_object_is_synchronized( $types, $data['blogid'], $meta_value_to_translate );
 						if ( $parent_relation != false ) {
 							$object_id = BEA_CSF_Relations::get_object_for_any( $types, $parent_relation->emitter_blog_id, $sync_fields['_current_receiver_blog_id'], $parent_relation->emitter_id, $parent_relation->emitter_id );
 						}
 					}
 
 					if ( ! empty( $object_id ) && (int) $object_id > 0 ) {
-						$meta_value_to_translate[$_key] = $object_id;
+						$meta_value_to_translate[ $_key ] = $object_id;
 					}
 				}
 
-				$meta_data_to_update[$meta_key_to_translate] = $meta_value_to_translate;
+				$meta_data_to_update[ $meta_key_to_translate ] = $meta_value_to_translate;
 			} else {
 				$object_id = BEA_CSF_Relations::get_object_for_any( $types, $data['blogid'], $sync_fields['_current_receiver_blog_id'], $meta_value_to_translate, $meta_value_to_translate );
 				// If relation not exist, try to check if the parent relation is an synchronized content for get an indirect relation
 				if ( empty( $object_id ) || (int) $object_id == 0 ) {
-					$parent_relation = BEA_CSF_Relations::current_object_is_synchronized($types, $data['blogid'], $meta_value_to_translate);
+					$parent_relation = BEA_CSF_Relations::current_object_is_synchronized( $types, $data['blogid'], $meta_value_to_translate );
 					if ( $parent_relation != false ) {
 						$object_id = BEA_CSF_Relations::get_object_for_any( $types, $parent_relation->emitter_blog_id, $sync_fields['_current_receiver_blog_id'], $parent_relation->emitter_id, $parent_relation->emitter_id );
 
@@ -189,7 +189,7 @@ class BEA_CSF_Addon_ACF {
 				}
 
 				if ( ! empty( $object_id ) && (int) $object_id > 0 ) {
-					$meta_data_to_update[$meta_key_to_translate] = $object_id;
+					$meta_data_to_update[ $meta_key_to_translate ] = $object_id;
 				}
 			}
 		}
@@ -204,13 +204,13 @@ class BEA_CSF_Addon_ACF {
 	 */
 	public static function prepare_acf_fields( $fields ) {
 		foreach ( (array) $fields as $field ) {
-			if (in_array($field['type'], array('flexible_content') ) ) { // Flexible is recursive structure with layouts
-				foreach( $field['layouts'] as $layout_field ) {
+			if ( in_array( $field['type'], array( 'flexible_content' ) ) ) { // Flexible is recursive structure with layouts
+				foreach ( $field['layouts'] as $layout_field ) {
 					self::prepare_acf_fields( $layout_field['sub_fields'] );
 				}
-			} elseif (in_array($field['type'], array('repeater') ) ) { // Repeater is recursive structure
+			} elseif ( in_array( $field['type'], array( 'repeater', 'group' ) ) ) { // Repeater is recursive structure
 				self::prepare_acf_fields( $field['sub_fields'] );
-			} elseif ( in_array($field['type'], array('image', 'gallery', 'post_object', 'relationship', 'file', 'page_link', 'taxonomy') ) ) {
+			} elseif ( in_array( $field['type'], array( 'image', 'gallery', 'post_object', 'relationship', 'file', 'page_link', 'taxonomy' ) ) ) {
 				self::$acf_fields[ $field['key'] ] = $field;
 			}
 		}
