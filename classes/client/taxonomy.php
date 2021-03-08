@@ -43,18 +43,21 @@ class BEA_CSF_Client_Taxonomy {
 				'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
 			) );
 		} else {
-
 			// Prevent PLL same slug for several languages on insert
 			if ( ! empty( $data['pll']['is_translated'] ) && empty( $exist_pll_term_id ) ) {
 				$data['slug'] = $data['slug'] . '___' . $data['pll']['language']; // Create new one
 			}
 
-			$new_term_id = wp_insert_term( $data['name'], $data['taxonomy'], array(
-				'description' => $data['description'],
-				'slug'        => $data['slug'],
-				'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+			$new_term_id = wp_insert_term(
+				$data['name'],
+				$data['taxonomy'],
+				array(
+					'description' => $data['description'],
+					'slug'        => $data['slug'],
+					'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
 
-			) );
+				)
+			);
 
 			// try to manage error when term already exist with the same name !
 			if ( is_wp_error( $new_term_id ) && 'term_exists' === $new_term_id->get_error_code() ) {
