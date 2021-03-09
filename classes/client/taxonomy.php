@@ -36,7 +36,7 @@ class BEA_CSF_Client_Taxonomy {
 
 		// Prevent PLL same slug for several languages. Check if pll term exist by slug
 		if ( function_exists( 'PLL' ) && ! empty( $data['pll']['is_translated'] ) ) {
-			$exist_pll_term_id = PLL()->model->term_exists_by_slug( $data['slug'], $data['pll']['language'], $data['taxonomy'], $data['parent'] );
+			$exist_pll_term_id = PLL()->model->term_exists_by_slug( $data['slug'], $data['pll']['language'], $data['taxonomy'], BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ) );
 		}
 
 		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['term_id'], $data['term_id'] );
