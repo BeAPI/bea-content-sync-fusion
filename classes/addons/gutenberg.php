@@ -60,8 +60,13 @@ class BEA_CSF_Addon_Gutenberg {
 				$block['innerBlocks'] = $this->translate_blocks( $block['innerBlocks'], $emitter_blog_id, $receiver_blog_id );
 			}
 
-			$block['attrs']        = $this->translate_block_attributes( $block['attrs'], $block['blockName'], $emitter_blog_id, $receiver_blog_id );
-			$block['innerContent'] = $this->translate_block_content( $block['innerContent'], $block['blockName'], $emitter_blog_id, $receiver_blog_id );
+			if ( ! empty( $block['attrs'] ) ) {
+				$block['attrs'] = $this->translate_block_attributes( $block['attrs'], $block['blockName'], $emitter_blog_id, $receiver_blog_id );
+			}
+
+			if ( ! empty( $block['innerContent'] ) ) {
+				$block['innerContent'] = $this->translate_block_content( $block['innerContent'], $block['blockName'], $emitter_blog_id, $receiver_blog_id );
+			}
 		}
 		unset( $block );
 
