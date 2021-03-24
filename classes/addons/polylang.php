@@ -265,11 +265,14 @@ class BEA_CSF_Addon_Polylang {
 
 		foreach ( $posts as $lang => $post_id ) {
 
-			$args = [
-				'ID'         => $post_id,
-				'post_title' => get_the_title( $post_id ),
-				'post_name'  => sanitize_title( get_the_title( $post_id ) ),
-			];
+			$post = get_post( $post_id );
+
+			if ( empty( $post ) ) {
+				continue;
+			}
+
+			$args              = $post->to_array();
+			$args['post_name'] = sanitize_title( $post->post_title );
 
 			\wp_update_post( $args );
 		}
