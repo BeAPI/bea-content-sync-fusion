@@ -152,8 +152,8 @@ class BEA_CSF_Client_Taxonomy {
 		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );
 		if ( ! empty( $local_term_id ) && (int) $local_term_id > 0 ) {
 			// Term already exist before sync, keep it !
-			$already_exists = (int) get_term_id_from_meta( 'already_exists', 1 );
-			if ( 1 === $already_exists ) {
+			$already_exists = get_term_meta( $local_term_id, 'already_exists', true );
+			if ( ! empty( $already_exists ) && 1 === absint( $already_exists ) ) {
 				return false;
 			}
 
