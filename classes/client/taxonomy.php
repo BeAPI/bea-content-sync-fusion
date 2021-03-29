@@ -151,6 +151,11 @@ class BEA_CSF_Client_Taxonomy {
 
 		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );
 		if ( ! empty( $local_term_id ) && (int) $local_term_id > 0 ) {
+			BEA_CSF_Relations::delete_by_receiver( 'taxonomy', (int) $GLOBALS['wpdb']->blogid, (int) $local_term_id );
+
+			// Delete additional if reciprocal synchro
+			BEA_CSF_Relations::delete_by_emitter_and_receiver( 'taxonomy', (int) $GLOBALS['wpdb']->blogid, (int) $local_term_id, (int) $term['blogid'], (int) $term['term_id'] );
+
 			// Term already exist before sync, keep it !
 			$already_exists = get_term_meta( $local_term_id, 'already_exists', true );
 			if ( ! empty( $already_exists ) && 1 === absint( $already_exists ) ) {
@@ -158,11 +163,6 @@ class BEA_CSF_Client_Taxonomy {
 			}
 
 			wp_delete_term( $local_term_id, $term['taxonomy'] );
-
-			BEA_CSF_Relations::delete_by_receiver( 'taxonomy', (int) $GLOBALS['wpdb']->blogid, (int) $local_term_id );
-
-			// Delete additional if reciprocal synchro
-			BEA_CSF_Relations::delete_by_emitter_and_receiver( 'taxonomy', (int) $GLOBALS['wpdb']->blogid, (int) $local_term_id, (int) $term['blogid'], (int) $term['term_id'] );
 		}
 
 		return apply_filters( 'bea_csf.client.taxonomy.delete', true, $sync_fields );
