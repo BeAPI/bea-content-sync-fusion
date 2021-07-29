@@ -51,7 +51,7 @@ class BEA_CSF_Admin_Metaboxes {
 
 		// Allow to edit current post id for revisionary
 		$_post_id           = apply_filters( 'bea/csf/save_post_id', $post->ID );
-		$is_saving_revision = apply_filters( 'bea/csf/is_save_revision', false );
+		$is_saving_revision = apply_filters( 'bea/csf/is_save_revision', false, $post->ID );
 
 		// Update receivers note
 		if ( isset( $_POST['post_receivers_note'] ) ) {
