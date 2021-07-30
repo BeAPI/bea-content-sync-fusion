@@ -44,6 +44,18 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.8.2
+
+* Added: Hook to change ID on save_post (for revisionary metabox)
+* Fixed: fix a bug on delete sync term by remove relation
+* Fixed: fix a bug with encode chars with get_the_title
+* Fixed: fix a fatal error with attrs or inner content null for gutenberg
+* Fixed: fix parent on term exist function for polylang
+* Fixed: fix a bug with same terms slugs for polylang
+* Fixed: fix wrong type when checking for attachment parent
+* Changed: handle the alternate queue if argument passed for cronjob
+* Changed: bump tools
+
 ### 3.8.1
 
 * Fixed: fix a possible bug with nested calls to switch_to_blog()
