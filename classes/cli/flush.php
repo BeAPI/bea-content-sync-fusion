@@ -64,8 +64,23 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 	 * @param $params
 	 */
 	public function site( $args, $params ) {
+		$types_relation = [];
+
+		if ( isset( $params['taxonomies'] ) && 'true' === $params['taxonomies'] ) {
+			$types_relation[] = 'taxonomy';
+		}
+
+		if (  isset( $params['attachments'] ) && 'true' === $params['attachments'] ) {
+			$types_relation[] = 'attachment';
+		}
+
+		if ( isset( $params['post_type'] ) && 'true' === $params['post_type'] ) {
+			$types_relation[] = 'posttype';
+		}
+
 		// Get data to delete
-		$items_to_delete = BEA_CSF_Relations::get_results_by_receiver_blog_id( get_current_blog_id() );
+		$items_to_delete = BEA_CSF_Relations::get_types_relation_by_receiver_blog_id( get_current_blog_id(), $types_relation  );
+
 		if ( empty( $items_to_delete ) ) {
 			WP_CLI::warning( __( 'No content to flush', 'bea-content-sync-fusion' ) );
 			return;

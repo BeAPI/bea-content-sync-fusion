@@ -437,11 +437,42 @@ class BEA_CSF_Relations {
 	}
 
 	/**
+	 * Get results by receiver blog id and relation types
+	 *
+	 * @param int $blog_id
+	 * @param array $types_relation
+	 * @example [
+	 *  'taxonomy',
+	 *  'attachment',
+	 *  'posttype',
+	 * ]
+	 *
+	 * @return mixed
+	 */
+	public static function get_types_relation_by_receiver_blog_id( int $blog_id, array $types_relation = [] ) {
+		if ( empty( $types_relation ) ) {
+			return self::get_results_by_receiver_blog_id( $blog_id );
+		}
+
+		global $wpdb;
+
+		/** @var WPDB $wpdb */
+
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types_relation ) . ' ) AND receiver_blog_id = %d',
+				$blog_id
+			)
+		);
+	}
+
+	/**
 	 * Helper for clean SQL "types" IN clause, and create string for query
+	 *
+	 * @param $types
 	 *
 	 * @return string
 	 *
-	 * @param $types
 	 */
 	private static function get_sql_in_types( $types ) {
 		$types = array_map(
