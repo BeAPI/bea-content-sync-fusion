@@ -1,9 +1,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: O&O - Content Synchronization - Fusion\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-12-12 14:22+0100\n"
-"PO-Revision-Date: 2017-12-12 14:25+0100\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bea-content-sync-"
+"fusion\n"
+"POT-Creation-Date: 2022-03-23T14:48:11+00:00\n"
+"PO-Revision-Date: 2022-03-23 15:55+0100\n"
 "Last-Translator: beapi <amaury@beapi.fr>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -12,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
 "__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
 "_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
@@ -22,100 +23,119 @@ msgstr ""
 "X-Loco-Target-Locale: fr_FR\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../classes/addons/advanced-custom-fields-exclusion.php:139
+#. Plugin Name of the plugin
+#, fuzzy
+#| msgid "Content Sync: Edit"
+msgid "BEA - Content Sync Fusion"
+msgstr "Synchronisation : Éditer"
+
+#. Plugin URI of the plugin
+msgid "https://beapi.fr"
+msgstr ""
+
+#. Description of the plugin
+#, fuzzy
+#| msgid "Content synchronization status"
+msgid "Manage content synchronization across a WordPress multisite."
+msgstr "Statut des Synchronisations"
+
+#. Author of the plugin
+msgid "Be API"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://beapi.fr"
+msgstr ""
+
+#: classes/addons/advanced-custom-fields-exclusion.php:139
 msgid "Exclude this group from future synchro"
 msgstr "Exclure"
 
-#: ../classes/addons/advanced-custom-fields-exclusion.php:156
+#: classes/addons/advanced-custom-fields-exclusion.php:156
 msgid "Exclude this field from future synchro"
 msgstr "Exclure"
 
-#: ../classes/addons/advanced-custom-fields-exclusion.php:435
+#: classes/addons/advanced-custom-fields-exclusion.php:439
 msgid "Exclude this group from sync"
 msgstr "Exclure"
 
-#: ../classes/addons/revisionize.php:60
+#: classes/addons/revisionize.php:75
 msgid "Remote revision"
 msgstr "Révision distante"
 
-#: ../classes/admin/admin-blog.php:27
+#: classes/admin/admin-blog.php:27
 msgid "Resync content"
 msgstr "Resynchroniser le contenu"
 
-#: ../classes/admin/admin-blog.php:28
+#: classes/admin/admin-blog.php:28
 msgid "Sync content"
 msgstr "Synchroniser le contenu"
 
-#: ../classes/admin/admin-blog.php:64
+#: classes/admin/admin-blog.php:64
 msgid "Resync website OK."
 msgstr "Resynchronisation du site terminée."
 
-#: ../classes/admin/admin-blog.php:66
+#: classes/admin/admin-blog.php:66
 msgid "Sync website OK."
 msgstr "Synchronisation du site OK."
 
-#: ../classes/admin/admin-client-metaboxes.php:57
+#: classes/admin/admin-client-metaboxes.php:59
 msgid "Synchronization"
 msgstr "Synchronisation"
 
-#: ../classes/admin/admin-dashboard-widgets.php:22
+#: classes/admin/admin-dashboard-widgets.php:22
 msgid "Content synchronization status"
 msgstr "Statut des Synchronisations"
 
-#: ../classes/admin/admin-dashboard-widgets.php:28
+#: classes/admin/admin-dashboard-widgets.php:28
 msgid "Synchronized contents awaiting validation"
 msgstr "Contenus synchronisés en attente de validation"
 
-#: ../classes/admin/admin-list.php:43
+#: classes/admin/admin-list.php:44
 msgid "Show all media"
 msgstr "Afficher tous les médias"
 
-#: ../classes/admin/admin-list.php:45
+#: classes/admin/admin-list.php:46
 msgid "Show all content"
 msgstr "Afficher tous les contenus"
 
-#: ../classes/admin/admin-list.php:46
+#: classes/admin/admin-list.php:47
 msgid "Show only local content"
 msgstr "N'afficher que le contenu local"
 
-#: ../classes/admin/admin-list.php:47
+#: classes/admin/admin-list.php:48
 msgid "Show only remote content"
 msgstr "N'afficher que le contenu distant"
 
-#: ../classes/admin/admin-metaboxes.php:153
+#: classes/admin/admin-metaboxes.php:184
 msgid "Synchronization (auto)"
 msgstr "Synchronisation (automatique)"
 
-#: ../classes/admin/admin-metaboxes.php:166
+#: classes/admin/admin-metaboxes.php:213
 msgid "Synchronization (manual)"
 msgstr "Synchronisation (manuelle)"
 
-#: ../classes/admin/admin-notifications.php:29
+#: classes/admin/admin-notifications.php:29
 msgid "Content Sync Notifications"
 msgstr "Notifications de synchronisation"
 
-#: ../classes/admin/admin-notifications.php:29
+#: classes/admin/admin-notifications.php:29
 msgid "Sync Notification"
 msgstr "Notifications de synchronisation"
 
-#: ../classes/admin/admin-notifications.php:41
+#: classes/admin/admin-notifications.php:45
 msgid "Selectable users"
 msgstr "Utilisateurs disponibles"
 
-#: ../classes/admin/admin-notifications.php:41
+#: classes/admin/admin-notifications.php:46
 msgid "Selection users"
 msgstr "Sélection des utilisateurs"
 
-#: ../classes/admin/admin-restrictions.php:69
-#, php-format
-msgid "Preview &#8220;%s&#8221;"
-msgstr "Prévisualiser &#8220;%s&#8221;"
+#: classes/admin/admin-restrictions.php:101 views/admin/server-page-add.php:82
+msgid "Publish"
+msgstr "Publié"
 
-#: ../classes/admin/admin-restrictions.php:69
-msgid "Preview"
-msgstr "Prévisualiser "
-
-#: ../classes/admin/admin-restrictions.php:154
+#: classes/admin/admin-restrictions.php:188
 msgid ""
 "You are not allowed to edit this content. You must update it from your "
 "master site."
@@ -123,124 +143,168 @@ msgstr ""
 "Vous n'êtes pas autorisé à modifier ce contenu. Vous devez mettre à jour "
 "depuis votre site source."
 
-#: ../classes/admin/admin-synchronizations-network.php:39
+#: classes/admin/admin-synchronizations-network.php:42
 msgid "Selectable items"
 msgstr "Éléments sélectionnable"
 
-#: ../classes/admin/admin-synchronizations-network.php:40
+#: classes/admin/admin-synchronizations-network.php:43
 msgid "Selection items"
 msgstr "Éléments sélectionnés"
 
-#: ../classes/admin/admin-synchronizations-network.php:54
+#: classes/admin/admin-synchronizations-network.php:58
 msgid "Content Sync"
 msgstr "Content Sync"
 
-#: ../classes/admin/admin-synchronizations-network.php:55
-#: ../views/admin/blog-widget-list.php:13
-#: ../views/admin/server-page-settings.php:70
+#: classes/admin/admin-synchronizations-network.php:61
+#: classes/admin/admin-synchronizations-network.php:62
+#: views/admin/blog-widget-list.php:16 views/admin/server-page-settings.php:77
 msgid "Edit"
 msgstr "Éditer"
 
-#: ../classes/admin/admin-synchronizations-network.php:59
-#: ../views/admin/server-page-add.php:128
+#: classes/admin/admin-synchronizations-network.php:72
+#: classes/admin/admin-synchronizations-network.php:73
+#: views/admin/server-page-add.php:134
 msgid "Add"
 msgstr "Ajouter"
 
-#: ../classes/admin/admin-synchronizations-network.php:63
+#: classes/admin/admin-synchronizations-network.php:83
+#: classes/admin/admin-synchronizations-network.php:84
 msgid "Queue"
 msgstr "File d'attente"
 
-#: ../classes/admin/admin-synchronizations-network.php:82
+#: classes/admin/admin-synchronizations-network.php:108
 msgid "Yes"
 msgstr "Oui"
 
-#: ../classes/admin/admin-synchronizations-network.php:82
+#: classes/admin/admin-synchronizations-network.php:109
 msgid "No"
 msgstr "Non"
 
-#: ../classes/admin/admin-synchronizations-network.php:117
-#: ../classes/admin/admin-synchronizations-network.php:213
+#: classes/admin/admin-synchronizations-network.php:145
+#: classes/admin/admin-synchronizations-network.php:241
 msgid "This synchronization ID not exists. Tcheater ?"
 msgstr "Cet ID de synchronisation n'existe pas. Tricheur ?"
 
-#: ../classes/admin/admin-synchronizations-network.php:168
+#: classes/admin/admin-synchronizations-network.php:196
 msgid "Advanced settings updated with success !"
 msgstr "Réglages avancés mis à jour avec succès !"
 
-#: ../classes/admin/admin-synchronizations-network.php:177
+#: classes/admin/admin-synchronizations-network.php:205
 msgid "You must defined a label."
 msgstr "Vous devez définir un label."
 
-#: ../classes/admin/admin-synchronizations-network.php:182
+#: classes/admin/admin-synchronizations-network.php:210
 msgid "You must defined at least one emitter."
 msgstr "Vous devez définir au moins un émetteur."
 
-#: ../classes/admin/admin-synchronizations-network.php:187
+#: classes/admin/admin-synchronizations-network.php:215
 msgid "You must defined at least one receiver."
 msgstr "Vous devez définir au moins un receveur."
 
-#: ../classes/cli/flush.php:19 ../classes/cli/flush.php:51
+#: classes/cli/flush.php:37 classes/cli/flush.php:70
 msgid "No content to flush"
 msgstr "Aucun contenu à purger"
 
-#: ../classes/cli/flush.php:56
+#: classes/cli/flush.php:76
 msgid "Start of content flushing"
 msgstr "Début de la purge des contenus"
 
-#: ../classes/cli/flush.php:73
+#: classes/cli/flush.php:93
 msgid "End of content flushing"
 msgstr "Fin de la purge des contenus"
 
-#: ../classes/cli/flush.php:93
-msgid "Empty Term"
-msgstr "Terme vide"
-
-#: ../classes/cli/flush.php:106
+#: classes/cli/flush.php:129
 msgid ""
 "All commands related \"flush features\" to the BEA Content Sync Fusion plugin"
 msgstr ""
 "Toutes les commandes liées à la \"purge\" du plugin BEA Content Sync Fusion"
 
-#: ../classes/cli/queue.php:26 ../classes/cli/queue.php:72
+#: classes/cli/migration.php:63
+#, fuzzy
+#| msgid "No content to validate"
+msgid "No meta to migrate"
+msgstr "Aucun contenu à valider"
+
+#: classes/cli/migration.php:94
+#, fuzzy
+#| msgid ""
+#| "All commands related \"queue features\" to the BEA Content Sync Fusion "
+#| "plugin"
+msgid ""
+"Allow to migrate old relation structure (meta data) to relations tables for "
+"the BEA Content Sync Fusion plugin"
+msgstr ""
+"Toutes les commandes liées à la \"File d'attente\" du plugin BEA Content "
+"Sync Fusion"
+
+#: classes/cli/queue.php:28 classes/cli/queue.php:100
 msgid "No content to synchronize"
 msgstr "Aucun contenu à synchroniser"
 
-#: ../classes/cli/queue.php:60
+#: classes/cli/queue.php:71
+#, fuzzy
+#| msgid "Number of items in the queue : "
+msgid "%d items waiting on the queue"
+msgstr "Nombre d'éléments dans la file d'attente : "
+
+#: classes/cli/queue.php:81
 msgid "Queue flushed with success !"
 msgstr "La file d'attente a été purgée avec succès !"
 
-#: ../classes/cli/queue.php:77
+#: classes/cli/queue.php:107
 msgid "Start of content synchronization"
 msgstr "Début de la synchronisation des contenus"
 
-#: ../classes/cli/queue.php:87
+#: classes/cli/queue.php:117
 msgid "End of content synchronization"
 msgstr "Fin de la synchronisation des contenus"
 
-#: ../classes/cli/queue.php:95
+#: classes/cli/queue.php:152
 msgid ""
 "All commands related \"queue features\" to the BEA Content Sync Fusion plugin"
 msgstr ""
 "Toutes les commandes liées à la \"File d'attente\" du plugin BEA Content "
 "Sync Fusion"
 
-#: ../classes/cli/resync.php:54
+#: classes/cli/relation.php:191
+#, fuzzy
+#| msgid ""
+#| "All commands related \"resync features\" to the BEA Content Sync Fusion "
+#| "plugin"
+msgid ""
+"All commands related \"relation features\" to the BEA Content Sync Fusion "
+"plugin"
+msgstr ""
+"Toutes les commandes liées à la \"re-synchronisation\" du plugin BEA Content "
+"Sync Fusion"
+
+#: classes/cli/resync.php:22
+#, fuzzy
+#| msgid "No site to resync"
+msgid "No new site to resync"
+msgstr "Aucun site à re-synchroniser"
+
+#: classes/cli/resync.php:90
 msgid "No site to resync"
 msgstr "Aucun site à re-synchroniser"
 
-#: ../classes/cli/resync.php:132
+#: classes/cli/resync.php:137
+msgid "No sync data emission for this website"
+msgstr ""
+
+#: classes/cli/resync.php:195
 msgid "No content to resync"
 msgstr "Aucun contenu à re-synchroniser"
 
-#: ../classes/cli/resync.php:135
+#: classes/cli/resync.php:200
 msgid "Start of content resyncing"
 msgstr "Début de la re-synchronisation des contenus"
 
-#: ../classes/cli/resync.php:183
+#: classes/cli/resync.php:246
 msgid "End of content resync"
 msgstr "Fin de la re-synchronisation des contenus"
 
-#: ../classes/cli/resync.php:308
+#: classes/cli/resync.php:277
 msgid ""
 "All commands related \"resync features\" to the BEA Content Sync Fusion "
 "plugin"
@@ -248,40 +312,27 @@ msgstr ""
 "Toutes les commandes liées à la \"re-synchronisation\" du plugin BEA Content "
 "Sync Fusion"
 
-#: ../classes/client/taxonomy.php:17 ../classes/client/taxonomy.php:105
-msgid "Bad call, invalid datas."
-msgstr "Mauvais appel, données incorrectes."
-
-#: ../libraries/wordpress-settings-api-class/class.settings-api.php:347
-msgid "Browse"
-msgstr "Parcourir"
-
-#: ../libraries/wordpress-settings-api-class/class.settings-api.php:501
-msgid "No section available"
-msgstr "Aucune section"
-
-#: ../views/admin/blog-widget-list.php:6
+#: views/admin/blog-widget-list.php:6
 msgid "Title"
 msgstr "Titre"
 
-#: ../views/admin/blog-widget-list.php:7
+#: views/admin/blog-widget-list.php:7
 msgid "Action"
 msgstr "Action"
 
-#: ../views/admin/blog-widget-list.php:18
+#: views/admin/blog-widget-list.php:21
 msgid "No content to validate"
 msgstr "Aucun contenu à valider"
 
-#: ../views/admin/blog-widget-status.php:3
-#, php-format
+#: views/admin/blog-widget-status.php:3
 msgid "There are still %d item(s) to synchronize."
 msgstr "Il reste encore %d élément(s) à synchroniser."
 
-#: ../views/admin/blog-widget-status.php:10
+#: views/admin/blog-widget-status.php:10
 msgid "Force sync 30 first items"
 msgstr "Forcer la synchroniser les 30 premiers éléments"
 
-#: ../views/admin/client-metabox.php:2
+#: views/admin/client-metabox.php:2
 msgid ""
 "This content comes from a synchronization. You can choose to stop receiving "
 "updates by checking the following box."
@@ -289,28 +340,31 @@ msgstr ""
 "Ce contenu provient d'une synchronisation. Vous pouvez choisir de ne plus "
 "recevoir de mises à jour en cochant cette case."
 
-#: ../views/admin/client-metabox.php:7
+#: views/admin/client-metabox.php:7
 msgid "Exclude this content from future synchronization"
 msgstr "Exclure ce contenu des prochaines synchronisations"
 
-#: ../views/admin/client-metabox.php:11
+#: views/admin/client-metabox.php:11
 msgid "An internal note for diffusion:"
 msgstr "Note interne pour la diffusion:"
 
-#: ../views/admin/client-metabox.php:17
-#, php-format
+#: views/admin/client-metabox.php:17
+#, fuzzy
+#| msgid ""
+#| "This content comes from the site <strong>%s</strong>, and from the "
+#| "original article: <strong>%s</strong>"
 msgid ""
-"This content comes from the site <strong>%s</strong>, and from the original "
-"article: <strong>%s</strong>"
+"This content comes from the site <strong>%1$s</strong>, and from the "
+"original article: <strong>%2$s</strong>"
 msgstr ""
 "Ce contenu vient du site <strong>%s</strong>, et du contenu source: <strong>"
 "%s</strong>"
 
-#: ../views/admin/client-page-settings-notification.php:2
+#: views/admin/client-page-settings-notification.php:2
 msgid "Content Sync: Notifications"
 msgstr "Synchronisations : Notifications"
 
-#: ../views/admin/client-page-settings-notification.php:5
+#: views/admin/client-page-settings-notification.php:5
 msgid ""
 "This page allows you to choose what user must be notified when adding new "
 "content with sync feature. If no user is selected, no notification will be "
@@ -320,27 +374,27 @@ msgstr ""
 "quand un nouveau contenu est synchronisé. Si aucun utilisateur n'est "
 "sélectionné, aucune notification ne sera envoyée."
 
-#: ../views/admin/client-page-settings-notification.php:24
+#: views/admin/client-page-settings-notification.php:25
 msgid "Save settings"
 msgstr "Enregistrer les réglages"
 
-#: ../views/admin/client-terms-form.php:2
+#: views/admin/client-terms-form.php:2
 msgid "Emitter"
 msgstr "Émetteur"
 
-#: ../views/admin/client-terms-form.php:6
+#: views/admin/client-terms-form.php:6
 msgid "Blog:"
 msgstr "Blog:"
 
-#: ../views/admin/client-terms-form.php:16
+#: views/admin/client-terms-form.php:16
 msgid "Term:"
 msgstr "Terme:"
 
-#: ../views/admin/client-terms-form.php:18
+#: views/admin/client-terms-form.php:18
 msgid "No term or invalid term"
 msgstr "Aucun terme ou terme invalide"
 
-#: ../views/admin/server-metabox-auto.php:2
+#: views/admin/server-metabox-auto.php:2
 msgid ""
 "This content will be transmitted to other network sites. You decide to "
 "exclude from synchronization by checking the box below."
@@ -348,19 +402,18 @@ msgstr ""
 "Ce contenu sera transmis aux autres sites du réseau. Vous pouvez décider "
 "d'exclure cet élément de la synchronisation en cochant la case ci-dessous."
 
-#: ../views/admin/server-metabox-auto.php:8
+#: views/admin/server-metabox-auto.php:8
 msgid "Exclude this content from synchronization"
 msgstr "Exclure ce contenu de la synchronisation"
 
-#: ../views/admin/server-metabox-auto.php:12
-#: ../views/admin/server-metabox-manual.php:39
+#: views/admin/server-metabox-auto.php:12
+#: views/admin/server-metabox-manual.php:42
 msgid "An internal note for diffusion."
 msgstr "Une note interne lors de la diffusion."
 
-#: ../views/admin/server-metabox-auto.php:17
-#: ../views/admin/server-metabox-manual.php:44
-#: ../views/admin/server-term-metabox-manual.php:24
-#, php-format
+#: views/admin/server-metabox-auto.php:17
+#: views/admin/server-metabox-manual.php:48
+#: views/admin/server-term-metabox-manual.php:24
 msgid ""
 "This content is concerned with these following synchronizations: <strong>%s</"
 "strong>"
@@ -368,7 +421,7 @@ msgstr ""
 "Ce contenu est inclus dans les synchronisations suivantes : <strong>%s</"
 "strong>"
 
-#: ../views/admin/server-metabox-manual.php:2
+#: views/admin/server-metabox-manual.php:2
 msgid ""
 "You can choose which sites should receive this content. The publication "
 "status is taken into account only during the first synchronization on the "
@@ -378,35 +431,35 @@ msgstr ""
 "publication est prise en compte seulement lors de la première "
 "synchronisation vers le site concerné."
 
-#: ../views/admin/server-metabox-manual.php:23
+#: views/admin/server-metabox-manual.php:26
 msgid "Publish always"
 msgstr "Toujours publier"
 
-#: ../views/admin/server-metabox-manual.php:24
+#: views/admin/server-metabox-manual.php:27
 msgid "Pending + Leave as"
 msgstr "En attente de validation et laisser tel quel"
 
-#: ../views/admin/server-metabox-manual.php:27
+#: views/admin/server-metabox-manual.php:30
 msgid "Publish + Draft future"
 msgstr "Publié et Brouillon futur"
 
-#: ../views/admin/server-metabox-manual.php:28
+#: views/admin/server-metabox-manual.php:31
 msgid "Pending + Draft future"
 msgstr "En attente de relecture et brouillon"
 
-#: ../views/admin/server-page-add.php:3
+#: views/admin/server-page-add.php:3
 msgid "Content Sync: Edit"
 msgstr "Synchronisation : Éditer"
 
-#: ../views/admin/server-page-add.php:5
+#: views/admin/server-page-add.php:5
 msgid "Content Sync: Add"
 msgstr "Synchronisation : Ajouter"
 
-#: ../views/admin/server-page-add.php:11
+#: views/admin/server-page-add.php:11
 msgid "Label"
 msgstr "Libellé"
 
-#: ../views/admin/server-page-add.php:15
+#: views/admin/server-page-add.php:15
 msgid ""
 "The label of the synchronization is mainly used for the administration "
 "console."
@@ -414,55 +467,52 @@ msgstr ""
 "Le libellé de cette synchronisation est principalement utilisé pour "
 "l'amdinistration."
 
-#: ../views/admin/server-page-add.php:19
-#: ../views/admin/server-page-settings.php:12
+#: views/admin/server-page-add.php:19 views/admin/server-page-settings.php:12
 msgid "Post type"
 msgstr "Type de contenu"
 
-#: ../views/admin/server-page-add.php:21
+#: views/admin/server-page-add.php:21
 msgid "No post type, sync only taxo !"
 msgstr "Aucun type de contenu, seulement les taxonomies !"
 
-#: ../views/admin/server-page-add.php:28
+#: views/admin/server-page-add.php:28
 msgid "You must select the type of content that you want to sync"
 msgstr ""
 "Vous devez sélectionner le type de contenu que vous voulez synchroniser"
 
-#: ../views/admin/server-page-add.php:32
-#: ../views/admin/server-page-settings.php:13
+#: views/admin/server-page-add.php:32 views/admin/server-page-settings.php:13
 msgid "Taxonomies"
 msgstr "Taxinomies"
 
-#: ../views/admin/server-page-add.php:40
+#: views/admin/server-page-add.php:40
 msgid "You must select taxonomies related to content that you want to sync"
 msgstr ""
 "Vous devez sélectionner les taxinomies associées au contenu que vous voulez "
 "synchroniser"
 
-#: ../views/admin/server-page-add.php:45
+#: views/admin/server-page-add.php:45
 msgid "P2P connections"
 msgstr "Connections P2P"
 
-#: ../views/admin/server-page-add.php:53
+#: views/admin/server-page-add.php:53
 msgid "You must select P2P connection that you want to sync"
 msgstr ""
 "Vous devez sélectionner les connections P2P que vous voulez synchroniser"
 
-#: ../views/admin/server-page-add.php:58
-#: ../views/admin/server-page-settings.php:17
+#: views/admin/server-page-add.php:58 views/admin/server-page-settings.php:17
 msgid "Mode"
 msgstr "Mode de fonctionnement"
 
-#: ../views/admin/server-page-add.php:62
+#: views/admin/server-page-add.php:63
 msgid "Manual"
 msgstr "Manuel"
 
-#: ../views/admin/server-page-add.php:63
+#: views/admin/server-page-add.php:64
 msgid "Automatic"
 msgstr "Automatique"
 
-#: ../views/admin/server-page-add.php:71 ../views/admin/server-page-add.php:101
-#: ../views/admin/server-page-add.php:115
+#: views/admin/server-page-add.php:73 views/admin/server-page-add.php:107
+#: views/admin/server-page-add.php:121
 msgid ""
 "Mode automatically is completely transparent to the user, whereas the manual "
 "mode adds a meta box in the writing page."
@@ -470,24 +520,19 @@ msgstr ""
 "Le mode automatique est complètement transparent pour l'utilisateur. Le mode "
 "manuel ajoute une boite de configuration dans la page d'édition."
 
-#: ../views/admin/server-page-add.php:75
-#: ../views/admin/server-page-settings.php:18
+#: views/admin/server-page-add.php:77 views/admin/server-page-settings.php:18
 msgid "Default status"
 msgstr "Statut par défaut"
 
-#: ../views/admin/server-page-add.php:79
-msgid "Publish"
-msgstr "Publié"
-
-#: ../views/admin/server-page-add.php:80
+#: views/admin/server-page-add.php:83
 msgid "Pending"
 msgstr "En attente de relecture"
 
-#: ../views/admin/server-page-add.php:81
+#: views/admin/server-page-add.php:84
 msgid "User selection's, only for manual mode"
 msgstr "Choix de l'utilisateur, seulement en mode manuel"
 
-#: ../views/admin/server-page-add.php:89
+#: views/admin/server-page-add.php:93
 msgid ""
 "When content is published and it is sent to other sites, it is automatically "
 "set to the status \"published\", you can also set the \"pending\" status and "
@@ -499,57 +544,53 @@ msgstr ""
 "\" et donner la possibilité à chaque administrateur de valider ou pas le "
 "contenu. (seulement pour les types de contenu)"
 
-#: ../views/admin/server-page-add.php:93
-#: ../views/admin/server-page-settings.php:19
+#: views/admin/server-page-add.php:97 views/admin/server-page-settings.php:19
 msgid "Emitters"
 msgstr "Émetteurs"
 
-#: ../views/admin/server-page-add.php:105
-#: ../views/admin/server-page-settings.php:20
+#: views/admin/server-page-add.php:111 views/admin/server-page-settings.php:20
 msgid "Receivers"
 msgstr "Receveurs"
 
-#: ../views/admin/server-page-add.php:125
-#: ../views/admin/server-page-settings.php:128
+#: views/admin/server-page-add.php:131 views/admin/server-page-settings.php:145
 msgid "Save"
 msgstr "Enregistrer"
 
-#: ../views/admin/server-page-queue.php:2
+#: views/admin/server-page-queue.php:2
 msgid "Content Sync: Queue"
 msgstr "Synchronisations : file d'attente"
 
-#: ../views/admin/server-page-queue.php:8
-#, php-format
-msgid "Cron process %d items by %d items"
+#: views/admin/server-page-queue.php:7
+#, fuzzy
+#| msgid "Cron process %d items by %d items"
+msgid "Cron process %1$d items by %2$d items"
 msgstr "La tâche de fond synchonise %d éléments par %d élements"
 
-#: ../views/admin/server-page-queue.php:10
+#: views/admin/server-page-queue.php:9
 msgid "Number of items in the queue : "
 msgstr "Nombre d'éléments dans la file d'attente : "
 
-#: ../views/admin/server-page-queue.php:14
-#, php-format
+#: views/admin/server-page-queue.php:13
 msgid "The file %s has been modified : "
 msgstr "Le fichier %s a été modifié : "
 
-#: ../views/admin/server-page-queue.php:20
+#: views/admin/server-page-queue.php:19
 msgid "Delete file lock"
 msgstr "Supprimer le fichier de verrouillage"
 
-#: ../views/admin/server-page-queue.php:26
-#, php-format
+#: views/admin/server-page-queue.php:25
 msgid "The file %s has been deleted"
 msgstr "Le fichier %s a été supprimé"
 
-#: ../views/admin/server-page-queue.php:32
+#: views/admin/server-page-queue.php:32
 msgid "Number of items in the queue of maintenance : "
 msgstr "Nombre d'éléments dans la file d'attente de maintenance : "
 
-#: ../views/admin/server-page-queue.php:37
+#: views/admin/server-page-queue.php:36
 msgid "For debug only (30 items only)"
 msgstr "Pour le débuggage seulement (30 éléments à la fois)"
 
-#: ../views/admin/server-page-queue.php:38
+#: views/admin/server-page-queue.php:37
 msgid ""
 "You can now debug the queue of each site one by one from their dashboard or "
 "the list of sites view."
@@ -557,11 +598,11 @@ msgstr ""
 "Vous pouvez désormais debugger la file d'attente de chaque site depuis son "
 "tableau de bord ou depuis la liste de sites."
 
-#: ../views/admin/server-page-settings.php:2
+#: views/admin/server-page-settings.php:2
 msgid "Content Sync: Settings"
 msgstr "Synchronisations : Réglages"
 
-#: ../views/admin/server-page-settings.php:4
+#: views/admin/server-page-settings.php:4
 msgid ""
 "This plugin gives you the ability to sync content published on a website "
 "network to one or more websites network of your choice."
@@ -569,55 +610,47 @@ msgstr ""
 "Cette extension vous donne la possibilité de synchroniser du contenu entre "
 "un site du réseau vers un ou plusieurs sites de votre choix."
 
-#: ../views/admin/server-page-settings.php:10
+#: views/admin/server-page-settings.php:10
 msgid "Name"
 msgstr "Nom"
 
-#: ../views/admin/server-page-settings.php:11
+#: views/admin/server-page-settings.php:11
 msgid "Enable ?"
 msgstr "Activer ?"
 
-#: ../views/admin/server-page-settings.php:15
+#: views/admin/server-page-settings.php:15
 msgid "P2P"
 msgstr "P2P"
 
-#: ../views/admin/server-page-settings.php:26
-#, php-format
+#: views/admin/server-page-settings.php:26
 msgid "No synchronization exists. Want to <a href=\"%s\">create one</a>?"
 msgstr ""
 "Aucune synchronisation n'existe. Voulez-vous en <a href=\"%s\">ajouter une</"
 "a> ?"
 
-#: ../views/admin/server-page-settings.php:76
-#, php-format
-msgid ""
-"You are about to delete this sync '%s'\n"
-"  'Cancel' to stop, 'OK' to delete."
-msgstr ""
-
-#: ../views/admin/server-page-settings.php:76
+#: views/admin/server-page-settings.php:93
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../views/admin/server-page-settings.php:78
+#: views/admin/server-page-settings.php:95
 msgid "This item is locked because registered since the developer API."
 msgstr ""
 "Cet élément est verrouillé parce qu'il est défini à partir de l'API pour les "
 "développeurs."
 
-#: ../views/admin/server-page-settings.php:104
+#: views/admin/server-page-settings.php:121
 msgid "Content Sync: Advanced settings"
 msgstr "Synchronisations : Réglages avancés"
 
-#: ../views/admin/server-page-settings.php:110
+#: views/admin/server-page-settings.php:127
 msgid "Special mode"
 msgstr "Mode spécial"
 
-#: ../views/admin/server-page-settings.php:117
+#: views/admin/server-page-settings.php:134
 msgid "Remove all content edition restrictions"
 msgstr "Retirer toues les restrictions sur le contenu"
 
-#: ../views/admin/server-term-metabox-manual.php:5
+#: views/admin/server-term-metabox-manual.php:5
 msgid ""
 "You can choose which sites should receive this content. Select no site does "
 "not synchronize this content."
