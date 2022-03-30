@@ -169,8 +169,14 @@ class BEA_CSF_Admin_Restrictions {
 			$tags = (array) $_REQUEST['delete_tags'];
 		}
 
+		$taxonomy_name = $_REQUEST['taxonomy'] ?? '';
+
+		if ( empty( $taxonomy_name ) ) {
+			return;
+		}
+
 		foreach ( $tags as $tag ) {
-			$current_term = get_term( (int) $tag, $_GET['taxonomy'] );
+			$current_term = get_term( (int) $tag, $_REQUEST['taxonomy'] );
 
 			// Term not exist ?
 			if ( empty( $current_term ) || is_wp_error( $current_term ) ) {
