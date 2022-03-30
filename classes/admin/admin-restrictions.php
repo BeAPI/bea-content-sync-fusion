@@ -87,7 +87,8 @@ class BEA_CSF_Admin_Restrictions {
 				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ) ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
 
 				if ( current_user_can( 'publish_post', $post->ID ) ) {
-					$actions['publish'] = '<a href="' . esc_url(
+					$actions['publish'] = 	sprintf(
+						'<a href="%s">%s</a>',
 						wp_nonce_url(
 							add_query_arg(
 								array(
@@ -96,8 +97,9 @@ class BEA_CSF_Admin_Restrictions {
 								)
 							),
 							'bea-csf-publish'
-						)
-					) . '">Publish</a>';
+						),
+						__( 'Publish', 'bea-content-sync-fusion' )
+					);
 				}
 			}
 		}
