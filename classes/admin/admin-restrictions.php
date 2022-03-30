@@ -140,7 +140,9 @@ class BEA_CSF_Admin_Restrictions {
 
 		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 			unset( $actions['edit'], $actions['inline hide-if-no-js'], $actions['delete'] );
-			$actions['view'] .= '<span class="locked-term-parent"></span>';
+			if( isset( $actions['view'] ) ) {  // Check if the term has a single view
+				$actions['view'] .= '<span class="locked-term-parent"></span>';
+			}
 		}
 
 		return $actions;
@@ -163,7 +165,7 @@ class BEA_CSF_Admin_Restrictions {
 			$tags[] = $_REQUEST['tag_ID'];
 		} elseif ( ! empty( $_REQUEST['tax_ID'] ) ) {
 			$tags[] = $_REQUEST['tax_ID'];
-		} else {
+		} elseif ( ! empty( $_REQUEST['delete_tags'] ) ) {
 			$tags = (array) $_REQUEST['delete_tags'];
 		}
 
