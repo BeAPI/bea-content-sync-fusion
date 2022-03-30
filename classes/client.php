@@ -105,7 +105,11 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false );
+		if ( "1" === $_POST['include_from_sync'] && $_POST['mode'] === "exclude_default" ) {
+			return false;
+		}
+
+		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false, true );
 
 		return true;
 	}
@@ -127,7 +131,13 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false );
+		if ( empty( $_POST['include_from_sync'] ) && $_POST['mode'] === "exclude_default" ) {
+			return false;
+		}
+
+		$is_include_from_sync = (bool) get_post_meta( $attachment_id, '_include_from_sync', true );
+
+		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false, $is_include_from_sync );
 
 		return true;
 	}

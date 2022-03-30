@@ -12,7 +12,7 @@
 			<input type="text" name="sync[label]" class="widefat"
 				   value="<?php echo esc_attr( $current_sync->get_field( 'label' ) ); ?>"/>
 			<span
-				class="description"><?php _e( 'The label of the synchronization is mainly used for the administration console.', 'bea-content-sync-fusion' ); ?></span>
+					class="description"><?php _e( 'The label of the synchronization is mainly used for the administration console.', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
 		<p>
@@ -21,11 +21,11 @@
 				<option value=""><?php _e( 'No post type, sync only taxo !', 'bea-content-sync-fusion' ); ?></option>
 				<?php foreach ( get_post_types( array(), 'objects' ) as $post_type ) : ?>
 					<option
-						value="<?php echo esc_attr( $post_type->name ); ?>" <?php selected( $post_type->name, $current_sync->get_field( 'post_type' ) ); ?>><?php echo esc_html( $post_type->labels->name ); ?></option>
+							value="<?php echo esc_attr( $post_type->name ); ?>" <?php selected( $post_type->name, $current_sync->get_field( 'post_type' ) ); ?>><?php echo esc_html( $post_type->labels->name ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span
-				class="description"><?php _e( 'You must select the type of content that you want to sync', 'bea-content-sync-fusion' ); ?></span>
+					class="description"><?php _e( 'You must select the type of content that you want to sync', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
 		<p id="bea-csf-taxonomies-block">
@@ -33,11 +33,11 @@
 			<select multiple="multiple" class="widefat multiple-helper" name="sync[taxonomies][]">
 				<?php foreach ( get_taxonomies( array(), 'objects' ) as $taxonomy ) : ?>
 					<option
-						value="<?php echo esc_attr( $taxonomy->name ); ?>" <?php selected( true, in_array( $taxonomy->name, (array) $current_sync->get_field( 'taxonomies' ) ) ); ?>><?php echo esc_html( $taxonomy->labels->name . ' (' . $taxonomy->rewrite['slug'] . ')' ); ?></option>
+							value="<?php echo esc_attr( $taxonomy->name ); ?>" <?php selected( true, in_array( $taxonomy->name, (array) $current_sync->get_field( 'taxonomies' ) ) ); ?>><?php echo esc_html( $taxonomy->labels->name . ' (' . $taxonomy->rewrite['slug'] . ')' ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span
-				class="description"><?php _e( 'You must select taxonomies related to content that you want to sync', 'bea-content-sync-fusion' ); ?></span>
+					class="description"><?php _e( 'You must select taxonomies related to content that you want to sync', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
 		<?php if ( class_exists( 'P2P_Connection_Type_Factory' ) ) : ?>
@@ -46,11 +46,11 @@
 				<select multiple="multiple" class="widefat multiple-helper" name="sync[p2p_connections][]">
 					<?php foreach ( $p2p_registered_connections as $p2p_name => $p2p_obj ) : ?>
 						<option
-							value="<?php echo esc_attr( $p2p_name ); ?>" <?php selected( true, in_array( $p2p_name, (array) $current_sync->get_field( 'p2p_connections' ) ) ); ?>><?php echo esc_html( $p2p_name ); ?></option>
+								value="<?php echo esc_attr( $p2p_name ); ?>" <?php selected( true, in_array( $p2p_name, (array) $current_sync->get_field( 'p2p_connections' ) ) ); ?>><?php echo esc_html( $p2p_name ); ?></option>
 					<?php endforeach; ?>
 				</select>
 				<span
-					class="description"><?php _e( 'You must select P2P connection that you want to sync', 'bea-content-sync-fusion' ); ?></span>
+						class="description"><?php _e( 'You must select P2P connection that you want to sync', 'bea-content-sync-fusion' ); ?></span>
 			</p>
 		<?php endif; ?>
 
@@ -60,17 +60,18 @@
 				<?php
 				foreach (
 					array(
-						'manual' => __( 'Manual', 'bea-content-sync-fusion' ),
-						'auto'   => __( 'Automatic', 'bea-content-sync-fusion' ),
+						'manual' 			=> __( 'Manual', 'bea-content-sync-fusion' ),
+						'auto'   			=> __( 'Automatic', 'bea-content-sync-fusion' ),
+						'exclude_default'   => __( 'Exclude default', 'bea-content-sync-fusion' ),
 					) as $value => $label
 				) :
 					?>
 					<option
-						value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $current_sync->get_field( 'mode' ) ); ?>><?php echo esc_html( $label ); ?></option>
+							value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $current_sync->get_field( 'mode' ) ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span
-				class="description"><?php _e( 'Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', 'bea-content-sync-fusion' ); ?></span>
+					class="description"><?php _e( 'Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
 		<p>
@@ -86,11 +87,11 @@
 				) :
 					?>
 					<option
-						value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $current_sync->get_field( 'status' ) ); ?>><?php echo esc_html( $label ); ?></option>
+							value="<?php echo esc_attr( $value ); ?>" <?php selected( $value, $current_sync->get_field( 'status' ) ); ?>><?php echo esc_html( $label ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span
-				class="description"><?php _e( 'When content is published and it is sent to other sites, it is automatically set to the status "published", you can also set the "pending" status and provide an opportunity for each admin to validate or not the content. (only for post type)', 'bea-content-sync-fusion' ); ?></span>
+					class="description"><?php _e( 'When content is published and it is sent to other sites, it is automatically set to the status "published", you can also set the "pending" status and provide an opportunity for each admin to validate or not the content. (only for post type)', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
 		<p>
@@ -100,25 +101,25 @@
 						value="all" <?php selected( in_array( 'all', $current_sync->get_field( 'emitters', true ) ), true ); ?>><?php echo esc_html( 'All' ); ?></option>
 				<?php foreach ( BEA_CSF_Synchronizations::get_sites_from_network() as $site ) : ?>
 					<option
-						value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'emitters', true ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
+							value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'emitters', true ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span
-				class="description"><?php _e( 'Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', 'bea-content-sync-fusion' ); ?></span>
+					class="description"><?php _e( 'Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
 		<p>
 			<label><?php _e( 'Receivers', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat multiple-helper" name="sync[receivers][]" multiple="true">
 				<option
-					value="all" <?php selected( in_array( 'all', $current_sync->get_field( 'receivers', true ) ), true ); ?>><?php echo esc_html( 'All, except emitters' ); ?></option>
+						value="all" <?php selected( in_array( 'all', $current_sync->get_field( 'receivers', true ) ), true ); ?>><?php echo esc_html( 'All, except emitters' ); ?></option>
 				<?php foreach ( BEA_CSF_Synchronizations::get_sites_from_network() as $site ) : ?>
 					<option
-						value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'receivers', true ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
+							value="<?php echo esc_attr( $site['blog_id'] ); ?>" <?php selected( in_array( $site['blog_id'], $current_sync->get_field( 'receivers', true ) ), true ); ?>><?php echo esc_html( $site['blogname'] . ' (' . $site['domain'] . $site['path'] . ')' ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<span
-				class="description"><?php _e( 'Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', 'bea-content-sync-fusion' ); ?></span>
+					class="description"><?php _e( 'Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page.', 'bea-content-sync-fusion' ); ?></span>
 		</p>
 
 		<p class="submit">

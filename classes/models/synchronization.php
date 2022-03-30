@@ -120,7 +120,7 @@ class BEA_CSF_Synchronization {
 
 		// Call the unique action hook !
 		foreach ( $this->_register_hooks as $hook_name ) {
-			add_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 4 );
+			add_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 5 );
 		}
 
 		return true;
@@ -281,7 +281,7 @@ class BEA_CSF_Synchronization {
 	 *
 	 * @return bool
 	 */
-	public function send_to_receivers( $hook_data, $excluded_from_sync = false, $receivers_inclusion = false, $ignore_mode = false ) {
+	public function send_to_receivers( $hook_data, $excluded_from_sync = false, $receivers_inclusion = false, $ignore_mode = false, $include_from_sync = false ) {
 		global $_bea_origin_blog_id;
 
 		// Set hook data into class var
@@ -295,6 +295,10 @@ class BEA_CSF_Synchronization {
 
 		// Emitter content is excluded from SYNC ?
 		if ( ( 'auto' === $this->mode || true === $ignore_mode ) && true === $excluded_from_sync ) {
+			return false;
+		}
+
+		if ( ( 'exclude_default' === $this->mode || true === $ignore_mode ) && false === $include_from_sync ) {
 			return false;
 		}
 

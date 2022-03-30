@@ -11,6 +11,14 @@ class BEA_CSF_Admin_Metaboxes {
 	public function __construct() {
 		add_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), 10, 3 );
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ), 10, 2 );
+
+		/** Attachment **/
+		/** ----- Edit Attachment --- **/
+		add_action( 'add_meta_boxes_attachment', array( __CLASS__, 'add_meta_boxes_attachment' ), 10 );
+		/** ----- Modal Attachment --- **/
+		add_filter( 'attachment_fields_to_edit', array( __CLASS__, 'custom_fields_attachment' ), PHP_INT_MAX, 2 );
+		/** ----- Save data attachment --- **/
+		add_filter( 'attachment_fields_to_save', array( __CLASS__, 'attachment_fields_to_save' ), PHP_INT_MAX, 2 );
 	}
 
 	/**
@@ -163,6 +171,7 @@ class BEA_CSF_Admin_Metaboxes {
 			get_current_blog_id(),
 			$post->ID
 		);
+
 		if ( ! empty( $emitter_relation ) && 'attachment' === $post_type ) {
 			return false;
 		}
@@ -331,4 +340,182 @@ class BEA_CSF_Admin_Metaboxes {
 		return false;
 	}
 
+	/**
+	 * Add meta boxes for the attachments editing
+	 *
+	 * @param $post
+	 *
+	 * @return bool
+	 * @author Egidio CORICA
+	 */
+	public static function add_meta_boxes_attachment( $post ) {
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized(
+			array(
+				'attachment',
+			),
+			get_current_blog_id(),
+			$post->ID
+		);
+
+		if ( ! empty( $emitter_relation ) ) {
+			return false;
+		}
+
+		// Get syncs for current post_type and mode set to "auto"
+		$syncs_with_auto_state = BEA_CSF_Synchronizations::get(
+			array(
+				'post_type' => $post->post_type,
+				'mode'      => 'exclude_default',
+				'emitters'  => get_current_blog_id(),
+			),
+			'AND',
+			false,
+			true
+		);
+
+		if ( ! empty( $syncs_with_auto_state ) ) {
+			add_meta_box(
+				'meta-box-id',
+				__( 'Include in the sync', 'bea-content-sync-fusion' ),
+				array( __CLASS__, 'metabox_content_include' ),
+				'attachment',
+				'side',
+				'low',
+				array( 'syncs' => $syncs_with_auto_state )
+			);
+		}
+
+		return true;
+	}
+
+	public static function metabox_content_include( $post, $metabox ) {
+		// Get values for current post
+		$include_attachments = (int) get_post_meta( $post->ID, '_include_from_sync', true );
+
+		// Get names from syncs
+		$sync_names = array();
+		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
+			$sync_names[] = $sync_obj->get_field( 'label' );
+		}
+
+		// Include template
+		include BEA_CSF_DIR . 'views/admin/server-metabox-attachment.php';
+	}
+
+	/**
+	 *
+	 * Add field for the attachments modal
+	 *
+	 * @param $form_fields
+	 * @param $attachment
+	 *
+	 * @return array|false|mixed
+	 * @author Egidio CORICA
+	 */
+	public static function custom_fields_attachment( $form_fields, $attachment ) {
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized(
+			array(
+				'attachment',
+			),
+			get_current_blog_id(),
+			$attachment->ID
+		);
+
+		if ( ! empty( $emitter_relation ) ) {
+			return false;
+		}
+
+		// Get syncs for current post_type and mode set to "auto"
+		$syncs_with_auto_state = BEA_CSF_Synchronizations::get(
+			array(
+				'post_type' => $attachment->post_type,
+				'mode'      => 'exclude_default',
+				'emitters'  => get_current_blog_id(),
+			),
+			'AND',
+			false,
+			true
+		);
+
+		if ( ! empty( $syncs_with_auto_state ) ) {
+			return self::attachment_fields_to_edit( $form_fields, $attachment, $syncs_with_auto_state );
+		}
+
+		return $form_fields;
+	}
+
+	/**
+	 * Add the checkbox field to the right media to include it in the synchronization
+	 *
+	 *
+	 * @param array $form_fields
+	 * @param WP_Post $attachment
+	 *
+	 * @return array mixed
+	 * @author Egidio CORICA
+	 */
+	public static function attachment_fields_to_edit( $form_fields, $attachment, $syncs ) {
+		// Get values for current post
+		$include_attachments = (int) get_post_meta( $attachment->ID, '_include_from_sync', true );
+
+		$form_fields['include_sync'] = array(
+			'show_in_edit'  => false,
+			'show_in_modal' => true,
+			'label'         => __( 'Include in the sync', 'bea-content-sync-fusion' ),
+			'input'         => 'html',
+			'html'          => sprintf( '<input type="checkbox" id="include-from-sync-%s" name="include_from_sync" value="1" %s><input type="hidden" name="mode" value="exclude_default"/>', $attachment->ID, 1 === $include_attachments ? 'checked' : '' ),
+			'value'         => $include_attachments,
+		);
+
+		// return the modified images
+		return $form_fields;
+	}
+
+	/**
+	 * Save the data if needed for the media
+	 *
+	 * @param $_attachment
+	 * @param array $data
+	 *
+	 * @return array
+	 * @author Egidio CORICA
+	 */
+	public static function attachment_fields_to_save( $_attachment, $data ) {
+		if ( 'attachment' !== $_attachment['post_type'] ) {
+			return $_attachment;
+		}
+
+		$_attachment_id = apply_filters( 'bea/csf/save_attachment_id', $_attachment['ID'] );
+
+		if ( empty( $_attachment_id ) ) {
+			return $_attachment;
+		}
+
+		$_attachment_object = get_post( $_attachment_id );
+
+		if ( empty( $_attachment_object ) ) {
+			return $_attachment;
+		}
+
+		$previous_value = (int) get_post_meta( $_attachment_id, '_include_from_sync', true );
+
+		if ( 1 === $previous_value ) {
+			$_attachment['mode']              = 'exclude_default';
+			$_attachment['include_from_sync'] = $previous_value;
+		}
+
+		if ( isset( $_POST['include_from_sync'] ) && 1 === (int) $_POST['include_from_sync'] ) {
+			update_post_meta( $_attachment_id, '_include_from_sync', 1 );
+		} else {
+			delete_post_meta( $_attachment_id, '_include_from_sync' );
+			if ( 1 === $previous_value ) {
+				do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . get_current_blog_id(), $_attachment_object, false, false, false, true );
+			}
+		}
+
+		add_filter( 'attachment_fields_to_save', array( __CLASS__, 'attachment_fields_to_save' ), PHP_INT_MAX, 2 );
+
+		// return the modified images
+		return $_attachment;
+	}
 }

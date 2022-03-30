@@ -3,8 +3,8 @@ msgstr ""
 "Project-Id-Version: O&O - Content Synchronization - Fusion\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bea-content-sync-"
 "fusion\n"
-"POT-Creation-Date: 2022-03-23T14:48:11+00:00\n"
-"PO-Revision-Date: 2022-03-23 15:55+0100\n"
+"POT-Creation-Date: 2020-10-27 21:50+0100\n"
+"PO-Revision-Date: 2022-03-30 12:38+0200\n"
 "Last-Translator: beapi <amaury@beapi.fr>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -107,13 +107,17 @@ msgstr "N'afficher que le contenu local"
 msgid "Show only remote content"
 msgstr "N'afficher que le contenu distant"
 
-#: classes/admin/admin-metaboxes.php:184
+#: classes/admin/admin-metaboxes.php:197
 msgid "Synchronization (auto)"
 msgstr "Synchronisation (automatique)"
 
-#: classes/admin/admin-metaboxes.php:213
+#: classes/admin/admin-metaboxes.php:226
 msgid "Synchronization (manual)"
 msgstr "Synchronisation (manuelle)"
+
+#: classes/admin/admin-metaboxes.php:382 classes/admin/admin-metaboxes.php:468
+msgid "Include in the sync"
+msgstr "Inclure dans la synchronisation"
 
 #: classes/admin/admin-notifications.php:29
 msgid "Content Sync Notifications"
@@ -131,11 +135,11 @@ msgstr "Utilisateurs disponibles"
 msgid "Selection users"
 msgstr "Sélection des utilisateurs"
 
-#: classes/admin/admin-restrictions.php:101 views/admin/server-page-add.php:82
+#: classes/admin/admin-restrictions.php:101 views/admin/server-page-add.php:83
 msgid "Publish"
 msgstr "Publié"
 
-#: classes/admin/admin-restrictions.php:188
+#: classes/admin/admin-restrictions.php:196
 msgid ""
 "You are not allowed to edit this content. You must update it from your "
 "master site."
@@ -163,7 +167,7 @@ msgstr "Éditer"
 
 #: classes/admin/admin-synchronizations-network.php:72
 #: classes/admin/admin-synchronizations-network.php:73
-#: views/admin/server-page-add.php:134
+#: views/admin/server-page-add.php:135
 msgid "Add"
 msgstr "Ajouter"
 
@@ -266,7 +270,7 @@ msgstr ""
 "Toutes les commandes liées à la \"File d'attente\" du plugin BEA Content "
 "Sync Fusion"
 
-#: classes/cli/relation.php:191
+#: classes/cli/relation.php:193
 #, fuzzy
 #| msgid ""
 #| "All commands related \"resync features\" to the BEA Content Sync Fusion "
@@ -290,7 +294,7 @@ msgstr "Aucun site à re-synchroniser"
 
 #: classes/cli/resync.php:137
 msgid "No sync data emission for this website"
-msgstr ""
+msgstr "Pas d’émission de données de synchronisation pour ce site web"
 
 #: classes/cli/resync.php:195
 msgid "No content to resync"
@@ -394,6 +398,29 @@ msgstr "Terme:"
 msgid "No term or invalid term"
 msgstr "Aucun terme ou terme invalide"
 
+#: views/admin/server-metabox-attachment.php:3
+msgid ""
+"This content will be transmitted to other network sites. You decide to "
+"include from synchronization by checking the box below."
+msgstr ""
+"Ce contenu sera transmis aux autres sites du réseau. Vous pouvez décider "
+"d’inclure cet élément de la synchronisation en cochant la case ci-dessous."
+
+#: views/admin/server-metabox-attachment.php:9
+msgid "Include this content from synchronization"
+msgstr "Inclure ce contenu de la synchronisation"
+
+#: views/admin/server-metabox-attachment.php:13
+#: views/admin/server-metabox-auto.php:17
+#: views/admin/server-metabox-manual.php:48
+#: views/admin/server-term-metabox-manual.php:24
+msgid ""
+"This content is concerned with these following synchronizations: <strong>%s</"
+"strong>"
+msgstr ""
+"Ce contenu est inclus dans les synchronisations suivantes : <strong>%s</"
+"strong>"
+
 #: views/admin/server-metabox-auto.php:2
 msgid ""
 "This content will be transmitted to other network sites. You decide to "
@@ -410,16 +437,6 @@ msgstr "Exclure ce contenu de la synchronisation"
 #: views/admin/server-metabox-manual.php:42
 msgid "An internal note for diffusion."
 msgstr "Une note interne lors de la diffusion."
-
-#: views/admin/server-metabox-auto.php:17
-#: views/admin/server-metabox-manual.php:48
-#: views/admin/server-term-metabox-manual.php:24
-msgid ""
-"This content is concerned with these following synchronizations: <strong>%s</"
-"strong>"
-msgstr ""
-"Ce contenu est inclus dans les synchronisations suivantes : <strong>%s</"
-"strong>"
 
 #: views/admin/server-metabox-manual.php:2
 msgid ""
@@ -511,8 +528,12 @@ msgstr "Manuel"
 msgid "Automatic"
 msgstr "Automatique"
 
-#: views/admin/server-page-add.php:73 views/admin/server-page-add.php:107
-#: views/admin/server-page-add.php:121
+#: views/admin/server-page-add.php:65
+msgid "Exclude default (only attachments)"
+msgstr "Exclusion par défaut (uniquement pour les médias)"
+
+#: views/admin/server-page-add.php:74 views/admin/server-page-add.php:108
+#: views/admin/server-page-add.php:122
 msgid ""
 "Mode automatically is completely transparent to the user, whereas the manual "
 "mode adds a meta box in the writing page."
@@ -520,19 +541,19 @@ msgstr ""
 "Le mode automatique est complètement transparent pour l'utilisateur. Le mode "
 "manuel ajoute une boite de configuration dans la page d'édition."
 
-#: views/admin/server-page-add.php:77 views/admin/server-page-settings.php:18
+#: views/admin/server-page-add.php:78 views/admin/server-page-settings.php:18
 msgid "Default status"
 msgstr "Statut par défaut"
 
-#: views/admin/server-page-add.php:83
+#: views/admin/server-page-add.php:84
 msgid "Pending"
 msgstr "En attente de relecture"
 
-#: views/admin/server-page-add.php:84
+#: views/admin/server-page-add.php:85
 msgid "User selection's, only for manual mode"
 msgstr "Choix de l'utilisateur, seulement en mode manuel"
 
-#: views/admin/server-page-add.php:93
+#: views/admin/server-page-add.php:94
 msgid ""
 "When content is published and it is sent to other sites, it is automatically "
 "set to the status \"published\", you can also set the \"pending\" status and "
@@ -544,15 +565,15 @@ msgstr ""
 "\" et donner la possibilité à chaque administrateur de valider ou pas le "
 "contenu. (seulement pour les types de contenu)"
 
-#: views/admin/server-page-add.php:97 views/admin/server-page-settings.php:19
+#: views/admin/server-page-add.php:98 views/admin/server-page-settings.php:19
 msgid "Emitters"
 msgstr "Émetteurs"
 
-#: views/admin/server-page-add.php:111 views/admin/server-page-settings.php:20
+#: views/admin/server-page-add.php:112 views/admin/server-page-settings.php:20
 msgid "Receivers"
 msgstr "Receveurs"
 
-#: views/admin/server-page-add.php:131 views/admin/server-page-settings.php:145
+#: views/admin/server-page-add.php:132 views/admin/server-page-settings.php:145
 msgid "Save"
 msgstr "Enregistrer"
 
@@ -657,3 +678,22 @@ msgid ""
 msgstr ""
 "Vous pouvez choisir sur quels sites recevoir ce contenu. Ne sélectionner "
 "aucun site ne synchronise pas ce contenu."
+
+#, php-format
+#~ msgid "Preview &#8220;%s&#8221;"
+#~ msgstr "Prévisualiser &#8220;%s&#8221;"
+
+#~ msgid "Preview"
+#~ msgstr "Prévisualiser "
+
+#~ msgid "Empty Term"
+#~ msgstr "Terme vide"
+
+#~ msgid "Bad call, invalid datas."
+#~ msgstr "Mauvais appel, données incorrectes."
+
+#~ msgid "Browse"
+#~ msgstr "Parcourir"
+
+#~ msgid "No section available"
+#~ msgstr "Aucune section"
