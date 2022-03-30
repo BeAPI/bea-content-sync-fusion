@@ -105,10 +105,6 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		if ( "1" === $_POST['include_from_sync'] && $_POST['mode'] === "exclude_default" ) {
-			return false;
-		}
-
 		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false, true );
 
 		return true;

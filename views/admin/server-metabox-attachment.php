@@ -5,6 +5,7 @@
 
 <input type="checkbox" id="<?php echo esc_attr($input_id); ?>" name="include_from_sync"
 	   value="1" <?php checked( $include_attachments, 1 ); ?> />
+<input type="hidden" name="mode" value="exclude_default"/>
 <label for="<?php echo esc_attr($input_id); ?>">
 	<?php _e( 'Include this content from synchronization', 'bea-content-sync-fusion' ); ?>
 </label>
