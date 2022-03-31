@@ -4,13 +4,13 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BEA - Content Sync Fusion 3.8.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bea-content-sync-fusion\n"
-"Last-Translator: Zainoudine Soulé <zsoule@beapi.fr>\n"
+"Last-Translator: Egidio CORICA <ecorica@beapi.fr>\n"
 "Language-Team: Rexel Team\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "POT-Creation-Date: 2020-10-27 21:50+0100\n"
-"PO-Revision-Date: 2022-03-23T14:48:11+00:00\n"
+"PO-Revision-Date: 2022-03-30T10:34:49+00:00\n"
 "X-Generator: WP-CLI 2.6.0\n"
 "X-Domain: bea-content-sync-fusion\n"
 
@@ -94,12 +94,17 @@ msgstr ""
 msgid "Show only remote content"
 msgstr ""
 
-#: classes/admin/admin-metaboxes.php:184
+#: classes/admin/admin-metaboxes.php:197
 msgid "Synchronization (auto)"
 msgstr ""
 
-#: classes/admin/admin-metaboxes.php:213
+#: classes/admin/admin-metaboxes.php:226
 msgid "Synchronization (manual)"
+msgstr ""
+
+#: classes/admin/admin-metaboxes.php:382
+#: classes/admin/admin-metaboxes.php:468
+msgid "Include in the sync"
 msgstr ""
 
 #: classes/admin/admin-notifications.php:29
@@ -119,11 +124,11 @@ msgid "Selection users"
 msgstr ""
 
 #: classes/admin/admin-restrictions.php:101
-#: views/admin/server-page-add.php:82
+#: views/admin/server-page-add.php:83
 msgid "Publish"
 msgstr ""
 
-#: classes/admin/admin-restrictions.php:188
+#: classes/admin/admin-restrictions.php:196
 msgid "You are not allowed to edit this content. You must update it from your master site."
 msgstr ""
 
@@ -148,7 +153,7 @@ msgstr ""
 
 #: classes/admin/admin-synchronizations-network.php:72
 #: classes/admin/admin-synchronizations-network.php:73
-#: views/admin/server-page-add.php:134
+#: views/admin/server-page-add.php:135
 msgid "Add"
 msgstr ""
 
@@ -236,7 +241,7 @@ msgstr ""
 msgid "All commands related \"queue features\" to the BEA Content Sync Fusion plugin"
 msgstr ""
 
-#: classes/cli/relation.php:191
+#: classes/cli/relation.php:193
 msgid "All commands related \"relation features\" to the BEA Content Sync Fusion plugin"
 msgstr ""
 
@@ -332,6 +337,21 @@ msgstr ""
 msgid "No term or invalid term"
 msgstr ""
 
+#: views/admin/server-metabox-attachment.php:3
+msgid "This content will be transmitted to other network sites. You decide to include from synchronization by checking the box below."
+msgstr ""
+
+#: views/admin/server-metabox-attachment.php:9
+msgid "Include this content from synchronization"
+msgstr ""
+
+#: views/admin/server-metabox-attachment.php:13
+#: views/admin/server-metabox-auto.php:17
+#: views/admin/server-metabox-manual.php:48
+#: views/admin/server-term-metabox-manual.php:24
+msgid "This content is concerned with these following synchronizations: <strong>%s</strong>"
+msgstr ""
+
 #: views/admin/server-metabox-auto.php:2
 msgid "This content will be transmitted to other network sites. You decide to exclude from synchronization by checking the box below."
 msgstr ""
@@ -343,12 +363,6 @@ msgstr ""
 #: views/admin/server-metabox-auto.php:12
 #: views/admin/server-metabox-manual.php:42
 msgid "An internal note for diffusion."
-msgstr ""
-
-#: views/admin/server-metabox-auto.php:17
-#: views/admin/server-metabox-manual.php:48
-#: views/admin/server-term-metabox-manual.php:24
-msgid "This content is concerned with these following synchronizations: <strong>%s</strong>"
 msgstr ""
 
 #: views/admin/server-metabox-manual.php:2
@@ -430,40 +444,44 @@ msgstr ""
 msgid "Automatic"
 msgstr ""
 
-#: views/admin/server-page-add.php:73
-#: views/admin/server-page-add.php:107
-#: views/admin/server-page-add.php:121
+#: views/admin/server-page-add.php:65
+msgid "Exclude default (only attachments)"
+msgstr ""
+
+#: views/admin/server-page-add.php:74
+#: views/admin/server-page-add.php:108
+#: views/admin/server-page-add.php:122
 msgid "Mode automatically is completely transparent to the user, whereas the manual mode adds a meta box in the writing page."
 msgstr ""
 
-#: views/admin/server-page-add.php:77
+#: views/admin/server-page-add.php:78
 #: views/admin/server-page-settings.php:18
 msgid "Default status"
 msgstr ""
 
-#: views/admin/server-page-add.php:83
+#: views/admin/server-page-add.php:84
 msgid "Pending"
 msgstr ""
 
-#: views/admin/server-page-add.php:84
+#: views/admin/server-page-add.php:85
 msgid "User selection's, only for manual mode"
 msgstr ""
 
-#: views/admin/server-page-add.php:93
+#: views/admin/server-page-add.php:94
 msgid "When content is published and it is sent to other sites, it is automatically set to the status \"published\", you can also set the \"pending\" status and provide an opportunity for each admin to validate or not the content. (only for post type)"
 msgstr ""
 
-#: views/admin/server-page-add.php:97
+#: views/admin/server-page-add.php:98
 #: views/admin/server-page-settings.php:19
 msgid "Emitters"
 msgstr ""
 
-#: views/admin/server-page-add.php:111
+#: views/admin/server-page-add.php:112
 #: views/admin/server-page-settings.php:20
 msgid "Receivers"
 msgstr ""
 
-#: views/admin/server-page-add.php:131
+#: views/admin/server-page-add.php:132
 #: views/admin/server-page-settings.php:145
 msgid "Save"
 msgstr ""
