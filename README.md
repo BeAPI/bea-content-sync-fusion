@@ -44,6 +44,14 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9
+
+* Feature: New "exclude_default" mode for attachments. Excludes attachments from the default synchronisation and adds a meta box to include them.
+* Added:  Add "--posttype=true", "--taxonomies=true" and "--attachments=true" arguments for the flush site command
+* Changed: Update of the .pot file and the FR translations
+* Fixed : Fix warning on term has no view (publicly_queryable=false)
+* Fixed : Fixed warning for "deletes_tag" and "taxonomy" values that are undefined.
+
 ### 3.8.2
 
 * Added: Hook to change ID on save_post (for revisionary metabox)
