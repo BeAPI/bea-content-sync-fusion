@@ -6,43 +6,43 @@ class BEA_CSF_Addon_Revisionize {
 	 */
 	public function __construct() {
 		if ( ! defined( 'REVISIONIZE_VERSION' ) ) {
-			return false;
+			return;
 		}
 
 		add_filter(
 			'bea_csf/client/posttype/before_merge',
-			array(
+			[
 				__CLASS__,
 				'bea_csf_client_posttype_before_merge',
-			),
+			],
 			10,
 			2
 		);
-		//add_filter( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
 		add_filter(
-			'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer',
-			array(
+			'bea_csf_client_PostType_merge_data_to_transfer',
+			[
 				__CLASS__,
 				'maybe_transform_data_for_draft',
-			),
+			],
 			10,
 			3
 		);
 
-		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ), 11, 2 );
-		add_action( 'display_post_states', array( __CLASS__, 'display_post_states' ), 11, 2 );
+		add_action( 'add_meta_boxes', [ __CLASS__, 'add_meta_boxes' ], 11, 2 );
+		add_action( 'display_post_states', [ __CLASS__, 'display_post_states' ], 11, 2 );
 
-		add_action( 'revisionize/get_post_custom_keys', array( __CLASS__, 'get_post_custom_keys' ), 11, 3 );
-
-		return true;
+		add_action( 'revisionize/get_post_custom_keys', [ __CLASS__, 'get_post_custom_keys' ], 11, 3 );
 	}
 
 	public static function get_post_custom_keys( $meta_keys, $id, $context ) {
-		if ( 'copy' === $context ) {
-			foreach ( [ '_network_post_revision' ] as $meta_key_delete ) {
-				if ( ( $key = array_search( $meta_key_delete, $meta_keys ) ) !== false ) {
-					unset( $meta_keys[ $key ] );
-				}
+		if ( 'copy' !== $context ) {
+			return $meta_keys;
+		}
+
+		foreach ( [ '_network_post_revision' ] as $meta_key_delete ) {
+			$key = array_search( $meta_key_delete, $meta_keys );
+			if ( false !== $key ) {
+				unset( $meta_keys[ $key ] );
 			}
 		}
 
@@ -65,7 +65,7 @@ class BEA_CSF_Addon_Revisionize {
 	/**
 	 * Add a custom post states for remote revision
 	 *
-	 * @param array $states
+	 * @param array   $states
 	 * @param WP_Post $post
 	 *
 	 * @return array
@@ -90,14 +90,14 @@ class BEA_CSF_Addon_Revisionize {
 			$_post_receivers_status = maybe_unserialize( $data['meta_data'][ '_b' . $data['blogid'] . '_post_receivers_status' ][0] );
 
 			if ( isset( $_post_receivers_status[ $sync_receiver_blog_id ] ) &&
-				in_array(
-					$_post_receivers_status[ $sync_receiver_blog_id ],
-					[
-						'publish-draft',
-						'pending-draft',
-					],
-					true
-				) ) {
+					in_array(
+						$_post_receivers_status[ $sync_receiver_blog_id ],
+						[
+							'publish-draft',
+							'pending-draft',
+						],
+						true
+					) ) {
 
 				// Mapping ID
 				$local_id = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
@@ -116,9 +116,9 @@ class BEA_CSF_Addon_Revisionize {
 				$data['post_status']           = 'draft';
 
 				// Add meta data for revisionize
-				$data['meta_data']['_post_revision_of']      = array( 0 => $local_id );
-				$data['meta_data']['_post_revision']         = array( 0 => true );
-				$data['meta_data']['_network_post_revision'] = array( 0 => true );
+				$data['meta_data']['_post_revision_of']      = [ 0 => $local_id ];
+				$data['meta_data']['_post_revision']         = [ 0 => true ];
+				$data['meta_data']['_network_post_revision'] = [ 0 => true ];
 			}
 		}
 

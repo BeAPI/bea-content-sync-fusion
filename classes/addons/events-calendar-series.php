@@ -14,25 +14,25 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 			return false;
 		}
 
-		add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 1 );
+		add_action( 'save_post', [ __CLASS__, 'save_post' ], 10, 1 );
 
-		add_action( 'bea_csf.server.posttype.merge', array( __CLASS__, 'bea_csf_server_posttype_merge' ), 10, 2 );
+		add_action( 'bea_csf.server.posttype.merge', [ __CLASS__, 'bea_csf_server_posttype_merge' ], 10, 2 );
 		add_action(
 			'bea_csf.client.posttype.merge',
-			array(
+			[
 				__CLASS__,
 				'bea_csf_client_posttype_merge_tickets',
-			),
+			],
 			10,
 			3
 		);
-		add_action( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge_venue' ), 10, 3 );
+		add_action( 'bea_csf.client.posttype.merge', [ __CLASS__, 'bea_csf_client_posttype_merge_venue' ], 10, 3 );
 		add_action(
 			'bea_csf.client.posttype.merge',
-			array(
+			[
 				__CLASS__,
 				'bea_csf_client_posttype_merge_organizer',
-			),
+			],
 			10,
 			3
 		);
@@ -91,8 +91,8 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 
 		// Get tickets
 		$tickets = Tribe__Tickets__Tickets::get_event_tickets( $data['ID'] );
-		if ( $tickets != false && ! empty( $tickets ) ) {
-			$data['tickets'] = array();
+		if ( ! empty( $tickets ) ) {
+			$data['tickets'] = [];
 
 			foreach ( $tickets as $ticket ) {
 				$data['tickets'][] = BEA_CSF_Server_PostType::get_data( $ticket->ID, $sync_fields );
@@ -101,13 +101,13 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 
 		// Get organizer
 		$data['_EventOrganizerID'] = get_post_meta( $data['ID'], '_EventOrganizerID', true );
-		if ( $data['_EventOrganizerID'] != false ) {
+		if ( false !== $data['_EventOrganizerID'] ) {
 			$data['_EventOrganizer'] = BEA_CSF_Server_PostType::get_data( $data['_EventOrganizerID'], $sync_fields );
 		}
 
 		// Get venue
 		$data['_EventVenueID'] = get_post_meta( $data['ID'], '_EventVenueID', true );
-		if ( $data['_EventVenueID'] != false ) {
+		if ( false !== $data['_EventVenueID'] ) {
 			$data['_EventVenue'] = BEA_CSF_Server_PostType::get_data( $data['_EventVenueID'], $sync_fields );
 		}
 
@@ -117,8 +117,8 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 	/**
 	 * Insert/update organizer on client part after event insertion
 	 *
-	 * @param array $data
-	 * @param array $sync_fields
+	 * @param array   $data
+	 * @param array   $sync_fields
 	 * @param WP_Post $new_post
 	 *
 	 * @return array mixed
@@ -129,19 +129,19 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 		}
 
 		// Get local event
-		$local_event_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
-		if ( false == $local_event_id ) {
+		$local_event_id = BEA_CSF_Relations::get_object_for_any( [ 'posttype' ], $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		if ( false === $local_event_id ) {
 			return $data;
 		}
 
 		// Create organizer on client if not exists
-		$local_organizer_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_EventOrganizerID'], $data['_EventOrganizerID'] );
-		if ( false == $local_organizer_id ) {
+		$local_organizer_id = BEA_CSF_Relations::get_object_for_any( [ 'posttype' ], $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_EventOrganizerID'], $data['_EventOrganizerID'] );
+		if ( false === $local_organizer_id ) {
 			$data['_EventOrganizer']['blogid'] = $data['blogid'];
 			BEA_CSF_Client_PostType::merge( $data['_EventOrganizer'], $sync_fields );
 
 			// Renew mapping ID
-			$local_organizer_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_EventOrganizerID'], $data['_EventOrganizerID'] );
+			$local_organizer_id = BEA_CSF_Relations::get_object_for_any( [ 'posttype' ], $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_EventOrganizerID'], $data['_EventOrganizerID'] );
 		}
 
 		// Update local organizer
@@ -153,8 +153,8 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 	/**
 	 * Insert/update venue on client part after event insertion
 	 *
-	 * @param array $data
-	 * @param array $sync_fields
+	 * @param array   $data
+	 * @param array   $sync_fields
 	 * @param WP_Post $new_post
 	 *
 	 * @return array mixed
@@ -165,19 +165,19 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 		}
 
 		// Get local event
-		$local_event_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
-		if ( false == $local_event_id ) {
+		$local_event_id = BEA_CSF_Relations::get_object_for_any( [ 'posttype' ], $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		if ( false === $local_event_id ) {
 			return $data;
 		}
 
 		// Create venue on client if not exists
-		$local_venue_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_EventVenueID'], $data['_EventVenueID'] );
-		if ( false == $local_venue_id ) {
+		$local_venue_id = BEA_CSF_Relations::get_object_for_any( [ 'posttype' ], $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_EventVenueID'], $data['_EventVenueID'] );
+		if ( false === $local_venue_id ) {
 			$data['_EventVenue']['blogid'] = $data['blogid'];
 			BEA_CSF_Client_PostType::merge( $data['_EventVenue'], $sync_fields );
 
 			// Renew mapping ID
-			$local_venue_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_EventVenueID'], $data['_EventVenueID'] );
+			$local_venue_id = BEA_CSF_Relations::get_object_for_any( [ 'posttype' ], $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['_EventVenueID'], $data['_EventVenueID'] );
 		}
 
 		// Update local venue
@@ -189,8 +189,8 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 	/**
 	 * Insert/update tickets on client part after event insertion
 	 *
-	 * @param array $data
-	 * @param array $sync_fields
+	 * @param array   $data
+	 * @param array   $sync_fields
 	 * @param WP_Post $new_post
 	 *
 	 * @return array mixed
@@ -202,8 +202,8 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 		}
 
 		// Get local event
-		$local_event_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
-		if ( false == $local_event_id ) {
+		$local_event_id = BEA_CSF_Relations::get_object_for_any( [ 'posttype' ], $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );
+		if ( false === $local_event_id ) {
 			return $data;
 		}
 
@@ -212,7 +212,7 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 		$local_tickets_id = wp_list_pluck( $local_tickets, 'ID' );
 
 		// Loop on each tickets for insertion, and keep ID
-		$remote_tickets_id = array();
+		$remote_tickets_id = [];
 		foreach ( $data['tickets'] as &$ticket ) {
 			// Fix event ID with local value
 			if ( isset( $ticket['meta_data']['_tribe_rsvp_for_event'] ) ) {
@@ -223,8 +223,8 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 			BEA_CSF_Client_PostType::merge( $ticket, $sync_fields );
 
 			// Translated remote tickets with current ID
-			$local_ticket_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $ticket['ID'], $ticket['ID'] );
-			if ( false != $local_ticket_id ) {
+			$local_ticket_id = BEA_CSF_Relations::get_object_for_any( [ 'posttype' ], $data['blogid'], $sync_fields['_current_receiver_blog_id'], $ticket['ID'], $ticket['ID'] );
+			if ( false !== $local_ticket_id ) {
 				$remote_tickets_id[] = (int) $local_ticket_id;
 			}
 		}

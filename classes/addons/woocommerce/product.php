@@ -41,7 +41,7 @@ class BEA_CSF_Addon_WooCommerce_Product {
 					$media_id     = (int) $media_id;
 					$new_media_id = BEA_CSF_Relations::get_object_for_any( array( 'attachment' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $media_id, $media_id );
 					if ( false !== $new_media_id ) {
-						  return $new_media_id;
+						return $new_media_id;
 					}
 
 					return $media_id;
@@ -60,7 +60,7 @@ class BEA_CSF_Addon_WooCommerce_Product {
 					$product_id     = (int) $product_id;
 					$new_product_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $product_id, $product_id );
 					if ( false !== $new_product_id ) {
-						  return $new_product_id;
+						return $new_product_id;
 					}
 
 					return $product_id;
@@ -79,7 +79,7 @@ class BEA_CSF_Addon_WooCommerce_Product {
 					$product_id     = (int) $product_id;
 					$new_product_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $product_id, $product_id );
 					if ( false !== $new_product_id ) {
-						  return $new_product_id;
+						return $new_product_id;
 					}
 
 					return $product_id;
@@ -98,7 +98,7 @@ class BEA_CSF_Addon_WooCommerce_Product {
 					$product_id     = (int) $product_id;
 					$new_product_id = BEA_CSF_Relations::get_object_for_any( array( 'posttype' ), $data['blogid'], $sync_fields['_current_receiver_blog_id'], $product_id, $product_id );
 					if ( false !== $new_product_id ) {
-						  return $new_product_id;
+						return $new_product_id;
 					}
 
 					return $product_id;
