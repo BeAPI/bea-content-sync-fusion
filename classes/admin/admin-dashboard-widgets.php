@@ -42,6 +42,11 @@ class BEA_CSF_Admin_Dashboard_Widgets {
 			wp_cache_flush();
 		}
 
+		/**
+		 * Get counter for the view
+		 */
+		$counter = BEA_CSF_Async::get_counter( get_current_blog_id() );
+
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/blog-widget-status.php' );
 
