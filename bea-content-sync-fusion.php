@@ -13,8 +13,9 @@ Copyright 2013-2020 - Be API Team (technique@beapi.fr)
 */
 
 // Plugin constants
+
 define( 'BEA_CSF_VERSION', '3.9' );
-define( 'BEA_CSF_DB_VERSION', '1603827572' );
+define( 'BEA_CSF_DB_VERSION', '1649671234' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
 
