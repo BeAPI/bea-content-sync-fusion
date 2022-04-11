@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9.1
+
+* Enhancement: Add new indexes to speedup the queries on receivers and emitters queries.
+
 ### 3.9
 
 * Feature: New "exclude_default" mode for attachments. Excludes attachments from the default synchronisation and adds a meta box to include them.
