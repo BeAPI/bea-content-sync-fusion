@@ -42,6 +42,8 @@ class BEA_CSF_Plugin {
             `custom_fields` TEXT NOT NULL,
             PRIMARY KEY (id), 
             UNIQUE KEY `type_emitter_receiver` (`type`(191), `emitter_blog_id`, `emitter_id`, `receiver_blog_id`, `receiver_id`)
+            KEY `emitters` ( `type`(191), `emitter_blog_id`, `emitter_id` )
+            KEY `receivers` ( `type`(191), `receiver_blog_id`, `receiver_id` )
         );";
 
 		if ( ! function_exists( 'dbDelta' ) ) {
