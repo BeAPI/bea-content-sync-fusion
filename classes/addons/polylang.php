@@ -219,10 +219,12 @@ class BEA_CSF_Addon_Polylang {
 
 		if ( 'posttype' === $type ) {
 			pll_save_post_translations( $new_values );
+			$this->bea_csf_update_posts_slug( $new_values );
 		}
 
 		if ( 'taxonomy' === $type ) {
 			pll_save_term_translations( $new_values );
+			$this->bea_csf_update_terms_slug( $new_values );
 		}
 	}
 
@@ -249,5 +251,55 @@ class BEA_CSF_Addon_Polylang {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Prevent post translations with same slugs
+	 *
+	 * @param $posts
+	 *
+	 * @author Léonard Phoumpakka
+	 *
+	 */
+	public function bea_csf_update_posts_slug( $posts ) {
+
+		foreach ( $posts as $lang => $post_id ) {
+
+			$post = get_post( $post_id );
+
+			if ( empty( $post ) ) {
+				continue;
+			}
+
+			$args              = $post->to_array();
+			$args['post_name'] = sanitize_title( $post->post_title );
+
+			\wp_update_post( $args );
+		}
+	}
+
+	/**
+	 * Prevent taxonomy translations with same slugs
+	 *
+	 * @param $terms
+	 *
+	 * @author Léonard Phoumpakka
+	 *
+	 */
+	public function bea_csf_update_terms_slug( $terms ) {
+		foreach ( $terms as $lang => $term_id ) {
+
+			$term_obj = get_term_by( 'ID', $term_id );
+
+			if ( empty( $term_obj ) || is_wp_error( $term_obj ) ) {
+				continue;
+			}
+
+			$args = [
+				'slug' => sanitize_title( $term_obj->name ),
+			];
+
+			\wp_update_term( $term_id, $term_obj->taxonomy, $args );
+		}
 	}
 }

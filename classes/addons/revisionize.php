@@ -9,15 +9,25 @@ class BEA_CSF_Addon_Revisionize {
 			return false;
 		}
 
-		add_filter( 'bea_csf/client/posttype/before_merge', array(
-			__CLASS__,
-			'bea_csf_client_posttype_before_merge',
-		), 10, 2 );
+		add_filter(
+			'bea_csf/client/posttype/before_merge',
+			array(
+				__CLASS__,
+				'bea_csf_client_posttype_before_merge',
+			),
+			10,
+			2
+		);
 		//add_filter( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
-		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array(
-			__CLASS__,
-			'maybe_transform_data_for_draft',
-		), 10, 3 );
+		add_filter(
+			'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer',
+			array(
+				__CLASS__,
+				'maybe_transform_data_for_draft',
+			),
+			10,
+			3
+		);
 
 		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ), 11, 2 );
 		add_action( 'display_post_states', array( __CLASS__, 'display_post_states' ), 11, 2 );
@@ -80,10 +90,14 @@ class BEA_CSF_Addon_Revisionize {
 			$_post_receivers_status = maybe_unserialize( $data['meta_data'][ '_b' . $data['blogid'] . '_post_receivers_status' ][0] );
 
 			if ( isset( $_post_receivers_status[ $sync_receiver_blog_id ] ) &&
-			     in_array( $_post_receivers_status[ $sync_receiver_blog_id ], [
-				     'publish-draft',
-				     'pending-draft',
-			     ], true ) ) {
+				in_array(
+					$_post_receivers_status[ $sync_receiver_blog_id ],
+					[
+						'publish-draft',
+						'pending-draft',
+					],
+					true
+				) ) {
 
 				// Mapping ID
 				$local_id = BEA_CSF_Relations::get_object_for_any( 'posttype', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['ID'], $data['ID'] );

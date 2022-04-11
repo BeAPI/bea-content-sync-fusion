@@ -11,7 +11,7 @@
 					<li>
 						<label class="selectit">
 							<input type="checkbox" name="term_receivers[]"
-							       value="<?php echo $blog['blog_id']; ?>" <?php checked( in_array( $blog['blog_id'], $current_values ), true ); ?> />&nbsp;
+								   value="<?php echo $blog['blog_id']; ?>" <?php checked( in_array( $blog['blog_id'], $current_values ), true ); ?> />&nbsp;
 							<?php esc_html_e( $blog['blogname'] ); ?>
 						</label>
 					</li>
@@ -19,7 +19,7 @@
 			</ul>
 		</div>
 
-		<?php if( !empty($sync_names) ) : ?>
+		<?php if ( ! empty( $sync_names ) ) : ?>
 			<p>
 				<?php printf( __( 'This content is concerned with these following synchronizations: <strong>%s</strong>', 'bea-content-sync-fusion' ), implode( ', ', $sync_names ) ); ?>
 			</p>

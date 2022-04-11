@@ -19,7 +19,7 @@ class BEA_CSF_Client_P2P {
 			return new WP_Error( 'invalid_datas', 'Error - Datas is invalid.' );
 		}
 
-		if ( !isset($data['blogid']) ) {
+		if ( ! isset( $data['blogid'] ) ) {
 			return new WP_Error( 'missing_blog_id', 'Error - Missing a blog ID for allow insertion.' );
 		}
 
@@ -62,9 +62,13 @@ class BEA_CSF_Client_P2P {
 		}
 
 		// Create connection
-		p2p_type( $data['p2p_type'] )->connect( $p2p_from_local, $p2p_to_local, array(
-			'date' => current_time( 'mysql' ),
-		) );
+		p2p_type( $data['p2p_type'] )->connect(
+			$p2p_from_local,
+			$p2p_to_local,
+			array(
+				'date' => current_time( 'mysql' ),
+			)
+		);
 	}
 
 	/**
@@ -115,7 +119,8 @@ class BEA_CSF_Client_P2P {
 		if ( ! isset( $blogs[ $wpdb->blogid ] ) ) {
 			add_user_to_blog( $wpdb->blogid, $user_id, $prefered_role );
 		} else {
-			wp_update_user( array(
+			wp_update_user(
+				array(
 					'ID'   => $user_id,
 					'role' => $prefered_role,
 				)

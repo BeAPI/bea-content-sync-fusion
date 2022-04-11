@@ -1,3 +1,6 @@
+<a href="https://beapi.fr">![Be API Github Banner](.github/banner-github.png)</a>
+
+
 BEA - Content Sync Fusion
 =======================
 
@@ -9,9 +12,17 @@ Manage content synchronisation across a WordPress multisite.
 * Require at least WordPress 4.6.x, in order to use the `WP_Site_Query`.
 * Know and understand the implementation of CRON tasks on a Linux server
 
+## Installation
+
+3 possibilities.
+
+ * Take the ZIP archive proposed in the Github releases
+ * Add "bea/bea-content-sync-fusion" on composer json project file
+ * Take this GIT repository and call "composer install" command
+
 ## Compatibility
 
-Compatible up to WordPress 5.x (Gutenberg is not completely covered at the moment)
+Compatible up to WordPress 5.x
 
 ### Third plugins compatibility
 
@@ -22,8 +33,57 @@ Compatible up to WordPress 5.x (Gutenberg is not completely covered at the momen
  * [The Events Calendar Family](https://theeventscalendar.com/)
  * [Revisionize](https://wordpress.org/plugins/revisionize/)
  * [Multisite Clone Duplicator](https://wordpress.org/plugins/multisite-clone-duplicator/)
- 
+
+## Who ?
+
+Created by [Be API](https://beapi.fr), the French WordPress leader agency since 2009. Based in Paris, we are more than 30 people and always [hiring](https://beapi.workable.com) some fun and talented guys. So we will be pleased to work with you.
+
+This plugin is only maintained, which means we do not guarantee some free support. Consider reporting an [issue](#issues--features-request--proposal) and be patient.
+
+If you really like what we do or want to thank us for our quick work, feel free to [donate](https://www.paypal.me/BeAPI) as much as you want / can, even 1€ is a great gift for buying coffee :)
+
 ## Changelog
+
+### 3.9
+
+* Feature: New "exclude_default" mode for attachments. Excludes attachments from the default synchronisation and adds a meta box to include them.
+* Added:  Add "--posttype=true", "--taxonomies=true" and "--attachments=true" arguments for the flush site command
+* Changed: Update of the .pot file and the FR translations
+* Fixed : Fix warning on term has no view (publicly_queryable=false)
+* Fixed : Fixed warning for "deletes_tag" and "taxonomy" values that are undefined.
+
+### 3.8.2
+
+* Added: Hook to change ID on save_post (for revisionary metabox)
+* Fixed: fix a bug on delete sync term by remove relation
+* Fixed: fix a bug with encode chars with get_the_title
+* Fixed: fix a fatal error with attrs or inner content null for gutenberg
+* Fixed: fix parent on term exist function for polylang
+* Fixed: fix a bug with same terms slugs for polylang
+* Fixed: fix wrong type when checking for attachment parent
+* Changed: handle the alternate queue if argument passed for cronjob
+* Changed: bump tools
+
+### 3.8.1
+
+* Fixed: fix a possible bug with nested calls to switch_to_blog()
+* Fixed: fix a bug with escapging data & gurenberg (thanks @petitphp)
+* Added: Add tools for testing (thanks @Rahe)
+
+### 3.8
+
+* Fixed: fix terms synchronization, a bug introduced on 3.0.1
+* Added: Add tooling for quality (phpcs/cbf/psalm)
+* Added: New algorithm for reciprocal relations, or derivated relations
+* Changed: Update JavaScript libraries
+* Removed: old PHP libraries
+* Removed: custom flag & custom fields columns on relation object
+
+### 3.7
+
+* Feature: full support of Gutenberg
+* Improvement: Polylang addon (slug conflict)
+* Improvement: Restriction for terms
 
 ### 3.6
 

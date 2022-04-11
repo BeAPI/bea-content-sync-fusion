@@ -34,8 +34,18 @@ class BEA_CSF_Client_Taxonomy {
 		// Define this variable for skip infinite sync when emetter and receiver are reciprocal
 		$_bea_origin_blog_id = $data['blogid'];
 
+		// Prevent PLL same slug for several languages. Check if pll term exist by slug
+		if ( function_exists( 'PLL' ) && ! empty( $data['pll']['is_translated'] ) ) {
+			$exist_pll_term_id = PLL()->model->term_exists_by_slug( $data['slug'], $data['pll']['language'], $data['taxonomy'], BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ) );
+		}
+
 		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['term_id'], $data['term_id'] );
 		if ( ! empty( $local_term_id ) && (int) $local_term_id > 0 ) {
+			// Prevent PLL same slug for several languages on update
+			if ( ! empty( $data['pll']['is_translated'] ) && ! empty( $exist_pll_term_id ) ) {
+				$data['slug'] = $data['slug'] . '___' . $data['pll']['language']; // Prevent exist term
+			}
+
 			$new_term_id = wp_update_term( $local_term_id, $data['taxonomy'], array(
 				'name'        => $data['name'],
 				'description' => $data['description'],
@@ -43,24 +53,44 @@ class BEA_CSF_Client_Taxonomy {
 				'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
 			) );
 		} else {
-			$new_term_id = wp_insert_term( $data['name'], $data['taxonomy'], array(
-				'description' => $data['description'],
-				'slug'        => $data['slug'],
-				'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+			// Prevent PLL same slug for several languages on insert
+			if ( ! empty( $data['pll']['is_translated'] ) && empty( $exist_pll_term_id ) ) {
+				$data['slug'] = $data['slug'] . '___' . $data['pll']['language']; // Create new one
+			}
 
-			) );
+			$new_term_id = wp_insert_term(
+				$data['name'],
+				$data['taxonomy'],
+				array(
+					'description' => $data['description'],
+					'slug'        => $data['slug'],
+					'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+
+				)
+			);
 
 			// try to manage error when term already exist with the same name !
 			if ( is_wp_error( $new_term_id ) && 'term_exists' === $new_term_id->get_error_code() ) {
 
 				$term_exists_result = term_exists( $data['name'], $data['taxonomy'], $data['parent'] );
+
+				// Prevent PLL same slug for several languages on update
+				if ( ! empty( $data['pll']['is_translated'] ) && ! empty( $exist_pll_term_id ) ) {
+					$term_exists_result = [ 'term_id' => $exist_pll_term_id ];
+					$data['slug']       = $data['slug'] . '___' . $data['pll']['language']; // Prevent exist term
+				}
+
 				if ( false !== $term_exists_result ) {
-					$new_term_id = wp_update_term( $term_exists_result['term_id'], $data['taxonomy'], array(
-						'name'        => $data['name'],
-						'description' => $data['description'],
-						'slug'        => $data['slug'],
-						'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
-					) );
+					$new_term_id = wp_update_term(
+						$term_exists_result['term_id'],
+						$data['taxonomy'],
+						array(
+							'name'        => $data['name'],
+							'description' => $data['description'],
+							'slug'        => $data['slug'],
+							'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+						)
+					);
 					update_term_meta( $term_exists_result['term_id'], 'already_exists', 1 );
 				}
 			}
@@ -121,18 +151,18 @@ class BEA_CSF_Client_Taxonomy {
 
 		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );
 		if ( ! empty( $local_term_id ) && (int) $local_term_id > 0 ) {
-			// Term already exist before sync, keep it !
-			$already_exists = (int) get_term_id_from_meta( 'already_exists', 1 );
-			if ( 1 === $already_exists ) {
-				return false;
-			}
-
-			wp_delete_term( $local_term_id, $term['taxonomy'] );
-
 			BEA_CSF_Relations::delete_by_receiver( 'taxonomy', (int) $GLOBALS['wpdb']->blogid, (int) $local_term_id );
 
 			// Delete additional if reciprocal synchro
 			BEA_CSF_Relations::delete_by_emitter_and_receiver( 'taxonomy', (int) $GLOBALS['wpdb']->blogid, (int) $local_term_id, (int) $term['blogid'], (int) $term['term_id'] );
+
+			// Term already exist before sync, keep it !
+			$already_exists = get_term_meta( $local_term_id, 'already_exists', true );
+			if ( ! empty( $already_exists ) && 1 === absint( $already_exists ) ) {
+				return false;
+			}
+
+			wp_delete_term( $local_term_id, $term['taxonomy'] );
 		}
 
 		return apply_filters( 'bea_csf.client.taxonomy.delete', true, $sync_fields );

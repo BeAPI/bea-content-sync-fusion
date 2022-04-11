@@ -19,7 +19,7 @@ class BEA_CSF_SEO {
 	 * @return string
 	 */
 	public static function get_wp_canonical_url( $canonical_url, WP_Post $post ) {
-		return self::get_canonical_url( $canonical_url, $post);
+		return self::get_canonical_url( $canonical_url, $post );
 	}
 
 	/**

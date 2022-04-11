@@ -1,5 +1,5 @@
 <div class="wrap">
-	<h2><?php _e( "Content Sync: Settings", 'bea-content-sync-fusion' ); ?></h2>
+	<h2><?php _e( 'Content Sync: Settings', 'bea-content-sync-fusion' ); ?></h2>
 
 	<p><?php _e( 'This plugin gives you the ability to sync content published on a website network to one or more websites network of your choice.', 'bea-content-sync-fusion' ); ?></p>
 
@@ -22,7 +22,7 @@
 			</thead>
 			<tbody id="the-list" class="list:clients">
 			<?php
-			if ( $registered_syncs == false || empty( $registered_syncs ) ) :
+			if ( $registered_syncs === false || empty( $registered_syncs ) ) :
 				echo '<tr><td colspan="9">' . sprintf( __( 'No synchronization exists. Want to <a href="%s">create one</a>?', 'bea-content-sync-fusion' ), network_admin_url( 'admin.php?page=' . 'bea-csf-add' ) ) . '</td></tr>';
 			else :
 				$class = 'alternate';
@@ -64,15 +64,32 @@
 							<div class="row-actions">
 									<span class="edit">
 										<?php if ( ! $sync->is_locked() ) : ?>
-											<a href="<?php echo add_query_arg( array(
-												'action'  => 'edit',
-												'sync_id' => $sync->get_field( 'id' )
-											), network_admin_url( 'admin.php?page=' . 'bea-csf-add' ) ); ?>"><?php _e( 'Edit', 'bea-content-sync-fusion' ); ?></a>
+											<a href="
+											<?php
+											echo add_query_arg(
+												array(
+													'action'  => 'edit',
+													'sync_id' => $sync->get_field( 'id' ),
+												),
+												network_admin_url( 'admin.php?page=' . 'bea-csf-add' )
+											);
+											?>
+											"><?php _e( 'Edit', 'bea-content-sync-fusion' ); ?></a>
 											|
-											<a class="delete" href="<?php echo wp_nonce_url( add_query_arg( array(
-												'action'  => 'delete',
-												'sync_id' => $sync->get_field( 'id' )
-											), network_admin_url( 'admin.php?page=' . 'bea-csf-edit' ) ), 'delete-sync' ); ?>"
+											<a class="delete" href="
+											<?php
+											echo wp_nonce_url(
+												add_query_arg(
+													array(
+														'action'  => 'delete',
+														'sync_id' => $sync->get_field( 'id' ),
+													),
+													network_admin_url( 'admin.php?page=' . 'bea-csf-edit' )
+												),
+												'delete-sync'
+											);
+											?>
+											"
 											   onclick="return confirm('<?php echo esc_js( sprintf( __( "You are about to delete this sync '%s'\n  'Cancel' to stop, 'OK' to delete." ), $sync->get_field( 'label' ) ) ); ?>');"><?php _e( 'Delete', 'bea-content-sync-fusion' ); ?></a>
 										<?php else : ?>
 											<?php _e( 'This item is locked because registered since the developer API.', 'bea-content-sync-fusion' ); ?>
@@ -101,20 +118,20 @@
 	<!-- /col-container -->
 
 
-	<h3><?php _e( "Content Sync: Advanced settings", 'bea-content-sync-fusion' ); ?></h3>
+	<h3><?php _e( 'Content Sync: Advanced settings', 'bea-content-sync-fusion' ); ?></h3>
 	<div id="col-container">
 		<form action="" method="post">
 			<table class="form-table">
 				<tbody>
 				<tr valign="top">
-					<th scope="row"><?php _e( "Special mode", 'bea-content-sync-fusion' ); ?></th>
+					<th scope="row"><?php _e( 'Special mode', 'bea-content-sync-fusion' ); ?></th>
 					<td>
 						<fieldset>
 							<label for="csf-unlock-mode">
 								<input
 									name="csf_adv_settings[unlock-mode]" <?php checked( is_array( $current_settings ) && $current_settings['unlock-mode'] == '1', true ); ?>
 									type="checkbox" id="csf-unlock-mode"
-									value="1"> <?php _e( "Remove all content edition restrictions", 'bea-content-sync-fusion' ); ?>
+									value="1"> <?php _e( 'Remove all content edition restrictions', 'bea-content-sync-fusion' ); ?>
 							</label>
 						</fieldset>
 					</td>
@@ -125,7 +142,7 @@
 			<?php wp_nonce_field( 'update-bea-csf-adv-settings' ); ?>
 			<p class="submit">
 				<input class="button-primary" type="submit" name="update-bea-csf-adv-settings"
-				       value="<?php _e( "Save", 'bea-content-sync-fusion' ); ?>"/>
+					   value="<?php _e( 'Save', 'bea-content-sync-fusion' ); ?>"/>
 			</p>
 		</form>
 	</div>

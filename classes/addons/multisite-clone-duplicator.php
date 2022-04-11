@@ -61,14 +61,16 @@ class BEA_CSF_Addon_Multisite_Clone_Duplicator {
 	public function create_missing_relations( $from_site_id, $to_site_id ) {
 		switch_to_blog( $to_site_id );
 
-		$media_query = new WP_Query( array(
-			'post_type'        => 'attachment',
-			'bea_csf_filter'   => 'local-only',
-			'nopaging'         => true,
-			'fields'           => 'ids',
-			'suppress_filters' => false,
-			'post_status'      => 'any',
-		) );
+		$media_query = new WP_Query(
+			array(
+				'post_type'        => 'attachment',
+				'bea_csf_filter'   => 'local-only',
+				'nopaging'         => true,
+				'fields'           => 'ids',
+				'suppress_filters' => false,
+				'post_status'      => 'any',
+			)
+		);
 
 		if ( $media_query->have_posts() ) {
 			foreach ( $media_query->posts as $media_query_id ) {
