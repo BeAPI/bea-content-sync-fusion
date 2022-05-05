@@ -284,6 +284,7 @@ class BEA_CSF_Addon_ACF {
 	 * @param string $type_relation
 	 *
 	 * @return int
+	 * @author Egidio CORICA
 	 */
 	public static function translate_field( int $value, int $emitter_blog_id, int $receiver_blog_id, string $type_relation ): int {
 		$local_id = BEA_CSF_Relations::get_object_for_any(
@@ -303,6 +304,7 @@ class BEA_CSF_Addon_ACF {
 	 * @param $field_object
 	 *
 	 * @return string
+	 * @author Egidio CORICA
 	 */
 	public static function get_type_relation( $field_object ): string {
 		$types_relation = [
