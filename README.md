@@ -44,6 +44,11 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9.2
+
+* Feature : Added synchronisation of Gutenberg ACF blocks
+* Fixed: Remove double all on admin widget
+
 ### 3.9.1
 
 * Enhancement: Add new indexes to speedup the queries on receivers and emitters queries.
