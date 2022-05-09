@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Manage dynamic ACF fields
  *
@@ -19,6 +20,7 @@ class BEA_CSF_Addon_ACF {
 		add_action( 'bea_csf.client.attachment.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
 
 		add_action( 'bea_csf.client.taxonomy.merge', array( __CLASS__, 'bea_csf_client_taxonomy_merge' ), 10, 3 );
+		add_filter( 'bea_csf_gutenberg_translate_block_attributes', array( __CLASS__, 'translate_acf_blocks' ), 10, 4 );
 
 		return true;
 	}
@@ -214,6 +216,110 @@ class BEA_CSF_Addon_ACF {
 				self::$acf_fields[ $field['key'] ] = $field;
 			}
 		}
+	}
+
+	/**
+	 * Translate attributs for a acf block.
+	 *
+	 * @param array $attributes current block's attributs.
+	 * @param string $block_name current block's name.
+	 * @param int $emitter_blog_id ID of the emitter site.
+	 * @param int $receiver_blog_id ID of the receiver site.
+	 *
+	 * @return array translated attributs.
+	 * @author Egidio CORICA
+	 */
+	public static function translate_acf_blocks( array $attributes, string $block_name, int $emitter_blog_id, int $receiver_blog_id ): array {
+		// Skip if it's not an acf block
+		if ( false === strpos( $block_name, 'acf' ) ) {
+			return $attributes;
+		}
+
+		foreach ( $attributes['data'] as $field_name => $field_value ) {
+			if ( 0 === strpos( $field_name, '_' ) ) {
+				continue;
+			}
+
+			$field_object  = acf_get_field( $field_name );
+			$type_relation = self::get_type_relation( $field_object );
+
+			if ( empty( $type_relation ) ) {
+				continue;
+			}
+
+			// Multiple values
+			if ( is_array( $field_value ) ) {
+				$translate_fields = [];
+
+				foreach ( $field_value as $value ) {
+					if ( ! is_numeric( $value ) ) {
+						$translate_fields[] = $value;
+						continue;
+					}
+
+					$translate_fields[] = (string) self::translate_field( (int) $value, $emitter_blog_id, $receiver_blog_id, $type_relation );
+				}
+
+				$attributes['data'][ $field_name ] = $translate_fields;
+
+				continue;
+			}
+
+			// Single value
+			if ( is_numeric( $field_value ) ) {
+				$attributes['data'][ $field_name ] = (string) self::translate_field( (int) $field_value, $emitter_blog_id, $receiver_blog_id, $type_relation );
+			}
+		}
+
+		return $attributes;
+	}
+
+
+	/**
+	 * Translate field if a relationship exists
+	 *
+	 * @param int $value
+	 * @param int $emitter_blog_id
+	 * @param int $receiver_blog_id
+	 * @param string $type_relation
+	 *
+	 * @return int
+	 * @author Egidio CORICA
+	 */
+	public static function translate_field( int $value, int $emitter_blog_id, int $receiver_blog_id, string $type_relation ): int {
+		$local_id = BEA_CSF_Relations::get_object_for_any(
+			$type_relation,
+			$emitter_blog_id,
+			$receiver_blog_id,
+			$value,
+			$value
+		);
+
+		return ! empty( $local_id ) ? $local_id : $value;
+	}
+
+	/**
+	 * Get type relation by acf field
+	 *
+	 * @param $field_object
+	 *
+	 * @return string
+	 * @author Egidio CORICA
+	 */
+	public static function get_type_relation( $field_object ): string {
+		$types_relation = [
+			'posttype'   => apply_filters( 'bea_csf_addon_acf_match_fields_posttype', [ 'post_object', 'relationship', 'page_link' ], $field_object ),
+			'attachment' => apply_filters( 'bea_csf_addon_acf_match_fields_attachment', [ 'image', 'gallery', 'file' ], $field_object ),
+			'taxonomy'   => apply_filters( 'bea_csf_addon_acf_match_fields_taxonomy', [ 'taxonomy' ], $field_object ),
+		];
+
+		foreach ( $types_relation as $type_relation_name => $field_type ) {
+			if ( in_array( $field_object['type'], $field_type, true ) ) {
+				return $type_relation_name;
+			}
+		}
+
+		return '';
 	}
 
 }

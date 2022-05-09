@@ -146,7 +146,7 @@ class BEA_CSF_Addon_Gutenberg {
 				break;
 		}
 
-		return $attributes;
+		return apply_filters( 'bea_csf_gutenberg_translate_block_attributes', $attributes, $block_name, $emitter_blog_id, $receiver_blog_id );
 	}
 
 	/**
