@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9.3
+
+* Fixed : Correction of the syntax for the creation of the relations table. (Missing commas)
+
 ### 3.9.2
 
 * Feature : Added synchronisation of Gutenberg ACF blocks
