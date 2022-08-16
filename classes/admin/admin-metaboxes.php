@@ -422,7 +422,7 @@ class BEA_CSF_Admin_Metaboxes {
 		);
 
 		if ( ! empty( $emitter_relation ) ) {
-			return false;
+			return $form_fields;
 		}
 
 		// Get syncs for current post_type and mode set to "auto"
