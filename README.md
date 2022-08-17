@@ -44,6 +44,11 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9.4
+
+* Fixed : Change the return type of `attachment_fields_to_edit` to array to match the filter type attended
+* Added : Add the minimum WordPress version to plugin header
+
 ### 3.9.3
 
 * Fixed : Correction of the syntax for the creation of the relations table. (Missing commas)
