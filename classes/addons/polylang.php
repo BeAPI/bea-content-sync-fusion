@@ -104,14 +104,18 @@ class BEA_CSF_Addon_Polylang {
 	/**
 	 * Add additional polylang data for post
 	 *
-	 * @param array $emitter_data
+	 * @param array|bool $emitter_data
 	 *
-	 * @return array
+	 * @return array|bool
 	 *
 	 * @author Léonard Phoumpakka
 	 *
 	 */
-	public function bea_csf_server_posttype_merge( array $emitter_data ) {
+	public function bea_csf_server_posttype_merge( $emitter_data ) {
+		if ( ! is_array( $emitter_data ) ) {
+			return $emitter_data;
+		}
+
 		$emitter_data['pll']['is_translated'] = pll_is_translated_post_type( get_post_type( $emitter_data['ID'] ) );
 		$emitter_data['pll']['translations']  = pll_get_post_translations( $emitter_data['ID'] );
 		$emitter_data['pll']['language']      = pll_get_post_language( $emitter_data['ID'] );
