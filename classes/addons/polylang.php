@@ -21,14 +21,17 @@ class BEA_CSF_Addon_Polylang {
 	/**
 	 * Prepare additional polylang data for taxonomies
 	 *
-	 * @param array $emitter_data
+	 * @param array|bool $emitter_data
 	 *
-	 * @return array
+	 * @return array|bool
 	 *
 	 * @author Léonard Phoumpakka
 	 *
 	 */
-	public function bea_csf_server_taxonomy_merge( array $emitter_data ) {
+	public function bea_csf_server_taxonomy_merge( $emitter_data ) {
+		if ( ! is_array( $emitter_data ) ) {
+			return $emitter_data;
+		}
 
 		$emitter_data['pll']['is_translated'] = pll_is_translated_taxonomy( $emitter_data['taxonomy'] );
 		$emitter_data['pll']['translations']  = pll_get_term_translations( $emitter_data['term_id'] );
@@ -48,7 +51,6 @@ class BEA_CSF_Addon_Polylang {
 	 *
 	 */
 	public function bea_csf_client_taxonomy_before_merge( array $emitter_data ) {
-
 		// Taxonomy is translated ?
 		if ( false === $emitter_data['pll']['is_translated'] ) {
 			return $emitter_data;
@@ -73,16 +75,19 @@ class BEA_CSF_Addon_Polylang {
 	/**
 	 * Set language on synced terms from emitter
 	 *
-	 * @param array $emitter_data
+	 * @param array|bool $emitter_data
 	 * @param $sync_fields
 	 * @param WP_Term $new_term_obj
 	 *
-	 * @return array
+	 * @return array|bool
 	 *
 	 * @author Léonard Phoumpakka
 	 *
 	 */
-	public function bea_csf_set_term_language( array $emitter_data, $sync_fields, WP_Term $new_term_obj ) {
+	public function bea_csf_set_term_language( $emitter_data, $sync_fields, WP_Term $new_term_obj ) {
+		if ( ! is_array( $emitter_data ) ) {
+			return $emitter_data;
+		}
 
 		if ( false === $emitter_data['pll']['is_translated'] ) {
 			return $emitter_data;
@@ -104,14 +109,18 @@ class BEA_CSF_Addon_Polylang {
 	/**
 	 * Add additional polylang data for post
 	 *
-	 * @param array $emitter_data
+	 * @param array|bool $emitter_data
 	 *
-	 * @return array
+	 * @return array|bool
 	 *
 	 * @author Léonard Phoumpakka
 	 *
 	 */
-	public function bea_csf_server_posttype_merge( array $emitter_data ) {
+	public function bea_csf_server_posttype_merge( $emitter_data ) {
+		if ( ! is_array( $emitter_data ) ) {
+			return $emitter_data;
+		}
+
 		$emitter_data['pll']['is_translated'] = pll_is_translated_post_type( get_post_type( $emitter_data['ID'] ) );
 		$emitter_data['pll']['translations']  = pll_get_post_translations( $emitter_data['ID'] );
 		$emitter_data['pll']['language']      = pll_get_post_language( $emitter_data['ID'] );
