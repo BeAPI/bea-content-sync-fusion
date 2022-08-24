@@ -47,10 +47,12 @@ If you really like what we do or want to thank us for our quick work, feel free 
 ### 3.9.5
 
 * Fixed : #136 When post does not exists on filter bea_csf.server.xxxx.merge
+* Updating composer.json allowed plugin
 
 ### 3.9.4
 
-* Fixed : #132 Fix attachment_fields_to_edit filter error
+* Fixed : Change the return type of `attachment_fields_to_edit` to array to match the filter type attended
+* Added : Add the minimum WordPress version to plugin header
 
 ### 3.9.3
 
