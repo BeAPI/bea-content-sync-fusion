@@ -104,7 +104,7 @@ class BEA_CSF_Addon_Polylang {
 	/**
 	 * Add additional polylang data for post
 	 *
-	 * @param array|bool $emitter_data
+	 * @param array $emitter_data
 	 *
 	 * @return array|bool
 	 *
