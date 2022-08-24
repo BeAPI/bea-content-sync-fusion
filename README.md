@@ -44,6 +44,14 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9.5
+
+* Fixed : #136 When post does not exists on filter bea_csf.server.xxxx.merge
+
+### 3.9.4
+
+* Fixed : #132 Fix attachment_fields_to_edit filter error
+
 ### 3.9.3
 
 * Fixed : Correction of the syntax for the creation of the relations table. (Missing commas)
