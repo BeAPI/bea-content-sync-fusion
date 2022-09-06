@@ -18,6 +18,7 @@ define( 'BEA_CSF_VERSION', '3.9.5' );
 define( 'BEA_CSF_DB_VERSION', '1649671234' );
 define( 'BEA_CSF_OPTION', 'bea-content-sync-fusion' );
 define( 'BEA_CSF_CRON_QTY', 500 );
+define( 'BEA_CSF_RELATIONS_CACHE_GROUP', 'relations-cache-group' );
 
 if ( ! defined( 'BEA_CSF_MEDIA_FEATURE' ) ) {
 	define( 'BEA_CSF_MEDIA_FEATURE', true );
