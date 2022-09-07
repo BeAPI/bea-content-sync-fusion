@@ -1,6 +1,9 @@
 <?php
 
 class BEA_CSF_Relations {
+
+	const BEA_CSF_RELATIONS_CACHE_GROUP = 'relations-cache-group';
+
 	/**
 	 * @return int|mixed
 	 *
@@ -73,7 +76,12 @@ class BEA_CSF_Relations {
 
 		// Clean cache before delete
 		$query = $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE id = %d", $id );
-		self::delete_relation_cache( $query );
+		$relations = $wpdb->get_results( $query );
+		if ( ! empty ( $relations ) ) {
+			foreach ( $relations as $relation ) {
+				self::delete_relation_cache( $relation );
+			}
+		}
 
 		return $wpdb->delete( $wpdb->bea_csf_relations, array( 'id' => $id ), array( '%d' ) );
 	}
@@ -110,7 +118,12 @@ class BEA_CSF_Relations {
 
 		// Clean cache before delete
 		$query = $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE emitter_blog_id = %d", $blog_id );
-		self::delete_relation_cache( $query );
+		$relations = $wpdb->get_results( $query );
+		if ( ! empty ( $relations ) ) {
+			foreach ( $relations as $relation ) {
+				self::delete_relation_cache( $relation );
+			}
+		}
 
 		$wpdb->delete(
 			$wpdb->bea_csf_relations,
@@ -122,7 +135,12 @@ class BEA_CSF_Relations {
 
 		// Clean cache before delete
 		$query = $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE receiver_blog_id = %d", receiver_blog_id );
-		self::delete_relation_cache( $query );
+		$relations = $wpdb->get_results( $query );
+		if ( ! empty ( $relations ) ) {
+			foreach ( $relations as $relation ) {
+				self::delete_relation_cache( $relation );
+			}
+		}
 
 		$wpdb->delete(
 			$wpdb->bea_csf_relations,
@@ -155,7 +173,12 @@ class BEA_CSF_Relations {
 			$emitter_blog_id,
 			$emitter_id
 		);
-		self::delete_relation_cache( $query );
+		$relations = $wpdb->get_results( $query );
+		if ( ! empty ( $relations ) ) {
+			foreach ( $relations as $relation ) {
+				self::delete_relation_cache( $relation );
+			}
+		}
 
 		return $wpdb->delete(
 			$wpdb->bea_csf_relations,
@@ -188,7 +211,12 @@ class BEA_CSF_Relations {
 			$receiver_blog_id,
 			$receiver_id
 		);
-		self::delete_relation_cache( $query );
+		$relations = $wpdb->get_results( $query );
+		if ( ! empty ( $relations ) ) {
+			foreach ( $relations as $relation ) {
+				self::delete_relation_cache( $relation );
+			}
+		}
 
 		return $wpdb->delete(
 			$wpdb->bea_csf_relations,
@@ -225,7 +253,12 @@ class BEA_CSF_Relations {
 			$receiver_blog_id,
 			$receiver_id
 		);
-		self::delete_relation_cache( $query );
+		$relations = $wpdb->get_results( $query );
+		if ( ! empty ( $relations ) ) {
+			foreach ( $relations as $relation ) {
+				self::delete_relation_cache( $relation );
+			}
+		}
 
 		return $wpdb->delete(
 			$wpdb->bea_csf_relations,
@@ -392,8 +425,8 @@ class BEA_CSF_Relations {
 	 */
 	public static function current_object_is_synchronized( $types, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
-		$cache_id = self::get_cache_id( self::get_sql_in_types( $types ), $receiver_blog_id, $receiver_id  );
-		$relation = wp_cache_get( $cache_id, BEA_CSF_RELATIONS_CACHE_GROUP, false, $found );
+		$cache_id = self::get_cache_id( $types, $receiver_blog_id, $receiver_id  );
+		$relation = wp_cache_get( $cache_id, self::BEA_CSF_RELATIONS_CACHE_GROUP, false, $found );
 		if ( $found ) {
 			return $relation;
 		}
@@ -407,7 +440,7 @@ class BEA_CSF_Relations {
 			)
 		);
 		if ( null !== $result ) {
-			wp_cache_set( $cache_id, $result, BEA_CSF_RELATIONS_CACHE_GROUP );
+			wp_cache_set( $cache_id, $result, self::BEA_CSF_RELATIONS_CACHE_GROUP );
 		}
 		return $result;
 	}
@@ -544,9 +577,9 @@ class BEA_CSF_Relations {
 	 * @return string
 	 */
 	private static function get_cache_id ( $types, int $receiver_blog_id, int $receiver_id ): string {
-		$type = 'taxonomy';
-		if ( is_array( $types ) || $types !== 'taxonomy' ) {
-			$type = 'post';
+		$type = 'post';
+		if ( 'taxonomy' === $types || ( is_array( $types ) && in_array( 'taxonomy', $types, true ) ) ) {
+			$type = 'taxonomy';
 		}
 		return $receiver_blog_id . '-' . $receiver_id . '-' . $type;
 	}
@@ -554,19 +587,12 @@ class BEA_CSF_Relations {
 	/**
 	 * Delete all relation caches matching query results
 	 *
-	 * @param string $query
+	 * @param stdClass $relation
 	 * @return void
 	 */
-	private static function delete_relation_cache ( string $query ) {
-		global $wpdb;
-
-		$relations = $wpdb->get_results( $query );
-		if ( ! empty ( $relations ) ) {
-			foreach ( $relations as $relation ) {
-				$cache_id = self::get_cache_id( $relation->type, $relation->receiver_blog_id, $relation->receiver_id );
-				wp_cache_delete( $cache_id, BEA_CSF_RELATIONS_CACHE_GROUP );
-			}
-		}
+	public static function delete_relation_cache ( stdClass $relation ) {
+		$cache_id = self::get_cache_id( $relation->type, $relation->receiver_blog_id, $relation->receiver_id );
+		wp_cache_delete( $cache_id, BEA_CSF_RELATIONS_CACHE_GROUP );
 
 	}
 }
