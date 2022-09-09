@@ -17,14 +17,14 @@ class BEA_CSF_Relations {
 	public static function merge( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $strict_mode = false ) {
 		// Test with right emitter/receiver direction
 		$relation_id = self::exists( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id );
-		if ( $relation_id != false ) {
+		if ( false != $relation_id ) {
 			return $relation_id;
 		}
 
 		if ( false === $strict_mode ) {
 			// Test also on reverse direction emitter/receiver, allow to not create duplicate relations on 2 directions
 			$relation_id = self::exists( $type, $receiver_blog_id, $receiver_id, $emitter_blog_id, $emitter_id );
-			if ( $relation_id != false ) {
+			if ( false != $relation_id ) {
 				return $relation_id;
 			}
 		}
@@ -75,9 +75,10 @@ class BEA_CSF_Relations {
 		/** @var WPDB $wpdb */
 
 		// Clean cache before delete
-		$query = $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE id = %d", $id );
-		$relations = $wpdb->get_results( $query );
-		if ( ! empty ( $relations ) ) {
+		$relations = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE id = %d", $id )
+		);
+		if ( ! empty( $relations ) ) {
 			foreach ( $relations as $relation ) {
 				self::delete_relation_cache( $relation );
 			}
@@ -117,9 +118,10 @@ class BEA_CSF_Relations {
 		/** @var WPDB $wpdb */
 
 		// Clean cache before delete
-		$query = $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE emitter_blog_id = %d", $blog_id );
-		$relations = $wpdb->get_results( $query );
-		if ( ! empty ( $relations ) ) {
+		$relations = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE emitter_blog_id = %d", $blog_id )
+		);
+		if ( ! empty( $relations ) ) {
 			foreach ( $relations as $relation ) {
 				self::delete_relation_cache( $relation );
 			}
@@ -134,9 +136,10 @@ class BEA_CSF_Relations {
 		);
 
 		// Clean cache before delete
-		$query = $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE receiver_blog_id = %d", receiver_blog_id );
-		$relations = $wpdb->get_results( $query );
-		if ( ! empty ( $relations ) ) {
+		$relations = $wpdb->get_results(
+			$wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE receiver_blog_id = %d", receiver_blog_id )
+		);
+		if ( ! empty( $relations ) ) {
 			foreach ( $relations as $relation ) {
 				self::delete_relation_cache( $relation );
 			}
@@ -167,14 +170,15 @@ class BEA_CSF_Relations {
 		/** @var WPDB $wpdb */
 
 		// Clean cache before delete
-		$query = $wpdb->prepare(
-			"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s, emitter_blog_id = %d, emitter_id = %d",
-			$type,
-			$emitter_blog_id,
-			$emitter_id
+		$relations = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s, emitter_blog_id = %d, emitter_id = %d",
+				$type,
+				$emitter_blog_id,
+				$emitter_id
+			)
 		);
-		$relations = $wpdb->get_results( $query );
-		if ( ! empty ( $relations ) ) {
+		if ( ! empty( $relations ) ) {
 			foreach ( $relations as $relation ) {
 				self::delete_relation_cache( $relation );
 			}
@@ -205,14 +209,15 @@ class BEA_CSF_Relations {
 		/** @var WPDB $wpdb */
 
 		// Clean cache before delete
-		$query = $wpdb->prepare(
-			"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s, receiver_blog_id = %d, receiver_id = %d",
-			$type,
-			$receiver_blog_id,
-			$receiver_id
+		$relations = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s, receiver_blog_id = %d, receiver_id = %d",
+				$type,
+				$receiver_blog_id,
+				$receiver_id
+			)
 		);
-		$relations = $wpdb->get_results( $query );
-		if ( ! empty ( $relations ) ) {
+		if ( ! empty( $relations ) ) {
 			foreach ( $relations as $relation ) {
 				self::delete_relation_cache( $relation );
 			}
@@ -245,16 +250,17 @@ class BEA_CSF_Relations {
 		/** @var WPDB $wpdb */
 
 		// Clean cache before delete
-		$query = $wpdb->prepare(
-			"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s, emitter_blog_id = %d, emitter_id = %d, receiver_blog_id = %d, receiver_id = %d",
-			$type,
-			$emitter_blog_id,
-			$emitter_id,
-			$receiver_blog_id,
-			$receiver_id
+		$relations = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s, emitter_blog_id = %d, emitter_id = %d, receiver_blog_id = %d, receiver_id = %d",
+				$type,
+				$emitter_blog_id,
+				$emitter_id,
+				$receiver_blog_id,
+				$receiver_id
+			)
 		);
-		$relations = $wpdb->get_results( $query );
-		if ( ! empty ( $relations ) ) {
+		if ( ! empty( $relations ) ) {
 			foreach ( $relations as $relation ) {
 				self::delete_relation_cache( $relation );
 			}
@@ -310,7 +316,7 @@ class BEA_CSF_Relations {
 			return $result_id;
 		}
 
-		if ( $direct === true ) {
+		if ( true === $direct ) {
 			return false;
 		}
 
@@ -576,7 +582,7 @@ class BEA_CSF_Relations {
 	 * @param int $receiver_id
 	 * @return string
 	 */
-	private static function get_cache_id ( $types, int $receiver_blog_id, int $receiver_id ): string {
+	private static function get_cache_id( $types, int $receiver_blog_id, int $receiver_id ): string {
 		$type = 'post';
 		if ( 'taxonomy' === $types || ( is_array( $types ) && in_array( 'taxonomy', $types, true ) ) ) {
 			$type = 'taxonomy';
@@ -590,9 +596,9 @@ class BEA_CSF_Relations {
 	 * @param stdClass $relation
 	 * @return void
 	 */
-	public static function delete_relation_cache ( stdClass $relation ) {
+	public static function delete_relation_cache( stdClass $relation ) {
 		$cache_id = self::get_cache_id( $relation->type, $relation->receiver_blog_id, $relation->receiver_id );
-		wp_cache_delete( $cache_id, BEA_CSF_RELATIONS_CACHE_GROUP );
+		wp_cache_delete( $cache_id, self::BEA_CSF_RELATIONS_CACHE_GROUP );
 
 	}
 }
