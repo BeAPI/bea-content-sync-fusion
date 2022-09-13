@@ -114,7 +114,13 @@ class BEA_CSF_Admin_Restrictions {
 		if ( isset( $_GET['action'] ) && 'bea-csf-publish' === $_GET['action'] && isset( $_GET['ID'] ) && (int) $_GET['ID'] > 0 ) {
 			check_admin_referer( 'bea-csf-publish' );
 
-			wp_publish_post( (int) $_GET['ID'] );
+			$args = array(
+				'ID'           => (int) $_GET['ID'],
+				'post_status' => 'publish',
+			);
+
+			// to ensure post_name is set instead wp_publish_post
+			wp_update_post( $args );
 
 			$redirect_url = remove_query_arg( 'action' );
 			$redirect_url = remove_query_arg( 'ID', $redirect_url );
