@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9.6
+
+* Fixed : fix a bug by ensure "post_name" is set with wp_post_update() instead wp_publish_post()
+
 ### 3.9.5
 
 * Fixed : #136 When post does not exists on filter bea_csf.server.xxxx.merge
