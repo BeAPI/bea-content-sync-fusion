@@ -47,6 +47,7 @@ If you really like what we do or want to thank us for our quick work, feel free 
 ### 3.9.6
 
 * Fixed : fix a bug by ensure "post_name" is set with wp_post_update() instead wp_publish_post()
+* Added : object cache on relations
 
 ### 3.9.5
 
