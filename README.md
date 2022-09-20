@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9.7
+
+* Added : Add the cast for the arguments of the method 
+
 ### 3.9.6
 
 * Fixed : fix a bug by ensure "post_name" is set with wp_post_update() instead wp_publish_post()
