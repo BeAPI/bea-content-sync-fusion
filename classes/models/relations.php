@@ -5,14 +5,15 @@ class BEA_CSF_Relations {
 	const BEA_CSF_RELATIONS_CACHE_GROUP = 'relations-cache-group';
 
 	/**
-	 * @return int|mixed
-	 *
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
 	 *
 	 * @param $type
+	 *
+	 * @return int|mixed
+	 *
 	 */
 	public static function merge( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id, $strict_mode = false ) {
 		// Test with right emitter/receiver direction
@@ -33,14 +34,15 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return int
-	 *
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
 	 *
 	 * @param $type
+	 *
+	 * @return int
+	 *
 	 */
 	public static function insert( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
@@ -64,9 +66,9 @@ class BEA_CSF_Relations {
 	/**
 	 * Delete a row with this primary ID.
 	 *
-	 * @return mixed
-	 *
 	 * @param $id
+	 *
+	 * @return mixed
 	 *
 	 */
 	public static function delete( $id ) {
@@ -90,12 +92,13 @@ class BEA_CSF_Relations {
 	/**
 	 * Delete relation for an object_id for emitter and receiver context
 	 *
-	 * @return true
-	 *
 	 * @param integer $blog_id
 	 * @param integer $object_id
 	 *
 	 * @param string $type
+	 *
+	 * @return true
+	 *
 	 */
 	public static function delete_by_object_id( $type, $blog_id, $object_id ) {
 		self::delete_by_emitter( $type, $blog_id, $object_id );
@@ -107,9 +110,9 @@ class BEA_CSF_Relations {
 	/**
 	 * Delete data relation for a blog
 	 *
-	 * @return true
-	 *
 	 * @param integer $blog_id
+	 *
+	 * @return true
 	 *
 	 */
 	public static function delete_by_blog_id( $blog_id ) {
@@ -157,12 +160,13 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return false|int
-	 *
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
 	 *
 	 * @param $type
+	 *
+	 * @return false|int
+	 *
 	 */
 	public static function delete_by_emitter( $type, $emitter_blog_id, $emitter_id ) {
 		global $wpdb;
@@ -196,12 +200,13 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return false|int
-	 *
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
 	 *
 	 * @param $type
+	 *
+	 * @return false|int
+	 *
 	 */
 	public static function delete_by_receiver( $type, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
@@ -235,14 +240,15 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return false|int
-	 *
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
 	 * @param $receiver_blog_id
 	 * @param $receiver_id
 	 *
 	 * @param $type
+	 *
+	 * @return false|int
+	 *
 	 */
 	public static function delete_by_emitter_and_receiver( $type, $emitter_blog_id, $emitter_id, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
@@ -280,9 +286,9 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return mixed
-	 *
 	 * @param $id
+	 *
+	 * @return mixed
 	 *
 	 */
 	public static function get( $id ) {
@@ -294,14 +300,14 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return integer|false
-	 *
 	 * @param int $emitter_blog_id
 	 * @param int $receiver_blog_id
 	 * @param int $emitter_id
 	 * @param int $receiver_id
 	 *
 	 * @param string|array $type
+	 *
+	 * @return integer|false
 	 *
 	 * @author Alexandre Sadowski
 	 */
@@ -342,11 +348,12 @@ class BEA_CSF_Relations {
 	/**
 	 * Get all hierachy of relation for a content
 	 *
-	 * @return array
-	 *
 	 * @param $emitter_blog_id
 	 * @param $emitter_id
 	 * @param $type
+	 *
+	 * @return array
+	 *
 	 */
 	public static function get_relations_hierarchy( $type, $emitter_blog_id, $emitter_id ) {
 		$hierarchy = [];
@@ -370,13 +377,13 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return int
-	 *
 	 * @param int $emitter_blog_id
 	 * @param int $receiver_blog_id
 	 * @param int $emitter_id
 	 *
 	 * @param string|array $types
+	 *
+	 * @return int
 	 *
 	 * @author Alexandre Sadowski
 	 */
@@ -395,13 +402,13 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return int
-	 *
 	 * @param int $emitter_blog_id
 	 * @param int $receiver_blog_id
 	 * @param int $receiver_id
 	 *
 	 * @param string|array $types
+	 *
+	 * @return int
 	 *
 	 * @author Alexandre Sadowski
 	 */
@@ -420,18 +427,18 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return mixed
-	 *
 	 * @param int $receiver_blog_id
 	 * @param int $receiver_id
 	 *
 	 * @param string|array $types
 	 *
+	 * @return mixed
+	 *
 	 * @author Alexandre Sadowski
 	 */
 	public static function current_object_is_synchronized( $types, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
-		$cache_id = self::get_cache_id( $types, $receiver_blog_id, $receiver_id  );
+		$cache_id = self::get_cache_id( $types, (int) $receiver_blog_id, (int) $receiver_id );
 		$relation = wp_cache_get( $cache_id, self::BEA_CSF_RELATIONS_CACHE_GROUP, false, $found );
 		if ( $found ) {
 			return $relation;
@@ -448,6 +455,7 @@ class BEA_CSF_Relations {
 		if ( null !== $result ) {
 			wp_cache_set( $cache_id, $result, self::BEA_CSF_RELATIONS_CACHE_GROUP );
 		}
+
 		return $result;
 	}
 
@@ -512,9 +520,9 @@ class BEA_CSF_Relations {
 	}
 
 	/**
-	 * @return mixed
-	 *
 	 * @param int $quantity
+	 *
+	 * @return mixed
 	 *
 	 */
 	public static function get_results( $quantity = 100 ) {
@@ -530,13 +538,14 @@ class BEA_CSF_Relations {
 	 *
 	 * @param int $blog_id
 	 * @param array $types_relation
+	 *
+	 * @return mixed
 	 * @example [
 	 *  'taxonomy',
 	 *  'attachment',
 	 *  'posttype',
 	 * ]
 	 *
-	 * @return mixed
 	 */
 	public static function get_types_relation_by_receiver_blog_id( int $blog_id, array $types_relation = [] ) {
 		if ( empty( $types_relation ) ) {
@@ -580,6 +589,7 @@ class BEA_CSF_Relations {
 	 * @param string|array $types
 	 * @param int $receiver_blog_id
 	 * @param int $receiver_id
+	 *
 	 * @return string
 	 */
 	private static function get_cache_id( $types, int $receiver_blog_id, int $receiver_id ): string {
@@ -587,6 +597,7 @@ class BEA_CSF_Relations {
 		if ( 'taxonomy' === $types || ( is_array( $types ) && in_array( 'taxonomy', $types, true ) ) ) {
 			$type = 'taxonomy';
 		}
+
 		return $receiver_blog_id . '-' . $receiver_id . '-' . $type;
 	}
 
@@ -594,10 +605,11 @@ class BEA_CSF_Relations {
 	 * Delete all relation caches matching query results
 	 *
 	 * @param stdClass $relation
+	 *
 	 * @return void
 	 */
 	public static function delete_relation_cache( stdClass $relation ) {
-		$cache_id = self::get_cache_id( $relation->type, $relation->receiver_blog_id, $relation->receiver_id );
+		$cache_id = self::get_cache_id( $relation->type, (int) $relation->receiver_blog_id, (int) $relation->receiver_id );
 		wp_cache_delete( $cache_id, self::BEA_CSF_RELATIONS_CACHE_GROUP );
 
 	}
