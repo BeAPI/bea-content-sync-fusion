@@ -46,30 +46,30 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ### 3.9.7
 
-* Added : Add the cast for the arguments of the method 
+* Added: Add the cast for the arguments of the method 
 
 ### 3.9.6
 
-* Fixed : fix a bug by ensure "post_name" is set with wp_post_update() instead wp_publish_post()
-* Added : object cache on relations
+* Fixed: fix a bug by ensure "post_name" is set with wp_post_update() instead wp_publish_post()
+* Added: object cache on relations
 
 ### 3.9.5
 
-* Fixed : #136 When post does not exists on filter bea_csf.server.xxxx.merge
+* Fixed: #136 When post does not exists on filter bea_csf.server.xxxx.merge
 * Updating composer.json allowed plugin
 
 ### 3.9.4
 
-* Fixed : Change the return type of `attachment_fields_to_edit` to array to match the filter type attended
-* Added : Add the minimum WordPress version to plugin header
+* Fixed: Change the return type of `attachment_fields_to_edit` to array to match the filter type attended
+* Added: Add the minimum WordPress version to plugin header
 
 ### 3.9.3
 
-* Fixed : Correction of the syntax for the creation of the relations table. (Missing commas)
+* Fixed: Correction of the syntax for the creation of the relations table. (Missing commas)
 
 ### 3.9.2
 
-* Feature : Added synchronisation of Gutenberg ACF blocks
+* Feature: Added synchronisation of Gutenberg ACF blocks
 * Fixed: Remove double all on admin widget
 
 ### 3.9.1
