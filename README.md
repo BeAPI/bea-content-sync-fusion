@@ -44,6 +44,9 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9.8
+* Fixed: Replace comma with the AND keyword in SQL queries
+
 ### 3.9.7
 
 * Added: Add the cast for the arguments of the method 
