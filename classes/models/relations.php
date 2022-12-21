@@ -216,7 +216,7 @@ class BEA_CSF_Relations {
 		// Clean cache before delete
 		$relations = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s, receiver_blog_id = %d, receiver_id = %d",
+				"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s AND receiver_blog_id = %d AND receiver_id = %d",
 				$type,
 				$receiver_blog_id,
 				$receiver_id
@@ -258,7 +258,7 @@ class BEA_CSF_Relations {
 		// Clean cache before delete
 		$relations = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s, emitter_blog_id = %d, emitter_id = %d, receiver_blog_id = %d, receiver_id = %d",
+				"SELECT * FROM $wpdb->bea_csf_relations WHERE type = %s AND emitter_blog_id = %d AND emitter_id = %d AND receiver_blog_id = %d AND receiver_id = %d",
 				$type,
 				$emitter_blog_id,
 				$emitter_id,
