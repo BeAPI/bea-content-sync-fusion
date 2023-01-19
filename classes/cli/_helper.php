@@ -5,14 +5,14 @@ if ( ! defined( 'WP_CLI' ) ) {
 }
 
 class BEA_CSF_Cli_Helper {
+
 	/**
-	 *
 	 * Synchronization all terms from any taxonomies
 	 *
 	 * @param array $args
 	 * @param array $terms_args
 	 *
-	 * @return bool
+	 * @return array|bool
 	 */
 	public static function get_all_terms( $args = array(), $terms_args = array() ) {
 		$args = wp_parse_args( $args, array() );
@@ -26,8 +26,15 @@ class BEA_CSF_Cli_Helper {
 		}
 
 		// Get terms objects
-		$terms_args = wp_parse_args( $terms_args, array( 'hide_empty' => false ) );
-		$results    = get_terms( array_keys( $taxonomies ), $terms_args );
+		$terms_args = wp_parse_args(
+			$terms_args,
+			array(
+				'taxonomy'   => array_keys( $taxonomies ),
+				'hide_empty' => false,
+				'orderby'    => 'term_id',
+			)
+		);
+		$results    = get_terms( $terms_args );
 		if ( is_wp_error( $results ) || empty( $results ) ) {
 			WP_CLI::debug( 'No terms found for taxonomies : %s', implode( ',', array_keys( $taxonomies ) ) );
 
@@ -38,18 +45,24 @@ class BEA_CSF_Cli_Helper {
 	}
 
 	/**
-	 *
 	 * Synchronization all terms from any taxonomies
 	 *
 	 * @param array $taxonomies
 	 * @param array $terms_args
 	 *
-	 * @return bool
+	 * @return array|bool
 	 */
 	public static function get_terms( $taxonomies = array(), $terms_args = array() ) {
 		// Get terms objects
-		$terms_args = wp_parse_args( $terms_args, array( 'hide_empty' => false ) );
-		$results    = get_terms( $taxonomies, $terms_args );
+		$terms_args = wp_parse_args(
+			$terms_args,
+			array(
+				'taxonomy'   => $taxonomies,
+				'hide_empty' => false,
+				'orderby'    => 'term_id',
+			)
+		);
+		$results    = get_terms( $terms_args );
 		if ( is_wp_error( $results ) || empty( $results ) ) {
 			WP_CLI::debug( 'No terms found for taxonomies : %s', implode( ',', $taxonomies ) );
 
