@@ -140,7 +140,7 @@ class BEA_CSF_Relations {
 
 		// Clean cache before delete
 		$relations = $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE receiver_blog_id = %d", receiver_blog_id )
+			$wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_relations WHERE receiver_blog_id = %d", $blog_id )
 		);
 		if ( ! empty( $relations ) ) {
 			foreach ( $relations as $relation ) {
