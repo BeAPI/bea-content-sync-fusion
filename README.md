@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.9.11
+
+* Fixed : warning when merging taxonomies
+
 ### 3.9.10
 
 * Fixed : clean cache when a site is deleted
