@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bea-content-sync-"
 "fusion\n"
 "POT-Creation-Date: 2020-10-27 21:50+0100\n"
-"PO-Revision-Date: 2022-03-30 12:38+0200\n"
+"PO-Revision-Date: 2023-03-28 11:11+0200\n"
 "Last-Translator: beapi <amaury@beapi.fr>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 3.1.1\n"
 "X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
 "__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
 "_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
@@ -334,7 +334,7 @@ msgstr "Il reste encore %d élément(s) à synchroniser."
 
 #: views/admin/blog-widget-status.php:10
 msgid "Force sync 30 first items"
-msgstr "Forcer la synchroniser les 30 premiers éléments"
+msgstr "Forcer la synchronisation des 30 premiers éléments"
 
 #: views/admin/client-metabox.php:2
 msgid ""
@@ -669,7 +669,7 @@ msgstr "Mode spécial"
 
 #: views/admin/server-page-settings.php:134
 msgid "Remove all content edition restrictions"
-msgstr "Retirer toues les restrictions sur le contenu"
+msgstr "Retirer toutes les restrictions sur le contenu"
 
 #: views/admin/server-term-metabox-manual.php:5
 msgid ""

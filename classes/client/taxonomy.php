@@ -80,7 +80,7 @@ class BEA_CSF_Client_Taxonomy {
 					$data['slug']       = $data['slug'] . '___' . $data['pll']['language']; // Prevent exist term
 				}
 
-				if ( false !== $term_exists_result ) {
+				if ( false !== $term_exists_result && isset( $term_exists_result['term_id'] ) ) {
 					$new_term_id = wp_update_term(
 						$term_exists_result['term_id'],
 						$data['taxonomy'],
