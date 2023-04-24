@@ -244,8 +244,6 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 		$progress->finish();
 
 		WP_CLI::success( __( 'End of content resync', 'bea-content-sync-fusion' ) );
-
-		WP_CLI::run_command( array( 'cache', 'flush' ) );
 	}
 
 	/**
