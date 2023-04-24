@@ -81,10 +81,10 @@ else
 fi
 
 # Regular queue
-$WP_CLI_BIN content-sync-fusion queue get_sites --url="$WP_NETWORK_URL" ADDITIONAL_ARGS $WP_PATH  | xargs -I {} $WP_CLI_BIN content-sync-fusion queue pull --alternativeq=$ALT_QUEUE --url={} ADDITIONAL_ARGS $WP_PATH
+$WP_CLI_BIN content-sync-fusion queue get_sites --url="$WP_NETWORK_URL" $ADDITIONAL_ARGS $WP_PATH  | xargs -I {} $WP_CLI_BIN content-sync-fusion queue pull --alternativeq=$ALT_QUEUE --url={} $ADDITIONAL_ARGS $WP_PATH
 
 # Check for resync content (new site/blog)
-$WP_CLI_BIN content-sync-fusion resync new_sites --smart=true --attachments=true --post_type=true --taxonomies=true --url="$WP_NETWORK_URL" ADDITIONAL_ARGS $WP_PATH
+$WP_CLI_BIN content-sync-fusion resync new_sites --smart=true --attachments=true --post_type=true --taxonomies=true --url="$WP_NETWORK_URL" $ADDITIONAL_ARGS $WP_PATH
 
 # Remove lock PIDFILE
 rm $PIDFILE
