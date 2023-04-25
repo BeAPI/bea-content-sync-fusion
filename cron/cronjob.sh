@@ -5,11 +5,12 @@
 # We recommend to exec this task each minute : */1 * * * *
 
 ## USAGE
-# 3 arguments max
-# 1st argument : REQUIRED - the network URL of WordPress, eg : mydomain.fr, https://mydomain.fr
-# 2nd argument : OPTIONAL - the WP-CLI binary command, eg: wp, "lando wp", "php wp-cli.phar" (Default value : wp)
-# 3nd argument : OPTIONAL - the path of WP installation, eg: /var/www/wp/ (not default value)
+# 5 arguments max
+# 1st argument  : REQUIRED - the network URL of WordPress, eg : mydomain.fr, https://mydomain.fr
+# 2nd argument  : OPTIONAL - the WP-CLI binary command, eg: wp, "lando wp", "php wp-cli.phar" (Default value : wp)
+# 3nd argument  : OPTIONAL - the path of WP installation, eg: /var/www/wp/ (not default value)
 # 4rth argument : OPTIONAL - the alternate queue, eg : true (Default value : false)
+# 5th argument  : OPTIONAL - additional parameters to pass to WPCLI, eg : --skip-plugins=stream
 
 ## TODO
 # Allow to customize path for PID file
@@ -35,6 +36,7 @@ fi
 WP_NETWORK_URL=${1}
 WP_CLI_BIN=${2:-wp}
 ALT_QUEUE=${4:-false}
+ADDITIONAL_ARGS=${5:-''}
 
 # Wrap the 3rd argument if is filled
 if [ -n "${3:-}" ]; then
@@ -79,10 +81,10 @@ else
 fi
 
 # Regular queue
-$WP_CLI_BIN content-sync-fusion queue get_sites --url="$WP_NETWORK_URL" $WP_PATH  | xargs -I {} $WP_CLI_BIN content-sync-fusion queue pull --alternativeq=$ALT_QUEUE --url={}  $WP_PATH 
+$WP_CLI_BIN content-sync-fusion queue get_sites --url="$WP_NETWORK_URL" $ADDITIONAL_ARGS $WP_PATH  | xargs -I {} $WP_CLI_BIN content-sync-fusion queue pull --alternativeq=$ALT_QUEUE --url={} $ADDITIONAL_ARGS $WP_PATH
 
 # Check for resync content (new site/blog)
-$WP_CLI_BIN content-sync-fusion resync new_sites --smart=true --attachments=true --post_type=true --taxonomies=true --url="$WP_NETWORK_URL" $WP_PATH
+$WP_CLI_BIN content-sync-fusion resync new_sites --smart=true --attachments=true --post_type=true --taxonomies=true --url="$WP_NETWORK_URL" $ADDITIONAL_ARGS $WP_PATH
 
 # Remove lock PIDFILE
 rm $PIDFILE
