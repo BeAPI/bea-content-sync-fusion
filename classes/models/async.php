@@ -139,6 +139,8 @@ class BEA_CSF_Async {
 		// Explode filter for get object and method
 		$current_filter_data = explode( '/', $current_filter );
 
+		add_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
+
 		/**
 		 * Filters the database query.
 		 *
@@ -147,10 +149,6 @@ class BEA_CSF_Async {
 		 *
 		 * @param array $data Data that will be sent to database.
 		 */
-
-		add_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
-
-		// Allow to
 		$data = apply_filters( 'bea-csf-async-insert-data', [
 			'type'             => $type,
 			'object_name'      => $current_filter_data[3],
