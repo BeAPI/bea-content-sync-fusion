@@ -44,6 +44,13 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.10.0
+
+* Performance : Do not flush object cache after each pull of content, this needs to be manually done. The query cache layer is cleared/added on right actions.
+* Added : Allow to pass non positionnal arguments to the cron query.
+* Added : Add each command missing phpdocbloc.
+* Added : Allow to filter the "fields" field before inserting it.
+
 ### 3.9.11
 
 * Fixed : warning when merging taxonomies
