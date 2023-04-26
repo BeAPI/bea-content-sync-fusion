@@ -141,17 +141,27 @@ class BEA_CSF_Async {
 
 		add_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
 
+		/**
+		 * Filters the fields for the database query.
+		 *
+		 * Sometimes you'll need to clear up the data before inserting it.
+		 * On large multisite you will maybe want to remove the receivers and emitters entries.
+		 *
+		 * @param array $data Data that will be sent to database.
+		 */
+		$data = [
+			'type'             => $type,
+			'object_name'      => $current_filter_data[3],
+			'hook_data'        => maybe_serialize( $hook_data ),
+			'current_filter'   => $current_filter,
+			'receiver_blog_id' => $receiver_blog_id,
+			'fields'           => maybe_serialize( apply_filters( 'bea-csf-async-insert-fields', $fields ) ),
+		];
+
 		/** @var WPDB $wpdb */
 		$wpdb->insert(
 			$wpdb->bea_csf_queue,
-			array(
-				'type'             => $type,
-				'object_name'      => $current_filter_data[3],
-				'hook_data'        => maybe_serialize( $hook_data ),
-				'current_filter'   => $current_filter,
-				'receiver_blog_id' => $receiver_blog_id,
-				'fields'           => maybe_serialize( $fields ),
-			),
+			$data,
 			array( '%s', '%s', '%s', '%s', '%d', '%s' )
 		);
 
