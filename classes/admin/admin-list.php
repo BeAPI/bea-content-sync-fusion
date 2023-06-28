@@ -13,13 +13,11 @@ class BEA_CSF_Admin_List {
 		add_action( 'parse_query', array( __CLASS__, 'parse_query' ), 10 );
 	}
 
-
 	/**
 	 * Add a selector for filter local or remote media
 	 *
 	 * @param $post_type
 	 *
-	 * @return bool
 	 */
 	public static function restrict_manage_posts( $post_type ) {
 		global $wpdb;
@@ -36,7 +34,7 @@ class BEA_CSF_Admin_List {
 		);
 
 		if ( empty( $_has_syncs ) ) {
-			return false;
+			return;
 		}
 
 		$current_action = ( ! isset( $_GET['attachment-bea-csf-filter'] ) ) ? '' : $_GET['attachment-bea-csf-filter'];
@@ -55,15 +53,12 @@ class BEA_CSF_Admin_List {
 	 * Set a WP_Query query_var depending $_GET query !
 	 *
 	 * @param WP_Query $query
-	 *
-	 * @return boolean
 	 */
 	public static function parse_query( WP_Query $query ) {
 		if ( ! isset( $_GET['attachment-bea-csf-filter'] ) || ! $query->is_main_query() || empty( $_GET['attachment-bea-csf-filter'] ) ) {
-			return false;
+			return;
 		}
 
 		$query->set( 'bea_csf_filter', stripslashes( $_GET['attachment-bea-csf-filter'] ) );
-		return true;
 	}
 }

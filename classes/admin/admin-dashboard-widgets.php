@@ -49,8 +49,6 @@ class BEA_CSF_Admin_Dashboard_Widgets {
 
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/blog-widget-status.php' );
-
-		return true;
 	}
 
 	/**
@@ -69,7 +67,5 @@ class BEA_CSF_Admin_Dashboard_Widgets {
 
 		// Include template
 		include( BEA_CSF_DIR . 'views/admin/blog-widget-list.php' );
-
-		return true;
 	}
 }

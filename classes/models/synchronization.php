@@ -2,6 +2,9 @@
 
 class BEA_CSF_Synchronization {
 
+	/**
+	 * @var array|string[]
+	 */
 	private $_fields = array(
 		'id',
 		'active',
@@ -14,7 +17,15 @@ class BEA_CSF_Synchronization {
 		'emitters',
 		'receivers',
 	);
+
+	/**
+	 * @var bool
+	 */
 	private $_is_locked = true;
+
+	/**
+	 * @var array
+	 */
 	private $_register_hooks = array();
 
 	// Public fields for this synchronization
@@ -83,14 +94,13 @@ class BEA_CSF_Synchronization {
 			// Register this hook only for post type attachment for evite doublon sync item
 			if ( 'attachment' === $this->post_type ) { // Specific CPT : Attachments
 
-				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $emitter_blog_id;
-				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $emitter_blog_id;
+				$this->_register_hooks[] = "bea-csf/Attachment/delete/attachment/{$emitter_blog_id}";
+				$this->_register_hooks[] = "bea-csf/Attachment/merge/attachment/{$emitter_blog_id}";
 
-			} else { // Classic CPT : Posts/Pages
-
+			} else {
 				if ( ! empty( $this->post_type ) ) {
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $this->post_type . '/' . $emitter_blog_id;
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $this->post_type . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = "bea-csf/PostType/merge/{$this->post_type}/{$emitter_blog_id}";
+					$this->_register_hooks[] = "bea-csf/PostType/delete/{$this->post_type}/{$emitter_blog_id}";
 				}
 			}
 
@@ -98,12 +108,12 @@ class BEA_CSF_Synchronization {
 			if ( ! empty( $this->taxonomies ) ) {
 				foreach ( $this->taxonomies as $taxonomy ) {
 					// Skip register if taxo is already register on another synchro
-					if ( isset( $connection_taxo_duplicate[ $taxonomy . '/' . $emitter_blog_id ] ) ) {
-						//continue;
-					}
+					//if ( isset( $connection_taxo_duplicate[ $taxonomy . '/' . $emitter_blog_id ] ) ) {
+					//continue;
+					//}
 
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $emitter_blog_id;
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = "bea-csf/Taxonomy/delete/{$taxonomy}/{$emitter_blog_id}";
+					$this->_register_hooks[] = "bea-csf/Taxonomy/merge/{$taxonomy}/{$emitter_blog_id}";
 
 					$connection_taxo_duplicate[ $taxonomy . '/' . $emitter_blog_id ] = true;
 				}
@@ -112,8 +122,8 @@ class BEA_CSF_Synchronization {
 			// P2P
 			if ( ! empty( $this->p2p_connections ) ) {
 				foreach ( $this->p2p_connections as $p2p_connection ) {
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'P2P' . '/' . 'delete' . '/' . $p2p_connection . '/' . $emitter_blog_id;
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'P2P' . '/' . 'merge' . '/' . $p2p_connection . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = "bea-csf/P2P/delete/{$p2p_connection}/{$emitter_blog_id}";
+					$this->_register_hooks[] = "bea-csf/P2P/merge/{$p2p_connection}/{$emitter_blog_id}";
 				}
 			}
 		}
@@ -187,7 +197,7 @@ class BEA_CSF_Synchronization {
 	 *
 	 * @return boolean|array
 	 */
-	public function get_field( $field_name, $raw_value = false ) {
+	public function get_field( string $field_name, bool $raw_value = false ) {
 		if ( 'receivers' == $field_name && false === $raw_value ) { // Add support "all except..." value context
 			return $this->get_receivers();
 		} elseif ( 'emitters' == $field_name && false === $raw_value ) { // Add support "all" value context
@@ -278,10 +288,11 @@ class BEA_CSF_Synchronization {
 	 * @param boolean $excluded_from_sync
 	 * @param array|bool|false $receivers_inclusion
 	 * @param boolean $ignore_mode
+	 * @param bool $include_from_sync
 	 *
 	 * @return bool
 	 */
-	public function send_to_receivers( $hook_data, $excluded_from_sync = false, $receivers_inclusion = false, $ignore_mode = false, $include_from_sync = false ) {
+	public function send_to_receivers( $hook_data, bool $excluded_from_sync = false, $receivers_inclusion = false, bool $ignore_mode = false, bool $include_from_sync = false ): bool {
 		global $_bea_origin_blog_id;
 
 		// Set hook data into class var
@@ -298,6 +309,7 @@ class BEA_CSF_Synchronization {
 			return false;
 		}
 
+		// TODO: Missing documentation ?!
 		if ( ( 'exclude_default' === $this->mode || true === $ignore_mode ) && false === $include_from_sync ) {
 			return false;
 		}

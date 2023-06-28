@@ -17,12 +17,12 @@ class BEA_CSF_Admin_Client_Metaboxes {
 	 *
 	 * @return bool
 	 */
-	public static function save_post( $post_id ) {
+	public static function save_post( int $post_id ) {
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return false;
 		}
 
-		// verify this came from the our screen and with proper authorization,
+		// verify this came from our screen and with proper authorization,
 		// because save_post can be triggered at other times
 		if ( ! isset( $_POST[ BEA_CSF_OPTION . '-nonce-client' ] ) || ! wp_verify_nonce( $_POST[ BEA_CSF_OPTION . '-nonce-client' ], plugin_basename( __FILE__ ) ) ) {
 			return false;
@@ -30,7 +30,7 @@ class BEA_CSF_Admin_Client_Metaboxes {
 
 		/* OK, it's safe for us to save the data now. */
 
-		if ( isset( $_POST['exclude_from_futur_sync'] ) && (int) $_POST['exclude_from_futur_sync'] == 1 ) {
+		if ( isset( $_POST['exclude_from_futur_sync'] ) && 1 === (int) $_POST['exclude_from_futur_sync'] ) {
 			update_post_meta( $post_id, '_exclude_from_futur_sync', 1 );
 		} else {
 			delete_post_meta( $post_id, '_exclude_from_futur_sync' );
@@ -45,10 +45,9 @@ class BEA_CSF_Admin_Client_Metaboxes {
 	 * @param string $post_type
 	 * @param WP_Post $post
 	 *
-	 * @return bool
 	 * @author Amaury Balmer
 	 */
-	public static function add_meta_boxes( $post_type, $post ) {
+	public static function add_meta_boxes( string $post_type, WP_Post $post ) {
 		global $wpdb;
 
 		// Get emitter for current post
@@ -67,8 +66,6 @@ class BEA_CSF_Admin_Client_Metaboxes {
 				array( 'relation' => $emitter_relation )
 			);
 		}
-
-		return true;
 	}
 
 	/**
@@ -80,7 +77,7 @@ class BEA_CSF_Admin_Client_Metaboxes {
 	 * @return void
 	 * @author Amaury Balmer
 	 */
-	public static function metabox_content( $post, $metabox ) {
+	public static function metabox_content( WP_Post $post, array $metabox ) {
 		// Use nonce for verification
 		wp_nonce_field( plugin_basename( __FILE__ ), BEA_CSF_OPTION . '-nonce-client' );
 
