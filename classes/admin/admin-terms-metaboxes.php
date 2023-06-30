@@ -125,7 +125,7 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 
 		if ( ! empty( $receivers_to_delete ) && ! empty( $old_term_receivers ) ) {
 			// Theses values have just deleted, delete content for clients !
-			do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $receivers_to_delete, true );
+			do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $receivers_to_delete, true, true );
 		}
 
 		return true;

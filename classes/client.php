@@ -263,9 +263,9 @@ class BEA_CSF_Client {
 				do_action( 'acf/save_post', $post->ID );
 				self::register_hooks();
 			}
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
+			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
 		} elseif ( $new_status !== $old_status && in_array( $new_status, $allowed_delete_status, true ) ) { // Check for unpublish
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false );
+			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
 		}
 
 		return true;
@@ -287,7 +287,7 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false );
+		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
 
 		return true;
 	}
@@ -303,7 +303,7 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'merge' . '/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false );
+		do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'merge' . '/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
 
 		return true;
 	}
@@ -321,7 +321,7 @@ class BEA_CSF_Client {
 				continue;
 			}
 
-			do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'delete' . '/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false );
+			do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'delete' . '/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
 		}
 
 		return true;
@@ -364,7 +364,7 @@ class BEA_CSF_Client {
 		$_term_receivers = (array) get_term_meta( $term->term_id, '_term_receivers', true );
 		$_term_receivers = array_filter( $_term_receivers );
 
-		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . get_current_blog_id(), $term, false, $_term_receivers, false );
+		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . get_current_blog_id(), $term, false, $_term_receivers, false, true );
 
 		return true;
 	}

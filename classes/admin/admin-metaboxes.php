@@ -71,7 +71,7 @@ class BEA_CSF_Admin_Metaboxes {
 			update_post_meta( $_post_id, '_exclude_from_sync', 1 );
 			if ( 0 === $previous_value && false === $is_saving_revision ) {
 				// This value have just changed, delete content for clients !
-				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false );
+				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
 			}
 		} else {
 			delete_post_meta( $_post_id, '_exclude_from_sync' );
@@ -119,7 +119,7 @@ class BEA_CSF_Admin_Metaboxes {
 
 		if ( ! empty( $receivers_to_delete ) && ! empty( $old_post_receivers ) && false === $is_saving_revision) {
 			// Theses values have just deleted, delete content for clients !
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, $receivers_to_delete, true );
+			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, $receivers_to_delete, true, true );
 		}
 
 		return true;
