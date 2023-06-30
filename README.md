@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.11.0
+
+* Fixed : Delete content one uncheck manual admin metabox
+
 ### 3.10.0
 
 * Performance : Do not flush object cache after each pull of content, this needs to be manually done. The query cache layer is cleared/added on right actions.
