@@ -41,7 +41,29 @@ class BEA_CSF_Cli_Helper {
 			return false;
 		}
 
-		return $results;
+		return self::hierarchical_sort_terms( $results );
+	}
+
+	/**
+	 * Sort an array of WP_Terms by hierarchical order (parents first, then children, then grand-children...)
+	 *
+	 * @param WP_Term[] $terms
+	 * @param int $parent
+	 * @return WP_Term[]
+	 * @author Ingrid Azéma
+	 */
+	private static function hierarchical_sort_terms( array $terms, int $parent = 0 ): array {
+		$sorted_terms = [];
+		foreach ( $terms as $term ) {
+			if ( $term->parent !== $parent || ! $term instanceof WP_Term ) {
+				continue;
+			}
+			$sorted_terms[] = $term;
+			$children       = self::hierarchical_sort_terms( $terms, $term->term_id );
+			$sorted_terms   = array_merge( $sorted_terms, $children );
+		}
+
+		return $sorted_terms;
 	}
 
 	/**
