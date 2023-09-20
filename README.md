@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.12.1
+
+* Changed: Order terms hierarchically when doing a resync
+
 ### 3.12.0
 
 * Added : Add compatibility with Yoast SEO meta images.
