@@ -439,7 +439,7 @@ class BEA_CSF_Relations {
 	public static function current_object_is_synchronized( $types, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
 
-		// In some contexts the do_action( 'add_meta_boxes') is called an passes wrong parameters
+		// In some contexts the do_action( 'add_meta_boxes') is called and passes wrong parameters
 		// to the get_cache_id method.
 		// $receiver_id at this point must be a number or a numeric string
 		if ( ! is_numeric( $receiver_id ) ) {
