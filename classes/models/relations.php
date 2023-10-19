@@ -438,6 +438,13 @@ class BEA_CSF_Relations {
 	 */
 	public static function current_object_is_synchronized( $types, $receiver_blog_id, $receiver_id ) {
 		global $wpdb;
+
+		// In some contexts the do_action( 'add_meta_boxes') is called and passes wrong parameters
+		// to the get_cache_id method.
+		if ( (int) $receiver_id <= 0 ) {
+			return;
+		}
+
 		$cache_id = self::get_cache_id( $types, (int) $receiver_blog_id, (int) $receiver_id );
 		$relation = wp_cache_get( $cache_id, self::BEA_CSF_RELATIONS_CACHE_GROUP, false, $found );
 		if ( $found ) {
