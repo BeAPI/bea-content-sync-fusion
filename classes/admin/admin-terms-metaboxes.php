@@ -34,7 +34,15 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		}
 
 		foreach ( $syncs as $sync ) {
-			if ( in_array( $taxonomy, $sync->taxonomies ) ) {
+			if ( ! isset( $sync->taxonomies ) ) {
+				continue;
+			}
+
+			if ( is_string( $taxonomy ) && $taxonomy === $sync->taxonomies ) {
+				return $sync;
+			}
+
+			if ( is_array( $sync->taxonomies ) && in_array( $taxonomy, $sync->taxonomies ) ) {
 				return $sync;
 			}
 		}
