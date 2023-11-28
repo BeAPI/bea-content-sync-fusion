@@ -38,7 +38,7 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 				continue;
 			}
 
-			if ( is_string( $taxonomy ) && $taxonomy === $sync->taxonomies ) {
+			if ( is_string( $sync->taxonomies ) && $taxonomy === $sync->taxonomies ) {
 				return $sync;
 			}
 
