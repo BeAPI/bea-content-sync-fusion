@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.12.3
+
+* Fixed : ensure manpiulating an array when using `is_array()` (fatal error with PHP 8+)
+
 ### 3.12.2
 
 * Added: Add compatibility with Members metaboxes
