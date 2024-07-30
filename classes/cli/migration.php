@@ -27,7 +27,7 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 			switch_to_blog( $blog->blog_id );
 
 			// Table exists ?
-			if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->postmeta ) ) === $wpdb->postmeta ) {
+			if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->postmeta ) ) !== $wpdb->postmeta ) {
 				restore_current_blog();
 				continue;
 			}
