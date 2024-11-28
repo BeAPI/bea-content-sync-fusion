@@ -116,10 +116,10 @@ class BEA_CSF_Addon_Gutenberg {
 							$image_id,
 							$image_id
 						);
+						if ( ! empty( $local_id ) ) {
+							$image_ids[] = $local_id;
+						}
 					}
-				}
-				if ( ! empty( $local_id ) ) {
-					$image_ids[] = $local_id;
 				}
 				$attributes['ids'] = $image_ids;
 				break;
