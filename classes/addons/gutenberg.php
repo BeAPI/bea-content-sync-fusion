@@ -107,7 +107,7 @@ class BEA_CSF_Addon_Gutenberg {
 				break;
 			case 'core/gallery':
 				$image_ids = [];
-				if ( !empty( $attributes['ids'] ) ) {
+				if ( ! empty( $attributes['ids'] ) ) {
 					foreach ( $attributes['ids'] as $image_id ) {
 						$local_id = BEA_CSF_Relations::get_object_for_any(
 							'attachment',
@@ -118,7 +118,7 @@ class BEA_CSF_Addon_Gutenberg {
 						);
 					}
 				}
-				if ( isset( $local_id ) && ! empty( $local_id ) ) {
+				if ( ! empty( $local_id ) ) {
 					$image_ids[] = $local_id;
 				}
 				$attributes['ids'] = $image_ids;
