@@ -44,9 +44,13 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.12.4
+
+* Fixed : Ensure an array key exists to prevent a warning
+
 ### 3.12.3
 
-* Fixed : ensure manpiulating an array when using `is_array()` (fatal error with PHP 8+)
+* Fixed : Ensure manipulating an array when using `is_array()` (fatal error with PHP 8+)
 
 ### 3.12.2
 
@@ -73,11 +77,11 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ### 3.9.11
 
-* Fixed : warning when merging taxonomies
+* Fixed : Warning when merging taxonomies
 
 ### 3.9.10
 
-* Fixed : clean cache when a site is deleted
+* Fixed : Clean cache when a site is deleted
 
 ### 3.9.9
 * Changed: Order terms by ID when doing a resync
@@ -91,7 +95,7 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ### 3.9.6
 
-* Fixed: fix a bug by ensure "post_name" is set with wp_post_update() instead wp_publish_post()
+* Fixed: Fix a bug by ensure "post_name" is set with wp_post_update() instead wp_publish_post()
 * Added: object cache on relations
 
 ### 3.9.5
