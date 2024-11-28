@@ -223,7 +223,7 @@ class BEA_CSF_Admin_Restrictions {
 		}
 
 		if ( in_array( $cap, $capabilities ) ) {
-			$post = get_post( $args[0] );
+			$post = isset( $args[0] ) ? get_post( $args[0] ) : null;
 			if ( empty( $post ) || is_wp_error( $post ) ) {
 				return $caps;
 			}
