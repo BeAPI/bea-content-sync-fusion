@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.12.5
+
+* Fixed : Ensure variables are not empty arrays before use
+
 ### 3.12.4
 
 * Fixed : Ensure an array key exists to prevent a warning
