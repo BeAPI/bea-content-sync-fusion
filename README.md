@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.12.6
+
+* Security: Added prepared statements to previously vulnerable SQL queries to enhance database security.
+
 ### 3.12.5
 
 * Fixed : Ensure variables are not empty arrays before use
