@@ -27,27 +27,27 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 			switch_to_blog( $blog->blog_id );
 
 			// Table exists ?
-			if ( $wpdb->get_var( "SHOW TABLES LIKE '$wpdb->postmeta'" ) != $wpdb->postmeta ) {
+			if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->postmeta ) ) !== $wpdb->postmeta ) {
 				restore_current_blog();
 				continue;
 			}
 
-			$selects[] = "(
-				SELECT pm.post_id AS post_id, pm.meta_value AS meta_value, {$blog->blog_id} AS blog_id 
-				FROM {$wpdb->postmeta} AS pm
-				WHERE 1 = 1
-				AND pm.meta_key = '_origin_key'
-			)";
+			$blog_id = (int) $blog->blog_id; // Ensure the blog_id is an integer
+			$meta_key = '_origin_key'; // Define the meta_key explicitly
+
+			// Use prepare to ensure safe query construction
+			$selects[] = $wpdb->prepare( "(
+		            SELECT pm.post_id AS post_id, pm.meta_value AS meta_value, %d AS blog_id 
+		            FROM {$wpdb->postmeta} AS pm
+		            WHERE pm.meta_key = %s
+		        )", $blog_id, $meta_key );
 
 			restore_current_blog();
 		}
 
-		// Make an union, group doublons with concat
-		$query = ' SELECT post_id, meta_value, blog_id FROM (  ';
-		$query .= implode( ' UNION ALL ', $selects );
-		$query .= ' ) AS wp ';
+		$union_all_query = implode( ' UNION ALL ', $selects );
 
-		return $wpdb->get_results( $query );
+		return $wpdb->get_results( "SELECT post_id, meta_value, blog_id FROM ( $union_all_query ) AS wp" );
 	}
 
 	/**
