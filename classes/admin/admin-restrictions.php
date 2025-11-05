@@ -84,8 +84,7 @@ class BEA_CSF_Admin_Restrictions {
 
 		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 			if ( 'pending' === $post->post_status ) {
-				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ) ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
-
+				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ), $post ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
 				if ( current_user_can( 'publish_post', $post->ID ) ) {
 					$actions['publish'] = 	sprintf(
 						'<a href="%s">%s</a>',
