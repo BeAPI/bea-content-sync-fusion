@@ -44,6 +44,10 @@ If you really like what we do or want to thank us for our quick work, feel free 
 
 ## Changelog
 
+### 3.12.8
+
+* Fixed: Add $post argument to 'preview_post_link' filter callback.
+
 ### 3.12.7
 
 * Fixed: Add missing argument `--alternativeq` in cronjob script.
