@@ -17,7 +17,7 @@ jobs:
       - name: Build project PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.1
+          php-version: 8.3
       - run: composer install --prefer-dist --no-dev -o
       - run: |
           echo "ℹ︎ Create release folder"
