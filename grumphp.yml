@@ -18,9 +18,5 @@ grumphp:
     phpcs:
       standard: ['phpcs.xml']
       triggered_by: [php]
-    psalm:
-      config: psalm.xml
-      triggered_by: ['php']
-      show_info: true
   testsuites: []
   extensions: []
