@@ -92,9 +92,9 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 
 		$progress = \WP_CLI\Utils\make_progress_bar( 'Loop on content to flush', $total );
 		foreach ( $items_to_delete as $relation ) {
-			if ( $relation->type === 'taxonomy' ) {
+			if ( 'taxonomy' === $relation->type ) {
 				$term = self::get_term_by_id( $relation->receiver_id );
-				if ( $term != false ) {
+				if ( false !== $term ) {
 					wp_delete_term( $term->term_id, $term->taxonomy );
 				}
 			} else {
@@ -125,7 +125,7 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 		global $wpdb;
 
 		if ( empty( $term ) ) {
-			$error = new WP_Error( 'invalid_term', __( 'Empty Term' ) );
+			$error = new WP_Error( 'invalid_term', __( 'Empty Term', 'bea-content-sync-fusion' ) );
 
 			return $error;
 		}

@@ -42,16 +42,20 @@ class BEA_CSF_Query {
 			return $join;
 		}
 
-		$join_type = $query->get( 'bea_csf_filter' ) === 'local-only' ? 'LEFT' : 'INNER';
-
 		// Get current blog ID safely
 		$current_blog_id = (int) get_current_blog_id();
 
-		// Prepare the join SQL
-		$join .= $wpdb->prepare(
-			" $join_type JOIN {$wpdb->bea_csf_relations} AS bcr ON ({$wpdb->posts}.ID = bcr.receiver_id AND bcr.receiver_blog_id = %d) ",
-			$current_blog_id
-		);
+		if ( 'local-only' === $query->get( 'bea_csf_filter' ) ) {
+			$join .= $wpdb->prepare(
+				" LEFT JOIN {$wpdb->bea_csf_relations} AS bcr ON ({$wpdb->posts}.ID = bcr.receiver_id AND bcr.receiver_blog_id = %d) ",
+				$current_blog_id
+			);
+		} else {
+			$join .= $wpdb->prepare(
+				" INNER JOIN {$wpdb->bea_csf_relations} AS bcr ON ({$wpdb->posts}.ID = bcr.receiver_id AND bcr.receiver_blog_id = %d) ",
+				$current_blog_id
+			);
+		}
 
 		return $join;
 	}

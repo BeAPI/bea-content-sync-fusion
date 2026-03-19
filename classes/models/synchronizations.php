@@ -66,10 +66,11 @@ class BEA_CSF_Synchronizations {
 			foreach ( $args as $m_key => $m_value ) {
 
 				$obj_value = $obj->get_field( $m_key );
+				// phpcs:ignore WordPress.PHP.YodaConditions.NotYoda -- Intentional loose equality for sync field matching.
 				if ( $obj_value == $m_value
-					 || ( $in_array === true && is_array( $obj_value ) && in_array( $m_value, (array) $obj_value ) )
-					 || ( $in_array === true && is_array( $m_value ) && in_array( $obj_value, (array) $m_value ) )
-					 || ( $in_array === true && ( is_array( $m_value ) && is_array( $obj_value ) ) && array_intersect( $obj_value, $m_value ) )
+					 || ( true === $in_array && is_array( $obj_value ) && in_array( $m_value, (array) $obj_value ) )
+					 || ( true === $in_array && is_array( $m_value ) && in_array( $obj_value, (array) $m_value ) )
+					 || ( true === $in_array && ( is_array( $m_value ) && is_array( $obj_value ) ) && array_intersect( $obj_value, $m_value ) )
 				) {
 					$matched++;
 				}
@@ -151,7 +152,7 @@ class BEA_CSF_Synchronizations {
 
 	public static function add( BEA_CSF_Synchronization $sync_obj ) {
 		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION );
-		if ( $current_options == false ) {
+		if ( false === $current_options ) {
 			$current_options = [];
 
 			$new_id = 1;
@@ -174,7 +175,7 @@ class BEA_CSF_Synchronizations {
 
 	public static function update( BEA_CSF_Synchronization $sync_obj, $insert_fallback = false ) {
 		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION );
-		if ( $current_options == false ) {
+		if ( false === $current_options ) {
 			$current_options = [];
 		}
 
@@ -183,7 +184,7 @@ class BEA_CSF_Synchronizations {
 
 		// Check if object exists
 		if ( ! isset( $current_options[ $current_sync_id ] ) ) {
-			if ( $insert_fallback == false ) {
+			if ( false === $insert_fallback ) {
 				return false;
 			} else {
 				return self::add( $sync_obj );
@@ -207,7 +208,7 @@ class BEA_CSF_Synchronizations {
 	 */
 	public static function delete( BEA_CSF_Synchronization $sync_obj ) {
 		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION );
-		if ( $current_options == false ) {
+		if ( false === $current_options ) {
 			$current_options = [];
 		}
 
@@ -310,7 +311,7 @@ class BEA_CSF_Synchronizations {
 		uasort(
 			$return_sites,
 			function ( $a, $b ) {
-				if ( $a['network_id'] == $b ['network_id'] ) {
+				if ( $a['network_id'] === $b['network_id'] ) {
 					return ( $a['blog_id'] < $b ['blog_id'] ) ? - 1 : 1;
 				}
 

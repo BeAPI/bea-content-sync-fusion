@@ -71,7 +71,8 @@ class BEA_CSF_Admin_Metaboxes {
 			update_post_meta( $_post_id, '_exclude_from_sync', 1 );
 			if ( 0 === $previous_value && false === $is_saving_revision ) {
 				// This value have just changed, delete content for clients !
-				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
+				// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+				do_action( 'bea-csf/PostType/delete/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
 			}
 		} else {
 			delete_post_meta( $_post_id, '_exclude_from_sync' );
@@ -119,7 +120,8 @@ class BEA_CSF_Admin_Metaboxes {
 
 		if ( ! empty( $receivers_to_delete ) && ! empty( $old_post_receivers ) && false === $is_saving_revision ) {
 			// Theses values have just deleted, delete content for clients !
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, $receivers_to_delete, true, true );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/PostType/delete/' . $post->post_type . '/' . get_current_blog_id(), $post, false, $receivers_to_delete, true, true );
 		}
 
 		return true;
@@ -504,14 +506,17 @@ class BEA_CSF_Admin_Metaboxes {
 			$_attachment['include_from_sync'] = $previous_value;
 		}
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Attachment save; capability and nonce are enforced by core before this filter runs.
 		if ( isset( $_POST['include_from_sync'] ) && 1 === (int) $_POST['include_from_sync'] ) {
 			update_post_meta( $_attachment_id, '_include_from_sync', 1 );
 		} else {
 			delete_post_meta( $_attachment_id, '_include_from_sync' );
 			if ( 1 === $previous_value ) {
-				do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . get_current_blog_id(), $_attachment_object, false, false, false, true );
+				// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+				do_action( 'bea-csf/Attachment/delete/attachment/' . get_current_blog_id(), $_attachment_object, false, false, false, true );
 			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		add_filter( 'attachment_fields_to_save', [ __CLASS__, 'attachment_fields_to_save' ], PHP_INT_MAX, 2 );
 

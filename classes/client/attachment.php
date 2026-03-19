@@ -71,7 +71,7 @@ class BEA_CSF_Client_Attachment {
 
 			$data_for_post['ID'] = $current_media_id;
 			$new_media_id        = wp_update_post( $data_for_post );
-			if ( is_wp_error( $new_media_id ) || $new_media_id === 0 ) {
+			if ( is_wp_error( $new_media_id ) || 0 === (int) $new_media_id ) {
 				return new WP_Error( 'invalid_datas', 'Error - An fatal error occurred during attachment insertion.' );
 			}
 
@@ -82,7 +82,7 @@ class BEA_CSF_Client_Attachment {
 			//$data_for_post['import_id'] = $data_for_post['ID'];
 			unset( $data_for_post['ID'] );
 			$new_media_id = wp_insert_post( $data_for_post );
-			if ( is_wp_error( $new_media_id ) || $new_media_id === 0 ) {
+			if ( is_wp_error( $new_media_id ) || 0 === (int) $new_media_id ) {
 				return new WP_Error( 'invalid_datas', 'Error - An fatal error occurred during attachment insertion.' );
 			}
 

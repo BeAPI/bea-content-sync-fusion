@@ -6,7 +6,10 @@
  * @author Amaury BALMER
  */
 class BEA_CSF_Addon_ACF {
-	static $acf_fields = [];
+	/**
+	 * @var array
+	 */
+	private static $acf_fields = [];
 
 	/**
 	 * BEA_CSF_Addon_ACF constructor.
@@ -166,9 +169,9 @@ class BEA_CSF_Addon_ACF {
 				foreach ( $meta_value_to_translate as $_key => $_value ) {
 					$object_id = BEA_CSF_Relations::get_object_for_any( $types, $data['blogid'], $sync_fields['_current_receiver_blog_id'], $_value, $_value );
 					// If relation not exist, try to check if the parent relation is an synchronized content for get an indirect relation
-					if ( empty( $object_id ) || (int) $object_id == 0 ) {
+					if ( empty( $object_id ) || 0 === (int) $object_id ) {
 						$parent_relation = BEA_CSF_Relations::current_object_is_synchronized( $types, $data['blogid'], $meta_value_to_translate );
-						if ( $parent_relation != false ) {
+						if ( false !== $parent_relation ) {
 							$object_id = BEA_CSF_Relations::get_object_for_any( $types, $parent_relation->emitter_blog_id, $sync_fields['_current_receiver_blog_id'], $parent_relation->emitter_id, $parent_relation->emitter_id );
 						}
 					}
@@ -182,9 +185,9 @@ class BEA_CSF_Addon_ACF {
 			} else {
 				$object_id = BEA_CSF_Relations::get_object_for_any( $types, $data['blogid'], $sync_fields['_current_receiver_blog_id'], $meta_value_to_translate, $meta_value_to_translate );
 				// If relation not exist, try to check if the parent relation is an synchronized content for get an indirect relation
-				if ( empty( $object_id ) || (int) $object_id == 0 ) {
+				if ( empty( $object_id ) || 0 === (int) $object_id ) {
 					$parent_relation = BEA_CSF_Relations::current_object_is_synchronized( $types, $data['blogid'], $meta_value_to_translate );
-					if ( $parent_relation != false ) {
+					if ( false !== $parent_relation ) {
 						$object_id = BEA_CSF_Relations::get_object_for_any( $types, $parent_relation->emitter_blog_id, $sync_fields['_current_receiver_blog_id'], $parent_relation->emitter_id, $parent_relation->emitter_id );
 
 					}

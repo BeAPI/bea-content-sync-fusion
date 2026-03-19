@@ -100,13 +100,15 @@ class BEA_CSF_Async {
 		$data_to_transfer = apply_filters( 'bea_csf_client_' . $object . '_' . $method . '_data_to_transfer', $data_to_transfer, $sync->receiver_blog_id, $sync->fields );
 
 		// Flush POST variables
-		$_backup_POST = $_POST;
-		$_POST        = [];
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- $_POST is cleared temporarily and restored; no form processing in this window.
+		$bea_csf_post_backup = $_POST;
+		$_POST               = [];
 
 		// Send data to CLIENT classes
 		$result = call_user_func( [ 'BEA_CSF_Client_' . $object, $method ], $data_to_transfer, $sync->fields );
 		// Restore POST variables
-		$_POST = $_backup_POST;
+		$_POST = $bea_csf_post_backup;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		// Reactive hooks plugin
 		BEA_CSF_Client::register_hooks();
@@ -280,9 +282,11 @@ class BEA_CSF_Async {
 
 		/** @var WPDB $wpdb */
 		if ( 0 < $blog_id ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $order_by is filterable; default is a static ORDER BY fragment.
 			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d ORDER BY $order_by LIMIT %d", $blog_id, $quantity ) );
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $order_by is filterable; default is a static ORDER BY fragment.
 		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue  ORDER BY $order_by LIMIT %d", $quantity ) );
 	}
 

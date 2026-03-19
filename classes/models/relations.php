@@ -368,7 +368,7 @@ class BEA_CSF_Relations {
 				$emitter_id      = $result->emitter_id;
 			}
 
-			if ( $i === 50 ) {
+			if ( 50 === $i ) {
 				break; // Skip infinite loop error, in theory, never called.
 			}
 		} while ( ! empty( $result ) );
@@ -391,6 +391,7 @@ class BEA_CSF_Relations {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- IN list built from esc_sql() literals via get_sql_in_types().
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT receiver_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . ' ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND emitter_id = %d',
@@ -399,6 +400,7 @@ class BEA_CSF_Relations {
 				$emitter_id
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
@@ -416,6 +418,7 @@ class BEA_CSF_Relations {
 		global $wpdb;
 
 		/** @var WPDB $wpdb */
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- IN list built from esc_sql() literals via get_sql_in_types().
 		return (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT emitter_id FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . ' ) AND emitter_blog_id = %d AND receiver_blog_id = %d AND receiver_id = %d',
@@ -424,6 +427,7 @@ class BEA_CSF_Relations {
 				$receiver_id
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**
@@ -452,6 +456,7 @@ class BEA_CSF_Relations {
 		}
 
 		/** @var WPDB $wpdb */
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- IN list built from esc_sql() literals via get_sql_in_types().
 		$result = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types ) . ' ) AND receiver_blog_id = %d AND receiver_id = %d',
@@ -459,6 +464,7 @@ class BEA_CSF_Relations {
 				$receiver_id
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 		if ( null !== $result ) {
 			wp_cache_set( $cache_id, $result, self::BEA_CSF_RELATIONS_CACHE_GROUP );
 		}
@@ -563,12 +569,14 @@ class BEA_CSF_Relations {
 
 		/** @var WPDB $wpdb */
 
+		// phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- IN list built from esc_sql() literals via get_sql_in_types().
 		return $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM $wpdb->bea_csf_relations WHERE type IN ( " . self::get_sql_in_types( $types_relation ) . ' ) AND receiver_blog_id = %d',
 				$blog_id
 			)
 		);
+		// phpcs:enable WordPress.DB.PreparedSQL.NotPrepared
 	}
 
 	/**

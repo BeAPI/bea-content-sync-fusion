@@ -83,25 +83,20 @@ class BEA_CSF_Synchronization {
 			// Register this hook only for post type attachment for evite doublon sync item
 			if ( 'attachment' === $this->post_type ) { // Specific CPT : Attachments
 
-				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $emitter_blog_id;
-				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $emitter_blog_id;
+				$this->_register_hooks[] = 'bea-csf/Attachment/delete/attachment/' . $emitter_blog_id;
+				$this->_register_hooks[] = 'bea-csf/Attachment/merge/attachment/' . $emitter_blog_id;
 
 			} elseif ( ! empty( $this->post_type ) ) { // Classic CPT : Posts/Pages
 
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $this->post_type . '/' . $emitter_blog_id;
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $this->post_type . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = 'bea-csf/PostType/merge/' . $this->post_type . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = 'bea-csf/PostType/delete/' . $this->post_type . '/' . $emitter_blog_id;
 			}
 
 			// Terms for all kind of CPT
 			if ( ! empty( $this->taxonomies ) ) {
 				foreach ( $this->taxonomies as $taxonomy ) {
-					// Skip register if taxo is already register on another synchro
-					if ( isset( $connection_taxo_duplicate[ $taxonomy . '/' . $emitter_blog_id ] ) ) {
-						//continue;
-					}
-
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $emitter_blog_id;
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = 'bea-csf/Taxonomy/delete/' . $taxonomy . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = 'bea-csf/Taxonomy/merge/' . $taxonomy . '/' . $emitter_blog_id;
 
 					$connection_taxo_duplicate[ $taxonomy . '/' . $emitter_blog_id ] = true;
 				}
@@ -110,8 +105,8 @@ class BEA_CSF_Synchronization {
 			// P2P
 			if ( ! empty( $this->p2p_connections ) ) {
 				foreach ( $this->p2p_connections as $p2p_connection ) {
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'P2P' . '/' . 'delete' . '/' . $p2p_connection . '/' . $emitter_blog_id;
-					$this->_register_hooks[] = 'bea-csf' . '/' . 'P2P' . '/' . 'merge' . '/' . $p2p_connection . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = 'bea-csf/P2P/delete/' . $p2p_connection . '/' . $emitter_blog_id;
+					$this->_register_hooks[] = 'bea-csf/P2P/merge/' . $p2p_connection . '/' . $emitter_blog_id;
 				}
 			}
 		}

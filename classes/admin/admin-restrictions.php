@@ -84,7 +84,8 @@ class BEA_CSF_Admin_Restrictions {
 
 		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 			if ( 'pending' === $post->post_status ) {
-				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ), $post ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
+				/* translators: %s: Post title. */
+				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ), $post ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;', 'bea-content-sync-fusion' ), $post->post_title ) ) . '" rel="permalink">' . esc_html__( 'Preview', 'bea-content-sync-fusion' ) . '</a>';
 				if ( current_user_can( 'publish_post', $post->ID ) ) {
 					$actions['publish'] = sprintf(
 						'<a href="%s">%s</a>',
@@ -198,7 +199,7 @@ class BEA_CSF_Admin_Restrictions {
 			$_has_syncs = apply_filters( 'bea_csf_taxonomy_caps', $_has_syncs );
 
 			if ( null !== $_origin_key && empty( $_has_syncs ) ) {
-				wp_die( __( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
+				wp_die( esc_html__( 'You are not allowed to edit this content. You must update it from your master site.', 'bea-content-sync-fusion' ) );
 			}
 		}
 	}

@@ -133,7 +133,8 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 
 		if ( ! empty( $receivers_to_delete ) && ! empty( $old_term_receivers ) ) {
 			// Theses values have just deleted, delete content for clients !
-			do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $receivers_to_delete, true, true );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/Taxonomy/delete/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $receivers_to_delete, true, true );
 		}
 
 		return true;

@@ -51,6 +51,7 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 
 		$union_all_query = implode( ' UNION ALL ', $selects );
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- UNION built from per-blog fragments produced with $wpdb->prepare().
 		return $wpdb->get_results( "SELECT post_id, meta_value, blog_id FROM ( $union_all_query ) AS wp" );
 	}
 

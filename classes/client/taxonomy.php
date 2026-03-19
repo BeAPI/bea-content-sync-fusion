@@ -14,7 +14,7 @@ class BEA_CSF_Client_Taxonomy {
 		global $_bea_origin_blog_id;
 
 		if ( empty( $data ) || ! is_array( $data ) ) {
-			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );
+			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.', 'bea-content-sync-fusion' ) );
 		}
 
 		if ( ! isset( $data['blogid'] ) ) {
@@ -150,7 +150,7 @@ class BEA_CSF_Client_Taxonomy {
 	 */
 	public static function delete( array $term, array $sync_fields ) {
 		if ( empty( $term ) || ! is_array( $term ) ) {
-			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.' ) );
+			return new WP_Error( 'invalid_datas', __( 'Bad call, invalid datas.', 'bea-content-sync-fusion' ) );
 		}
 
 		$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $term['blogid'], $sync_fields['_current_receiver_blog_id'], $term['term_id'], $term['term_id'] );

@@ -25,7 +25,7 @@ class BEA_CSF_Addon_WooCommerce_Product_Attributes {
 		// Hack WooCommerce check
 		global $wp_taxonomies;
 		$bk_wp_taxonomies = $wp_taxonomies;
-		$wp_taxonomies    = [];
+		$wp_taxonomies    = []; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		delete_transient( 'wc_attribute_taxonomies' );
 		WC_Cache_Helper::incr_cache_prefix( 'woocommerce-attributes' );
@@ -54,7 +54,7 @@ class BEA_CSF_Addon_WooCommerce_Product_Attributes {
 		}
 
 		// Restore backup
-		$wp_taxonomies = $bk_wp_taxonomies;
+		$wp_taxonomies = $bk_wp_taxonomies; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		unset( $bk_wp_taxonomies );
 	}
 

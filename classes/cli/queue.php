@@ -43,6 +43,7 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 		}
 		WP_CLI\Utils\format_items( 'table', $results, [ 'blog_id', 'counter' ] );
 
+		/* translators: %d: Number of queued items. */
 		WP_CLI::success( sprintf( __( '%d items waiting on the queue', 'bea-content-sync-fusion' ), BEA_CSF_Async::get_counter() ) );
 	}
 

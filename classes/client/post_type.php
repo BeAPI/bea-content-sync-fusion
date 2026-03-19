@@ -43,7 +43,7 @@ class BEA_CSF_Client_PostType {
 		// Merge post
 		if ( ! empty( $data['local_id'] ) && (int) $data['local_id'] > 0 ) {
 			$current_value = (int) get_post_meta( $data['local_id'], '_exclude_from_futur_sync', true );
-			if ( $current_value == 1 ) {
+			if ( 1 === $current_value ) {
 				return new WP_Error( 'future_sync_exclusion', 'Error - This post is exclude from future sync.' );
 			}
 

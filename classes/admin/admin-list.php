@@ -48,7 +48,7 @@ class BEA_CSF_Admin_List {
 		$output .= '<option ' . selected( $current_action, 'remote-only', false ) . ' value="remote-only">' . __( 'Show only remote content', 'bea-content-sync-fusion' ) . '</option>';
 		$output .= '</select>';
 
-		echo $output;
+		echo $output;//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**

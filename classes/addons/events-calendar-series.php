@@ -91,7 +91,7 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 
 		// Get tickets
 		$tickets = Tribe__Tickets__Tickets::get_event_tickets( $data['ID'] );
-		if ( $tickets != false && ! empty( $tickets ) ) {
+		if ( false !== $tickets && ! empty( $tickets ) ) {
 			$data['tickets'] = [];
 
 			foreach ( $tickets as $ticket ) {
@@ -101,13 +101,13 @@ class BEA_CSF_Addon_Events_Calendar_Series {
 
 		// Get organizer
 		$data['_EventOrganizerID'] = get_post_meta( $data['ID'], '_EventOrganizerID', true );
-		if ( $data['_EventOrganizerID'] != false ) {
+		if ( false !== $data['_EventOrganizerID'] ) {
 			$data['_EventOrganizer'] = BEA_CSF_Server_PostType::get_data( $data['_EventOrganizerID'], $sync_fields );
 		}
 
 		// Get venue
 		$data['_EventVenueID'] = get_post_meta( $data['ID'], '_EventVenueID', true );
-		if ( $data['_EventVenueID'] != false ) {
+		if ( false !== $data['_EventVenueID'] ) {
 			$data['_EventVenue'] = BEA_CSF_Server_PostType::get_data( $data['_EventVenueID'], $sync_fields );
 		}
 

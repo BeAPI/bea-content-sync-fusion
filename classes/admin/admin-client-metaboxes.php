@@ -30,7 +30,7 @@ class BEA_CSF_Admin_Client_Metaboxes {
 
 		/* OK, it's safe for us to save the data now. */
 
-		if ( isset( $_POST['exclude_from_futur_sync'] ) && (int) $_POST['exclude_from_futur_sync'] == 1 ) {
+		if ( isset( $_POST['exclude_from_futur_sync'] ) && 1 === (int) $_POST['exclude_from_futur_sync'] ) {
 			update_post_meta( $post_id, '_exclude_from_futur_sync', 1 );
 		} else {
 			delete_post_meta( $post_id, '_exclude_from_futur_sync' );

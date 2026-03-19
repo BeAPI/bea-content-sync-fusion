@@ -20,7 +20,7 @@ class BEA_CSF_Addon_Revisionize {
 		);
 		//add_filter( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
 		add_filter(
-			'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer',
+			'bea_csf_client_PostType_merge_data_to_transfer',
 			[
 				__CLASS__,
 				'maybe_transform_data_for_draft',
@@ -40,7 +40,8 @@ class BEA_CSF_Addon_Revisionize {
 	public static function get_post_custom_keys( $meta_keys, $id, $context ) {
 		if ( 'copy' === $context ) {
 			foreach ( [ '_network_post_revision' ] as $meta_key_delete ) {
-				if ( ( $key = array_search( $meta_key_delete, $meta_keys ) ) !== false ) {
+				$key = array_search( $meta_key_delete, $meta_keys, true );
+				if ( false !== $key ) {
 					unset( $meta_keys[ $key ] );
 				}
 			}

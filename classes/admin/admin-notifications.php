@@ -35,7 +35,7 @@ class BEA_CSF_Admin_Notifications {
 	 * @param string $hook_suffix
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
-		if ( isset( $hook_suffix ) && $hook_suffix == 'settings_page_bea-csfc-notifications' ) {
+		if ( isset( $hook_suffix ) && 'settings_page_bea-csfc-notifications' === $hook_suffix ) {
 			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/js/jquery.multi-select.js', [ 'jquery' ], '0.9.8', true );
 			wp_enqueue_script( 'bea-csf-admin-notifications', BEA_CSF_URL . 'assets/js/bea-csf-admin-notifications.js', [ 'lou-multi-select' ], BEA_CSF_VERSION, true );
 			wp_localize_script(

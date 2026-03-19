@@ -25,6 +25,7 @@ class BEA_CSF_Client {
 		);
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Read-only check to attach hooks; no data processed.
 		if ( isset( $_POST['thumbnail_id'] ) ) {
 			add_action( 'updated_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX, 3 );
 			add_action( 'deleted_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX, 3 );
@@ -66,6 +67,7 @@ class BEA_CSF_Client {
 		);
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Read-only check to detach hooks; no data processed.
 		if ( isset( $_POST['thumbnail_id'] ) ) {
 			remove_action( 'updated_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX );
 			remove_action( 'deleted_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX );
@@ -105,7 +107,8 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false, true );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/Attachment/delete/attachment/' . get_current_blog_id(), $attachment, false, false, false, true );
 
 		return true;
 	}
@@ -129,7 +132,8 @@ class BEA_CSF_Client {
 
 		$is_include_from_sync = (bool) get_post_meta( $attachment_id, '_include_from_sync', true );
 
-		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false, $is_include_from_sync );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/Attachment/merge/attachment/' . get_current_blog_id(), $attachment, false, false, false, $is_include_from_sync );
 
 		return true;
 	}
@@ -263,9 +267,11 @@ class BEA_CSF_Client {
 				do_action( 'acf/save_post', $post->ID );
 				self::register_hooks();
 			}
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
-		} elseif ( $new_status !== $old_status && in_array( $new_status, $allowed_delete_status, true ) ) { // Check for unpublish
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/PostType/merge/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
+		} elseif ( $old_status !== $new_status && in_array( $new_status, $allowed_delete_status, true ) ) { // Check for unpublish
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/PostType/delete/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
 		}
 
 		return true;
@@ -287,7 +293,8 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/PostType/delete/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
 
 		return true;
 	}
@@ -303,7 +310,8 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'merge' . '/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/P2P/merge/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
 
 		return true;
 	}
@@ -321,7 +329,8 @@ class BEA_CSF_Client {
 				continue;
 			}
 
-			do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'delete' . '/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/P2P/delete/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
 		}
 
 		return true;
@@ -341,7 +350,8 @@ class BEA_CSF_Client {
 		$deleted_term->term_taxonomy_id = $tt_id;
 		$deleted_term->taxonomy         = $taxonomy;
 
-		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . get_current_blog_id(), $deleted_term, false, false, false );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/Taxonomy/delete/' . $taxonomy . '/' . get_current_blog_id(), $deleted_term, false, false, false );
 
 		return true;
 	}
@@ -364,7 +374,8 @@ class BEA_CSF_Client {
 		$_term_receivers = (array) get_term_meta( $term->term_id, '_term_receivers', true );
 		$_term_receivers = array_filter( $_term_receivers );
 
-		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . get_current_blog_id(), $term, false, $_term_receivers, false, true );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/Taxonomy/merge/' . $taxonomy . '/' . get_current_blog_id(), $term, false, $_term_receivers, false, true );
 
 		return true;
 	}
