@@ -21,7 +21,7 @@ class BEA_CSF_Server_Attachment {
 	 * @return array
 	 */
 	public static function delete( $attachment, array $sync_fields ) {
-		return apply_filters( 'bea_csf.server.attachment.delete', array( 'ID' => $attachment ), $sync_fields );
+		return apply_filters( 'bea_csf.server.attachment.delete', [ 'ID' => $attachment ], $sync_fields );
 	}
 
 	/**
@@ -55,5 +55,4 @@ class BEA_CSF_Server_Attachment {
 
 		return $attachment;
 	}
-
 }

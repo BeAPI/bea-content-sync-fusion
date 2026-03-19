@@ -9,10 +9,10 @@ class BEA_CSF_Admin_Blog {
 	 */
 	public function __construct() {
 		// Add actions link into sites list
-		add_filter( 'manage_sites_action_links', array( __CLASS__, 'manage_sites_action_links' ), 10, 3 );
-		add_action( 'wpmuadminedit', array( __CLASS__, 'wpmuadminedit' ) );
-		add_action( 'network_sites_updated_message_' . 'resync_bea_csf_content', array( __CLASS__, 'network_sites_updated_message' ) );
-		add_action( 'network_sites_updated_message_' . 'sync_bea_csf_content', array( __CLASS__, 'network_sites_updated_message' ) );
+		add_filter( 'manage_sites_action_links', [ __CLASS__, 'manage_sites_action_links' ], 10, 3 );
+		add_action( 'wpmuadminedit', [ __CLASS__, 'wpmuadminedit' ] );
+		add_action( 'network_sites_updated_message_' . 'resync_bea_csf_content', [ __CLASS__, 'network_sites_updated_message' ] );
+		add_action( 'network_sites_updated_message_' . 'sync_bea_csf_content', [ __CLASS__, 'network_sites_updated_message' ] );
 	}
 
 	/**
@@ -41,14 +41,14 @@ class BEA_CSF_Admin_Blog {
 
 			BEA_CSF_Multisite::wpmu_new_blog( $id );
 
-			wp_safe_redirect( add_query_arg( array( 'updated' => 'resync_bea_csf_content' ), wp_get_referer() ) );
+			wp_safe_redirect( add_query_arg( [ 'updated' => 'resync_bea_csf_content' ], wp_get_referer() ) );
 			exit();
 		} elseif ( isset( $_GET['action'] ) && $_GET['action'] == 'sync_bea_csf_content' && $id > 0 ) {
 			check_admin_referer( 'sync_blog_content_' . $id );
 
 			BEA_CSF_Async::process_queue( 30, $id );
 
-			wp_safe_redirect( add_query_arg( array( 'updated' => 'sync_bea_csf_content' ), wp_get_referer() ) );
+			wp_safe_redirect( add_query_arg( [ 'updated' => 'sync_bea_csf_content' ], wp_get_referer() ) );
 			exit();
 		}
 	}

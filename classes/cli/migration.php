@@ -17,17 +17,17 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 		// Get current network
 		$current_network = get_network();
 
-		$selects = array();
+		$selects = [];
 		foreach ( get_sites(
-			array(
+			[
 				'network_id' => $current_network->id,
 				'number' => 99999999,
-			)
+			]
 		) as $blog ) {
 			switch_to_blog( $blog->blog_id );
 
 			// Table exists ?
-			if ( $wpdb->get_var( $wpdb->prepare( "SHOW TABLES LIKE %s", $wpdb->postmeta ) ) !== $wpdb->postmeta ) {
+			if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->postmeta ) ) !== $wpdb->postmeta ) {
 				restore_current_blog();
 				continue;
 			}
@@ -36,11 +36,15 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 			$meta_key = '_origin_key'; // Define the meta_key explicitly
 
 			// Use prepare to ensure safe query construction
-			$selects[] = $wpdb->prepare( "(
+			$selects[] = $wpdb->prepare(
+				"(
 		            SELECT pm.post_id AS post_id, pm.meta_value AS meta_value, %d AS blog_id 
 		            FROM {$wpdb->postmeta} AS pm
 		            WHERE pm.meta_key = %s
-		        )", $blog_id, $meta_key );
+		        )",
+				$blog_id,
+				$meta_key
+			);
 
 			restore_current_blog();
 		}
@@ -90,7 +94,7 @@ class BEA_CSF_Cli_Migration extends WP_CLI_Command {
 WP_CLI::add_command(
 	'content-sync-fusion migration',
 	'BEA_CSF_Cli_Migration',
-	array(
+	[
 		'shortdesc' => __( 'Allow to migrate old relation structure (meta data) to relations tables for the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
-	)
+	]
 );

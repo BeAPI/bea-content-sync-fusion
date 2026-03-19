@@ -7,7 +7,7 @@
 			<?php
 			foreach ( $syncs as $sync_obj ) :
 				if ( ! isset( $current_values[ $sync_obj->get_field( 'id' ) ] ) ) {
-					$current_values[ $sync_obj->get_field( 'id' ) ] = array();
+					$current_values[ $sync_obj->get_field( 'id' ) ] = [];
 				}
 				?>
 				

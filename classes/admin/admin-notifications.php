@@ -8,10 +8,10 @@ class BEA_CSF_Admin_Notifications {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
-		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
+		add_action( 'admin_init', [ __CLASS__, 'admin_init' ] );
 
-		add_action( 'admin_menu', array( __CLASS__, 'admin_menu' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
+		add_action( 'admin_menu', [ __CLASS__, 'admin_menu' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_enqueue_scripts' ] );
 	}
 
 	public static function admin_init() {
@@ -26,7 +26,7 @@ class BEA_CSF_Admin_Notifications {
 	}
 
 	public static function admin_menu() {
-		add_options_page( __( 'Content Sync Notifications', 'bea-content-sync-fusion' ), __( 'Sync Notification', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csfc-notifications', array( __CLASS__, 'render_page' ) );
+		add_options_page( __( 'Content Sync Notifications', 'bea-content-sync-fusion' ), __( 'Sync Notification', 'bea-content-sync-fusion' ), 'manage_options', 'bea-csfc-notifications', [ __CLASS__, 'render_page' ] );
 	}
 
 	/**
@@ -36,21 +36,21 @@ class BEA_CSF_Admin_Notifications {
 	 */
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
 		if ( isset( $hook_suffix ) && $hook_suffix == 'settings_page_bea-csfc-notifications' ) {
-			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/js/jquery.multi-select.js', array( 'jquery' ), '0.9.8', true );
-			wp_enqueue_script( 'bea-csf-admin-notifications', BEA_CSF_URL . 'assets/js/bea-csf-admin-notifications.js', array( 'lou-multi-select' ), BEA_CSF_VERSION, true );
+			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/js/jquery.multi-select.js', [ 'jquery' ], '0.9.8', true );
+			wp_enqueue_script( 'bea-csf-admin-notifications', BEA_CSF_URL . 'assets/js/bea-csf-admin-notifications.js', [ 'lou-multi-select' ], BEA_CSF_VERSION, true );
 			wp_localize_script(
 				'bea-csf-admin-notifications',
 				'beaCsfAdminNotifications',
-				array(
+				[
 					'selectableHeader' => __( 'Selectable users', 'bea-content-sync-fusion' ),
 					'selectionHeader' => __(
 						'Selection users',
 						'bea-content-sync-fusion'
 					),
-				)
+				]
 			);
-			wp_enqueue_style( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/css/multi-select.css', array(), '0.9.8', 'screen' );
-			wp_enqueue_style( 'bea-csf-admin-notifications', BEA_CSF_URL . 'assets/css/bea-csf-admin-notifications.css', array(), BEA_CSF_VERSION );
+			wp_enqueue_style( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/css/multi-select.css', [], '0.9.8', 'screen' );
+			wp_enqueue_style( 'bea-csf-admin-notifications', BEA_CSF_URL . 'assets/css/bea-csf-admin-notifications.css', [], BEA_CSF_VERSION );
 		}
 	}
 
@@ -58,16 +58,16 @@ class BEA_CSF_Admin_Notifications {
 		global $wpdb;
 
 		// Prepare users array
-		$users = array();
+		$users = [];
 
 		// Get users admin/editor on this blog
-		$roles = array( 'administrator', 'editor' );
+		$roles = [ 'administrator', 'editor' ];
 		foreach ( $roles as $role ) {
 			$users_query = new WP_User_Query(
-				array(
+				[
 					'role' => $role,
 					'fields' => 'all',
-				)
+				]
 			);
 			if ( $users_query->get_total() > 0 ) {
 				$users = array_merge( $users_query->get_results(), $users );
@@ -76,10 +76,10 @@ class BEA_CSF_Admin_Notifications {
 
 		// Get syncs with notifications enabled
 		$syncs = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'notifications' => 1,
 				'receivers' => $wpdb->blogid,
-			),
+			],
 			'AND',
 			false,
 			true
@@ -89,7 +89,7 @@ class BEA_CSF_Admin_Notifications {
 		$current_values = get_option( BEA_CSF_OPTION . '-notifications' );
 
 		// Include template
-		include( BEA_CSF_DIR . 'views/admin/client-page-settings-notification.php' );
+		include BEA_CSF_DIR . 'views/admin/client-page-settings-notification.php';
 
 		return true;
 	}

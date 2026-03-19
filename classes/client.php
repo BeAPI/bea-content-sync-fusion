@@ -8,84 +8,84 @@ class BEA_CSF_Client {
 
 	public static function register_hooks() {
 		// Attachments
-		add_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX, 1 );
-		add_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX, 1 );
-		add_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX, 1 );
+		add_action( 'delete_attachment', [ __CLASS__, 'delete_attachment' ], PHP_INT_MAX, 1 );
+		add_action( 'edit_attachment', [ __CLASS__, 'merge_attachment' ], PHP_INT_MAX, 1 );
+		add_action( 'add_attachment', [ __CLASS__, 'merge_attachment' ], PHP_INT_MAX, 1 );
 
 		// Attachments crop
-		add_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX, 5 );
+		add_filter( 'wp_save_image_editor_file', [ __CLASS__, 'wp_save_image_editor_file' ], PHP_INT_MAX, 5 );
 		add_filter(
 			'wp_update_attachment_metadata',
-			array(
+			[
 				__CLASS__,
 				'wp_update_attachment_metadata',
-			),
+			],
 			PHP_INT_MAX,
 			2
 		);
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			add_action( 'updated_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
-			add_action( 'deleted_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
+			add_action( 'updated_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX, 3 );
+			add_action( 'deleted_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX, 3 );
 		}
 
 		// Post types
-		add_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX, 3 );
-		add_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX, 1 );
+		add_action( 'transition_post_status', [ __CLASS__, 'transition_post_status' ], PHP_INT_MAX, 3 );
+		add_action( 'delete_post', [ __CLASS__, 'delete_post' ], PHP_INT_MAX, 1 );
 
 		// Terms
 		// Use 990 priority for conflict with Polylang
-		add_action( 'create_term', array( __CLASS__, 'merge_term' ), 990, 3 );
-		add_action( 'edited_term', array( __CLASS__, 'merge_term' ), 990, 3 );
-		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), 990, 3 );
+		add_action( 'create_term', [ __CLASS__, 'merge_term' ], 990, 3 );
+		add_action( 'edited_term', [ __CLASS__, 'merge_term' ], 990, 3 );
+		add_action( 'delete_term', [ __CLASS__, 'delete_term' ], 990, 3 );
 
 		// Terms/Post_type association
-		add_action( 'set_object_terms', array( __CLASS__, 'set_object_terms' ), PHP_INT_MAX, 6 );
+		add_action( 'set_object_terms', [ __CLASS__, 'set_object_terms' ], PHP_INT_MAX, 6 );
 
 		// P2P
-		add_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
-		add_action( 'p2p_delete_connections', array( __CLASS__, 'p2p_delete_connections' ), PHP_INT_MAX, 1 );
+		add_action( 'p2p_created_connection', [ __CLASS__, 'p2p_created_connection' ], PHP_INT_MAX, 1 );
+		add_action( 'p2p_delete_connections', [ __CLASS__, 'p2p_delete_connections' ], PHP_INT_MAX, 1 );
 	}
 
 	public static function unregister_hooks() {
 		// Attachments
-		remove_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX );
-		remove_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX );
-		remove_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX );
+		remove_action( 'delete_attachment', [ __CLASS__, 'delete_attachment' ], PHP_INT_MAX );
+		remove_action( 'edit_attachment', [ __CLASS__, 'merge_attachment' ], PHP_INT_MAX );
+		remove_action( 'add_attachment', [ __CLASS__, 'merge_attachment' ], PHP_INT_MAX );
 
 		// Attachments crop
-		remove_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX );
+		remove_filter( 'wp_save_image_editor_file', [ __CLASS__, 'wp_save_image_editor_file' ], PHP_INT_MAX );
 		remove_filter(
 			'wp_update_attachment_metadata',
-			array(
+			[
 				__CLASS__,
 				'wp_update_attachment_metadata',
-			),
+			],
 			PHP_INT_MAX
 		);
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			remove_action( 'updated_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
-			remove_action( 'deleted_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
+			remove_action( 'updated_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX );
+			remove_action( 'deleted_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX );
 		}
 
 		// Post types
-		remove_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX );
-		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX );
+		remove_action( 'transition_post_status', [ __CLASS__, 'transition_post_status' ], PHP_INT_MAX );
+		remove_action( 'delete_post', [ __CLASS__, 'delete_post' ], PHP_INT_MAX );
 
 		// Terms
-		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), 990 );
-		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), 990 );
-		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), 990 );
+		remove_action( 'create_term', [ __CLASS__, 'merge_term' ], 990 );
+		remove_action( 'edited_term', [ __CLASS__, 'merge_term' ], 990 );
+		remove_action( 'delete_term', [ __CLASS__, 'delete_term' ], 990 );
 
 		// Terms/Post_type association
-		remove_action( 'set_object_terms', array( __CLASS__, 'set_object_terms' ), PHP_INT_MAX );
+		remove_action( 'set_object_terms', [ __CLASS__, 'set_object_terms' ], PHP_INT_MAX );
 
 		// P2P
-		remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX );
-		remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX );
+		remove_action( 'p2p_created_connection', [ __CLASS__, 'p2p_created_connection' ], PHP_INT_MAX );
+		remove_action( 'p2p_delete_connection', [ __CLASS__, 'p2p_delete_connection' ], PHP_INT_MAX );
 	}
 
 	/**
@@ -313,7 +313,7 @@ class BEA_CSF_Client {
 	 *
 	 * @return bool
 	 */
-	public static function p2p_delete_connections( $p2p_ids = array() ) {
+	public static function p2p_delete_connections( $p2p_ids = [] ) {
 		$p2p_ids = (array) $p2p_ids;
 		foreach ( $p2p_ids as $p2p_id ) {
 			$connection = p2p_get_connection( (int) $p2p_id );
@@ -406,6 +406,5 @@ class BEA_CSF_Client {
 		}
 
 		return true;
-
 	}
 }

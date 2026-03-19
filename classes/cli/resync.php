@@ -60,14 +60,14 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 		$params['p2p']         = ! isset( $params['p2p'] ) ? 'false' : $params['p2p'];
 
 		// Default WP_Site_Query arguments
-		$site_args = array(
+		$site_args = [
 			'number'        => PHP_INT_MAX,
 			'order'         => 'ASC',
 			'orderby'       => 'id',
 			'count'         => false,
 			'fields'        => 'ids',
 			'no_found_rows' => false,
-		);
+		];
 
 		// Get emitters blogs list from plugin settings
 		if ( isset( $params['smart'] ) && 'true' === $params['smart'] ) {
@@ -97,8 +97,8 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 
 			$result = WP_CLI::launch_self(
 				'content-sync-fusion resync site',
-				array(),
-				array(
+				[],
+				[
 					'alternativeq' => $params['alternativeq'],
 					'attachments'  => $params['attachments'],
 					'post_type'    => $params['post_type'],
@@ -106,7 +106,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 					'p2p'          => $params['p2p'],
 					'receivers'    => $params['receivers'],
 					'url'          => get_home_url( $blog_id, '/' ),
-				),
+				],
 				false,
 				false // enable for debug
 			);
@@ -126,9 +126,9 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 	public function site( $args, $params ) {
 		// Get syncs for current site
 		$has_syncs = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'emitters' => get_current_blog_id(),
-			),
+			],
 			'AND',
 			false,
 			true
@@ -149,15 +149,15 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 			$this->receivers_blog_ids = explode( ',', $params['receivers'] );
 			$this->receivers_blog_ids = array_filter( array_map( 'intval', $this->receivers_blog_ids ) );
 
-			add_filter( 'bea_csf.pre_pre_send_data', array( $this, '_bea_csf_pre_pre_send_data' ), 10, 2 );
+			add_filter( 'bea_csf.pre_pre_send_data', [ $this, '_bea_csf_pre_pre_send_data' ], 10, 2 );
 		}
 
 		// Get data to resync
-		$data_to_sync = array();
+		$data_to_sync = [];
 
 		// Get terms with params argument
 		if ( ! isset( $params['taxonomies'] ) || 'false' === $params['taxonomies'] ) {
-			$data_to_sync['terms'] = array();
+			$data_to_sync['terms'] = [];
 		} else {
 			// TODO: Manage "any" and filtering
 			$data_to_sync['terms'] = BEA_CSF_Cli_Helper::get_all_terms();
@@ -165,7 +165,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 
 		// Get attachments with params argument
 		if ( ! isset( $params['attachments'] ) || 'false' === $params['attachments'] ) {
-			$data_to_sync['attachments'] = array();
+			$data_to_sync['attachments'] = [];
 		} else {
 			// TODO: Manage "any" and filtering
 			$data_to_sync['attachments'] = BEA_CSF_Cli_Helper::get_attachments();
@@ -173,7 +173,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 
 		// Get posts with params argument
 		if ( ! isset( $params['post_type'] ) || 'false' === $params['post_type'] ) {
-			$data_to_sync['posts'] = array();
+			$data_to_sync['posts'] = [];
 		} else {
 			// TODO: Manage "any" and filtering
 			$data_to_sync['posts'] = BEA_CSF_Cli_Helper::get_posts();
@@ -181,7 +181,7 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 
 		// Get P2P with params argument
 		if ( ! isset( $params['p2p'] ) || 'false' === $params['p2p'] ) {
-			$data_to_sync['p2p'] = array();
+			$data_to_sync['p2p'] = [];
 		} else {
 			// TODO: Manage "any" and filtering
 			$data_to_sync['p2p'] = BEA_CSF_Cli_Helper::get_p2p_connections();
@@ -265,13 +265,12 @@ class BEA_CSF_Cli_Resync extends WP_CLI_Command {
 
 		return false;
 	}
-
 }
 
 WP_CLI::add_command(
 	'content-sync-fusion resync',
 	'BEA_CSF_Cli_Resync',
-	array(
+	[
 		'shortdesc' => __( 'All commands related "resync features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
-	)
+	]
 );

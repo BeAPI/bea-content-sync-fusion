@@ -11,28 +11,28 @@ class BEA_CSF_Addon_Revisionize {
 
 		add_filter(
 			'bea_csf/client/posttype/before_merge',
-			array(
+			[
 				__CLASS__,
 				'bea_csf_client_posttype_before_merge',
-			),
+			],
 			10,
 			2
 		);
 		//add_filter( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
 		add_filter(
 			'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer',
-			array(
+			[
 				__CLASS__,
 				'maybe_transform_data_for_draft',
-			),
+			],
 			10,
 			3
 		);
 
-		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ), 11, 2 );
-		add_action( 'display_post_states', array( __CLASS__, 'display_post_states' ), 11, 2 );
+		add_action( 'add_meta_boxes', [ __CLASS__, 'add_meta_boxes' ], 11, 2 );
+		add_action( 'display_post_states', [ __CLASS__, 'display_post_states' ], 11, 2 );
 
-		add_action( 'revisionize/get_post_custom_keys', array( __CLASS__, 'get_post_custom_keys' ), 11, 3 );
+		add_action( 'revisionize/get_post_custom_keys', [ __CLASS__, 'get_post_custom_keys' ], 11, 3 );
 
 		return true;
 	}
@@ -116,9 +116,9 @@ class BEA_CSF_Addon_Revisionize {
 				$data['post_status']           = 'draft';
 
 				// Add meta data for revisionize
-				$data['meta_data']['_post_revision_of']      = array( 0 => $local_id );
-				$data['meta_data']['_post_revision']         = array( 0 => true );
-				$data['meta_data']['_network_post_revision'] = array( 0 => true );
+				$data['meta_data']['_post_revision_of']      = [ 0 => $local_id ];
+				$data['meta_data']['_post_revision']         = [ 0 => true ];
+				$data['meta_data']['_network_post_revision'] = [ 0 => true ];
 			}
 		}
 

@@ -111,8 +111,8 @@ require BEA_CSF_DIR . 'classes/admin/admin-list.php';
 require BEA_CSF_DIR . 'classes/admin/admin-dashboard-widgets.php';
 
 // Plugin activate/desactive hooks
-register_activation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'activate' ) );
-register_deactivation_hook( __FILE__, array( 'BEA_CSF_Plugin', 'deactivate' ) );
+register_activation_hook( __FILE__, [ 'BEA_CSF_Plugin', 'activate' ] );
+register_deactivation_hook( __FILE__, [ 'BEA_CSF_Plugin', 'deactivate' ] );
 
 // Init !
 add_action( 'plugins_loaded', 'init_bea_content_sync_fusion' );

@@ -16,7 +16,7 @@
 			<?php _e( 'Term:', 'bea-content-sync-fusion' ); ?>
 			<select name="term_emitter[term_id]">
 				<option value=""><?php _e( 'No term or invalid term', 'bea-content-sync-fusion' ); ?></option>
-				<?php foreach ( get_terms( $_origin_taxonomy, array( 'hide_empty' => false ) ) as $term ) : ?>
+				<?php foreach ( get_terms( $_origin_taxonomy, [ 'hide_empty' => false ] ) as $term ) : ?>
 					<option
 						value="<?php echo esc_attr( $term->term_id ); ?>" <?php selected( $term->term_id, $_origin_term_id, true ); ?>><?php echo esc_html( $term->name ); ?></option>
 				<?php endforeach; ?>

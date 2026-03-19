@@ -7,8 +7,8 @@
  *
  */
 class BEA_CSF_Addon_ACF_Exclusion {
-	static $acf_fields = array();
-	static $meta_data = array();
+	static $acf_fields = [];
+	static $meta_data = [];
 
 	/**
 	 * BEA_CSF_Addon_ACF_Exclusion constructor.
@@ -21,23 +21,23 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		// Fields
 		if ( apply_filters( 'bea/csf/acf-addon-exclusion/allow-fieds-exclusion', false ) !== false ) {
 
-			add_action( 'save_post', array( __CLASS__, 'save_post_fields' ), 10, 1 );
-			add_action( 'acf/include_field_types', array( __CLASS__, 'acf_include_field_types' ), 9999999 );
-			add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_fields' ), 11, 3 );
-			add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_fields' ), 11, 3 );
+			add_action( 'save_post', [ __CLASS__, 'save_post_fields' ], 10, 1 );
+			add_action( 'acf/include_field_types', [ __CLASS__, 'acf_include_field_types' ], 9999999 );
+			add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', [ __CLASS__, 'filter_acf_fields' ], 11, 3 );
+			add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', [ __CLASS__, 'filter_acf_fields' ], 11, 3 );
 
 		}
 
 		// Groups
-		add_action( 'save_post', array( __CLASS__, 'save_post_groups' ), 10, 1 );
-		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_groups' ), 10, 3 );
-		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_groups' ), 10, 3 );
-		add_action( 'post_edit_form_tag', array( __CLASS__, 'post_edit_form_tag' ), 1 );
+		add_action( 'save_post', [ __CLASS__, 'save_post_groups' ], 10, 1 );
+		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', [ __CLASS__, 'filter_acf_groups' ], 10, 3 );
+		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', [ __CLASS__, 'filter_acf_groups' ], 10, 3 );
+		add_action( 'post_edit_form_tag', [ __CLASS__, 'post_edit_form_tag' ], 1 );
 
 		// Flexible
-		add_action( 'save_post', array( __CLASS__, 'save_post_flexibles' ), 10, 1 );
-		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_flexibles' ), 10, 3 );
-		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', array( __CLASS__, 'filter_acf_flexibles' ), 10, 3 );
+		add_action( 'save_post', [ __CLASS__, 'save_post_flexibles' ], 10, 1 );
+		add_filter( 'bea_csf_client_' . 'Attachment' . '_' . 'merge' . '_data_to_transfer', [ __CLASS__, 'filter_acf_flexibles' ], 10, 3 );
+		add_filter( 'bea_csf_client_' . 'PostType' . '_' . 'merge' . '_data_to_transfer', [ __CLASS__, 'filter_acf_flexibles' ], 10, 3 );
 
 		return true;
 	}
@@ -119,8 +119,8 @@ class BEA_CSF_Addon_ACF_Exclusion {
 	public static function acf_include_field_types() {
 		foreach ( acf_get_field_types() as $sections => $fields ) {
 			foreach ( $fields as $field_type => $field_label ) {
-				add_action( 'acf/render_field/type=' . $field_type, array( __CLASS__, 'acf_render_field_before' ), 8, 1 );
-				add_action( 'acf/render_field/type=' . $field_type, array( __CLASS__, 'acf_render_field_after' ), 10, 1 );
+				add_action( 'acf/render_field/type=' . $field_type, [ __CLASS__, 'acf_render_field_before' ], 8, 1 );
+				add_action( 'acf/render_field/type=' . $field_type, [ __CLASS__, 'acf_render_field_after' ], 10, 1 );
 			}
 		}
 	}
@@ -135,7 +135,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			return false;
 		}
 
-		if ( in_array( $field['type'], array( 'flexible_content', 'repeater' ) ) ) {
+		if ( in_array( $field['type'], [ 'flexible_content', 'repeater' ] ) ) {
 			self::build_html_checkbox( $field, __( 'Exclude this group from future synchro', 'bea-content-sync-fusion' ) );
 		}
 
@@ -152,7 +152,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			return false;
 		}
 
-		if ( ! in_array( $field['type'], array( 'flexible_content', 'repeater' ) ) ) {
+		if ( ! in_array( $field['type'], [ 'flexible_content', 'repeater' ] ) ) {
 			self::build_html_checkbox( $field, __( 'Exclude this field from future synchro', 'bea-content-sync-fusion' ) );
 		}
 
@@ -214,7 +214,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 			return $data;
 		}
 
-		$fields = array();
+		$fields = [];
 		foreach ( $groups as $group ) {
 			if ( ! in_array( $group['key'], $current_excluded_groups ) ) {
 				continue;
@@ -231,7 +231,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		}
 
 		// Get only fields
-		self::$acf_fields = array();
+		self::$acf_fields = [];
 		self::prepare_acf_fields( $fields );
 
 		// Loop on each meta
@@ -303,11 +303,11 @@ class BEA_CSF_Addon_ACF_Exclusion {
 		foreach ( (array) $fields as $field ) {
 			self::$acf_fields[ $field['key'] ] = $field;
 
-			if ( in_array( $field['type'], array( 'flexible_content' ) ) ) { // Flexible is recursive structure with layouts
+			if ( in_array( $field['type'], [ 'flexible_content' ] ) ) { // Flexible is recursive structure with layouts
 				foreach ( $field['layouts'] as $layout_field ) {
 					self::prepare_acf_fields( $layout_field['sub_fields'] );
 				}
-			} elseif ( in_array( $field['type'], array( 'repeater' ) ) ) { // Repeater is recursive structure
+			} elseif ( in_array( $field['type'], [ 'repeater' ] ) ) { // Repeater is recursive structure
 				self::prepare_acf_fields( $field['sub_fields'] );
 			}
 		}
@@ -347,7 +347,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 
 					// Delete all metadata from flexible/repeater
 					$acf_field = acf_maybe_get_field( $raw_meta_value[0] );
-					if ( $acf_field != false && in_array( $acf_field['type'], array( 'flexible_content', 'repeater' ) ) ) {
+					if ( $acf_field != false && in_array( $acf_field['type'], [ 'flexible_content', 'repeater' ] ) ) {
 						foreach ( (array) $data['meta_data'] as $sub_meta_key => $sub_meta_value ) {
 							if ( ! preg_match( '/' . preg_quote( $acf_field['name'] ) . '[\_]\d*[\_]/', $sub_meta_key ) !== false ) {
 								continue;
@@ -373,7 +373,7 @@ class BEA_CSF_Addon_ACF_Exclusion {
 					if ( $meta_key == $translated_acf_name ) {
 						// Delete all metadata from flexible/repeater
 						$acf_field = acf_maybe_get_field( $matches[1][0] );
-						if ( $acf_field != false && in_array( $acf_field['type'], array( 'flexible_content', 'repeater' ) ) ) {
+						if ( $acf_field != false && in_array( $acf_field['type'], [ 'flexible_content', 'repeater' ] ) ) {
 							foreach ( (array) $data['meta_data'] as $sub_meta_key => $sub_meta_value ) {
 								if ( ! preg_match( '/' . preg_quote( $acf_field['name'] ) . '[\_]\d*[\_]/', $sub_meta_key ) !== false ) {
 									continue;

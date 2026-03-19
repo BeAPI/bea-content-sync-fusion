@@ -19,7 +19,7 @@
 			<label><?php _e( 'Post type', 'bea-content-sync-fusion' ); ?></label>
 			<select class="widefat" name="sync[post_type]">
 				<option value=""><?php _e( 'No post type, sync only taxo !', 'bea-content-sync-fusion' ); ?></option>
-				<?php foreach ( get_post_types( array(), 'objects' ) as $post_type ) : ?>
+				<?php foreach ( get_post_types( [], 'objects' ) as $post_type ) : ?>
 					<option
 							value="<?php echo esc_attr( $post_type->name ); ?>" <?php selected( $post_type->name, $current_sync->get_field( 'post_type' ) ); ?>><?php echo esc_html( $post_type->labels->name ); ?></option>
 				<?php endforeach; ?>
@@ -31,7 +31,7 @@
 		<p id="bea-csf-taxonomies-block">
 			<label><?php _e( 'Taxonomies', 'bea-content-sync-fusion' ); ?></label>
 			<select multiple="multiple" class="widefat multiple-helper" name="sync[taxonomies][]">
-				<?php foreach ( get_taxonomies( array(), 'objects' ) as $taxonomy ) : ?>
+				<?php foreach ( get_taxonomies( [], 'objects' ) as $taxonomy ) : ?>
 					<option
 							value="<?php echo esc_attr( $taxonomy->name ); ?>" <?php selected( true, in_array( $taxonomy->name, (array) $current_sync->get_field( 'taxonomies' ) ) ); ?>><?php echo esc_html( $taxonomy->labels->name . ' (' . $taxonomy->rewrite['slug'] . ')' ); ?></option>
 				<?php endforeach; ?>
@@ -59,11 +59,11 @@
 			<select class="widefat" name="sync[mode]">
 				<?php
 				foreach (
-					array(
-						'manual' 			=> __( 'Manual', 'bea-content-sync-fusion' ),
-						'auto'   			=> __( 'Automatic', 'bea-content-sync-fusion' ),
+					[
+						'manual'            => __( 'Manual', 'bea-content-sync-fusion' ),
+						'auto'              => __( 'Automatic', 'bea-content-sync-fusion' ),
 						'exclude_default'   => __( 'Exclude default', 'bea-content-sync-fusion' ),
-					) as $value => $label
+					] as $value => $label
 				) :
 					?>
 					<option
@@ -79,11 +79,11 @@
 			<select class="widefat" name="sync[status]">
 				<?php
 				foreach (
-					array(
+					[
 						'publish' => __( 'Publish', 'bea-content-sync-fusion' ),
 						'pending' => __( 'Pending', 'bea-content-sync-fusion' ),
 						'user_selection'  => __( 'User selection\'s, only for manual mode', 'bea-content-sync-fusion' ),
-					) as $value => $label
+					] as $value => $label
 				) :
 					?>
 					<option

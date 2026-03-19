@@ -6,8 +6,8 @@ class BEA_CSF_SEO {
 	 *
 	 */
 	public function __construct() {
-		add_filter( 'get_canonical_url', array( __CLASS__, 'get_wp_canonical_url' ), 99, 2 );
-		add_filter( 'wpseo_canonical', array( __CLASS__, 'get_wpseo_canonical_url' ), 99 );
+		add_filter( 'get_canonical_url', [ __CLASS__, 'get_wp_canonical_url' ], 99, 2 );
+		add_filter( 'wpseo_canonical', [ __CLASS__, 'get_wpseo_canonical_url' ], 99 );
 	}
 
 	/**
@@ -62,5 +62,4 @@ class BEA_CSF_SEO {
 
 		return $canonical_url;
 	}
-
 }

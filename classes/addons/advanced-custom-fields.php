@@ -6,7 +6,7 @@
  * @author Amaury BALMER
  */
 class BEA_CSF_Addon_ACF {
-	static $acf_fields = array();
+	static $acf_fields = [];
 
 	/**
 	 * BEA_CSF_Addon_ACF constructor.
@@ -16,11 +16,11 @@ class BEA_CSF_Addon_ACF {
 			return false;
 		}
 
-		add_action( 'bea_csf.client.posttype.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
-		add_action( 'bea_csf.client.attachment.merge', array( __CLASS__, 'bea_csf_client_posttype_merge' ), 10, 3 );
+		add_action( 'bea_csf.client.posttype.merge', [ __CLASS__, 'bea_csf_client_posttype_merge' ], 10, 3 );
+		add_action( 'bea_csf.client.attachment.merge', [ __CLASS__, 'bea_csf_client_posttype_merge' ], 10, 3 );
 
-		add_action( 'bea_csf.client.taxonomy.merge', array( __CLASS__, 'bea_csf_client_taxonomy_merge' ), 10, 3 );
-		add_filter( 'bea_csf_gutenberg_translate_block_attributes', array( __CLASS__, 'translate_acf_blocks' ), 10, 4 );
+		add_action( 'bea_csf.client.taxonomy.merge', [ __CLASS__, 'bea_csf_client_taxonomy_merge' ], 10, 3 );
+		add_filter( 'bea_csf_gutenberg_translate_block_attributes', [ __CLASS__, 'translate_acf_blocks' ], 10, 4 );
 
 		return true;
 	}
@@ -46,7 +46,7 @@ class BEA_CSF_Addon_ACF {
 			return $data;
 		}
 
-		$fields = array();
+		$fields = [];
 		foreach ( $groups as $group ) {
 			$_fields = (array) acf_get_fields( $group );
 			foreach ( $_fields as $_field ) {
@@ -59,7 +59,7 @@ class BEA_CSF_Addon_ACF {
 		}
 
 		// Get only fields
-		self::$acf_fields = array();
+		self::$acf_fields = [];
 		self::prepare_acf_fields( $fields );
 
 		// Translate
@@ -94,7 +94,7 @@ class BEA_CSF_Addon_ACF {
 			return $data;
 		}
 
-		$fields = array();
+		$fields = [];
 		foreach ( $groups as $group ) {
 			$_fields = (array) acf_get_fields( $group );
 			foreach ( $_fields as $_field ) {
@@ -107,7 +107,7 @@ class BEA_CSF_Addon_ACF {
 		}
 
 		// Get only fields
-		self::$acf_fields = array();
+		self::$acf_fields = [];
 		self::prepare_acf_fields( $fields );
 
 		// Translate
@@ -131,7 +131,7 @@ class BEA_CSF_Addon_ACF {
 	 * @return array
 	 */
 	public static function translate_dynamic_acf_fields( $meta_data, $data, $sync_fields ) {
-		$meta_data_to_update = array();
+		$meta_data_to_update = [];
 
 		// Reloop on meta from sync
 		foreach ( $meta_data as $key => $values ) {
@@ -155,10 +155,10 @@ class BEA_CSF_Addon_ACF {
 			$meta_value_to_translate = maybe_unserialize( $meta_data[ $meta_key_to_translate ][0] );
 
 			$types = false;
-			if ( in_array( $acf_field['type'], array( 'image', 'post_object', 'file', 'page_link', 'gallery', 'relationship' ) ) ) {
-				$types = array( 'attachment', 'posttype' );
-			} elseif ( in_array( $acf_field['type'], array( 'taxonomy' ) ) ) {
-				$types = array( 'taxonomy' );
+			if ( in_array( $acf_field['type'], [ 'image', 'post_object', 'file', 'page_link', 'gallery', 'relationship' ] ) ) {
+				$types = [ 'attachment', 'posttype' ];
+			} elseif ( in_array( $acf_field['type'], [ 'taxonomy' ] ) ) {
+				$types = [ 'taxonomy' ];
 			}
 
 			// Array or singular value ?
@@ -206,13 +206,13 @@ class BEA_CSF_Addon_ACF {
 	 */
 	public static function prepare_acf_fields( $fields ) {
 		foreach ( (array) $fields as $field ) {
-			if ( in_array( $field['type'], array( 'flexible_content' ) ) ) { // Flexible is recursive structure with layouts
+			if ( in_array( $field['type'], [ 'flexible_content' ] ) ) { // Flexible is recursive structure with layouts
 				foreach ( $field['layouts'] as $layout_field ) {
 					self::prepare_acf_fields( $layout_field['sub_fields'] );
 				}
-			} elseif ( in_array( $field['type'], array( 'repeater', 'group' ) ) ) { // Repeater is recursive structure
+			} elseif ( in_array( $field['type'], [ 'repeater', 'group' ] ) ) { // Repeater is recursive structure
 				self::prepare_acf_fields( $field['sub_fields'] );
-			} elseif ( in_array( $field['type'], array( 'image', 'gallery', 'post_object', 'relationship', 'file', 'page_link', 'taxonomy' ) ) ) {
+			} elseif ( in_array( $field['type'], [ 'image', 'gallery', 'post_object', 'relationship', 'file', 'page_link', 'taxonomy' ] ) ) {
 				self::$acf_fields[ $field['key'] ] = $field;
 			}
 		}
@@ -321,5 +321,4 @@ class BEA_CSF_Addon_ACF {
 
 		return '';
 	}
-
 }

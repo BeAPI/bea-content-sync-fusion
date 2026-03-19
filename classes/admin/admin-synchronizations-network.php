@@ -2,14 +2,14 @@
 
 class BEA_CSF_Admin_Synchronizations_Network {
 
-	private static $_default_fields = array(
+	private static $_default_fields = [
 		'label'     => '',
 		'post_type' => '',
 		'mode'      => 'auto',
 		'status'    => 'publish',
-		'emitters'  => array(),
-		'receivers' => array(),
-	);
+		'emitters'  => [],
+		'receivers' => [],
+	];
 
 	/**
 	 * Constructor
@@ -19,9 +19,9 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 */
 	public function __construct() {
 		// Register hooks
-		add_action( 'network_admin_menu', array( __CLASS__, 'network_admin_menu' ), 9 );
-		add_action( 'admin_init', array( __CLASS__, 'admin_init' ) );
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
+		add_action( 'network_admin_menu', [ __CLASS__, 'network_admin_menu' ], 9 );
+		add_action( 'admin_init', [ __CLASS__, 'admin_init' ] );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_enqueue_scripts' ] );
 	}
 
 	/**
@@ -33,18 +33,18 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
 		if ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . 'bea-csf-edit' ) { // Edit page
 		} elseif ( isset( $hook_suffix ) && $hook_suffix == 'content-sync_page_' . 'bea-csf-add' ) {
-			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/js/jquery.multi-select.js', array( 'jquery' ), '0.9.8', true );
-			wp_enqueue_script( 'bea-csf-admin-add', BEA_CSF_URL . 'assets/js/bea-csf-admin-add.js', array( 'lou-multi-select' ), BEA_CSF_VERSION, true );
+			wp_enqueue_script( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/js/jquery.multi-select.js', [ 'jquery' ], '0.9.8', true );
+			wp_enqueue_script( 'bea-csf-admin-add', BEA_CSF_URL . 'assets/js/bea-csf-admin-add.js', [ 'lou-multi-select' ], BEA_CSF_VERSION, true );
 			wp_localize_script(
 				'bea-csf-admin-add',
 				'beaCsfAdminAdd',
-				array(
+				[
 					'selectableHeader' => __( 'Selectable items', 'bea-content-sync-fusion' ),
 					'selectionHeader'  => __( 'Selection items', 'bea-content-sync-fusion' ),
-				)
+				]
 			);
-			wp_enqueue_style( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/css/multi-select.css', array(), '0.9.8', 'screen' );
-			wp_enqueue_style( 'bea-csf-admin-add', BEA_CSF_URL . 'assets/css/bea-csf-admin-add.css', array(), BEA_CSF_VERSION );
+			wp_enqueue_style( 'lou-multi-select', BEA_CSF_URL . 'assets/js/lou-multi-select/css/multi-select.css', [], '0.9.8', 'screen' );
+			wp_enqueue_style( 'bea-csf-admin-add', BEA_CSF_URL . 'assets/css/bea-csf-admin-add.css', [], BEA_CSF_VERSION );
 		}
 	}
 
@@ -62,10 +62,10 @@ class BEA_CSF_Admin_Synchronizations_Network {
 			__( 'Edit', 'bea-content-sync-fusion' ),
 			'manage_options',
 			'bea-csf-edit',
-			array(
+			[
 				__CLASS__,
 				'render_page_edit',
-			)
+			]
 		);
 		add_submenu_page(
 			'bea-csf-edit',
@@ -73,10 +73,10 @@ class BEA_CSF_Admin_Synchronizations_Network {
 			__( 'Add', 'bea-content-sync-fusion' ),
 			'manage_options',
 			'bea-csf-add',
-			array(
+			[
 				__CLASS__,
 				'render_page_add',
-			)
+			]
 		);
 		add_submenu_page(
 			'bea-csf-edit',
@@ -84,10 +84,10 @@ class BEA_CSF_Admin_Synchronizations_Network {
 			__( 'Queue', 'bea-content-sync-fusion' ),
 			'manage_options',
 			'bea-csf-queue',
-			array(
+			[
 				__CLASS__,
 				'render_page_queue',
-			)
+			]
 		);
 	}
 
@@ -104,10 +104,10 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		$registered_syncs = BEA_CSF_Synchronizations::get_all();
 
 		// Translation, yes/no
-		$i18n_true_false = array(
+		$i18n_true_false = [
 			'1' => __( 'Yes', 'bea-content-sync-fusion' ),
 			'0' => __( 'No', 'bea-content-sync-fusion' ),
-		);
+		];
 
 		// Display message
 		settings_errors( 'bea-content-sync-fusion' );
@@ -116,13 +116,13 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		$current_settings = get_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'csf_adv_settings' );
 
 		// Get P2P registered connection
-		$p2p_registered_connections = array();
+		$p2p_registered_connections = [];
 		if ( class_exists( 'P2P_Connection_Type_Factory' ) ) {
 			$p2p_registered_connections = P2P_Connection_Type_Factory::get_all_instances();
 		}
 
 		// Include template
-		include( BEA_CSF_DIR . 'views/admin/server-page-settings.php' );
+		include BEA_CSF_DIR . 'views/admin/server-page-settings.php';
 
 		return true;
 	}
@@ -140,13 +140,13 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		// if edit, merge array
 		if ( $edit == true ) {
 
-			$current_sync = BEA_CSF_Synchronizations::get( array( 'id' => $_GET['sync_id'] ) );
+			$current_sync = BEA_CSF_Synchronizations::get( [ 'id' => $_GET['sync_id'] ] );
 			if ( $current_sync == false ) {
 				wp_die( __( 'This synchronization ID not exists. Tcheater ?', 'bea-content-sync-fusion' ) );
 			}
 			$current_sync = current( $current_sync ); // take first result
 		} else {
-			$_POST['sync'] = ( ! isset( $_POST['sync'] ) ) ? array() : $_POST['sync'];
+			$_POST['sync'] = ( ! isset( $_POST['sync'] ) ) ? [] : $_POST['sync'];
 
 			$current_sync_fields = wp_parse_args( $_POST['sync'], self::$_default_fields );
 
@@ -154,7 +154,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		}
 
 		// Get P2P registered connection
-		$p2p_registered_connections = array();
+		$p2p_registered_connections = [];
 		if ( class_exists( 'P2P_Connection_Type_Factory' ) ) {
 			$p2p_registered_connections = P2P_Connection_Type_Factory::get_all_instances();
 		}
@@ -163,7 +163,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		settings_errors( 'bea-content-sync-fusion' );
 
 		// Include template
-		include( BEA_CSF_DIR . 'views/admin/server-page-add.php' );
+		include BEA_CSF_DIR . 'views/admin/server-page-add.php';
 
 		return true;
 	}
@@ -176,7 +176,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 */
 	public static function render_page_queue() {
 		// Include template
-		include( BEA_CSF_DIR . 'views/admin/server-page-queue.php' );
+		include BEA_CSF_DIR . 'views/admin/server-page-queue.php';
 
 		return true;
 	}
@@ -236,7 +236,7 @@ class BEA_CSF_Admin_Synchronizations_Network {
 		if ( isset( $_GET['page'] ) && $_GET['page'] == 'bea-csf-edit' && isset( $_GET['action'] ) && $_GET['action'] == 'delete' && isset( $_GET['sync_id'] ) ) { // Delete
 			check_admin_referer( 'delete-sync' );
 
-			$current_sync = BEA_CSF_Synchronizations::get( array( 'id' => $_GET['sync_id'] ) );
+			$current_sync = BEA_CSF_Synchronizations::get( [ 'id' => $_GET['sync_id'] ] );
 			if ( $current_sync == false ) {
 				wp_die( __( 'This synchronization ID not exists. Tcheater ?', 'bea-content-sync-fusion' ) );
 			}
@@ -269,15 +269,15 @@ class BEA_CSF_Admin_Synchronizations_Network {
 	 * @return array|string
 	 * @author Amaury Balmer
 	 */
-	public static function get_sites( $blogs_id = array(), $field = false ) {
+	public static function get_sites( $blogs_id = [], $field = false ) {
 		if ( empty( $blogs_id ) ) {
-			return array();
+			return [];
 		}
 
 		// Get all sites
 		$blogs = BEA_CSF_Synchronizations::get_sites_from_network();
 
-		$filtered = array();
+		$filtered = [];
 		foreach ( $blogs_id as $blog_id ) {
 			if ( $blog_id == 'all' ) {
 				$filtered[] = esc_html( 'All, except emitters' );
@@ -299,5 +299,4 @@ class BEA_CSF_Admin_Synchronizations_Network {
 
 		return $filtered;
 	}
-
 }

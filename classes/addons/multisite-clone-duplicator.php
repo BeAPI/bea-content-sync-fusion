@@ -15,7 +15,7 @@ class BEA_CSF_Addon_Multisite_Clone_Duplicator {
 		// Force deactive files duplication on FS
 		add_filter( 'mucd_copy_dirs', '__return_empty_array' );
 
-		add_action( 'mucd_after_copy_data', array( $this, 'mucd_after_copy_data' ), 10, 2 );
+		add_action( 'mucd_after_copy_data', [ $this, 'mucd_after_copy_data' ], 10, 2 );
 	}
 
 	/**
@@ -62,14 +62,14 @@ class BEA_CSF_Addon_Multisite_Clone_Duplicator {
 		switch_to_blog( $to_site_id );
 
 		$media_query = new WP_Query(
-			array(
+			[
 				'post_type'        => 'attachment',
 				'bea_csf_filter'   => 'local-only',
 				'nopaging'         => true,
 				'fields'           => 'ids',
 				'suppress_filters' => false,
 				'post_status'      => 'any',
-			)
+			]
 		);
 
 		if ( $media_query->have_posts() ) {

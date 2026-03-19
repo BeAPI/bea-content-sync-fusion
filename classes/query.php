@@ -9,9 +9,9 @@ class BEA_CSF_Query {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
-		add_action( 'query_vars', array( __CLASS__, 'query_vars' ), 10 );
-		add_filter( 'posts_join', array( __CLASS__, 'posts_join' ), 10, 2 );
-		add_filter( 'posts_where', array( __CLASS__, 'posts_where' ), 10, 2 );
+		add_action( 'query_vars', [ __CLASS__, 'query_vars' ], 10 );
+		add_filter( 'posts_join', [ __CLASS__, 'posts_join' ], 10, 2 );
+		add_filter( 'posts_where', [ __CLASS__, 'posts_where' ], 10, 2 );
 	}
 
 	/**
@@ -74,4 +74,3 @@ class BEA_CSF_Query {
 		return $where;
 	}
 }
-

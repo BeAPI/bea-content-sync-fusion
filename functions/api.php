@@ -13,7 +13,7 @@ function bea_csf_upload_dir() {
 
 	// First init, create array
 	if ( ! isset( $mem_upload_dir ) ) {
-		$mem_upload_dir = array();
+		$mem_upload_dir = [];
 	}
 
 	$current_blog_id = get_current_blog_id();

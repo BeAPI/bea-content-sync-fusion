@@ -46,12 +46,16 @@ class BEA_CSF_Client_Taxonomy {
 				$data['slug'] = $data['slug'] . '___' . $data['pll']['language']; // Prevent exist term
 			}
 
-			$new_term_id = wp_update_term( $local_term_id, $data['taxonomy'], array(
-				'name'        => $data['name'],
-				'description' => $data['description'],
-				'slug'        => $data['slug'],
-				'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
-			) );
+			$new_term_id = wp_update_term(
+				$local_term_id,
+				$data['taxonomy'],
+				[
+					'name'        => $data['name'],
+					'description' => $data['description'],
+					'slug'        => $data['slug'],
+					'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
+				]
+			);
 		} else {
 			// Prevent PLL same slug for several languages on insert
 			if ( ! empty( $data['pll']['is_translated'] ) && empty( $exist_pll_term_id ) ) {
@@ -61,12 +65,12 @@ class BEA_CSF_Client_Taxonomy {
 			$new_term_id = wp_insert_term(
 				$data['name'],
 				$data['taxonomy'],
-				array(
+				[
 					'description' => $data['description'],
 					'slug'        => $data['slug'],
 					'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
 
-				)
+				]
 			);
 
 			// try to manage error when term already exist with the same name !
@@ -84,12 +88,12 @@ class BEA_CSF_Client_Taxonomy {
 					$new_term_id = wp_update_term(
 						$term_exists_result['term_id'],
 						$data['taxonomy'],
-						array(
+						[
 							'name'        => $data['name'],
 							'description' => $data['description'],
 							'slug'        => $data['slug'],
 							'parent'      => BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], $data['parent'], $data['parent'] ),
-						)
+						]
 					);
 					update_term_meta( $term_exists_result['term_id'], 'already_exists', 1 );
 				}

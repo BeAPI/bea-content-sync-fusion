@@ -38,7 +38,12 @@
 
     <!-- Exclude as we use the short array syntax over the long one. -->
     <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+    <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
   </rule>
+
+  <!-- Force short array syntax on global ruleset -->
+  <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
   <config name="minimum_supported_wp_version" value="4.9"/>
 
   <rule ref="WordPress.WP.I18n">

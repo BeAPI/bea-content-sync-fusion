@@ -30,5 +30,4 @@ class BEA_CSF_Server_P2P {
 
 		return apply_filters( 'bea_csf.server.p2p.delete', $data, $sync_fields );
 	}
-
 }

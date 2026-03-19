@@ -2,7 +2,7 @@
 
 class BEA_CSF_Synchronization {
 
-	private $_fields = array(
+	private $_fields = [
 		'id',
 		'active',
 		'label',
@@ -13,21 +13,21 @@ class BEA_CSF_Synchronization {
 		'status',
 		'emitters',
 		'receivers',
-	);
+	];
 	private $_is_locked = true;
-	private $_register_hooks = array();
+	private $_register_hooks = [];
 
 	// Public fields for this synchronization
 	public $id = 1;
 	public $active = 1;
 	public $label = '';
 	public $post_type = '';
-	public $taxonomies = array();
-	public $p2p_connections = array();
+	public $taxonomies = [];
+	public $p2p_connections = [];
 	public $mode = '';
 	public $status = '';
-	public $emitters = array();
-	public $receivers = array();
+	public $emitters = [];
+	public $receivers = [];
 
 	// Private fields
 	public $_hook_data = null;
@@ -43,7 +43,7 @@ class BEA_CSF_Synchronization {
 	 *
 	 * @param array $fields
 	 */
-	public function __construct( array $fields = array() ) {
+	public function __construct( array $fields = [] ) {
 		$this->set_fields( $fields );
 		$this->register_actions();
 	}
@@ -57,7 +57,7 @@ class BEA_CSF_Synchronization {
 		global $connection_taxo_duplicate;
 
 		if ( ! isset( $connection_taxo_duplicate ) ) {
-			$connection_taxo_duplicate = array();
+			$connection_taxo_duplicate = [];
 		}
 
 		if ( 0 === $this->active ) {
@@ -67,12 +67,12 @@ class BEA_CSF_Synchronization {
 		// Stars with the hooks deregister previously recorded especially in the case of a re-register!
 		if ( ! empty( $this->_register_hooks ) ) {
 			foreach ( $this->_register_hooks as $hook_name ) {
-				remove_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 4 );
+				remove_action( $hook_name, [ $this, 'send_to_receivers' ], 10, 4 );
 			}
 		}
 
 		// Flush registered hooks
-		$this->_register_hooks = array();
+		$this->_register_hooks = [];
 
 		// No emitters ? Go out !
 		if ( empty( $this->get_emitters() ) ) {
@@ -86,12 +86,10 @@ class BEA_CSF_Synchronization {
 				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . $emitter_blog_id;
 				$this->_register_hooks[] = 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . $emitter_blog_id;
 
-			} else { // Classic CPT : Posts/Pages
+			} elseif ( ! empty( $this->post_type ) ) { // Classic CPT : Posts/Pages
 
-				if ( ! empty( $this->post_type ) ) {
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $this->post_type . '/' . $emitter_blog_id;
 					$this->_register_hooks[] = 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $this->post_type . '/' . $emitter_blog_id;
-				}
 			}
 
 			// Terms for all kind of CPT
@@ -120,7 +118,7 @@ class BEA_CSF_Synchronization {
 
 		// Call the unique action hook !
 		foreach ( $this->_register_hooks as $hook_name ) {
-			add_action( $hook_name, array( $this, 'send_to_receivers' ), 10, 5 );
+			add_action( $hook_name, [ $this, 'send_to_receivers' ], 10, 5 );
 		}
 
 		return true;
@@ -133,7 +131,7 @@ class BEA_CSF_Synchronization {
 	 *
 	 * @return boolean
 	 */
-	public function set_fields( $fields = array() ) {
+	public function set_fields( $fields = [] ) {
 		if ( empty( $fields ) ) {
 			return false;
 		}
@@ -153,7 +151,7 @@ class BEA_CSF_Synchronization {
 	 * @internal param array $fields
 	 */
 	public function get_fields() {
-		$results = array();
+		$results = [];
 		foreach ( $this->_fields as $field_name ) {
 			$results[ $field_name ] = $this->{$field_name};
 		}
@@ -227,7 +225,7 @@ class BEA_CSF_Synchronization {
 	 * @return array
 	 */
 	public function get_receivers() {
-		$results = array();
+		$results = [];
 		foreach ( $this->receivers as $key => $receiver_blog_id ) {
 			if ( 'all' === $receiver_blog_id ) {
 				$blogs    = BEA_CSF_Synchronizations::get_sites_from_network();
@@ -252,7 +250,7 @@ class BEA_CSF_Synchronization {
 	 * @return array
 	 */
 	public function get_emitters() {
-		$results = array();
+		$results = [];
 		foreach ( $this->emitters as $key => $emitter_blog_id ) {
 			if ( 'all' === $emitter_blog_id ) {
 				$blogs    = BEA_CSF_Synchronizations::get_sites_from_network();

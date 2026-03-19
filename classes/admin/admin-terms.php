@@ -10,12 +10,12 @@ class BEA_CSF_Admin_Terms {
 	 */
 	public function __construct() {
 		return;
-		add_action( 'edit_category_form_fields', array( __CLASS__, 'form' ), 10, 1 );
-		add_action( 'edit_link_category_form_fields', array( __CLASS__, 'form' ), 10, 1 );
-		add_action( 'edit_tag_form_fields', array( __CLASS__, 'form' ), 10, 1 );
+		add_action( 'edit_category_form_fields', [ __CLASS__, 'form' ], 10, 1 );
+		add_action( 'edit_link_category_form_fields', [ __CLASS__, 'form' ], 10, 1 );
+		add_action( 'edit_tag_form_fields', [ __CLASS__, 'form' ], 10, 1 );
 
-		add_action( 'created_term', array( __CLASS__, 'save' ), 10, 3 );
-		add_action( 'edited_term', array( __CLASS__, 'save' ), 10, 3 );
+		add_action( 'created_term', [ __CLASS__, 'save' ], 10, 3 );
+		add_action( 'edited_term', [ __CLASS__, 'save' ], 10, 3 );
 	}
 
 	public static function form( $term ) {
@@ -42,7 +42,7 @@ class BEA_CSF_Admin_Terms {
 		}
 
 		// Include template
-		include( BEA_CSF_DIR . 'views/admin/client-terms-form.php' );
+		include BEA_CSF_DIR . 'views/admin/client-terms-form.php';
 	}
 
 	public static function save( $term_id, $tt_id, $taxonomy ) {
@@ -59,7 +59,6 @@ class BEA_CSF_Admin_Terms {
 
 			update_term_meta( $term_id, '_origin_key', $_POST['term_emitter']['blog_id'] . ':' . $_POST['term_emitter']['term_id'] );
 		}
-
 	}
 
 	public static function is_valid_term_id( $term_id = 0, $taxonomy = '', $blog_id = 0 ) {
@@ -84,5 +83,4 @@ class BEA_CSF_Admin_Terms {
 
 		return false;
 	}
-
 }

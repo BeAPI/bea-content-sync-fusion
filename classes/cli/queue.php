@@ -34,14 +34,14 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 		// Get all blogs with content
 		$blog_ids = BEA_CSF_Async::get_blog_ids_from_queue();
 
-		$results = array();
+		$results = [];
 		foreach ( $blog_ids as $blog_id ) {
-			$results[] = array(
+			$results[] = [
 				'blog_id' => $blog_id,
 				'counter' => BEA_CSF_Async::get_counter( $blog_id ),
-			);
+			];
 		}
-		WP_CLI\Utils\format_items( 'table', $results, array( 'blog_id', 'counter' ) );
+		WP_CLI\Utils\format_items( 'table', $results, [ 'blog_id', 'counter' ] );
 
 		WP_CLI::success( sprintf( __( '%d items waiting on the queue', 'bea-content-sync-fusion' ), BEA_CSF_Async::get_counter() ) );
 	}
@@ -95,7 +95,7 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 
 			WP_CLI::launch_self(
 				'content-sync-fusion queue pull',
-				array(),
+				[],
 				$params,
 				false,
 				false // Allow debug with this value to true
@@ -240,7 +240,7 @@ class BEA_CSF_Cli_Queue extends WP_CLI_Command {
 WP_CLI::add_command(
 	'content-sync-fusion queue',
 	'BEA_CSF_Cli_Queue',
-	array(
+	[
 		'shortdesc' => __( 'All commands related "queue features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
-	)
+	]
 );

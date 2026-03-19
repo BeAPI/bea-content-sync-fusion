@@ -60,10 +60,10 @@ class BEA_CSF_Async {
 
 		// Get data from SERVER class
 		$data_to_transfer = call_user_func(
-			array(
+			[
 				'BEA_CSF_Server_' . $object,
 				$method,
-			),
+			],
 			$sync->hook_data,
 			$sync->fields
 		);
@@ -101,10 +101,10 @@ class BEA_CSF_Async {
 
 		// Flush POST variables
 		$_backup_POST = $_POST;
-		$_POST        = array();
+		$_POST        = [];
 
 		// Send data to CLIENT classes
-		$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_transfer, $sync->fields );
+		$result = call_user_func( [ 'BEA_CSF_Client_' . $object, $method ], $data_to_transfer, $sync->fields );
 		// Restore POST variables
 		$_POST = $_backup_POST;
 
@@ -139,7 +139,7 @@ class BEA_CSF_Async {
 		// Explode filter for get object and method
 		$current_filter_data = explode( '/', $current_filter );
 
-		add_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
+		add_filter( 'query', [ __CLASS__, 'alter_query_ignore_insert' ] );
 
 		/**
 		 * Filters the fields for the database query.
@@ -162,10 +162,10 @@ class BEA_CSF_Async {
 		$wpdb->insert(
 			$wpdb->bea_csf_queue,
 			$data,
-			array( '%s', '%s', '%s', '%s', '%d', '%s' )
+			[ '%s', '%s', '%s', '%s', '%d', '%s' ]
 		);
 
-		remove_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
+		remove_filter( 'query', [ __CLASS__, 'alter_query_ignore_insert' ] );
 
 		return $wpdb->insert_id;
 	}
@@ -229,7 +229,7 @@ class BEA_CSF_Async {
 
 		/** @var WPDB $wpdb */
 
-		return $wpdb->delete( $wpdb->bea_csf_queue, array( 'id' => $id ), array( '%d' ) );
+		return $wpdb->delete( $wpdb->bea_csf_queue, [ 'id' => $id ], [ '%d' ] );
 	}
 
 	/**

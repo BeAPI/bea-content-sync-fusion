@@ -1,7 +1,7 @@
 <?php
 
 class BEA_CSF_Admin_Restrictions {
-	private static $capabilities_to_check = array( 'edit_post', 'delete_post', 'delete_page', 'edit_page' );
+	private static $capabilities_to_check = [ 'edit_post', 'delete_post', 'delete_page', 'edit_page' ];
 
 	/**
 	 * Constructor, register hooks
@@ -10,7 +10,7 @@ class BEA_CSF_Admin_Restrictions {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
-		add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', [ __CLASS__, 'admin_enqueue_scripts' ] );
 
 		// Get current setting
 		$current_settings = get_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'csf_adv_settings' );
@@ -19,16 +19,16 @@ class BEA_CSF_Admin_Restrictions {
 		}
 
 		// Post row
-		add_filter( 'page_row_actions', array( __CLASS__, 'post_row_actions' ), 10, 2 );
-		add_filter( 'post_row_actions', array( __CLASS__, 'post_row_actions' ), 10, 2 );
-		add_action( 'admin_init', array( __CLASS__, 'admin_init_check_post_publishing' ) );
+		add_filter( 'page_row_actions', [ __CLASS__, 'post_row_actions' ], 10, 2 );
+		add_filter( 'post_row_actions', [ __CLASS__, 'post_row_actions' ], 10, 2 );
+		add_action( 'admin_init', [ __CLASS__, 'admin_init_check_post_publishing' ] );
 
 		// Term row
-		add_filter( 'tag_row_actions', array( __CLASS__, 'tag_row_actions' ), 10, 2 );
-		add_action( 'admin_init', array( __CLASS__, 'admin_init_check_term_edition' ) );
+		add_filter( 'tag_row_actions', [ __CLASS__, 'tag_row_actions' ], 10, 2 );
+		add_action( 'admin_init', [ __CLASS__, 'admin_init_check_term_edition' ] );
 
 		// Play with capabilities
-		add_filter( 'map_meta_cap', array( __CLASS__, 'map_meta_cap' ), 10, 4 );
+		add_filter( 'map_meta_cap', [ __CLASS__, 'map_meta_cap' ], 10, 4 );
 	}
 
 	/**
@@ -39,15 +39,15 @@ class BEA_CSF_Admin_Restrictions {
 	public static function admin_enqueue_scripts( $hook_suffix = '' ) {
 		if ( isset( $hook_suffix ) && in_array(
 			$hook_suffix,
-			array(
+			[
 				'edit.php',
 				'edit-tags.php',
 				'post.php',
-			),
+			],
 			true
 		) ) {
-			wp_enqueue_script( 'bea-csf-admin-client', BEA_CSF_URL . 'assets/js/bea-csf-admin-client.js', array( 'jquery' ), BEA_CSF_VERSION, true );
-			wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', array(), BEA_CSF_VERSION, 'all' );
+			wp_enqueue_script( 'bea-csf-admin-client', BEA_CSF_URL . 'assets/js/bea-csf-admin-client.js', [ 'jquery' ], BEA_CSF_VERSION, true );
+			wp_enqueue_style( 'bea-csf-admin', BEA_CSF_URL . 'assets/css/bea-csf-admin.css', [], BEA_CSF_VERSION, 'all' );
 		}
 	}
 
@@ -63,20 +63,20 @@ class BEA_CSF_Admin_Restrictions {
 		global $wpdb;
 
 		$_origin_key = BEA_CSF_Relations::current_object_is_synchronized(
-			array(
+			[
 				'posttype',
 				'attachment',
-			),
+			],
 			$wpdb->blogid,
 			$post->ID
 		);
 
 		// Get syncs model for current post_type, with any mode status (manual and auto)
 		$_has_syncs = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'post_type' => $post->post_type,
 				'emitters'  => $wpdb->blogid,
-			),
+			],
 			'AND',
 			false,
 			true
@@ -86,14 +86,14 @@ class BEA_CSF_Admin_Restrictions {
 			if ( 'pending' === $post->post_status ) {
 				$actions['view'] = '<a href="' . esc_url( apply_filters( 'preview_post_link', set_url_scheme( add_query_arg( 'preview', 'true', get_permalink( $post->ID ) ) ), $post ) ) . '" title="' . esc_attr( sprintf( __( 'Preview &#8220;%s&#8221;' ), $post->post_title ) ) . '" rel="permalink">' . __( 'Preview' ) . '</a>';
 				if ( current_user_can( 'publish_post', $post->ID ) ) {
-					$actions['publish'] = 	sprintf(
+					$actions['publish'] = sprintf(
 						'<a href="%s">%s</a>',
 						wp_nonce_url(
 							add_query_arg(
-								array(
+								[
 									'action' => 'bea-csf-publish',
 									'ID'     => $post->ID,
-								)
+								]
 							),
 							'bea-csf-publish'
 						),
@@ -113,10 +113,10 @@ class BEA_CSF_Admin_Restrictions {
 		if ( isset( $_GET['action'] ) && 'bea-csf-publish' === $_GET['action'] && isset( $_GET['ID'] ) && (int) $_GET['ID'] > 0 ) {
 			check_admin_referer( 'bea-csf-publish' );
 
-			$args = array(
+			$args = [
 				'ID'           => (int) $_GET['ID'],
 				'post_status' => 'publish',
-			);
+			];
 
 			// to ensure post_name is set instead wp_publish_post
 			wp_update_post( $args );
@@ -147,7 +147,7 @@ class BEA_CSF_Admin_Restrictions {
 
 		if ( null !== $_origin_key && empty( $_has_syncs ) ) {
 			unset( $actions['edit'], $actions['inline hide-if-no-js'], $actions['delete'] );
-			if( isset( $actions['view'] ) ) {  // Check if the term has a single view
+			if ( isset( $actions['view'] ) ) {  // Check if the term has a single view
 				$actions['view'] .= '<span class="locked-term-parent"></span>';
 			}
 		}
@@ -228,20 +228,20 @@ class BEA_CSF_Admin_Restrictions {
 			}
 
 			$_origin_key = BEA_CSF_Relations::current_object_is_synchronized(
-				array(
+				[
 					'posttype',
 					'attachment',
-				),
+				],
 				$wpdb->blogid,
 				$post->ID
 			);
 
 			// Get syncs model for current post_type, with any mode status (manual and auto)
 			$_has_syncs = BEA_CSF_Synchronizations::get(
-				array(
+				[
 					'post_type' => $post->post_type,
 					'emitters'  => $wpdb->blogid,
-				),
+				],
 				'AND',
 				false,
 				true

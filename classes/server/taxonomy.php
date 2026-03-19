@@ -18,10 +18,10 @@ class BEA_CSF_Server_Taxonomy {
 		if ( is_string( $term ) ) { // Internal format : taxonomy|||term_id
 			$term_values = explode( '|||', $term );
 
-			$term = array(
+			$term = [
 				'term_id'  => $term_values[1],
 				'taxonomy' => $term_values[0],
-			);
+			];
 
 			if ( empty( $term ) ) {
 				return false;

@@ -14,8 +14,8 @@ class BEA_CSF_Cli_Helper {
 	 *
 	 * @return array|bool
 	 */
-	public static function get_all_terms( $args = array(), $terms_args = array() ) {
-		$args = wp_parse_args( $args, array() );
+	public static function get_all_terms( $args = [], $terms_args = [] ) {
+		$args = wp_parse_args( $args, [] );
 
 		// Get taxonomies names only
 		$taxonomies = get_taxonomies( $args, 'names' );
@@ -28,11 +28,11 @@ class BEA_CSF_Cli_Helper {
 		// Get terms objects
 		$terms_args = wp_parse_args(
 			$terms_args,
-			array(
+			[
 				'taxonomy'   => array_keys( $taxonomies ),
 				'hide_empty' => false,
 				'orderby'    => 'term_id',
-			)
+			]
 		);
 		$results    = get_terms( $terms_args );
 		if ( is_wp_error( $results ) || empty( $results ) ) {
@@ -74,15 +74,15 @@ class BEA_CSF_Cli_Helper {
 	 *
 	 * @return array|bool
 	 */
-	public static function get_terms( $taxonomies = array(), $terms_args = array() ) {
+	public static function get_terms( $taxonomies = [], $terms_args = [] ) {
 		// Get terms objects
 		$terms_args = wp_parse_args(
 			$terms_args,
-			array(
+			[
 				'taxonomy'   => $taxonomies,
 				'hide_empty' => false,
 				'orderby'    => 'term_id',
-			)
+			]
 		);
 		$results    = get_terms( $terms_args );
 		if ( is_wp_error( $results ) || empty( $results ) ) {
@@ -102,8 +102,8 @@ class BEA_CSF_Cli_Helper {
 	 *
 	 * @return false|array
 	 */
-	public static function get_attachments( $args = array() ) {
-		$default_args = array(
+	public static function get_attachments( $args = [] ) {
+		$default_args = [
 			'post_type'              => 'attachment',
 			'post_status'            => 'any',
 			'nopaging'               => true,
@@ -111,7 +111,7 @@ class BEA_CSF_Cli_Helper {
 			'update_post_term_cache' => false,
 			'no_found_rows'          => true,
 			'cache_results'          => false,
-		);
+		];
 
 		$args    = wp_parse_args( $args, $default_args );
 		$results = get_posts( $args );
@@ -132,10 +132,10 @@ class BEA_CSF_Cli_Helper {
 	 *
 	 * @return false|array
 	 */
-	public static function get_posts( $args = array() ) {
+	public static function get_posts( $args = [] ) {
 		global $wp_post_types;
 
-		$default_args = array(
+		$default_args = [
 			'post_type'              => array_keys( $wp_post_types ),
 			'post_status'            => 'any',
 			'nopaging'               => true,
@@ -143,7 +143,7 @@ class BEA_CSF_Cli_Helper {
 			'update_post_term_cache' => false,
 			'no_found_rows'          => true,
 			'cache_results'          => false,
-		);
+		];
 
 		$args    = wp_parse_args( $args, $default_args );
 		$results = get_posts( $args );
@@ -164,7 +164,7 @@ class BEA_CSF_Cli_Helper {
 	 *
 	 * @return bool|array
 	 */
-	public static function get_p2p_connections( $args = array() ) {
+	public static function get_p2p_connections( $args = [] ) {
 		global $wpdb;
 
 		// $args = wp_parse_args( $args, array() ); // TODO: Implement P2P restriction query
@@ -178,5 +178,4 @@ class BEA_CSF_Cli_Helper {
 
 		return $results;
 	}
-
 }

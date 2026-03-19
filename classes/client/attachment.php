@@ -112,7 +112,7 @@ class BEA_CSF_Client_Attachment {
 
 		// Association with terms
 		if ( isset( $data['terms'] ) && is_array( $data['terms'] ) && ! empty( $data['terms'] ) ) {
-			$term_ids = array();
+			$term_ids = [];
 
 			foreach ( $data['terms'] as $term ) {
 				// Sync settings, check if term is in an allowed taxonomy
@@ -123,7 +123,7 @@ class BEA_CSF_Client_Attachment {
 				$local_term_id = BEA_CSF_Relations::get_object_for_any( 'taxonomy', $data['blogid'], $sync_fields['_current_receiver_blog_id'], (int) $term['term_id'], (int) $term['term_id'] );
 				if ( (int) $local_term_id > 0 ) {
 					if ( ! isset( $term_ids[ $term['taxonomy'] ] ) ) {
-						$term_ids[ $term['taxonomy'] ] = array();
+						$term_ids[ $term['taxonomy'] ] = [];
 					}
 
 					$term_ids[ $term['taxonomy'] ][] = (int) $local_term_id;

@@ -42,7 +42,7 @@
 					}
 
 					// Get taxonomies labels from taxo name
-					$taxonomies_label = array();
+					$taxonomies_label = [];
 					foreach ( $sync->get_field( 'taxonomies' ) as $taxonomy_name ) {
 						$taxonomy_object = get_taxonomy( $taxonomy_name );
 						if ( $taxonomy_object != false ) {
@@ -54,7 +54,7 @@
 					// Get P2P labels from taxo name
 					$p2p_label = implode( ', ', (array) $sync->get_field( 'p2p_connections' ) );
 
-					$i ++;
+					$i++;
 					$class = ( $class == 'alternate' ) ? '' : 'alternate';
 					?>
 					<tr class="<?php echo $class; ?>">
@@ -67,10 +67,10 @@
 											<a href="
 											<?php
 											echo add_query_arg(
-												array(
+												[
 													'action'  => 'edit',
 													'sync_id' => $sync->get_field( 'id' ),
-												),
+												],
 												network_admin_url( 'admin.php?page=' . 'bea-csf-add' )
 											);
 											?>
@@ -80,10 +80,10 @@
 											<?php
 											echo wp_nonce_url(
 												add_query_arg(
-													array(
+													[
 														'action'  => 'delete',
 														'sync_id' => $sync->get_field( 'id' ),
-													),
+													],
 													network_admin_url( 'admin.php?page=' . 'bea-csf-edit' )
 												),
 												'delete-sync'
