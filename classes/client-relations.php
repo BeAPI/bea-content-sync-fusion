@@ -7,9 +7,9 @@ class BEA_CSF_Client_Relations {
 	 *
 	 */
 	public function __construct() {
-		add_action( 'deleted_post', array( __CLASS__, 'deleted_post' ), 10 );
-		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), 10 );
-		add_action( 'deleted_blog', array( __CLASS__, 'deleted_blog' ), 10 );
+		add_action( 'deleted_post', [ __CLASS__, 'deleted_post' ], 10 );
+		add_action( 'delete_term', [ __CLASS__, 'delete_term' ], 10 );
+		add_action( 'deleted_blog', [ __CLASS__, 'deleted_blog' ], 10 );
 	}
 
 	/**

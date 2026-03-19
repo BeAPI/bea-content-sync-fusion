@@ -2,7 +2,7 @@
 
 class BEA_CSF_Synchronizations {
 
-	private static $_bea_csf_synchronizations = array();
+	private static $_bea_csf_synchronizations = [];
 
 	/**
 	 * Init synchronization from DB.
@@ -10,7 +10,7 @@ class BEA_CSF_Synchronizations {
 	 * @return boolean
 	 */
 	public static function init_from_db() {
-		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION, array() );
+		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION, [] );
 
 		foreach ( $current_options as $key => $sync_obj ) {
 			/** @var BEA_CSF_Synchronization $sync_obj */
@@ -45,10 +45,10 @@ class BEA_CSF_Synchronizations {
 	 *
 	 * @return array A list of objects or object fields
 	 */
-	public static function get( $args = array(), $operator = 'AND', $field = false, $in_array = false ) {
+	public static function get( $args = [], $operator = 'AND', $field = false, $in_array = false ) {
 		$list = self::get_all();
 		if ( empty( $list ) ) {
-			return array();
+			return [];
 		}
 
 		if ( empty( $args ) ) {
@@ -58,7 +58,7 @@ class BEA_CSF_Synchronizations {
 		$operator = strtoupper( $operator );
 		$count    = count( $args );
 
-		$filtered = array();
+		$filtered = [];
 		/** @var BEA_CSF_Synchronization $obj */
 		foreach ( $list as $key => $obj ) {
 			$matched = 0;
@@ -66,12 +66,13 @@ class BEA_CSF_Synchronizations {
 			foreach ( $args as $m_key => $m_value ) {
 
 				$obj_value = $obj->get_field( $m_key );
+				// phpcs:ignore WordPress.PHP.YodaConditions.NotYoda -- Intentional loose equality for sync field matching.
 				if ( $obj_value == $m_value
-					 || ( $in_array === true && is_array( $obj_value ) && in_array( $m_value, (array) $obj_value ) )
-					 || ( $in_array === true && is_array( $m_value ) && in_array( $obj_value, (array) $m_value ) )
-					 || ( $in_array === true && ( is_array( $m_value ) && is_array( $obj_value ) ) && array_intersect( $obj_value, $m_value ) )
+					 || ( true === $in_array && is_array( $obj_value ) && in_array( $m_value, (array) $obj_value ) )
+					 || ( true === $in_array && is_array( $m_value ) && in_array( $obj_value, (array) $m_value ) )
+					 || ( true === $in_array && ( is_array( $m_value ) && is_array( $obj_value ) ) && array_intersect( $obj_value, $m_value ) )
 				) {
-					$matched ++;
+					$matched++;
 				}
 			}
 
@@ -95,10 +96,10 @@ class BEA_CSF_Synchronizations {
 	public static function get_emitters_blogs_ids() {
 		$list = self::get_all();
 		if ( empty( $list ) ) {
-			return array();
+			return [];
 		}
 
-		$blogs_ids = array();
+		$blogs_ids = [];
 
 		/** @var BEA_CSF_Synchronization $obj */
 		foreach ( $list as $key => $obj ) {
@@ -124,15 +125,15 @@ class BEA_CSF_Synchronizations {
 	 */
 	public static function register( array $args ) {
 		// Default settings
-		$default_args = array(
+		$default_args = [
 			'active'    => true,
 			'label'     => '',
 			'post_type' => 'post',
 			'mode'      => 'auto', // manual OR auto
 			'status'    => 'publish', // publish OR pending
-			'emitters'  => array(),
-			'receivers' => array(),
-		);
+			'emitters'  => [],
+			'receivers' => [],
+		];
 		$args         = wp_parse_args( $args, $default_args );
 
 		// Check if label is filled ?
@@ -151,8 +152,8 @@ class BEA_CSF_Synchronizations {
 
 	public static function add( BEA_CSF_Synchronization $sync_obj ) {
 		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION );
-		if ( $current_options == false ) {
-			$current_options = array();
+		if ( false === $current_options ) {
+			$current_options = [];
 
 			$new_id = 1;
 		} else {
@@ -174,8 +175,8 @@ class BEA_CSF_Synchronizations {
 
 	public static function update( BEA_CSF_Synchronization $sync_obj, $insert_fallback = false ) {
 		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION );
-		if ( $current_options == false ) {
-			$current_options = array();
+		if ( false === $current_options ) {
+			$current_options = [];
 		}
 
 		// Get sync id
@@ -183,7 +184,7 @@ class BEA_CSF_Synchronizations {
 
 		// Check if object exists
 		if ( ! isset( $current_options[ $current_sync_id ] ) ) {
-			if ( $insert_fallback == false ) {
+			if ( false === $insert_fallback ) {
 				return false;
 			} else {
 				return self::add( $sync_obj );
@@ -207,8 +208,8 @@ class BEA_CSF_Synchronizations {
 	 */
 	public static function delete( BEA_CSF_Synchronization $sync_obj ) {
 		$current_options = get_network_option( self::get_option_network_id(), BEA_CSF_OPTION );
-		if ( $current_options == false ) {
-			$current_options = array();
+		if ( false === $current_options ) {
+			$current_options = [];
 		}
 
 		// Get sync id
@@ -253,14 +254,14 @@ class BEA_CSF_Synchronizations {
 	 * @return array
 	 */
 	public static function get_sites_from_network( $network_id = null ) {
-		$site_query_args = array(
+		$site_query_args = [
 			'public'   => 1,
 			'archived' => 0,
 			'mature'   => 0,
 			'spam'     => 0,
 			'deleted'  => 0,
 			'number'   => 200,
-		);
+		];
 		if ( is_null( $network_id ) ) {
 			$site_query_args['network__in'] = get_current_network_id();
 		} elseif ( ! empty( $network_id ) ) {
@@ -282,21 +283,21 @@ class BEA_CSF_Synchronizations {
 		$site_query = new WP_Site_Query( $site_query_args );
 		$sites      = $site_query->get_sites();
 		if ( empty( $sites ) ) {
-			return array();
+			return [];
 		}
 
-		$return_sites = array();
+		$return_sites = [];
 		foreach ( $sites as $site ) {
 			/* @var $site \WP_Site */
-			$return_sites[ $site->blog_id ] = array(
+			$return_sites[ $site->blog_id ] = [
 				'network_id' => $site->network_id,
 				'blog_id'    => $site->blog_id,
 				'domain'     => $site->domain,
 				'path'       => $site->path,
-			);
+			];
 
 			// Set the name : {network_name} {site_name}
-			$name = array();
+			$name = [];
 			// Check the query args for network
 			if ( isset( $site_query_args['network__in'] ) && empty( $site_query_args['network__in'] ) ) {
 				$name[] = get_network_option( $site->network_id, 'site_name' );
@@ -310,7 +311,7 @@ class BEA_CSF_Synchronizations {
 		uasort(
 			$return_sites,
 			function ( $a, $b ) {
-				if ( $a['network_id'] == $b ['network_id'] ) {
+				if ( $a['network_id'] === $b['network_id'] ) {
 					return ( $a['blog_id'] < $b ['blog_id'] ) ? - 1 : 1;
 				}
 
@@ -331,5 +332,4 @@ class BEA_CSF_Synchronizations {
 		 */
 		return apply_filters( 'bea_csf.admin.admin_synchronization_network.sites', $return_sites, $sites, $network_id );
 	}
-
 }

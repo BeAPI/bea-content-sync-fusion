@@ -1,18 +1,18 @@
 <?php
 
 class BEA_CSF_Media {
-	public static $blogs_wp_upload_dir = array();
+	public static $blogs_wp_upload_dir = [];
 
 	public function __construct() {
 		// Force site/id/ for the medias
 		add_filter( 'site_option_ms_files_rewriting', '__return_false', 99999999 );
 
 		// Fix URL on many WP cases
-		add_filter( 'wp_get_attachment_url', array( __CLASS__, 'wp_get_attachment_url' ), 99999999, 2 );
-		add_filter( 'get_attached_file', array( __CLASS__, 'get_attached_file' ), 99999999, 2 );
-		add_filter( 'wp_calculate_image_srcset', array( __CLASS__, 'wp_calculate_image_srcset' ), 99999999, 5 );
+		add_filter( 'wp_get_attachment_url', [ __CLASS__, 'wp_get_attachment_url' ], 99999999, 2 );
+		add_filter( 'get_attached_file', [ __CLASS__, 'get_attached_file' ], 99999999, 2 );
+		add_filter( 'wp_calculate_image_srcset', [ __CLASS__, 'wp_calculate_image_srcset' ], 99999999, 5 );
 
-		add_filter( 'wp_delete_file', array( __CLASS__, 'wp_delete_file' ) );
+		add_filter( 'wp_delete_file', [ __CLASS__, 'wp_delete_file' ] );
 	}
 
 	/**

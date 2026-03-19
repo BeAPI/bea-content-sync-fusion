@@ -25,7 +25,7 @@ class BEA_CSF_Addon_WooCommerce_Product_Attributes {
 		// Hack WooCommerce check
 		global $wp_taxonomies;
 		$bk_wp_taxonomies = $wp_taxonomies;
-		$wp_taxonomies    = [];
+		$wp_taxonomies    = []; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		delete_transient( 'wc_attribute_taxonomies' );
 		WC_Cache_Helper::incr_cache_prefix( 'woocommerce-attributes' );
@@ -40,13 +40,13 @@ class BEA_CSF_Addon_WooCommerce_Product_Attributes {
 			foreach ( $attribute_taxonomies as $attribute_taxonomy ) {
 				$data = (array) $attribute_taxonomy;
 				wc_create_attribute(
-					array(
+					[
 						'name'         => $data['attribute_label'],
 						'slug'         => $data['attribute_name'],
 						'type'         => $data['attribute_type'],
 						'order_by'     => $data['attribute_orderby'],
 						'has_archives' => $data['attribute_public'],
-					)
+					]
 				);
 			}
 
@@ -54,7 +54,7 @@ class BEA_CSF_Addon_WooCommerce_Product_Attributes {
 		}
 
 		// Restore backup
-		$wp_taxonomies = $bk_wp_taxonomies;
+		$wp_taxonomies = $bk_wp_taxonomies; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		unset( $bk_wp_taxonomies );
 	}
 

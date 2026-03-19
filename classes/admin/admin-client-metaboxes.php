@@ -8,8 +8,8 @@ class BEA_CSF_Admin_Client_Metaboxes {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
-		add_action( 'save_post', array( __CLASS__, 'save_post' ), 10, 1 );
-		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ), 10, 2 );
+		add_action( 'save_post', [ __CLASS__, 'save_post' ], 10, 1 );
+		add_action( 'add_meta_boxes', [ __CLASS__, 'add_meta_boxes' ], 10, 2 );
 	}
 
 	/**
@@ -30,7 +30,7 @@ class BEA_CSF_Admin_Client_Metaboxes {
 
 		/* OK, it's safe for us to save the data now. */
 
-		if ( isset( $_POST['exclude_from_futur_sync'] ) && (int) $_POST['exclude_from_futur_sync'] == 1 ) {
+		if ( isset( $_POST['exclude_from_futur_sync'] ) && 1 === (int) $_POST['exclude_from_futur_sync'] ) {
 			update_post_meta( $post_id, '_exclude_from_futur_sync', 1 );
 		} else {
 			delete_post_meta( $post_id, '_exclude_from_futur_sync' );
@@ -52,19 +52,19 @@ class BEA_CSF_Admin_Client_Metaboxes {
 		global $wpdb;
 
 		// Get emitter for current post
-		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( array( 'posttype', 'attachment' ), $wpdb->blogid, $post->ID );
+		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized( [ 'posttype', 'attachment' ], $wpdb->blogid, $post->ID );
 		if ( ! empty( $emitter_relation ) ) {
 			add_meta_box(
 				BEA_CSF_OPTION . 'metabox-client',
 				__( 'Synchronization', 'bea-content-sync-fusion' ),
-				array(
+				[
 					__CLASS__,
 					'metabox_content',
-				),
+				],
 				$post_type,
 				'side',
 				'low',
-				array( 'relation' => $emitter_relation )
+				[ 'relation' => $emitter_relation ]
 			);
 		}
 
@@ -89,16 +89,15 @@ class BEA_CSF_Admin_Client_Metaboxes {
 
 		// Get emitter data
 		switch_to_blog( $metabox['args']['relation']->emitter_blog_id );
-		$emitter_data = array(
+		$emitter_data = [
 			'blog_name'  => get_bloginfo( 'name' ),
 			'post_title' => get_the_title( $metabox['args']['relation']->emitter_id ),
-		);
+		];
 		restore_current_blog();
 
 		$current_receivers_note = get_post_meta( $post->ID, '_post_receivers_note', true );
 
 		// Include template
-		include( BEA_CSF_DIR . 'views/admin/client-metabox.php' );
+		include BEA_CSF_DIR . 'views/admin/client-metabox.php';
 	}
-
 }

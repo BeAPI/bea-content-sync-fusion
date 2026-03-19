@@ -60,10 +60,10 @@ class BEA_CSF_Async {
 
 		// Get data from SERVER class
 		$data_to_transfer = call_user_func(
-			array(
+			[
 				'BEA_CSF_Server_' . $object,
 				$method,
-			),
+			],
 			$sync->hook_data,
 			$sync->fields
 		);
@@ -100,13 +100,15 @@ class BEA_CSF_Async {
 		$data_to_transfer = apply_filters( 'bea_csf_client_' . $object . '_' . $method . '_data_to_transfer', $data_to_transfer, $sync->receiver_blog_id, $sync->fields );
 
 		// Flush POST variables
-		$_backup_POST = $_POST;
-		$_POST        = array();
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- $_POST is cleared temporarily and restored; no form processing in this window.
+		$bea_csf_post_backup = $_POST;
+		$_POST               = [];
 
 		// Send data to CLIENT classes
-		$result = call_user_func( array( 'BEA_CSF_Client_' . $object, $method ), $data_to_transfer, $sync->fields );
+		$result = call_user_func( [ 'BEA_CSF_Client_' . $object, $method ], $data_to_transfer, $sync->fields );
 		// Restore POST variables
-		$_POST = $_backup_POST;
+		$_POST = $bea_csf_post_backup;
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		// Reactive hooks plugin
 		BEA_CSF_Client::register_hooks();
@@ -139,7 +141,7 @@ class BEA_CSF_Async {
 		// Explode filter for get object and method
 		$current_filter_data = explode( '/', $current_filter );
 
-		add_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
+		add_filter( 'query', [ __CLASS__, 'alter_query_ignore_insert' ] );
 
 		/**
 		 * Filters the fields for the database query.
@@ -162,10 +164,10 @@ class BEA_CSF_Async {
 		$wpdb->insert(
 			$wpdb->bea_csf_queue,
 			$data,
-			array( '%s', '%s', '%s', '%s', '%d', '%s' )
+			[ '%s', '%s', '%s', '%s', '%d', '%s' ]
 		);
 
-		remove_filter( 'query', array( __CLASS__, 'alter_query_ignore_insert' ) );
+		remove_filter( 'query', [ __CLASS__, 'alter_query_ignore_insert' ] );
 
 		return $wpdb->insert_id;
 	}
@@ -229,7 +231,7 @@ class BEA_CSF_Async {
 
 		/** @var WPDB $wpdb */
 
-		return $wpdb->delete( $wpdb->bea_csf_queue, array( 'id' => $id ), array( '%d' ) );
+		return $wpdb->delete( $wpdb->bea_csf_queue, [ 'id' => $id ], [ '%d' ] );
 	}
 
 	/**
@@ -280,9 +282,11 @@ class BEA_CSF_Async {
 
 		/** @var WPDB $wpdb */
 		if ( 0 < $blog_id ) {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $order_by is filterable; default is a static ORDER BY fragment.
 			return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue WHERE receiver_blog_id = %d ORDER BY $order_by LIMIT %d", $blog_id, $quantity ) );
 		}
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $order_by is filterable; default is a static ORDER BY fragment.
 		return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->bea_csf_queue  ORDER BY $order_by LIMIT %d", $quantity ) );
 	}
 

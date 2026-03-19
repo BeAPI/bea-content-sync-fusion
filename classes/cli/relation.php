@@ -111,7 +111,7 @@ class BEA_CSF_Cli_Relation extends WP_CLI_Command {
 				continue;
 			}
 
-			$this->global_counter ++;
+			$this->global_counter++;
 
 			BEA_CSF_Relations::merge( 'attachment', $this->emitter_blog_id, $result->ID, $this->receiver_blog_id, $result->ID );
 		}
@@ -132,7 +132,7 @@ class BEA_CSF_Cli_Relation extends WP_CLI_Command {
 				continue;
 			}
 
-			$this->global_counter ++;
+			$this->global_counter++;
 
 			BEA_CSF_Relations::merge( 'posttype', $this->emitter_blog_id, $result->ID, $this->receiver_blog_id, $result->ID );
 
@@ -161,7 +161,7 @@ class BEA_CSF_Cli_Relation extends WP_CLI_Command {
 				continue;
 			}
 
-			$this->global_counter ++;
+			$this->global_counter++;
 
 			BEA_CSF_Relations::merge( 'taxonomy', $this->emitter_blog_id, $result->term_id, $this->receiver_blog_id, $result->term_id );
 		}
@@ -187,7 +187,7 @@ class BEA_CSF_Cli_Relation extends WP_CLI_Command {
 WP_CLI::add_command(
 	'content-sync-fusion relation',
 	'BEA_CSF_Cli_Relation',
-	array(
+	[
 		'shortdesc' => __( 'All commands related "relation features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
-	)
+	]
 );

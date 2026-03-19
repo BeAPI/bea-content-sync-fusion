@@ -8,84 +8,86 @@ class BEA_CSF_Client {
 
 	public static function register_hooks() {
 		// Attachments
-		add_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX, 1 );
-		add_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX, 1 );
-		add_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX, 1 );
+		add_action( 'delete_attachment', [ __CLASS__, 'delete_attachment' ], PHP_INT_MAX, 1 );
+		add_action( 'edit_attachment', [ __CLASS__, 'merge_attachment' ], PHP_INT_MAX, 1 );
+		add_action( 'add_attachment', [ __CLASS__, 'merge_attachment' ], PHP_INT_MAX, 1 );
 
 		// Attachments crop
-		add_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX, 5 );
+		add_filter( 'wp_save_image_editor_file', [ __CLASS__, 'wp_save_image_editor_file' ], PHP_INT_MAX, 5 );
 		add_filter(
 			'wp_update_attachment_metadata',
-			array(
+			[
 				__CLASS__,
 				'wp_update_attachment_metadata',
-			),
+			],
 			PHP_INT_MAX,
 			2
 		);
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Read-only check to attach hooks; no data processed.
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			add_action( 'updated_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
-			add_action( 'deleted_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX, 3 );
+			add_action( 'updated_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX, 3 );
+			add_action( 'deleted_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX, 3 );
 		}
 
 		// Post types
-		add_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX, 3 );
-		add_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX, 1 );
+		add_action( 'transition_post_status', [ __CLASS__, 'transition_post_status' ], PHP_INT_MAX, 3 );
+		add_action( 'delete_post', [ __CLASS__, 'delete_post' ], PHP_INT_MAX, 1 );
 
 		// Terms
 		// Use 990 priority for conflict with Polylang
-		add_action( 'create_term', array( __CLASS__, 'merge_term' ), 990, 3 );
-		add_action( 'edited_term', array( __CLASS__, 'merge_term' ), 990, 3 );
-		add_action( 'delete_term', array( __CLASS__, 'delete_term' ), 990, 3 );
+		add_action( 'create_term', [ __CLASS__, 'merge_term' ], 990, 3 );
+		add_action( 'edited_term', [ __CLASS__, 'merge_term' ], 990, 3 );
+		add_action( 'delete_term', [ __CLASS__, 'delete_term' ], 990, 3 );
 
 		// Terms/Post_type association
-		add_action( 'set_object_terms', array( __CLASS__, 'set_object_terms' ), PHP_INT_MAX, 6 );
+		add_action( 'set_object_terms', [ __CLASS__, 'set_object_terms' ], PHP_INT_MAX, 6 );
 
 		// P2P
-		add_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX, 1 );
-		add_action( 'p2p_delete_connections', array( __CLASS__, 'p2p_delete_connections' ), PHP_INT_MAX, 1 );
+		add_action( 'p2p_created_connection', [ __CLASS__, 'p2p_created_connection' ], PHP_INT_MAX, 1 );
+		add_action( 'p2p_delete_connections', [ __CLASS__, 'p2p_delete_connections' ], PHP_INT_MAX, 1 );
 	}
 
 	public static function unregister_hooks() {
 		// Attachments
-		remove_action( 'delete_attachment', array( __CLASS__, 'delete_attachment' ), PHP_INT_MAX );
-		remove_action( 'edit_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX );
-		remove_action( 'add_attachment', array( __CLASS__, 'merge_attachment' ), PHP_INT_MAX );
+		remove_action( 'delete_attachment', [ __CLASS__, 'delete_attachment' ], PHP_INT_MAX );
+		remove_action( 'edit_attachment', [ __CLASS__, 'merge_attachment' ], PHP_INT_MAX );
+		remove_action( 'add_attachment', [ __CLASS__, 'merge_attachment' ], PHP_INT_MAX );
 
 		// Attachments crop
-		remove_filter( 'wp_save_image_editor_file', array( __CLASS__, 'wp_save_image_editor_file' ), PHP_INT_MAX );
+		remove_filter( 'wp_save_image_editor_file', [ __CLASS__, 'wp_save_image_editor_file' ], PHP_INT_MAX );
 		remove_filter(
 			'wp_update_attachment_metadata',
-			array(
+			[
 				__CLASS__,
 				'wp_update_attachment_metadata',
-			),
+			],
 			PHP_INT_MAX
 		);
 
 		// Attachments - Manage AJAX actions on thumbnail post changes
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Read-only check to detach hooks; no data processed.
 		if ( isset( $_POST['thumbnail_id'] ) ) {
-			remove_action( 'updated_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
-			remove_action( 'deleted_post_meta', array( __CLASS__, 'merge_post_meta' ), PHP_INT_MAX );
+			remove_action( 'updated_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX );
+			remove_action( 'deleted_post_meta', [ __CLASS__, 'merge_post_meta' ], PHP_INT_MAX );
 		}
 
 		// Post types
-		remove_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), PHP_INT_MAX );
-		remove_action( 'delete_post', array( __CLASS__, 'delete_post' ), PHP_INT_MAX );
+		remove_action( 'transition_post_status', [ __CLASS__, 'transition_post_status' ], PHP_INT_MAX );
+		remove_action( 'delete_post', [ __CLASS__, 'delete_post' ], PHP_INT_MAX );
 
 		// Terms
-		remove_action( 'create_term', array( __CLASS__, 'merge_term' ), 990 );
-		remove_action( 'edited_term', array( __CLASS__, 'merge_term' ), 990 );
-		remove_action( 'delete_term', array( __CLASS__, 'delete_term' ), 990 );
+		remove_action( 'create_term', [ __CLASS__, 'merge_term' ], 990 );
+		remove_action( 'edited_term', [ __CLASS__, 'merge_term' ], 990 );
+		remove_action( 'delete_term', [ __CLASS__, 'delete_term' ], 990 );
 
 		// Terms/Post_type association
-		remove_action( 'set_object_terms', array( __CLASS__, 'set_object_terms' ), PHP_INT_MAX );
+		remove_action( 'set_object_terms', [ __CLASS__, 'set_object_terms' ], PHP_INT_MAX );
 
 		// P2P
-		remove_action( 'p2p_created_connection', array( __CLASS__, 'p2p_created_connection' ), PHP_INT_MAX );
-		remove_action( 'p2p_delete_connection', array( __CLASS__, 'p2p_delete_connection' ), PHP_INT_MAX );
+		remove_action( 'p2p_created_connection', [ __CLASS__, 'p2p_created_connection' ], PHP_INT_MAX );
+		remove_action( 'p2p_delete_connection', [ __CLASS__, 'p2p_delete_connection' ], PHP_INT_MAX );
 	}
 
 	/**
@@ -105,7 +107,8 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false, true );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/Attachment/delete/attachment/' . get_current_blog_id(), $attachment, false, false, false, true );
 
 		return true;
 	}
@@ -129,7 +132,8 @@ class BEA_CSF_Client {
 
 		$is_include_from_sync = (bool) get_post_meta( $attachment_id, '_include_from_sync', true );
 
-		do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'merge' . '/attachment/' . get_current_blog_id(), $attachment, false, false, false, $is_include_from_sync );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/Attachment/merge/attachment/' . get_current_blog_id(), $attachment, false, false, false, $is_include_from_sync );
 
 		return true;
 	}
@@ -263,9 +267,11 @@ class BEA_CSF_Client {
 				do_action( 'acf/save_post', $post->ID );
 				self::register_hooks();
 			}
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'merge' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
-		} elseif ( $new_status !== $old_status && in_array( $new_status, $allowed_delete_status, true ) ) { // Check for unpublish
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/PostType/merge/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
+		} elseif ( $old_status !== $new_status && in_array( $new_status, $allowed_delete_status, true ) ) { // Check for unpublish
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/PostType/delete/' . $post->post_type . '/' . get_current_blog_id(), $post, $is_excluded_from_sync, $_post_receivers, false, true );
 		}
 
 		return true;
@@ -287,7 +293,8 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/PostType/delete/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
 
 		return true;
 	}
@@ -303,7 +310,8 @@ class BEA_CSF_Client {
 			return false;
 		}
 
-		do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'merge' . '/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/P2P/merge/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
 
 		return true;
 	}
@@ -313,7 +321,7 @@ class BEA_CSF_Client {
 	 *
 	 * @return bool
 	 */
-	public static function p2p_delete_connections( $p2p_ids = array() ) {
+	public static function p2p_delete_connections( $p2p_ids = [] ) {
 		$p2p_ids = (array) $p2p_ids;
 		foreach ( $p2p_ids as $p2p_id ) {
 			$connection = p2p_get_connection( (int) $p2p_id );
@@ -321,7 +329,8 @@ class BEA_CSF_Client {
 				continue;
 			}
 
-			do_action( 'bea-csf' . '/' . 'P2P' . '/' . 'delete' . '/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/P2P/delete/' . $connection->p2p_type . '/' . get_current_blog_id(), $connection, false, false, false, true );
 		}
 
 		return true;
@@ -341,7 +350,8 @@ class BEA_CSF_Client {
 		$deleted_term->term_taxonomy_id = $tt_id;
 		$deleted_term->taxonomy         = $taxonomy;
 
-		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . get_current_blog_id(), $deleted_term, false, false, false );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/Taxonomy/delete/' . $taxonomy . '/' . get_current_blog_id(), $deleted_term, false, false, false );
 
 		return true;
 	}
@@ -364,7 +374,8 @@ class BEA_CSF_Client {
 		$_term_receivers = (array) get_term_meta( $term->term_id, '_term_receivers', true );
 		$_term_receivers = array_filter( $_term_receivers );
 
-		do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'merge' . '/' . $taxonomy . '/' . get_current_blog_id(), $term, false, $_term_receivers, false, true );
+		// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+		do_action( 'bea-csf/Taxonomy/merge/' . $taxonomy . '/' . get_current_blog_id(), $term, false, $_term_receivers, false, true );
 
 		return true;
 	}
@@ -406,6 +417,5 @@ class BEA_CSF_Client {
 		}
 
 		return true;
-
 	}
 }

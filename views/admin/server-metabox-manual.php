@@ -1,5 +1,5 @@
 <p>
-	<?php _e( 'You can choose which sites should receive this content. The publication status is taken into account only during the first synchronization on the concerned site.', 'bea-content-sync-fusion' ); ?>
+	<?php esc_html_e( 'You can choose which sites should receive this content. The publication status is taken into account only during the first synchronization on the concerned site.', 'bea-content-sync-fusion' ); ?>
 </p>
 
 <div class="wp-tab-panel">
@@ -13,8 +13,8 @@
 			<li style="clear: both;">
 				<label class="selectit">
 					<input type="checkbox" name="post_receivers[]"
-						   value="<?php echo esc_attr( $blog['blog_id'] ); ?>" <?php checked( in_array( $blog['blog_id'], $current_post_receivers ), true ); ?> />&nbsp;
-					<?php esc_html_e( $blog['blogname'] ); ?>
+						   value="<?php echo esc_attr( $blog['blog_id'] ); ?>" <?php checked( in_array( $blog['blog_id'], $current_post_receivers, true ), true ); ?> />&nbsp;
+					<?php echo esc_html( $blog['blogname'] ); ?>
 				</label>
 
 				<?php
@@ -23,12 +23,12 @@
 
 					<select name="post_receivers_status[<?php echo esc_attr( $blog['blog_id'] ); ?>]"
 							style="float:right;">
-						<option value="publish" <?php selected( $current_post_receivers_status[ $blog['blog_id'] ], 'publish', true ); ?>><?php _e( 'Publish always', 'bea-content-sync-fusion' ); ?></option>
-						<option value="pending" <?php selected( $current_post_receivers_status[ $blog['blog_id'] ], 'pending', true ); ?>><?php _e( 'Pending + Leave as', 'bea-content-sync-fusion' ); ?></option>
+						<option value="publish" <?php selected( $current_post_receivers_status[ $blog['blog_id'] ], 'publish', true ); ?>><?php esc_html_e( 'Publish always', 'bea-content-sync-fusion' ); ?></option>
+						<option value="pending" <?php selected( $current_post_receivers_status[ $blog['blog_id'] ], 'pending', true ); ?>><?php esc_html_e( 'Pending + Leave as', 'bea-content-sync-fusion' ); ?></option>
 
 						<?php if ( defined( 'REVISIONIZE_VERSION' ) ) : ?>
-							<option value="publish-draft" <?php selected( $current_post_receivers_status[ $blog['blog_id'] ], 'publish-draft', true ); ?>><?php _e( 'Publish + Draft future', 'bea-content-sync-fusion' ); ?></option>
-							<option value="pending-draft" <?php selected( $current_post_receivers_status[ $blog['blog_id'] ], 'pending-draft', true ); ?>><?php _e( 'Pending + Draft future', 'bea-content-sync-fusion' ); ?></option>
+							<option value="publish-draft" <?php selected( $current_post_receivers_status[ $blog['blog_id'] ], 'publish-draft', true ); ?>><?php esc_html_e( 'Publish + Draft future', 'bea-content-sync-fusion' ); ?></option>
+							<option value="pending-draft" <?php selected( $current_post_receivers_status[ $blog['blog_id'] ], 'pending-draft', true ); ?>><?php esc_html_e( 'Pending + Draft future', 'bea-content-sync-fusion' ); ?></option>
 						<?php endif; ?>
 					</select>
 
@@ -39,11 +39,14 @@
 </div>
 
 <p>
-	<label for="post_receivers_note"><?php _e( 'An internal note for diffusion.', 'bea-content-sync-fusion' ); ?></label>
+	<label for="post_receivers_note"><?php esc_html_e( 'An internal note for diffusion.', 'bea-content-sync-fusion' ); ?></label>
 	<textarea class="widefat" id="post_receivers_note"
 			  name="post_receivers_note"><?php echo esc_textarea( $current_receivers_note ); ?></textarea>
 </p>
 
 <p>
-	<?php printf( __( 'This content is concerned with these following synchronizations: <strong>%s</strong>', 'bea-content-sync-fusion' ), implode( ', ', $sync_names ) ); ?>
+	<?php
+	/* translators: %s: Comma-separated list of synchronization names. */
+	printf( esc_html__( 'This content is concerned with these following synchronizations: <strong>%s</strong>', 'bea-content-sync-fusion' ), esc_html( implode( ', ', $sync_names ) ) );
+	?>
 </p>

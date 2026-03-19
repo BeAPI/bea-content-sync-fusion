@@ -9,8 +9,8 @@ class BEA_CSF_Admin_List {
 	 */
 	public function __construct() {
 		// Allow filter content view by origin
-		add_filter( 'restrict_manage_posts', array( __CLASS__, 'restrict_manage_posts' ), 10 );
-		add_action( 'parse_query', array( __CLASS__, 'parse_query' ), 10 );
+		add_filter( 'restrict_manage_posts', [ __CLASS__, 'restrict_manage_posts' ], 10 );
+		add_action( 'parse_query', [ __CLASS__, 'parse_query' ], 10 );
 	}
 
 
@@ -26,10 +26,10 @@ class BEA_CSF_Admin_List {
 
 		// Get syncs model for current post_type, with any mode status (manual and auto)
 		$_has_syncs = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'post_type' => $post_type,
 				'receivers'  => $wpdb->blogid,
-			),
+			],
 			'AND',
 			false,
 			true
@@ -48,7 +48,7 @@ class BEA_CSF_Admin_List {
 		$output .= '<option ' . selected( $current_action, 'remote-only', false ) . ' value="remote-only">' . __( 'Show only remote content', 'bea-content-sync-fusion' ) . '</option>';
 		$output .= '</select>';
 
-		echo $output;
+		echo $output;//phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**

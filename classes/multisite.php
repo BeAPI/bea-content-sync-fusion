@@ -7,7 +7,7 @@ class BEA_CSF_Multisite {
 	 * Register hooks
 	 */
 	public function __construct() {
-		add_action( 'wpmu_new_blog', array( __CLASS__, 'wpmu_new_blog' ) );
+		add_action( 'wpmu_new_blog', [ __CLASS__, 'wpmu_new_blog' ] );
 	}
 
 	/**
@@ -21,7 +21,7 @@ class BEA_CSF_Multisite {
 	public static function wpmu_new_blog( $blog_id ) {
 		$current_values = get_network_option( BEA_CSF_Synchronizations::get_option_network_id(), 'bea-csf-multisite-resync-blogs' );
 		if ( false === $current_values || ! is_array( $current_values ) ) {
-			$current_values = array();
+			$current_values = [];
 		}
 
 		$current_values[] = (int) $blog_id;

@@ -9,12 +9,12 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
-		add_action( 'edit_category_form_fields', array( __CLASS__, 'form' ), 10, 1 );
-		add_action( 'edit_link_category_form_fields', array( __CLASS__, 'form' ), 10, 1 );
-		add_action( 'edit_tag_form_fields', array( __CLASS__, 'form' ), 10, 1 );
+		add_action( 'edit_category_form_fields', [ __CLASS__, 'form' ], 10, 1 );
+		add_action( 'edit_link_category_form_fields', [ __CLASS__, 'form' ], 10, 1 );
+		add_action( 'edit_tag_form_fields', [ __CLASS__, 'form' ], 10, 1 );
 
-		add_action( 'created_term', array( __CLASS__, 'save' ), 10, 3 );
-		add_action( 'edited_term', array( __CLASS__, 'save' ), 10, 3 );
+		add_action( 'created_term', [ __CLASS__, 'save' ], 10, 3 );
+		add_action( 'edited_term', [ __CLASS__, 'save' ], 10, 3 );
 	}
 
 	public static function taxonomy_has_sync( $taxonomy = '' ) {
@@ -22,9 +22,9 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 
 		// Get syncs for current post_type and any mode
 		$syncs = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'emitters' => $wpdb->blogid,
-			),
+			],
 			'AND',
 			false,
 			true
@@ -55,10 +55,10 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 
 		// Get syncs for current post_type and mode set to "manual"
 		$syncs_with_manual_state = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'mode'     => 'manual',
 				'emitters' => $wpdb->blogid,
-			),
+			],
 			'AND',
 			false,
 			true
@@ -96,7 +96,7 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		$sync_receivers = BEA_CSF_Admin_Synchronizations_Network::get_sites( $sync_receivers );
 
 		// Include template
-		include( BEA_CSF_DIR . 'views/admin/server-term-metabox-manual.php' );
+		include BEA_CSF_DIR . 'views/admin/server-term-metabox-manual.php';
 	}
 
 	public static function save( $term_id, $tt_id, $taxonomy ) {
@@ -114,7 +114,7 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 		}
 
 		// Set default value
-		$new_term_receivers = array();
+		$new_term_receivers = [];
 
 		// Get _POST data if form is filled
 		if ( isset( $_POST['term_receivers'] ) && ! empty( $_POST['term_receivers'] ) ) {
@@ -133,10 +133,10 @@ class BEA_CSF_Admin_Terms_Metaboxes {
 
 		if ( ! empty( $receivers_to_delete ) && ! empty( $old_term_receivers ) ) {
 			// Theses values have just deleted, delete content for clients !
-			do_action( 'bea-csf' . '/' . 'Taxonomy' . '/' . 'delete' . '/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $receivers_to_delete, true, true );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/Taxonomy/delete/' . $taxonomy . '/' . $wpdb->blogid, $term, false, $receivers_to_delete, true, true );
 		}
 
 		return true;
 	}
-
 }

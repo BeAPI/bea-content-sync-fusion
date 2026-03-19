@@ -9,16 +9,16 @@ class BEA_CSF_Admin_Metaboxes {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
-		add_action( 'transition_post_status', array( __CLASS__, 'transition_post_status' ), 10, 3 );
-		add_action( 'add_meta_boxes', array( __CLASS__, 'add_meta_boxes' ), 10, 2 );
+		add_action( 'transition_post_status', [ __CLASS__, 'transition_post_status' ], 10, 3 );
+		add_action( 'add_meta_boxes', [ __CLASS__, 'add_meta_boxes' ], 10, 2 );
 
 		/** Attachment **/
 		/** ----- Edit Attachment --- **/
-		add_action( 'add_meta_boxes_attachment', array( __CLASS__, 'add_meta_boxes_attachment' ), 10 );
+		add_action( 'add_meta_boxes_attachment', [ __CLASS__, 'add_meta_boxes_attachment' ], 10 );
 		/** ----- Modal Attachment --- **/
-		add_filter( 'attachment_fields_to_edit', array( __CLASS__, 'custom_fields_attachment' ), PHP_INT_MAX, 2 );
+		add_filter( 'attachment_fields_to_edit', [ __CLASS__, 'custom_fields_attachment' ], PHP_INT_MAX, 2 );
 		/** ----- Save data attachment --- **/
-		add_filter( 'attachment_fields_to_save', array( __CLASS__, 'attachment_fields_to_save' ), PHP_INT_MAX, 2 );
+		add_filter( 'attachment_fields_to_save', [ __CLASS__, 'attachment_fields_to_save' ], PHP_INT_MAX, 2 );
 	}
 
 	/**
@@ -71,7 +71,8 @@ class BEA_CSF_Admin_Metaboxes {
 			update_post_meta( $_post_id, '_exclude_from_sync', 1 );
 			if ( 0 === $previous_value && false === $is_saving_revision ) {
 				// This value have just changed, delete content for clients !
-				do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
+				// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+				do_action( 'bea-csf/PostType/delete/' . $post->post_type . '/' . get_current_blog_id(), $post, false, false, false, true );
 			}
 		} else {
 			delete_post_meta( $_post_id, '_exclude_from_sync' );
@@ -102,7 +103,7 @@ class BEA_CSF_Admin_Metaboxes {
 		}
 
 		// Update receivers features (checkbox)
-		$new_post_receivers = array();
+		$new_post_receivers = [];
 		if ( isset( $_POST['post_receivers'] ) && ! empty( $_POST['post_receivers'] ) ) {
 			$new_post_receivers = array_map( 'intval', $_POST['post_receivers'] );
 		}
@@ -117,9 +118,10 @@ class BEA_CSF_Admin_Metaboxes {
 		// Calcul difference for send delete notification for uncheck action
 		$receivers_to_delete = array_diff( $old_post_receivers, $new_post_receivers );
 
-		if ( ! empty( $receivers_to_delete ) && ! empty( $old_post_receivers ) && false === $is_saving_revision) {
+		if ( ! empty( $receivers_to_delete ) && ! empty( $old_post_receivers ) && false === $is_saving_revision ) {
 			// Theses values have just deleted, delete content for clients !
-			do_action( 'bea-csf' . '/' . 'PostType' . '/' . 'delete' . '/' . $post->post_type . '/' . get_current_blog_id(), $post, false, $receivers_to_delete, true, true );
+			// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+			do_action( 'bea-csf/PostType/delete/' . $post->post_type . '/' . get_current_blog_id(), $post, false, $receivers_to_delete, true, true );
 		}
 
 		return true;
@@ -142,7 +144,7 @@ class BEA_CSF_Admin_Metaboxes {
 		// Allow to edit current post id for revisionary
 		$_post_id           = apply_filters( 'bea/csf/save_post_id', $post->ID );
 
-		$post_receivers_status = array();
+		$post_receivers_status = [];
 		if ( isset( $_POST['post_receivers_status'] ) && ! empty( $_POST['post_receivers_status'] ) ) {
 			$post_receivers_status = array_map( 'trim', $_POST['post_receivers_status'] );
 		}
@@ -164,10 +166,10 @@ class BEA_CSF_Admin_Metaboxes {
 	public static function add_meta_boxes( $post_type, $post ) {
 		// Is synchronized content and media ? => not display metabox
 		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized(
-			array(
+			[
 				'posttype',
 				'attachment',
-			),
+			],
 			get_current_blog_id(),
 			$post->ID
 		);
@@ -178,11 +180,11 @@ class BEA_CSF_Admin_Metaboxes {
 
 		// Get syncs for current post_type and mode set to "auto"
 		$syncs_with_auto_state = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'post_type' => $post_type,
 				'mode'      => 'auto',
 				'emitters'  => get_current_blog_id(),
-			),
+			],
 			'AND',
 			false,
 			true
@@ -191,24 +193,24 @@ class BEA_CSF_Admin_Metaboxes {
 			add_meta_box(
 				BEA_CSF_OPTION . 'metabox-auto',
 				__( 'Synchronization (auto)', 'bea-content-sync-fusion' ),
-				array(
+				[
 					__CLASS__,
 					'metabox_content_auto',
-				),
+				],
 				$post_type,
 				'side',
 				'low',
-				array( 'syncs' => $syncs_with_auto_state )
+				[ 'syncs' => $syncs_with_auto_state ]
 			);
 		}
 
 		// Get syncs for current post_type and mode set to "manual"
 		$syncs_with_manual_state = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'post_type' => $post_type,
 				'mode'      => 'manual',
 				'emitters'  => get_current_blog_id(),
-			),
+			],
 			'AND',
 			false,
 			true
@@ -220,14 +222,14 @@ class BEA_CSF_Admin_Metaboxes {
 			add_meta_box(
 				BEA_CSF_OPTION . 'metabox-manual',
 				__( 'Synchronization (manual)', 'bea-content-sync-fusion' ),
-				array(
+				[
 					__CLASS__,
 					'metabox_content_manual',
-				),
+				],
 				$post_type,
 				'side',
 				'low',
-				array( 'syncs' => $syncs_with_manual_state )
+				[ 'syncs' => $syncs_with_manual_state ]
 			);
 		}
 
@@ -251,7 +253,7 @@ class BEA_CSF_Admin_Metaboxes {
 		$current_value          = (int) get_post_meta( $post->ID, '_exclude_from_sync', true );
 
 		// Get names from syncs
-		$sync_names = array();
+		$sync_names = [];
 		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
 			$sync_names[] = $sync_obj->get_field( 'label' );
 		}
@@ -280,7 +282,7 @@ class BEA_CSF_Admin_Metaboxes {
 		$current_post_receivers_status = (array) get_post_meta( $post->ID, '_b' . get_current_blog_id() . '_post_receivers_status', true );
 
 		// Get sites destination from syncs
-		$sync_receivers = array();
+		$sync_receivers = [];
 		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
 			$sync_receivers = array_merge( $sync_receivers, $sync_obj->get_field( 'receivers' ) );
 		}
@@ -288,7 +290,7 @@ class BEA_CSF_Admin_Metaboxes {
 
 		// Get names from syncs, and also enable a flag for user_selection status
 		$show_blog_status = false;
-		$sync_names       = array();
+		$sync_names       = [];
 		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
 			$sync_names[] = $sync_obj->get_field( 'label' );
 
@@ -350,9 +352,9 @@ class BEA_CSF_Admin_Metaboxes {
 	 */
 	public static function add_meta_boxes_attachment( $post ) {
 		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized(
-			array(
+			[
 				'attachment',
-			),
+			],
 			get_current_blog_id(),
 			$post->ID
 		);
@@ -363,11 +365,11 @@ class BEA_CSF_Admin_Metaboxes {
 
 		// Get syncs for current post_type and mode set to "auto"
 		$syncs_with_auto_state = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'post_type' => $post->post_type,
 				'mode'      => 'exclude_default',
 				'emitters'  => get_current_blog_id(),
-			),
+			],
 			'AND',
 			false,
 			true
@@ -377,11 +379,11 @@ class BEA_CSF_Admin_Metaboxes {
 			add_meta_box(
 				'meta-box-id',
 				__( 'Include in the sync', 'bea-content-sync-fusion' ),
-				array( __CLASS__, 'metabox_content_include' ),
+				[ __CLASS__, 'metabox_content_include' ],
 				'attachment',
 				'side',
 				'low',
-				array( 'syncs' => $syncs_with_auto_state )
+				[ 'syncs' => $syncs_with_auto_state ]
 			);
 		}
 
@@ -393,7 +395,7 @@ class BEA_CSF_Admin_Metaboxes {
 		$include_attachments = (int) get_post_meta( $post->ID, '_include_from_sync', true );
 
 		// Get names from syncs
-		$sync_names = array();
+		$sync_names = [];
 		foreach ( $metabox['args']['syncs'] as $sync_obj ) {
 			$sync_names[] = $sync_obj->get_field( 'label' );
 		}
@@ -414,9 +416,9 @@ class BEA_CSF_Admin_Metaboxes {
 	 */
 	public static function custom_fields_attachment( $form_fields, $attachment ) {
 		$emitter_relation = BEA_CSF_Relations::current_object_is_synchronized(
-			array(
+			[
 				'attachment',
-			),
+			],
 			get_current_blog_id(),
 			$attachment->ID
 		);
@@ -427,11 +429,11 @@ class BEA_CSF_Admin_Metaboxes {
 
 		// Get syncs for current post_type and mode set to "auto"
 		$syncs_with_auto_state = BEA_CSF_Synchronizations::get(
-			array(
+			[
 				'post_type' => $attachment->post_type,
 				'mode'      => 'exclude_default',
 				'emitters'  => get_current_blog_id(),
-			),
+			],
 			'AND',
 			false,
 			true
@@ -458,14 +460,14 @@ class BEA_CSF_Admin_Metaboxes {
 		// Get values for current post
 		$include_attachments = (int) get_post_meta( $attachment->ID, '_include_from_sync', true );
 
-		$form_fields['include_sync'] = array(
+		$form_fields['include_sync'] = [
 			'show_in_edit'  => false,
 			'show_in_modal' => true,
 			'label'         => __( 'Include in the sync', 'bea-content-sync-fusion' ),
 			'input'         => 'html',
 			'html'          => sprintf( '<input type="checkbox" id="include-from-sync-%s" name="include_from_sync" value="1" %s><input type="hidden" name="mode" value="exclude_default"/>', $attachment->ID, 1 === $include_attachments ? 'checked' : '' ),
 			'value'         => $include_attachments,
-		);
+		];
 
 		// return the modified images
 		return $form_fields;
@@ -504,16 +506,19 @@ class BEA_CSF_Admin_Metaboxes {
 			$_attachment['include_from_sync'] = $previous_value;
 		}
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- Attachment save; capability and nonce are enforced by core before this filter runs.
 		if ( isset( $_POST['include_from_sync'] ) && 1 === (int) $_POST['include_from_sync'] ) {
 			update_post_meta( $_attachment_id, '_include_from_sync', 1 );
 		} else {
 			delete_post_meta( $_attachment_id, '_include_from_sync' );
 			if ( 1 === $previous_value ) {
-				do_action( 'bea-csf' . '/' . 'Attachment' . '/' . 'delete' . '/attachment/' . get_current_blog_id(), $_attachment_object, false, false, false, true );
+				// phpcs:ignore WordPress.NamingConventions.ValidHookName.NotLowercase -- Legacy public hook name.
+				do_action( 'bea-csf/Attachment/delete/attachment/' . get_current_blog_id(), $_attachment_object, false, false, false, true );
 			}
 		}
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
-		add_filter( 'attachment_fields_to_save', array( __CLASS__, 'attachment_fields_to_save' ), PHP_INT_MAX, 2 );
+		add_filter( 'attachment_fields_to_save', [ __CLASS__, 'attachment_fields_to_save' ], PHP_INT_MAX, 2 );
 
 		// return the modified images
 		return $_attachment;

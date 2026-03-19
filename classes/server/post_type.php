@@ -14,9 +14,9 @@ class BEA_CSF_Server_PostType {
 		}
 
 		// Get object from object or ID
-		$post = array(
+		$post = [
 			'ID' => $post,
-		);
+		];
 
 		if ( empty( $post ) ) {
 			return false;
@@ -90,14 +90,14 @@ class BEA_CSF_Server_PostType {
 		}
 
 		// Init medias children
-		$post['medias'] = array();
+		$post['medias'] = [];
 
 		// Get medias attachment
 		$attachments = get_children(
-			array(
+			[
 				'post_parent' => $post['ID'],
 				'post_type'   => 'attachment',
-			)
+			]
 		);
 
 		foreach ( $attachments as $attachment ) {
@@ -108,7 +108,7 @@ class BEA_CSF_Server_PostType {
 		if ( defined( 'P2P_PLUGIN_VERSION' ) ) {
 			$results = (array) $wpdb->get_results( $wpdb->prepare( "SELECT * FROM $wpdb->p2p WHERE p2p_from = %d OR p2p_to = %d", $post['ID'], $post['ID'] ) );
 
-			$post['connections'] = array();
+			$post['connections'] = [];
 			foreach ( $results as $result ) {
 				$post['connections'][] = BEA_CSF_Server_P2P::merge( $result, $sync_fields );
 			}
@@ -116,5 +116,4 @@ class BEA_CSF_Server_PostType {
 
 		return $post;
 	}
-
 }

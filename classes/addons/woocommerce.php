@@ -1,7 +1,7 @@
 <?php
-require( BEA_CSF_DIR . 'classes/addons/woocommerce/product.php' );
-require( BEA_CSF_DIR . 'classes/addons/woocommerce/product-variation.php' );
-require( BEA_CSF_DIR . 'classes/addons/woocommerce/product-attributes.php' );
+require BEA_CSF_DIR . 'classes/addons/woocommerce/product.php';
+require BEA_CSF_DIR . 'classes/addons/woocommerce/product-variation.php';
+require BEA_CSF_DIR . 'classes/addons/woocommerce/product-attributes.php';
 
 class BEA_CSF_Addon_WooCommerce {
 	public function __construct() {

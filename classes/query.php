@@ -9,9 +9,9 @@ class BEA_CSF_Query {
 	 * @author Amaury Balmer
 	 */
 	public function __construct() {
-		add_action( 'query_vars', array( __CLASS__, 'query_vars' ), 10 );
-		add_filter( 'posts_join', array( __CLASS__, 'posts_join' ), 10, 2 );
-		add_filter( 'posts_where', array( __CLASS__, 'posts_where' ), 10, 2 );
+		add_action( 'query_vars', [ __CLASS__, 'query_vars' ], 10 );
+		add_filter( 'posts_join', [ __CLASS__, 'posts_join' ], 10, 2 );
+		add_filter( 'posts_where', [ __CLASS__, 'posts_where' ], 10, 2 );
 	}
 
 	/**
@@ -42,16 +42,20 @@ class BEA_CSF_Query {
 			return $join;
 		}
 
-		$join_type = $query->get( 'bea_csf_filter' ) === 'local-only' ? 'LEFT' : 'INNER';
-
 		// Get current blog ID safely
 		$current_blog_id = (int) get_current_blog_id();
 
-		// Prepare the join SQL
-		$join .= $wpdb->prepare(
-			" $join_type JOIN {$wpdb->bea_csf_relations} AS bcr ON ({$wpdb->posts}.ID = bcr.receiver_id AND bcr.receiver_blog_id = %d) ",
-			$current_blog_id
-		);
+		if ( 'local-only' === $query->get( 'bea_csf_filter' ) ) {
+			$join .= $wpdb->prepare(
+				" LEFT JOIN {$wpdb->bea_csf_relations} AS bcr ON ({$wpdb->posts}.ID = bcr.receiver_id AND bcr.receiver_blog_id = %d) ",
+				$current_blog_id
+			);
+		} else {
+			$join .= $wpdb->prepare(
+				" INNER JOIN {$wpdb->bea_csf_relations} AS bcr ON ({$wpdb->posts}.ID = bcr.receiver_id AND bcr.receiver_blog_id = %d) ",
+				$current_blog_id
+			);
+		}
 
 		return $join;
 	}
@@ -74,4 +78,3 @@ class BEA_CSF_Query {
 		return $where;
 	}
 }
-

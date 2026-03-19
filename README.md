@@ -9,7 +9,7 @@ Manage content synchronisation across a WordPress multisite.
 ## Requirements
 
 * WordPress should be installed as [multisite](https://codex.wordpress.org/Create_A_Network).
-* Require at least WordPress 4.6.x, in order to use the `WP_Site_Query`.
+* Require at least WordPress 4.9.x, in order to use the `WP_Site_Query`.
 * Know and understand the implementation of CRON tasks on a Linux server
 
 ## Installation
@@ -43,6 +43,10 @@ This plugin is only maintained, which means we do not guarantee some free suppor
 If you really like what we do or want to thank us for our quick work, feel free to [donate](https://www.paypal.me/BeAPI) as much as you want / can, even 1€ is a great gift for buying coffee :)
 
 ## Changelog
+
+### 3.13.0
+* Update quality tools
+* Apply PHPCS and compat for PHP 8.0 on all plugin
 
 ### 3.12.8
 

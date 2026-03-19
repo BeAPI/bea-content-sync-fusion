@@ -10,7 +10,7 @@
  */
 class BEA_CSF_Addon_Post_Types_Order {
 	public function __construct() {
-		add_filter( 'post-types-order_save-ajax-order', array( $this, 'wp_update_post_order' ), 1, 3 );
+		add_filter( 'post-types-order_save-ajax-order', [ $this, 'wp_update_post_order' ], 1, 3 );
 	}
 
 	/**

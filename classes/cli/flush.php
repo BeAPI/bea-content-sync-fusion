@@ -44,10 +44,10 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 		foreach ( $blog_ids as $blog_id ) {
 			WP_CLI::launch_self(
 				'content-sync-fusion flush site',
-				array(),
-				array(
+				[],
+				[
 					'url' => get_home_url( $blog_id, '/' ),
-				),
+				],
 				false,
 				false
 			);
@@ -70,7 +70,7 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 			$types_relation[] = 'taxonomy';
 		}
 
-		if (  isset( $params['attachments'] ) && 'true' === $params['attachments'] ) {
+		if ( isset( $params['attachments'] ) && 'true' === $params['attachments'] ) {
 			$types_relation[] = 'attachment';
 		}
 
@@ -79,7 +79,7 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 		}
 
 		// Get data to delete
-		$items_to_delete = BEA_CSF_Relations::get_types_relation_by_receiver_blog_id( get_current_blog_id(), $types_relation  );
+		$items_to_delete = BEA_CSF_Relations::get_types_relation_by_receiver_blog_id( get_current_blog_id(), $types_relation );
 
 		if ( empty( $items_to_delete ) ) {
 			WP_CLI::warning( __( 'No content to flush', 'bea-content-sync-fusion' ) );
@@ -92,9 +92,9 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 
 		$progress = \WP_CLI\Utils\make_progress_bar( 'Loop on content to flush', $total );
 		foreach ( $items_to_delete as $relation ) {
-			if ( $relation->type === 'taxonomy' ) {
+			if ( 'taxonomy' === $relation->type ) {
 				$term = self::get_term_by_id( $relation->receiver_id );
-				if ( $term != false ) {
+				if ( false !== $term ) {
 					wp_delete_term( $term->term_id, $term->taxonomy );
 				}
 			} else {
@@ -107,7 +107,7 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 
 		WP_CLI::success( __( 'End of content flushing', 'bea-content-sync-fusion' ) );
 
-		WP_CLI::run_command( array( 'cache', 'flush' ) );
+		WP_CLI::run_command( [ 'cache', 'flush' ] );
 	}
 
 	/**
@@ -125,7 +125,7 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 		global $wpdb;
 
 		if ( empty( $term ) ) {
-			$error = new WP_Error( 'invalid_term', __( 'Empty Term' ) );
+			$error = new WP_Error( 'invalid_term', __( 'Empty Term', 'bea-content-sync-fusion' ) );
 
 			return $error;
 		}
@@ -134,13 +134,12 @@ class BEA_CSF_Cli_Flush extends WP_CLI_Command {
 
 		return get_term( $term, $taxonomy, $output, $filter );
 	}
-
 }
 
 WP_CLI::add_command(
 	'content-sync-fusion flush',
 	'BEA_CSF_Cli_Flush',
-	array(
+	[
 		'shortdesc' => __( 'All commands related "flush features" to the BEA Content Sync Fusion plugin', 'bea-content-sync-fusion' ),
-	)
+	]
 );
