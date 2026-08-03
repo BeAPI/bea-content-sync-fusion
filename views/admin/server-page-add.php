@@ -80,7 +80,7 @@
 				<?php
 				foreach (
 					[
-						'publish' => __( 'Publish', 'bea-content-sync-fusion' ),
+						'publish' => __( 'Published', 'bea-content-sync-fusion' ),
 						'pending' => __( 'Pending', 'bea-content-sync-fusion' ),
 						'user_selection'  => __( 'User selection\'s, only for manual mode', 'bea-content-sync-fusion' ),
 					] as $value => $label

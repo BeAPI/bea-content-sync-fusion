@@ -124,8 +124,12 @@ msgid "Selection users"
 msgstr ""
 
 #: classes/admin/admin-restrictions.php:101
-#: views/admin/server-page-add.php:83
+msgctxt "verb"
 msgid "Publish"
+msgstr ""
+
+#: views/admin/server-page-add.php:83
+msgid "Published"
 msgstr ""
 
 #: classes/admin/admin-restrictions.php:196

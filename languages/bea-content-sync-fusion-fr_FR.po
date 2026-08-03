@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/bea-content-sync-"
 "fusion\n"
 "POT-Creation-Date: 2020-10-27 21:50+0100\n"
-"PO-Revision-Date: 2023-03-28 11:11+0200\n"
+"PO-Revision-Date: 2026-08-03 11:15+0200\n"
 "Last-Translator: beapi <amaury@beapi.fr>\n"
 "Language-Team: French (France)\n"
 "Language: fr_FR\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Poedit-SourceCharset: UTF-8\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-Poedit-KeywordsList: _:1;gettext:1;dgettext:2;ngettext:1,2;dngettext:2,3;"
 "__:1;_e:1;_c:1;_n:1,2;_n_noop:1,2;_nc:1,2;__ngettext:1,2;__ngettext_noop:1,2;"
 "_x:1,2c;_ex:1,2c;_nx:1,2,4c;_nx_noop:1,2,3c;_n_js:1,2;_nx_js:1,2,3c;"
@@ -135,8 +135,13 @@ msgstr "Utilisateurs disponibles"
 msgid "Selection users"
 msgstr "Sélection des utilisateurs"
 
-#: classes/admin/admin-restrictions.php:101 views/admin/server-page-add.php:83
+#: classes/admin/admin-restrictions.php:101
+msgctxt "verb"
 msgid "Publish"
+msgstr "Publier"
+
+#: views/admin/server-page-add.php:83
+msgid "Published"
 msgstr "Publié"
 
 #: classes/admin/admin-restrictions.php:196
@@ -361,8 +366,8 @@ msgid ""
 "This content comes from the site <strong>%1$s</strong>, and from the "
 "original article: <strong>%2$s</strong>"
 msgstr ""
-"Ce contenu vient du site <strong>%s</strong>, et du contenu source: <strong>"
-"%s</strong>"
+"Ce contenu vient du site <strong>%s</strong>, et du contenu source: "
+"<strong>%s</strong>"
 
 #: views/admin/client-page-settings-notification.php:2
 msgid "Content Sync: Notifications"
@@ -561,9 +566,9 @@ msgid ""
 "for post type)"
 msgstr ""
 "Lorsque le contenu est enregistré et envoyé vers les autres sites, le statut "
-"est automatiquement \"Publié\", vous pouvez mettre \"En attente de relecture"
-"\" et donner la possibilité à chaque administrateur de valider ou pas le "
-"contenu. (seulement pour les types de contenu)"
+"est automatiquement \"Publié\", vous pouvez mettre \"En attente de "
+"relecture\" et donner la possibilité à chaque administrateur de valider ou "
+"pas le contenu. (seulement pour les types de contenu)"
 
 #: views/admin/server-page-add.php:98 views/admin/server-page-settings.php:19
 msgid "Emitters"
