@@ -98,7 +98,7 @@ class BEA_CSF_Admin_Restrictions {
 							),
 							'bea-csf-publish'
 						),
-						__( 'Publish', 'bea-content-sync-fusion' )
+						_x( 'Publish', 'verb', 'bea-content-sync-fusion' )
 					);
 				}
 			}
