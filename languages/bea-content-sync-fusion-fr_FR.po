@@ -135,6 +135,15 @@ msgstr "Utilisateurs disponibles"
 msgid "Selection users"
 msgstr "Sélection des utilisateurs"
 
+#: classes/admin/admin-restrictions.php:88
+#, php-format
+msgid "Preview &#8220;%s&#8221;"
+msgstr "Prévisualiser &#8220;%s&#8221;"
+
+#: classes/admin/admin-restrictions.php:88
+msgid "Preview"
+msgstr "Prévisualiser"
+
 #: classes/admin/admin-restrictions.php:101
 msgctxt "verb"
 msgid "Publish"
@@ -683,13 +692,6 @@ msgid ""
 msgstr ""
 "Vous pouvez choisir sur quels sites recevoir ce contenu. Ne sélectionner "
 "aucun site ne synchronise pas ce contenu."
-
-#, php-format
-#~ msgid "Preview &#8220;%s&#8221;"
-#~ msgstr "Prévisualiser &#8220;%s&#8221;"
-
-#~ msgid "Preview"
-#~ msgstr "Prévisualiser "
 
 #~ msgid "Empty Term"
 #~ msgstr "Terme vide"
