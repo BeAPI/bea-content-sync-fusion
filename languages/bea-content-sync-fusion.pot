@@ -123,6 +123,15 @@ msgstr ""
 msgid "Selection users"
 msgstr ""
 
+#: classes/admin/admin-restrictions.php:88
+#, php-format
+msgid "Preview &#8220;%s&#8221;"
+msgstr ""
+
+#: classes/admin/admin-restrictions.php:88
+msgid "Preview"
+msgstr ""
+
 #: classes/admin/admin-restrictions.php:101
 msgctxt "verb"
 msgid "Publish"

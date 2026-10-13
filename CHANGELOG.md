@@ -4,6 +4,10 @@ Change history for **BEA - Content Sync Fusion**, a WordPress multisite plugin f
 
 Entries are preserved from the project’s historical changelog.
 
+## [3.13.1]
+
+* Fixed: Restore French translations for the pending post list Preview row action.
+
 ## [3.13.0]
 
 * Update quality tools
